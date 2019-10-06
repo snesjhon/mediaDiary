@@ -60,11 +60,11 @@ const App = () => {
       <Flex justifyContent="space-between">
         <Box my={4}>
           <p>
-            All caps, bold: <strong>MOVIE</strong>
+            All caps, bold: <strong>MOVIES</strong>
           </p>
           <p>All caps: TV SERIES</p>
           <p>
-            Italics: <em>Book</em>
+            Italics: <em>Albums</em>
           </p>
         </Box>
 

@@ -32,7 +32,7 @@ import { db } from "./config/db";
 //   grid-template-columns: 0.1fr 0.3fr 0.6fr;
 // `;
 
-// const MediaItem = styled(Grid)`
+// const MediaContainer = styled(Grid)`
 //   grid-template-columns: 1fr 1fr;
 
 // `;
@@ -42,7 +42,7 @@ const MediaListItem = styled(Grid)`
     props.isActive &&
     `
     outline: ${props.theme.borders.gray};
-    background-color: ${props.theme.colors.gray}
+    background-color: ${props.theme.bg.secondary}
   `} /* p={2}
                   mb={0}
                   bg={showInfo === list[movieID] && "gray"}
@@ -89,6 +89,31 @@ const MediaCard = styled(Grid)`
 //   } */
 // `;
 
+const MediaContainer = props => {
+  const { mediaInfo: media, mediaItem: item } = props;
+  let poster;
+  let title;
+  let date;
+  let overview;
+  if (item.type === "film") {
+    poster = media.poster_path;
+    title = media.title;
+    date = media.release_date;
+    overview = media.overview;
+  } else if (item.type === "tv") {
+    poster = media.poster_path;
+    title = media.name;
+    date = media.first_air_date;
+    overview = media.overview;
+  }
+  return props.children({
+    poster: poster,
+    title: title,
+    date: date,
+    overview: overview
+  });
+};
+
 const MediaList = () => {
   const [list, setList] = useState({});
   const [diary, setDiary] = useState({});
@@ -98,56 +123,57 @@ const MediaList = () => {
   const listKeys = Object.keys(list);
   const diaryKeys = Object.keys(diary);
   const mediaDate = showInfo[0];
-  const mediaInfo = showInfo[1];
+  const mediaItem = showInfo[1];
+  const mediaInfo = showInfo[2];
 
   useEffect(() => {
-    db.collection("movies")
+    db.collection("media")
       .doc("byID")
       .onSnapshot(function(doc) {
         const currentList = doc.data();
         if (currentList) {
           setList(currentList);
-          db.collection("movies")
-            .doc("byDate")
-            .onSnapshot(function(doc) {
-              const currentDiary = doc.data();
-              if (currentDiary) {
-                setDiary(currentDiary);
-              }
-            });
+        }
+      });
+    db.collection("media")
+      .doc("byDate")
+      .onSnapshot(function(doc) {
+        const currentDiary = doc.data();
+        if (currentDiary) {
+          setDiary(currentDiary);
         }
       });
   }, []);
 
-  useEffect(() => {
-    const initKeys = Object.keys(diary);
-    if (initKeys.length > 0) {
-      initKeys
-        .sort((a, b) => new Date(b) - new Date(a))
-        .map((date, dateIndex) => {
-          Object.keys(diary[date])
-            .sort(
-              (a, b) =>
-                new Date(diary[date][b].dateAdded.toDate()) -
-                new Date(diary[date][a].dateAdded.toDate())
-            )
-            .map((movieID, movieIndex) => {
-              if (dateIndex === 0 && movieIndex === 0) {
-                setShowInfo([date, list[movieID]]);
-              }
-            });
-        });
-    }
-  }, [diary, list]);
+  // useEffect(() => {
+  //   const initKeys = Object.keys(diary);
+  //   if (initKeys.length > 0) {
+  //     initKeys
+  //       .sort((a, b) => new Date(b) - new Date(a))
+  //       .map((date, dateIndex) => {
+  //         Object.keys(diary[date])
+  //           .sort(
+  //             (a, b) =>
+  //               new Date(diary[date][b].dateAdded.toDate()) -
+  //               new Date(diary[date][a].dateAdded.toDate())
+  //           )
+  //           .map((mediaID, mediaIndex) => {
+  //             if (dateIndex === 0 && mediaIndex === 0) {
+  //               setShowInfo([date, diary[date][mediaID], list[mediaID]]);
+  //             }
+  //           });
+  //       });
+  //   }
+  // }, [diary, list]);
 
-  useEffect(() => {
-    if (mediaInfo) {
-      const nodeOffTop = document.getElementById(mediaInfo.id).offsetTop;
-      if (offTop !== nodeOffTop) {
-        setOffTop(nodeOffTop);
-      }
-    }
-  }, [mediaInfo, offTop]);
+  // useEffect(() => {
+  //   if (mediaItem) {
+  //     const nodeOffTop = document.getElementById(mediaItem.id).offsetTop;
+  //     if (offTop !== nodeOffTop) {
+  //       setOffTop(nodeOffTop);
+  //     }
+  //   }
+  // }, [mediaItem, offTop]);
 
   if (listKeys.length > 0 && diaryKeys.length > 0) {
     return (
@@ -173,16 +199,22 @@ const MediaList = () => {
                         new Date(diary[date][b].dateAdded.toDate()) -
                         new Date(diary[date][a].dateAdded.toDate())
                     )
-                    .map(movieID => (
+                    .map(mediaID => (
                       <MediaListItem
-                        id={movieID}
-                        key={date + movieID}
-                        isActive={mediaInfo === list[movieID]}
+                        id={mediaID}
+                        key={date + mediaID}
+                        isActive={mediaInfo === list[mediaID]}
                         p={2}
                         mb={0}
-                        onClick={() => setShowInfo([date, list[movieID]])}
+                        onClick={() =>
+                          setShowInfo([
+                            date,
+                            diary[date][mediaID],
+                            list[mediaID]
+                          ])
+                        }
                       >
-                        <Text as="strong">{list[movieID].title}</Text>
+                        {currentMedia(diary[date][mediaID], list[mediaID])}
                       </MediaListItem>
                     ))}
                 </Flex>
@@ -202,30 +234,31 @@ const MediaList = () => {
                 gridTemplateColumns="0.3fr 0.7fr"
                 gridGap="0 1rem"
               >
-                <img
-                  src={`https://image.tmdb.org/t/p/w200/${mediaInfo.poster_path}`}
-                />
-                <Grid gridItem gridTemplateRows="1fr 1fr 1fr" zIndex={2}>
-                  <Text
-                    py={2}
-                    fontSize={4}
-                    fontWeight="600"
-                    alignItems="center"
-                  >
-                    {mediaInfo.title}
-                    <Text as="span" fontWeight="300" fontSize={3} ml={2}>
-                      (
-                      {new Date(mediaInfo.release_date).toLocaleDateString(
-                        "en-us",
-                        {
-                          year: "numeric"
-                        }
-                      )}
-                      )
-                    </Text>
-                  </Text>
-                  <Text>{mediaInfo.overview}</Text>
-                </Grid>
+                <MediaContainer mediaInfo={mediaInfo} mediaItem={mediaItem}>
+                  {({ poster, title, date, overview }) => (
+                    <>
+                      <img src={`https://image.tmdb.org/t/p/w200/${poster}`} />
+                      <Grid gridItem gridTemplateRows="1fr 1fr 1fr" zIndex={2}>
+                        <Text
+                          py={2}
+                          fontSize={4}
+                          fontWeight="600"
+                          alignItems="center"
+                        >
+                          {title}
+                          <Text as="span" fontWeight="300" fontSize={3} ml={2}>
+                            (
+                            {new Date(date).toLocaleDateString("en-us", {
+                              year: "numeric"
+                            })}
+                            )
+                          </Text>
+                        </Text>
+                        <Text>{overview}</Text>
+                      </Grid>
+                    </>
+                  )}
+                </MediaContainer>
               </MediaCard>
             </MediaListItem>
           </Box>
@@ -235,6 +268,35 @@ const MediaList = () => {
   } else {
     return <div>loading</div>;
   }
+
+  function currentMedia(diaryItem, listItem) {
+    console.log(listItem);
+    let titleID;
+    let styleText;
+    if (diaryItem.type === "film") {
+      titleID = "title";
+      styleText = {
+        as: "strong",
+        textTransform: "uppercase"
+      };
+    } else if (diaryItem.type === "tv") {
+      titleID = "original_name";
+      styleText = {
+        textTransform: "uppercase"
+      };
+    }
+
+    return <Text {...styleText}>{listItem[titleID]}</Text>;
+  }
+
+  // function MediaContainer() {
+  //   return {
+  //     poster: "1",
+  //     title: "1",
+  //     date: "1",
+  //     overview: "something else"
+  //   };
+  // }
 };
 
 export default MediaList;

@@ -14,13 +14,14 @@ const MediaSearch = () => {
   useEffect(() => {
     if (bouncedSearch) {
       setIsSearching(true);
-      fetch(
-        `https://api.themoviedb.org/3/search/movie?api_key=${
-          process.env.REACT_APP_MDB_KEY
-        }&language=en-US&query=${encodeURIComponent(
-          bouncedSearch
-        )}&page=1&include_adult=false`
-      )
+      let searchPromise;
+      if (type === "film") {
+        searchPromise = handleFilm(bouncedSearch);
+      } else if (type === "tv") {
+        searchPromise = handleTv(bouncedSearch);
+      }
+
+      searchPromise
         .then(r => r.json())
         .then(res => {
           setIsSearching(false);
@@ -29,7 +30,7 @@ const MediaSearch = () => {
     } else {
       setMovieResult([]);
     }
-  }, [bouncedSearch]);
+  }, [bouncedSearch, type]);
 
   return (
     <>
@@ -67,26 +68,23 @@ const MediaSearch = () => {
           onChange={e => setSearchInput(e.target.value)}
           placeholder="Search Marvel Comics"
           type="search"
-          style={{ border: "none" }}
         />
         {isSearching && <div>Searching ...</div>}
-        {movieResult.map((e, k) => (
-          <div key={e.title + k} onClick={() => addMovie(e)}>
-            {e.title} (
-            {new Date(e.release_date).toLocaleDateString("en-us", {
-              year: "numeric"
-            })}
-            )
-          </div>
-        ))}
+        {movieResult.map((e, k) => {
+          if (type === "film") {
+            return filmResults(e, k);
+          } else if (type === "tv") {
+            return tvResults(e, k);
+          }
+        })}
       </Box>
     </>
   );
   function addMovie(movie) {
-    const moviesByID = db.collection("movies").doc("byID");
-    const moviesByDate = db.collection("movies").doc("byDate");
+    const moviesByID = db.collection("media").doc("byID");
+    const moviesByDate = db.collection("media").doc("byDate");
 
-    const addMovieID = db.runTransaction(transaction => {
+    db.runTransaction(transaction => {
       return transaction.get(moviesByID).then(movieCollection => {
         if (!movieCollection.exists) {
           transaction.set(moviesByID, {
@@ -98,14 +96,17 @@ const MediaSearch = () => {
         });
       });
     });
-    const addMovieDate = db.runTransaction(transaction => {
+
+    db.runTransaction(transaction => {
       return transaction.get(moviesByDate).then(movieDates => {
         if (!movieDates.exists) {
           return transaction.set(moviesByDate, {
             [new Date().toLocaleDateString().replace(/\//g, "-")]: {
               [`${type}_${movie.id.toString()}`]: {
+                id: `${type}_${movie.id.toString()}`,
                 rewatched: false,
-                dateAdded: firebase.firestore.FieldValue.serverTimestamp()
+                dateAdded: firebase.firestore.FieldValue.serverTimestamp(),
+                type: type
               }
             }
           });
@@ -121,15 +122,59 @@ const MediaSearch = () => {
           [new Date().toLocaleDateString().replace(/\//g, "-")]: {
             ...currentDate,
             [`${type}_${movie.id.toString()}`]: {
+              id: `${type}_${movie.id.toString()}`,
               rewatched: false,
-              dateAdded: firebase.firestore.FieldValue.serverTimestamp()
+              dateAdded: firebase.firestore.FieldValue.serverTimestamp(),
+              type: type
             }
           }
         });
       });
     });
 
-    Promise.all([addMovieDate, addMovieID]).then(e => console.log(e));
+    // Promise.all([addMovieDate, addMovieID]).then(e => console.log(e));
+  }
+
+  function handleFilm(search) {
+    return fetch(
+      `https://api.themoviedb.org/3/search/movie?api_key=${
+        process.env.REACT_APP_MDB_KEY
+      }&language=en-US&query=${encodeURIComponent(
+        search
+      )}&page=1&include_adult=false`
+    );
+  }
+
+  function handleTv(search) {
+    return fetch(
+      `https://api.themoviedb.org/3/search/tv?api_key=${
+        process.env.REACT_APP_MDB_KEY
+      }&language=en-US&query=${encodeURIComponent(search)}&page=1`
+    );
+  }
+
+  function filmResults(filmItem, key) {
+    return (
+      <div key={filmItem.title + key} onClick={() => addMovie(filmItem)}>
+        {filmItem.title} (
+        {new Date(filmItem.release_date).toLocaleDateString("en-us", {
+          year: "numeric"
+        })}
+        )
+      </div>
+    );
+  }
+
+  function tvResults(tvItem, key) {
+    return (
+      <div key={tvItem.original_name + key} onClick={() => addMovie(tvItem)}>
+        {tvItem.original_name} (
+        {new Date(tvItem.first_air_date).toLocaleDateString("en-us", {
+          year: "numeric"
+        })}
+        )
+      </div>
+    );
   }
 };
 
