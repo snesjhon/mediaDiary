@@ -19,6 +19,8 @@ const MediaSearch = () => {
         searchPromise = handleFilm(bouncedSearch);
       } else if (type === "tv") {
         searchPromise = handleTv(bouncedSearch);
+      } else if (type === "album") {
+        searchPromise = handleAlbum(bouncedSearch);
       }
 
       searchPromise
@@ -58,15 +60,15 @@ const MediaSearch = () => {
             <Icon name="film" stroke="black" />
             <input
               type="checkbox"
-              checked={type === "music" ? true : false}
-              onChange={() => setType("music")}
+              checked={type === "album" ? true : false}
+              onChange={() => setType("album")}
             />
             Music
           </Box>
         </Flex>
         <input
           onChange={e => setSearchInput(e.target.value)}
-          placeholder="Search Marvel Comics"
+          placeholder={`Search {type} Comics`}
           type="search"
         />
         {isSearching && <div>Searching ...</div>}
@@ -75,6 +77,8 @@ const MediaSearch = () => {
             return filmResults(e, k);
           } else if (type === "tv") {
             return tvResults(e, k);
+          } else if (type === "album") {
+            return albumResults(e, k);
           }
         })}
       </Box>
@@ -153,6 +157,14 @@ const MediaSearch = () => {
     );
   }
 
+  function handleAlbum(search) {
+    return fetch(
+      `https://itunes.apple.com/search?term=${encodeURIComponent(
+        search
+      )}&media=music&entity=album`
+    );
+  }
+
   function filmResults(filmItem, key) {
     return (
       <div key={filmItem.title + key} onClick={() => addMovie(filmItem)}>
@@ -170,6 +182,19 @@ const MediaSearch = () => {
       <div key={tvItem.original_name + key} onClick={() => addMovie(tvItem)}>
         {tvItem.original_name} (
         {new Date(tvItem.first_air_date).toLocaleDateString("en-us", {
+          year: "numeric"
+        })}
+        )
+      </div>
+    );
+  }
+
+  function albumResults(albumItem, key) {
+    const { collectionName, artistName, releaseDate } = albumItem;
+    return (
+      <div key={collectionName + key} onClick={() => addMovie(albumItem)}>
+        {artistName} - {collectionName} (
+        {new Date(releaseDate).toLocaleDateString("en-us", {
           year: "numeric"
         })}
         )
