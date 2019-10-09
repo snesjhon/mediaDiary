@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Grid, Flex, Text, Box } from "./components";
 import styled from "styled-components";
 import { db } from "./config/db";
+import { Store } from "./config/store";
 
 // const MediaTable = styled(Box)`
 //   display: table;
@@ -89,6 +90,8 @@ const MediaCard = styled(Grid)`
 //   } */
 // `;
 
+// I think it's efficient that you get a render prop with information that'll pass that down
+// into a function and not4se3o
 const MediaContainer = props => {
   const { mediaInfo: media, mediaItem: item } = props;
   let poster;
@@ -118,6 +121,7 @@ const MediaContainer = props => {
 };
 
 const MediaList = () => {
+  const { state, dispatch } = useContext(Store);
   const [list, setList] = useState({});
   const [diary, setDiary] = useState({});
   const [showInfo, setShowInfo] = useState([]);
@@ -128,6 +132,8 @@ const MediaList = () => {
   const mediaDate = showInfo[0];
   const mediaItem = showInfo[1];
   const mediaInfo = showInfo[2];
+
+  console.log(state);
 
   useEffect(() => {
     db.collection("media")
