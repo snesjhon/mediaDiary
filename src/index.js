@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import theme from "./config/theme";
 import { ThemeProvider } from "styled-components";
+import { StoreProvider } from "./config/store";
 
 import "../node_modules/github-markdown-css/github-markdown.css";
 
@@ -18,9 +19,11 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 ReactDOM.render(
-  <ThemeProvider theme={theme}>
-    <GlobalStyle bg="rgb(30, 30, 30)" />
-    <App />
-  </ThemeProvider>,
+  <StoreProvider>
+    <ThemeProvider theme={theme}>
+      <GlobalStyle bg="rgb(30, 30, 30)" />
+      <App />
+    </ThemeProvider>
+  </StoreProvider>,
   document.getElementById("root")
 );
