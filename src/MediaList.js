@@ -105,6 +105,9 @@ const MediaContainer = props => {
     title = media.name;
     date = media.first_air_date;
     overview = media.overview;
+  } else if (item.type === "album"){
+    poster = media.artworkUrl100;
+    title = media.collectionName;
   }
   return props.children({
     poster: poster,

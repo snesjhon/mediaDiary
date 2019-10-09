@@ -18,7 +18,8 @@ import React from "react";
 import { hot } from "react-hot-loader/root";
 import { Box, Text, Flex } from "./components";
 import MediaList from "./MediaList";
-import MediaSearch from "./MediaSearch";
+import MediaModal from "./MediaModal";
+// import MediaSearch from "./MediaSearch";
 
 const App = () => {
   return (
@@ -51,7 +52,8 @@ const App = () => {
           </Text>
         </Flex>
         <Box textAlign="right">
-          <Text fontWeight="400">Login</Text>
+        <MediaModal />
+          {/* <Text fontWeight="400">Login</Text> */}
         </Box>
       </Flex>
 
@@ -67,8 +69,16 @@ const App = () => {
             Italics: <em>Albums</em>
           </p>
         </Box>
-
-        <MediaSearch />
+        <Box>
+          <Text fontSize={3} fontWeight={600} textAlign="right" borderBottom="1px solid borderGray">Stats</Text>
+        <p>
+           <strong> 100 MOVIES</strong>
+          </p>
+          <p>20 TV SERIES</p>
+          <p>
+            15 <em>Albums</em>
+          </p>
+        </Box>
       </Flex>
       <MediaList />
     </Box>
