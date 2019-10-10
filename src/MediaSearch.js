@@ -144,7 +144,6 @@ const MediaSearch = () => {
   }
 
   function albumResults(albumItem, key) {
-    console.log(albumItem);
     const { artist, name, mbid } = albumItem;
     return (
       <div key={name + key} onClick={() => handleAlbumInfo(artist, name, mbid)}>

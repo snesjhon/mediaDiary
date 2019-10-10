@@ -19,14 +19,13 @@ import { hot } from "react-hot-loader/root";
 import { Box, Text, Flex } from "./components";
 import MediaList from "./MediaList";
 import MediaModal from "./MediaModal";
-// import MediaSearch from "./MediaSearch";
 
 const App = () => {
+  document.documentElement.setAttribute("data-theme", "light");
   return (
     <Box
       className="markdown-body"
       maxWidth={["", "80vw", "70vw", "60vw", "50vw"]}
-      height="94.5vh"
       mx="auto"
       my={2}
       p={3}
@@ -41,13 +40,7 @@ const App = () => {
           <Text as="span" fontSize={4} ml={2} fontWeight="300">
             /
           </Text>
-          <Text
-            as="span"
-            fontSize={4}
-            ml={2}
-            fontWeight="300"
-            color="madOrange"
-          >
+          <Text as="span" fontSize={4} ml={2} fontWeight="300" color="orange">
             2019
           </Text>
         </Flex>
@@ -69,15 +62,7 @@ const App = () => {
             Italics: <em>Albums</em>
           </p>
         </Box>
-        <Box>
-          <Text
-            fontSize={3}
-            fontWeight={600}
-            textAlign="right"
-            borderBottom="1px solid borderGray"
-          >
-            Stats
-          </Text>
+        <Box my={4}>
           <p>
             <strong> 100 MOVIES</strong>
           </p>

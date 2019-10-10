@@ -42,7 +42,7 @@ const MediaListItem = styled(Grid)`
   ${props =>
     props.isActive &&
     `
-    outline: ${props.theme.borders.gray};
+    outline: ${props.theme.borders.primary};
     background-color: ${props.theme.bg.secondary}
   `} /* p={2}
                   mb={0}
@@ -279,7 +279,6 @@ const MediaList = () => {
   }
 
   function currentMedia(diaryItem, listItem) {
-    // console.log(listItem);
     let titleID;
     let styleText;
     if (diaryItem.type === "film") {
@@ -297,15 +296,6 @@ const MediaList = () => {
 
     return <Text {...styleText}>{listItem[titleID]}</Text>;
   }
-
-  // function MediaContainer() {
-  //   return {
-  //     poster: "1",
-  //     title: "1",
-  //     date: "1",
-  //     overview: "something else"
-  //   };
-  // }
 };
 
 export default MediaList;

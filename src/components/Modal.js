@@ -13,7 +13,7 @@ const Overlay = styled(Box)`
   height: 100%;
   z-index: 25;
   opacity: 0.5;
-  background-color:  ${props => props.theme.colors.borderGray};
+  background-color: ${props => props.theme.bg.secondary};
 `;
 
 const Presentation = styled(Box)`
@@ -30,7 +30,7 @@ const Presentation = styled(Box)`
   z-index: 50;
   background: ${props => props.theme.bg.primary};
   color: gray;
-  border: 1px solid ${props => props.theme.colors.borderGray};
+  border: 1px solid ${props => props.theme.borders.primary};
   box-shadow:  0px 0px 5px 5px rgba(0, 0, 0, 0.05);
 `;
 
@@ -42,7 +42,7 @@ const Modal = props => {
   const { children, isOpen, handleClose } = props;
   return (
     <Portal>
-      <Overlay isOpen={isOpen} onClick={handleClose}/>
+      <Overlay isOpen={isOpen} onClick={handleClose} />
       <Presentation isOpen={isOpen}>{children}</Presentation>
     </Portal>
   );

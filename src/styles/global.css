@@ -1,0 +1,29 @@
+/* madBlue: "rgb(20, 153, 162)",
+madOrange: "rgb(251, 158, 9)",
+madYellow: "rgb(247, 228, 0)" */
+
+html {
+  --orange: rgb(251, 158, 9);
+}
+
+html[data-theme="light"] {
+  --primary: rgb(36, 41, 45);
+  --secondary: rgb(106, 115, 125);
+  --bg-primary: rgb(255, 255, 255);
+  --bg-secondary: rgb(250, 251, 252);
+  --border-primary: rgb(209, 213, 217);
+  --border-secondary: rgb(226, 228, 232);
+}
+
+html[data-theme="dark"] {
+  --primary: blue;
+  --secondary: red;
+  --bg-primary: lightblue;
+  --bg-secondary: lightgray;
+  --border-primary: lightblue;
+  --border-secondary: lightyellow;
+}
+
+body {
+  background-color: var(--bg-primary);
+}
