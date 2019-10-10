@@ -108,7 +108,7 @@ const MediaContainer = props => {
     title = media.name;
     date = media.first_air_date;
     overview = media.overview;
-  } else if (item.type === "album"){
+  } else if (item.type === "album") {
     poster = media.artworkUrl100;
     title = media.collectionName;
   }
@@ -133,7 +133,7 @@ const MediaList = () => {
   const mediaItem = showInfo[1];
   const mediaInfo = showInfo[2];
 
-  console.log(state);
+  // console.log(state);
 
   useEffect(() => {
     db.collection("media")
@@ -279,7 +279,7 @@ const MediaList = () => {
   }
 
   function currentMedia(diaryItem, listItem) {
-    console.log(listItem);
+    // console.log(listItem);
     let titleID;
     let styleText;
     if (diaryItem.type === "film") {

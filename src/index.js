@@ -21,7 +21,7 @@ const GlobalStyle = createGlobalStyle`
 ReactDOM.render(
   <StoreProvider>
     <ThemeProvider theme={theme}>
-      <GlobalStyle bg="rgb(30, 30, 30)" />
+      <GlobalStyle bg="white" />
       <App />
     </ThemeProvider>
   </StoreProvider>,

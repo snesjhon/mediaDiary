@@ -1,5 +1,5 @@
 import React from "react";
-import IconFilm from "../icons/iconFilm";
+import IconFilm from "./icons/iconFilm";
 
 const iconComponents = {
   film: IconFilm

@@ -52,7 +52,7 @@ const App = () => {
           </Text>
         </Flex>
         <Box textAlign="right">
-        <MediaModal />
+          <MediaModal />
           {/* <Text fontWeight="400">Login</Text> */}
         </Box>
       </Flex>
@@ -70,9 +70,16 @@ const App = () => {
           </p>
         </Box>
         <Box>
-          <Text fontSize={3} fontWeight={600} textAlign="right" borderBottom="1px solid borderGray">Stats</Text>
-        <p>
-           <strong> 100 MOVIES</strong>
+          <Text
+            fontSize={3}
+            fontWeight={600}
+            textAlign="right"
+            borderBottom="1px solid borderGray"
+          >
+            Stats
+          </Text>
+          <p>
+            <strong> 100 MOVIES</strong>
           </p>
           <p>20 TV SERIES</p>
           <p>
