@@ -1,3 +1,11 @@
+/**
+ * ACTIONS
+ * ---
+ * We have a central way of dispatching actions throughout the app without having to start multiple
+ * states. But also, we have the store be plugged into the context. That way anytime that we dispatch
+ * something within the state it not only updates the current value, but also updates the "connected"
+ * components. Saving us the need of having redux as a dependency.
+ */
 import { db } from "./db";
 import * as firebase from "firebase/app";
 

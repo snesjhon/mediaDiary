@@ -6,7 +6,11 @@ const MediaModal = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return isOpen ? (
-    <Modal isOpen={isOpen} handleClose={() => setIsOpen(false)}>
+    <Modal
+      className="markdown-body"
+      isOpen={isOpen}
+      handleClose={() => setIsOpen(false)}
+    >
       <MediaSearch />
     </Modal>
   ) : (

@@ -20,18 +20,15 @@ const Presentation = styled(Box)`
   display: ${props => (props.isOpen ? "flex" : "none")};
   flex-direction: ${props => (props.isOpen ? "column" : "")};
   position: fixed;
-  top: 50%;
+  top: 30%;
   left: 50%;
-  /* transform: ${props =>
-    (props.typeProp && "translateX(-50%)") || "translate(-50%, -50%)"}; */
-    transform: translateX(-50%);
+  transform: translateX(-50%);
   width: auto;
   border-radius: 1.12em;
   z-index: 50;
   background: ${props => props.theme.bg.primary};
-  color: gray;
   border: 1px solid ${props => props.theme.borders.primary};
-  box-shadow:  0px 0px 5px 5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.05);
 `;
 
 const Portal = props => {
@@ -39,11 +36,13 @@ const Portal = props => {
 };
 
 const Modal = props => {
-  const { children, isOpen, handleClose } = props;
+  const { children, isOpen, handleClose, ...rest } = props;
   return (
     <Portal>
       <Overlay isOpen={isOpen} onClick={handleClose} />
-      <Presentation isOpen={isOpen}>{children}</Presentation>
+      <Presentation isOpen={isOpen} p={4} {...rest}>
+        {children}
+      </Presentation>
     </Portal>
   );
 };

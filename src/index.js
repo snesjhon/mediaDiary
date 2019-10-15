@@ -6,8 +6,8 @@ import { ThemeProvider } from "styled-components";
 import { StoreProvider } from "./config/store";
 
 import "./styles/reset.css";
-import "./styles/global.css";
 import "./styles/github.css";
+import "./styles/global.css";
 
 ReactDOM.render(
   <StoreProvider>
