@@ -1,30 +1,28 @@
+/*
+ * ENTRY
+ * ---
+ * The entry point at which we direct webpack into our codebase.
+ * Look at Main.jsx to see how we layout the routes and views.
+ *
+ * We have to include styles before the app starts so we can keep order
+ */
+
 import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
+import { render } from "react-dom";
 import theme from "./config/theme";
 import { ThemeProvider } from "styled-components";
 import { StoreProvider } from "./config/store";
+import Main from "./Main.js";
 
 import "./styles/reset.css";
 import "./styles/github.css";
 import "./styles/global.css";
 
-ReactDOM.render(
+render(
   <StoreProvider>
     <ThemeProvider theme={theme}>
-      <App />
+      <Main />
     </ThemeProvider>
   </StoreProvider>,
-  document.getElementById("root")
+  document.querySelector("#app")
 );
-
-// const GlobalStyle = createGlobalStyle`
-//   body {
-//     background-color: ${props => (props.bg ? props.bg : "black")};
-//   }
-//   .markdown-body  {
-//     color: primary !important; // Nooo
-//   }
-// `;
-// <GlobalStyle bg="white" />
-// import { createGlobalStyle } from "styled-components";

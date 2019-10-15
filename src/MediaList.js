@@ -236,7 +236,7 @@ const MediaList = () => {
               isActive={true}
               position="absolute"
               top={offTop}
-              maxWidth="39vw"
+              maxWidth="60vw"
             >
               <MediaCard
                 p={3}
