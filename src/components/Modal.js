@@ -23,11 +23,11 @@ const Presentation = styled(Box)`
   top: 30%;
   left: 50%;
   transform: translateX(-50%);
-  width: auto;
-  border-radius: 1.12em;
+  width: 60vw;
   z-index: 50;
   background: ${props => props.theme.bg.primary};
-  border: 1px solid ${props => props.theme.borders.primary};
+  border: 1px solid #d1d5da;
+  border-radius: 3px;
   box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.05);
 `;
 
@@ -40,7 +40,7 @@ const Modal = props => {
   return (
     <Portal>
       <Overlay isOpen={isOpen} onClick={handleClose} />
-      <Presentation isOpen={isOpen} p={4} {...rest}>
+      <Presentation isOpen={isOpen} p={3} {...rest}>
         {children}
       </Presentation>
     </Portal>

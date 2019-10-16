@@ -21,6 +21,23 @@ export const ADD_MEDIA = "ADD_MEDIA";
 //   return dispatch({ type: ADD_MEDIA, payload: json.results });
 // }
 
+export const addMediaLog = (media, type) => {
+  console.log(media, type);
+};
+
+// async function handleAlbumInfo(artist, name, mbid) {
+//   const r = await fetch(
+//     `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${
+//       process.env.REACT_APP_LASTFM
+//     }${
+//       mbid !== "" ? `&mbid=${mbid}` : `&artist=${artist}&album=${name}`
+//     }&format=json`
+//   );
+//   const albumInfo = await r.json();
+//   // after handling the information we can then get the info into the viewer.
+//   console.log(albumInfo);
+// }
+
 export const addMedia = (media, type) => {
   const moviesByID = db.collection("media").doc("byID");
   const moviesByDate = db.collection("media").doc("byDate");

@@ -1,8 +1,12 @@
 import React from "react";
-import IconFilm from "./icons/iconFilm";
+import IconFilm from "./icons/IconFilm";
+import IconAlbum from "./icons/IconAlbum";
+import IconTv from "./icons/IconTv";
 
 const iconComponents = {
-  film: IconFilm
+  film: IconFilm,
+  album: IconAlbum,
+  tv: IconTv
 };
 
 const Icon = props => {

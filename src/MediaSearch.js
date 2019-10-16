@@ -6,8 +6,8 @@
  */
 
 import React, { useState, useEffect } from "react";
-import { Box, Icon, Flex, Text } from "./components";
-import { addMedia } from "./config/actions";
+import { Box, Icon, Flex, Text, Checkbox } from "./components";
+import { addMedia, addMediaLog } from "./config/actions";
 import useDebounce from "./hooks/useDebounce";
 
 const MediaSearchList = props => {
@@ -37,7 +37,7 @@ const MediaSearchList = props => {
   });
 };
 
-const MediaSearch = () => {
+const MediaSearch = props => {
   const [searchInput, setSearchInput] = useState("");
   const [mediaResult, setMediaResult] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -65,40 +65,42 @@ const MediaSearch = () => {
 
   return (
     <>
-      <Box>
-        <Flex alignItems="center">
-          <Box mr={4}>
-            <input
-              onChange={e => setSearchInput(e.target.value)}
-              placeholder={`Search ${type}`}
-              type="search"
-            />
-          </Box>
-          <Flex mr={3} alignItems="center">
-            <input
-              type="checkbox"
-              checked={type === "film" ? true : false}
-              onChange={() => setType("film")}
-            />
-            <Icon name="film" stroke="black" />
-          </Flex>
-          <Flex mr={3} alignItems="center">
-            <input
-              type="checkbox"
-              checked={type === "tv" ? true : false}
-              onChange={() => setType("tv")}
-            />
-            <Icon name="film" stroke="black" />
-          </Flex>
-          <Flex mr={3} alignItems="center">
-            <input
-              type="checkbox"
-              checked={type === "album" ? true : false}
-              onChange={() => setType("album")}
-            />
-            <Icon ml={2} name="film" stroke="black" />
-          </Flex>
+      <Flex alignItems="center" justifyContent="space-between">
+        <Text fontSize={4} mr={4} fontWeight="600">
+          Select Media Type:
+        </Text>
+        <Flex alignItems="center" justifyContent="center">
+          <Checkbox
+            pr={2}
+            checked={type === "film" ? true : false}
+            onChange={() => setType("film")}
+          />
+          <Icon name="film" stroke="black" />
         </Flex>
+        <Flex alignItems="center">
+          <Checkbox
+            pr={2}
+            checked={type === "tv" ? true : false}
+            onChange={() => setType("tv")}
+          />
+          <Icon name="tv" stroke="black" />
+        </Flex>
+        <Flex alignItems="center">
+          <Checkbox
+            pr={2}
+            checked={type === "album" ? true : false}
+            onChange={() => setType("album")}
+          />
+          <Icon ml={2} name="album" stroke="black" />
+        </Flex>
+      </Flex>
+      <Box my={2} borderTop="1px solid #d1d5da" />
+      <Box mt={2}>
+        <input
+          onChange={e => setSearchInput(e.target.value)}
+          placeholder={`Search ${type}`}
+          type="search"
+        />
       </Box>
       {isSearching && <Box pt={3}>Searching ...</Box>}
       {mediaResult.length > 0 && (
@@ -108,7 +110,7 @@ const MediaSearch = () => {
               {({ name, artist, date }) => (
                 <li
                   // onClick={() => addMedia(e)}
-                  onClick={() => console.log(e)}
+                  onClick={() => props.setSelected(e)}
                 >
                   {name && name}
                   {artist && ` - ${artist}`}
@@ -136,19 +138,6 @@ const MediaSearch = () => {
       URL = `http://ws.audioscrobbler.com/2.0/?method=album.search&album=${search}&api_key=${process.env.REACT_APP_LASTFM}&limit=15&format=json`;
     }
     return fetch(URL);
-  }
-
-  async function handleAlbumInfo(artist, name, mbid) {
-    const r = await fetch(
-      `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${
-        process.env.REACT_APP_LASTFM
-      }${
-        mbid !== "" ? `&mbid=${mbid}` : `&artist=${artist}&album=${name}`
-      }&format=json`
-    );
-    const albumInfo = await r.json();
-    // after handling the information we can then get the info into the viewer.
-    console.log(albumInfo);
   }
 };
 
