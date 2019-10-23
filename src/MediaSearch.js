@@ -38,10 +38,10 @@ const MediaSearchList = props => {
 };
 
 const MediaSearch = props => {
+  const { setSelected, setType, type } = props;
   const [searchInput, setSearchInput] = useState("");
   const [mediaResult, setMediaResult] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [type, setType] = useState("film");
   const bouncedSearch = useDebounce(searchInput, 500);
 
   // We can simply use a promise here because if we wanted to turn this into a
@@ -110,7 +110,7 @@ const MediaSearch = props => {
               {({ name, artist, date }) => (
                 <li
                   // onClick={() => addMedia(e)}
-                  onClick={() => props.setSelected(e)}
+                  onClick={() => setSelected(e)}
                 >
                   {name && name}
                   {artist && ` - ${artist}`}

@@ -6,6 +6,7 @@ import MediaLog from "./MediaLog";
 const MediaModal = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState({});
+  const [type, setType] = useState("film");
 
   return isOpen ? (
     <Modal
@@ -17,9 +18,9 @@ const MediaModal = () => {
       }}
     >
       {Object.keys(selected).length > 0 ? (
-        <MediaLog selected={selected} />
+        <MediaLog selected={selected} type={type} />
       ) : (
-        <MediaSearch setSelected={setSelected} />
+        <MediaSearch setSelected={setSelected} setType={setType} type={type} />
       )}
     </Modal>
   ) : (

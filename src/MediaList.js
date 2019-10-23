@@ -231,7 +231,7 @@ const MediaList = () => {
             ))}
         </Flex>
         {mediaInfo && (
-          <Box>
+          <Box position="relative">
             <MediaListItem
               isActive={true}
               position="absolute"

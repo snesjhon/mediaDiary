@@ -1,27 +1,30 @@
 import React from "react";
-import IconFilm from "./icons/IconFilm";
-import IconAlbum from "./icons/IconAlbum";
-import IconTv from "./icons/IconTv";
+import * as IconRef from "./icons";
+import Box from "./Box";
 
 const iconComponents = {
-  film: IconFilm,
-  album: IconAlbum,
-  tv: IconTv
+  film: IconRef.IconFilm,
+  album: IconRef.IconAlbum,
+  tv: IconRef.IconTv,
+  checked: IconRef.IconChecked,
+  unchecked: IconRef.IconUnChecked
 };
 
 const Icon = props => {
   const { name, stroke, height, width, ...other } = props;
   const IconRender =
-    iconComponents[name] !== undefined ? iconComponents[name] : IconFilm;
+    iconComponents[name] !== undefined
+      ? iconComponents[name]
+      : IconRef.IconFilm;
   return (
-    <IconRender stroke={stroke} height={height} width={width} {...other} />
+    <Box
+      as={IconRender}
+      stroke={stroke}
+      height={height}
+      width={width}
+      {...other}
+    />
   );
-};
-
-Icon.defaultProps = {
-  stroke: "rgb(246, 248, 250)",
-  width: "20px",
-  height: "20px"
 };
 
 export default Icon;

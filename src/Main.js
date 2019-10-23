@@ -25,7 +25,7 @@ const App = () => {
   return (
     <Box
       className="markdown-body"
-      maxWidth={["97vw", "95vw", "70vw", "55vw", "50vw"]}
+      maxWidth={["97vw", "95vw", "85vw", "55vw", "50vw"]}
       mx="auto"
       my={2}
       p={3}
