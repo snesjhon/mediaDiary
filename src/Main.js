@@ -25,7 +25,7 @@ const App = () => {
   return (
     <Box
       className="markdown-body"
-      maxWidth={["97vw", "95vw", "85vw", "55vw", "50vw"]}
+      maxWidth={["97vw", "85vw", "75vw", "65vw"]}
       mx="auto"
       my={2}
       p={3}
@@ -44,9 +44,8 @@ const App = () => {
             2019
           </Text>
         </Flex>
-        <Box textAlign="right">
+        <Box>
           <MediaModal />
-          {/* <Text fontWeight="400">Login</Text> */}
         </Box>
       </Flex>
 

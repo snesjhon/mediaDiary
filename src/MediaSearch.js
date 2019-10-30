@@ -5,10 +5,21 @@
  * respecitve service we can then get that
  */
 
-import React, { useState, useEffect } from "react";
-import { Box, Icon, Flex, Text, Checkbox } from "./components";
+import React, { useState, useEffect, createRef } from "react";
+import { Box, Icon, Flex, Text, Checkbox, Input } from "./components";
+import styled from "styled-components";
 import { addMedia, addMediaLog } from "./config/actions";
 import useDebounce from "./hooks/useDebounce";
+
+const MediaResults = styled(Box)`
+  max-height: 32vh;
+  overflow: scroll;
+  & > li:hover {
+    cursor: pointer;
+    color: var(--orange);
+    background-color: var(--bg-secondary);
+  }
+`;
 
 const MediaSearchList = props => {
   const { type, item } = props;
@@ -38,11 +49,12 @@ const MediaSearchList = props => {
 };
 
 const MediaSearch = props => {
-  const { setSelected, setType, type } = props;
+  const { setSelected, type } = props;
   const [searchInput, setSearchInput] = useState("");
   const [mediaResult, setMediaResult] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const bouncedSearch = useDebounce(searchInput, 500);
+  const InputRef = createRef();
 
   // We can simply use a promise here because if we wanted to turn this into a
   // async func we'd have to create it outside of the current flow and then
@@ -63,40 +75,31 @@ const MediaSearch = props => {
     }
   }, [bouncedSearch, type]);
 
+  useEffect(() => {
+    if (InputRef.current) {
+      InputRef.current.focus();
+    }
+  });
+
   return (
     <>
-      <Flex alignItems="center" justifyContent="space-between">
-        <Text fontSize={4} mr={4} fontWeight="600">
-          Select Media Type:
-        </Text>
-        <Flex alignItems="center" justifyContent="center">
-          <Checkbox
-            pr={2}
-            checked={type === "film" ? true : false}
-            onChange={() => setType("film")}
-          />
-          <Icon name="film" stroke="black" />
+      <Box>
+        <Flex alignItems="center" justifyContent="space-between" mb={2}>
+          <Flex>
+            <Text fontSize={4} fontWeight="600">
+              Media Search
+            </Text>
+            <Text as="span" fontSize={4} ml={2} fontWeight="300">
+              /
+            </Text>
+            <Text as="span" fontSize={4} ml={2} color="orange">
+              {type}
+            </Text>
+          </Flex>
+          <Text>Close</Text>
         </Flex>
-        <Flex alignItems="center">
-          <Checkbox
-            pr={2}
-            checked={type === "tv" ? true : false}
-            onChange={() => setType("tv")}
-          />
-          <Icon name="tv" stroke="black" />
-        </Flex>
-        <Flex alignItems="center">
-          <Checkbox
-            pr={2}
-            checked={type === "album" ? true : false}
-            onChange={() => setType("album")}
-          />
-          <Icon ml={2} name="album" stroke="black" />
-        </Flex>
-      </Flex>
-      <Box my={2} borderTop="1px solid #d1d5da" />
-      <Box mt={2}>
-        <input
+        <Input
+          ref={InputRef}
           onChange={e => setSearchInput(e.target.value)}
           placeholder={`Search ${type}`}
           type="search"
@@ -104,25 +107,37 @@ const MediaSearch = props => {
       </Box>
       {isSearching && <Box pt={3}>Searching ...</Box>}
       {mediaResult.length > 0 && (
-        <Box as="ul" pt={3} pl={0} mb={0} style={{ listStyle: "none" }}>
-          {mediaResult.map((e, i) => (
-            <MediaSearchList key={type + i} type={type} item={e}>
-              {({ name, artist, date }) => (
-                <li
-                  // onClick={() => addMedia(e)}
-                  onClick={() => setSelected(e)}
-                >
-                  {name && name}
-                  {artist && ` - ${artist}`}
-                  {date &&
-                    ` (${new Date(date).toLocaleDateString("en-us", {
-                      year: "numeric"
-                    })})`}
-                </li>
-              )}
-            </MediaSearchList>
-          ))}
-        </Box>
+        <>
+          <Box my={2} borderTop="1px solid #d1d5da" />
+          <MediaResults
+            as="ul"
+            pt={2}
+            pl={0}
+            mb={0}
+            style={{ listStyle: "none" }}
+          >
+            {mediaResult.map((e, i) => (
+              <MediaSearchList key={type + i} type={type} item={e}>
+                {({ name, artist, date }) => (
+                  <Box
+                    as="li"
+                    py={2}
+                    pl={2}
+                    mt={0}
+                    onClick={() => setSelected(e)}
+                  >
+                    {name && name}
+                    {artist && ` - ${artist}`}
+                    {date &&
+                      ` (${new Date(date).toLocaleDateString("en-us", {
+                        year: "numeric"
+                      })})`}
+                  </Box>
+                )}
+              </MediaSearchList>
+            ))}
+          </MediaResults>
+        </>
       )}
     </>
   );
@@ -233,3 +248,57 @@ export default MediaSearch;
 //     </div>
 //   );
 //     }
+
+// <Flex>
+//           <Flex alignItems="baseline" ml={4}>
+//             <Icon
+//               mr={2}
+//               cursor="pointer"
+//               height="20px"
+//               width="20px"
+//               stroke="var(--primary)"
+//               name={type === "film" ? "checked" : "unchecked"}
+//               onClick={() => setType("film")}
+//             />
+//             <Icon
+//               name="film"
+//               stroke="var(--secondary)"
+//               height="25px"
+//               width="25px"
+//             />
+//           </Flex>
+//           <Flex alignItems="baseline" ml={4}>
+//             <Icon
+//               mr={2}
+//               cursor="pointer"
+//               height="20px"
+//               width="20px"
+//               stroke="var(--primary)"
+//               name={type === "tv" ? "checked" : "unchecked"}
+//               onClick={() => setType("tv")}
+//             />
+// <Icon
+//   name="tv"
+//   stroke="var(--secondary)"
+//   height="25px"
+//   width="25px"
+// />
+//           </Flex>
+//           <Flex alignItems="baseline" ml={4}>
+//             <Icon
+//               mr={2}
+//               cursor="pointer"
+//               height="20px"
+//               width="20px"
+//               stroke="var(--primary)"
+//               name={type === "album" ? "checked" : "unchecked"}
+//               onClick={() => setType("album")}
+//             />
+//             <Icon
+//               name="album"
+//               stroke="var(--secondary)"
+//               height="25px"
+//               width="25px"
+//             />
+//           </Flex>
+//         </Flex>

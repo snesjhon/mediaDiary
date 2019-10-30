@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 import Box from "./Box";
@@ -6,7 +6,6 @@ import Box from "./Box";
 const Overlay = styled(Box)`
   display: ${props => (props.isOpen ? "block" : "none")};
   position: fixed;
-  padding-top: 50px;
   top: 0;
   left: 0;
   width: 100%;
@@ -23,7 +22,6 @@ const Presentation = styled(Box)`
   top: 30%;
   left: 50%;
   transform: translateX(-50%);
-  width: 60vw;
   z-index: 50;
   background: ${props => props.theme.bg.primary};
   border: 1px solid #d1d5da;
@@ -37,10 +35,21 @@ const Portal = props => {
 
 const Modal = props => {
   const { children, isOpen, handleClose, ...rest } = props;
+
+  useEffect(() => {
+    document.documentElement.style.overflow = "hidden";
+    return () => (document.documentElement.style.overflow = "");
+  });
+
   return (
     <Portal>
       <Overlay isOpen={isOpen} onClick={handleClose} />
-      <Presentation isOpen={isOpen} p={3} {...rest}>
+      <Presentation
+        isOpen={isOpen}
+        p={4}
+        width={["3vw", "10vw", "45vw"]}
+        {...rest}
+      >
         {children}
       </Presentation>
     </Portal>

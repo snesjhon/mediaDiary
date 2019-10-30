@@ -36,9 +36,41 @@ export const addMediaLog = (media, type) => {
 //   const albumInfo = await r.json();
 //   // after handling the information we can then get the info into the viewer.
 //   console.log(albumInfo);
+//   return {
+//     tvMedia: albumInfo
+//   };
 // }
 
-export const addMedia = (media, type) => {
+export const addMedia = (media, type, date, star, seen) => {
+  if (type === "tv" || type === "film") {
+    return addMediaToFB(media, type, date, star, seen);
+  } else {
+    return fetch(
+      `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${
+        process.env.REACT_APP_LASTFM
+      }${
+        media.mbid !== ""
+          ? `&mbid=${media.mbid}`
+          : `&artist=${media.artist}&album=${media.name}`
+      }&format=json`
+    )
+      .then(r => r.json())
+      .then(info => {
+        return addMediaToFB(info.album, type, date, star, seen);
+      });
+  }
+};
+
+const addMediaToFB = (media, type, date, star, seen) => {
+  console.log(date, star, seen);
+  let movieID;
+  if (type === "tv" || type === "film") {
+    movieID = media.id.toString();
+  } else {
+    movieID = media.mbid
+      ? media.mbid
+      : encodeURIComponent(media.artist + media.name);
+  }
   const moviesByID = db.collection("media").doc("byID");
   const moviesByDate = db.collection("media").doc("byDate");
 
@@ -46,11 +78,11 @@ export const addMedia = (media, type) => {
     return transaction.get(moviesByID).then(movieCollection => {
       if (!movieCollection.exists) {
         transaction.set(moviesByID, {
-          [`${type}_${media.id.toString()}`]: media
+          [`${type}_${movieID}`]: media
         });
       }
       transaction.update(moviesByID, {
-        [`${type}_${media.id.toString()}`]: media
+        [`${type}_${movieID}`]: media
       });
     });
   });
@@ -59,12 +91,13 @@ export const addMedia = (media, type) => {
     return transaction.get(moviesByDate).then(movieDates => {
       if (!movieDates.exists) {
         return transaction.set(moviesByDate, {
-          [new Date().toLocaleDateString().replace(/\//g, "-")]: {
-            [`${type}_${media.id.toString()}`]: {
-              id: `${type}_${media.id.toString()}`,
-              rewatched: false,
+          [new Date(date).toLocaleDateString().replace(/\//g, "-")]: {
+            [`${type}_${movieID}`]: {
+              id: `${type}_${movieID}`,
               dateAdded: firebase.firestore.FieldValue.serverTimestamp(),
-              type: type
+              type,
+              seen,
+              star
             }
           }
         });
@@ -73,17 +106,18 @@ export const addMedia = (media, type) => {
       const currentData = movieDates.data();
       if (currentData) {
         currentDate =
-          currentData[new Date().toLocaleDateString().replace(/\//g, "-")];
+          currentData[new Date(date).toLocaleDateString().replace(/\//g, "-")];
       }
 
       transaction.update(moviesByDate, {
-        [new Date().toLocaleDateString().replace(/\//g, "-")]: {
+        [new Date(date).toLocaleDateString().replace(/\//g, "-")]: {
           ...currentDate,
-          [`${type}_${media.id.toString()}`]: {
-            id: `${type}_${media.id.toString()}`,
-            rewatched: false,
+          [`${type}_${movieID}`]: {
+            id: `${type}_${movieID}`,
             dateAdded: firebase.firestore.FieldValue.serverTimestamp(),
-            type: type
+            type,
+            seen,
+            star
           }
         }
       });

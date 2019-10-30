@@ -4,40 +4,6 @@ import styled from "styled-components";
 import { db } from "./config/db";
 import { Store } from "./config/store";
 
-// const MediaTable = styled(Box)`
-//   display: table;
-//   overflow: auto;
-//   width: 100%;
-//   border-collapse: collapse;
-//   border-spacing: 0;
-// `;
-
-// const TableRow = styled(Box)`
-//   display: table-row;
-//   border-top: 1px solid #c6cbd1;
-//   background-color: #fff;
-//   ${props =>
-//     props.bold &&
-//     `
-//     font-weight: bolder;
-//   `} /* padding: 5px; */
-// `;
-
-// const TableCell = styled(Box)`
-//   display: table-cell;
-//   border: 1px solid #dfe2e5;
-//   padding: 6px 13px;
-// `;
-
-// const GridList = styled(Grid)`
-//   grid-template-columns: 0.1fr 0.3fr 0.6fr;
-// `;
-
-// const MediaContainer = styled(Grid)`
-//   grid-template-columns: 1fr 1fr;
-
-// `;
-
 const MediaListItem = styled(Grid)`
   ${props =>
     props.isActive &&
@@ -51,26 +17,31 @@ const MediaListItem = styled(Grid)`
                   style={{ outline: "1px solid gray" }} */
 `;
 
-const MediaCard = styled(Grid)`
-  position: relative;
-  &:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: block;
-    z-index: 1;
-    ${props =>
-      props.imgUrl &&
-      `
-      background-image: url(${props.imgUrl});
-      filter: brightness(0.5)
-    `}
-  }
-  /* filter: "brightness(0.5)" */
+const PosterImg = styled.img`
+  border: 1px solid var(--border-secondary);
+  /* box-shadow: 0 1px 5px rgba(20, 24, 28, 0.2), 0 2px 10px rgba(20, 24, 28, 0.35); */
 `;
+
+// const MediaCard = styled(Grid)`
+//   position: relative;
+//   /* &:before {
+//     content: "";
+//     position: absolute;
+//     top: 0;
+//     bottom: 0;
+//     left: 0;
+//     right: 0;
+//     display: block;
+//     z-index: 1;
+//     ${props =>
+//       props.imgUrl &&
+//       `
+//       background-image: url(${props.imgUrl});
+//       filter: brightness(0.5)
+//     `}
+//   } */
+//   /* filter: "brightness(0.5)" */
+// `;
 
 // const MediaCover = styled(Grid)`
 //   padding-top: 10rem;
@@ -94,29 +65,29 @@ const MediaCard = styled(Grid)`
 // into a function and not4se3o
 const MediaContainer = props => {
   const { mediaInfo: media, mediaItem: item } = props;
-  let poster;
-  let title;
-  let date;
-  let overview;
+  let poster, title, date, overview, artist;
   if (item.type === "film") {
-    poster = media.poster_path;
+    poster = `https://image.tmdb.org/t/p/w400/${media.poster_path}`;
     title = media.title;
     date = media.release_date;
     overview = media.overview;
   } else if (item.type === "tv") {
-    poster = media.poster_path;
+    poster = `https://image.tmdb.org/t/p/w400/${media.poster_path}`;
     title = media.name;
     date = media.first_air_date;
     overview = media.overview;
   } else if (item.type === "album") {
-    poster = media.artworkUrl100;
-    title = media.collectionName;
+    poster = media.image[3]["#text"];
+    title = media.name;
+    artist = media.artist;
+    overview = media.wiki.summary.split("<a href")[0];
   }
   return props.children({
-    poster: poster,
-    title: title,
-    date: date,
-    overview: overview
+    poster,
+    title,
+    date,
+    overview,
+    artist
   });
 };
 
@@ -132,8 +103,6 @@ const MediaList = () => {
   const mediaDate = showInfo[0];
   const mediaItem = showInfo[1];
   const mediaInfo = showInfo[2];
-
-  // console.log(state);
 
   useEffect(() => {
     db.collection("media")
@@ -154,39 +123,40 @@ const MediaList = () => {
       });
   }, []);
 
-  // useEffect(() => {
-  //   const initKeys = Object.keys(diary);
-  //   if (initKeys.length > 0) {
-  //     initKeys
-  //       .sort((a, b) => new Date(b) - new Date(a))
-  //       .map((date, dateIndex) => {
-  //         Object.keys(diary[date])
-  //           .sort(
-  //             (a, b) =>
-  //               new Date(diary[date][b].dateAdded.toDate()) -
-  //               new Date(diary[date][a].dateAdded.toDate())
-  //           )
-  //           .map((mediaID, mediaIndex) => {
-  //             if (dateIndex === 0 && mediaIndex === 0) {
-  //               setShowInfo([date, diary[date][mediaID], list[mediaID]]);
-  //             }
-  //           });
-  //       });
-  //   }
-  // }, [diary, list]);
+  useEffect(() => {
+    const initKeys = Object.keys(diary);
+    if (initKeys.length > 0) {
+      initKeys
+        .sort((a, b) => new Date(b) - new Date(a))
+        .map((date, dateIndex) => {
+          Object.keys(diary[date])
+            .sort(
+              (a, b) =>
+                new Date(diary[date][b].dateAdded.toDate()) -
+                new Date(diary[date][a].dateAdded.toDate())
+            )
+            .map((mediaID, mediaIndex) => {
+              if (dateIndex === 0 && mediaIndex === 0) {
+                setShowInfo([date, diary[date][mediaID], list[mediaID]]);
+              }
+            });
+        });
+    }
+  }, [diary, list]);
 
-  // useEffect(() => {
-  //   if (mediaItem) {
-  //     const nodeOffTop = document.getElementById(mediaItem.id).offsetTop;
-  //     if (offTop !== nodeOffTop) {
-  //       setOffTop(nodeOffTop);
-  //     }
-  //   }
-  // }, [mediaItem, offTop]);
+  useEffect(() => {
+    if (mediaItem) {
+      const nodeOffTop = document.getElementById(mediaItem.id).offsetTop;
+      console.log(mediaItem, nodeOffTop, document.getElementById(mediaItem.id));
+      if (offTop !== nodeOffTop) {
+        setOffTop(nodeOffTop);
+      }
+    }
+  }, [mediaItem, offTop]);
 
   if (listKeys.length > 0 && diaryKeys.length > 0) {
     return (
-      <Grid gridTemplateColumns="0.5fr 1fr" gridGap="1rem">
+      <Grid gridTemplateColumns="0.5fr 1fr" gridGap="1rem" position="relative">
         <Flex flexDirection="column">
           {diaryKeys
             .sort((a, b) => new Date(b) - new Date(a))
@@ -198,7 +168,10 @@ const MediaList = () => {
                 pt={dateIndex !== 0 ? 3 : undefined}
                 mt={dateIndex !== 0 ? 3 : undefined}
               >
-                <Text pt={2} color={mediaDate === date ? "madBlue" : undefined}>
+                <Text
+                  pt={2}
+                  color={mediaDate === date ? "var(--blue)" : undefined}
+                >
                   {date.replace("-2019", "").replace("-", "/")}
                 </Text>
                 <Flex flexDirection="column">
@@ -238,37 +211,48 @@ const MediaList = () => {
               top={offTop}
               maxWidth="60vw"
             >
-              <MediaCard
-                p={3}
-                gridTemplateColumns="0.3fr 0.7fr"
-                gridGap="0 1rem"
-              >
+              <Box p={3} gridTemplateColumns="0.3fr 0.7fr" gridGap="0 1rem">
                 <MediaContainer mediaInfo={mediaInfo} mediaItem={mediaItem}>
-                  {({ poster, title, date, overview }) => (
-                    <>
-                      <img src={`https://image.tmdb.org/t/p/w200/${poster}`} />
-                      <Grid gridItem gridTemplateRows="1fr 1fr 1fr" zIndex={2}>
+                  {({ poster, title, date, overview, artist }) => (
+                    <Grid gridTemplateColumns="0.7fr 1fr" gridGap="1rem">
+                      <Grid gridItem>
+                        <PosterImg src={poster} />
+                      </Grid>
+                      <Grid gridItem>
                         <Text
-                          py={2}
+                          pt={2}
+                          pb={artist ? 0 : 2}
                           fontSize={4}
                           fontWeight="600"
                           alignItems="center"
                         >
                           {title}
-                          <Text as="span" fontWeight="300" fontSize={3} ml={2}>
-                            (
-                            {new Date(date).toLocaleDateString("en-us", {
-                              year: "numeric"
-                            })}
-                            )
-                          </Text>
+                          {mediaItem.type !== "album" && (
+                            <Text
+                              as="span"
+                              fontWeight="300"
+                              fontSize={3}
+                              ml={2}
+                            >
+                              (
+                              {new Date(date).toLocaleDateString("en-us", {
+                                year: "numeric"
+                              })}
+                              )
+                            </Text>
+                          )}
                         </Text>
+                        {artist && (
+                          <Text fontSize={3} fontWeight="300" pb={2}>
+                            {artist}
+                          </Text>
+                        )}
                         <Text>{overview}</Text>
                       </Grid>
-                    </>
+                    </Grid>
                   )}
                 </MediaContainer>
-              </MediaCard>
+              </Box>
             </MediaListItem>
           </Box>
         )}
@@ -279,8 +263,7 @@ const MediaList = () => {
   }
 
   function currentMedia(diaryItem, listItem) {
-    let titleID;
-    let styleText;
+    let titleID, titleArtist, styleText;
     if (diaryItem.type === "film") {
       titleID = "title";
       styleText = {
@@ -292,78 +275,20 @@ const MediaList = () => {
       styleText = {
         textTransform: "uppercase"
       };
+    } else if (diaryItem.type === "album") {
+      titleArtist = "artist";
+      titleID = "name";
+      styleText = {
+        fontStyle: "italic"
+      };
     }
 
-    return <Text {...styleText}>{listItem[titleID]}</Text>;
+    return (
+      <Text {...styleText}>
+        {listItem[titleID]} {titleArtist && `- ${listItem[titleArtist]}`}
+      </Text>
+    );
   }
 };
 
 export default MediaList;
-
-// {/* <img
-//   src={`https://image.tmdb.org/t/p/w780/${mediaInfo.backdrop_path}`}
-// /> */}
-// <MediaTable>
-//   <TableRow bold="bold">
-//     <TableCell>Date</TableCell>
-//     <TableCell>Poster</TableCell>
-//     <TableCell>Title</TableCell>
-//     <TableCell>Release Date</TableCell>
-//     <TableCell>Rewatched</TableCell>
-//   </TableRow>
-
-// </MediaTable>
-
-// <TableCell>
-// <Image
-//   width="40px"
-//   src={`https://image.tmdb.org/t/p/w92/${list[movieID].poster_path}`}
-// />
-// </TableCell>
-
-// <TableRow onClick={() => setShowInfo(movieID)}>
-//                     <TableCell>{date}</TableCell>
-//                     <TableCell>{list[movieID].title}</TableCell>
-//                     <TableCell>{list[movieID].release_date}</TableCell>
-//                     <TableCell>{list[movieID].release_date}</TableCell>
-//                   </TableRow>
-//                   {movieID === showInfo && (
-//                     <TableRow>
-//                       <TableCell>{list[movieID].title}</TableCell>
-//                       <TableCell>
-// <Image
-//   src={`https://image.tmdb.org/t/p/w200/${list[movieID].backdrop_path}`}
-// />
-//                       </TableCell>
-//                     </TableRow>
-//                   )}
-
-{
-  /* <MediaCover
-gridTemplateColumns="0.3fr 0.7fr"
-gridGap="0 1rem"
-imgUrl={`https://image.tmdb.org/t/p/w780/${mediaInfo.backdrop_path}`}
->
-<div></div>
-<Text
-  fontSize={4}
-  mb={2}
-  px={2}
-  fontWeight="600"
-  alignItems="center"
-  color="white"
->
-  {mediaInfo.title}
-  <Text as="span" fontWeight="300" fontSize={3} ml={2}>
-    (
-    {new Date(mediaInfo.release_date).toLocaleDateString(
-      "en-us",
-      {
-        year: "numeric"
-      }
-    )}
-    )
-  </Text>
-</Text>
-</MediaCover> */
-}

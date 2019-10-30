@@ -3,26 +3,23 @@ import { Box, Grid, Text, Button, Flex, Icon } from "./components";
 import styled from "styled-components";
 import DatePicker from "react-date-picker";
 import Rating from "react-rating";
-// import DatePicker from "react-date-picker/dist/entry.nostyle";
-// import "./styles/github.css";
-// import "../node_modules/react-date-picker/dist/DatePicker.css";
+import { addMedia } from "./config/actions";
 
 const PosterImg = styled.img`
   box-shadow: 0 1px 5px rgba(20, 24, 28, 0.2), 0 2px 10px rgba(20, 24, 28, 0.35);
 `;
 
-// into a function and not4se3o
 const MediaContainer = props => {
   const { selected, type } = props;
   let poster, title, published, overview, artist, watched;
   if (type === "film") {
-    poster = `https://image.tmdb.org/t/p/w200/${selected.poster_path}`;
+    poster = `https://image.tmdb.org/t/p/w400/${selected.poster_path}`;
     title = selected.title;
     published = selected.release_date;
     overview = selected.overview;
     watched = "Watched";
   } else if (type === "tv") {
-    poster = `https://image.tmdb.org/t/p/w200/${selected.poster_path}`;
+    poster = `https://image.tmdb.org/t/p/w400/${selected.poster_path}`;
     title = selected.name;
     published = selected.first_air_date;
     overview = selected.overview;
@@ -45,23 +42,20 @@ const MediaContainer = props => {
 };
 
 const MediaLog = props => {
-  const { selected, type } = props;
+  const { selected, setSelected, type } = props;
   const [date, setDate] = useState(new Date());
   const [seen, setSeen] = useState(false);
-  // console.log(selected, type);
+  const [star, setStar] = useState(0);
   // If type is Album, then make another API request for the year. LOL.
   return (
-    <Grid gridTemplateColumns="12rem 1fr" gridGap="2rem">
+    <Grid gridTemplateColumns="14rem 1fr" gridGap="2rem">
       <MediaContainer selected={selected} type={type}>
         {({ poster, title, published, watched }) => (
           <>
             <Box>
-              <Text mb={2}>back</Text>
-              <Box>
-                <PosterImg src={poster} />
-              </Box>
+              <PosterImg src={poster} />
             </Box>
-            <Box>
+            <Flex flexDirection="column">
               <Text mb={2} color="secondary">
                 I {watched} ...
               </Text>
@@ -85,24 +79,58 @@ const MediaLog = props => {
                 <Text mr={2} pb={0} color="secondary">
                   Rating
                 </Text>
-                <Rating fractions={2} />
+                <Rating
+                  fractions={2}
+                  emptySymbol={
+                    <Icon
+                      name="starEmpty"
+                      height="25px"
+                      width="25px"
+                      stroke="var(--primary)"
+                    />
+                  }
+                  fullSymbol={
+                    <Icon
+                      name="starFull"
+                      height="25px"
+                      width="25px"
+                      stroke="var(--primary)"
+                    />
+                  }
+                  onClick={e => setStar(e)}
+                  initialRating={star}
+                />
               </Flex>
-              <Flex mt={3}>
+              <Flex mt={3} alignItems="center">
+                <Text color="var(--secondary)" mr={3}>
+                  {watched} Before?
+                </Text>
                 <Icon
                   mr={2}
                   cursor="pointer"
-                  stroke="var(--secondary)"
                   height="25px"
                   width="25px"
+                  stroke="var(--primary)"
                   name={seen ? "checked" : "unchecked"}
                   onClick={() => setSeen(!seen)}
                 />
-                <Text>I&apos;ve {watched} This Before</Text>
               </Flex>
-              <Flex mt={4} pt={2} justifyContent="flex-end">
-                <Button variant="primary">Save</Button>
+              <Flex mt="auto" pt={2} justifyContent="flex-end">
+                <Button
+                  variant="secondary"
+                  mr={3}
+                  onClick={() => setSelected({})}
+                >
+                  Go Back
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={() => addMedia(selected, type, date, star, seen)}
+                >
+                  Save
+                </Button>
               </Flex>
-            </Box>
+            </Flex>
           </>
         )}
       </MediaContainer>

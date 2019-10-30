@@ -7,7 +7,9 @@ const iconComponents = {
   album: IconRef.IconAlbum,
   tv: IconRef.IconTv,
   checked: IconRef.IconChecked,
-  unchecked: IconRef.IconUnChecked
+  unchecked: IconRef.IconUnChecked,
+  starFull: IconRef.IconStarFull,
+  starEmpty: IconRef.IconStarEmpty
 };
 
 const Icon = props => {
