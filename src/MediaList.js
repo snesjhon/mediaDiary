@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Grid, Flex, Text, Box } from "./components";
+import { Grid, Flex, Text, Box, Icon } from "./components";
 import styled from "styled-components";
 import { db } from "./config/db";
 import { Store } from "./config/store";
+import Rating from "react-rating";
 
 const MediaListItem = styled(Grid)`
   ${props =>
@@ -87,7 +88,9 @@ const MediaContainer = props => {
     title,
     date,
     overview,
-    artist
+    artist,
+    star: item.star,
+    seen: item.seen
   });
 };
 
@@ -146,8 +149,16 @@ const MediaList = () => {
 
   useEffect(() => {
     if (mediaItem) {
+      const nodeListHeight = document.getElementById("mediaList").offsetHeight;
+
       const nodeOffTop = document.getElementById(mediaItem.id).offsetTop;
-      console.log(mediaItem, nodeOffTop, document.getElementById(mediaItem.id));
+      const nodeMainHeight = document.getElementById("mediaListItem")
+        .offsetHeight;
+
+      if (nodeOffTop + nodeMainHeight > nodeListHeight) {
+        console.log("overlap", nodeOffTop, nodeMainHeight, nodeListHeight);
+      }
+
       if (offTop !== nodeOffTop) {
         setOffTop(nodeOffTop);
       }
@@ -156,7 +167,12 @@ const MediaList = () => {
 
   if (listKeys.length > 0 && diaryKeys.length > 0) {
     return (
-      <Grid gridTemplateColumns="0.5fr 1fr" gridGap="1rem" position="relative">
+      <Grid
+        gridTemplateColumns="0.5fr 1fr"
+        gridGap="1rem"
+        position="relative"
+        // height="100%"
+      >
         <Flex flexDirection="column">
           {diaryKeys
             .sort((a, b) => new Date(b) - new Date(a))
@@ -204,8 +220,9 @@ const MediaList = () => {
             ))}
         </Flex>
         {mediaInfo && (
-          <Box position="relative">
+          <Box id="mediaList" position="relative">
             <MediaListItem
+              id="mediaListItem"
               isActive={true}
               position="absolute"
               top={offTop}
@@ -213,15 +230,20 @@ const MediaList = () => {
             >
               <Box p={3} gridTemplateColumns="0.3fr 0.7fr" gridGap="0 1rem">
                 <MediaContainer mediaInfo={mediaInfo} mediaItem={mediaItem}>
-                  {({ poster, title, date, overview, artist }) => (
-                    <Grid gridTemplateColumns="0.7fr 1fr" gridGap="1rem">
+                  {({ poster, title, date, overview, artist, star, seen }) => (
+                    <Grid
+                      gridTemplateColumns={
+                        mediaItem.type === "album" ? "0.7fr 1fr" : "0.5fr 1fr"
+                      }
+                      gridGap="1rem"
+                    >
                       <Grid gridItem>
                         <PosterImg src={poster} />
                       </Grid>
                       <Grid gridItem>
                         <Text
                           pt={2}
-                          pb={artist ? 0 : 2}
+                          pb={0}
                           fontSize={4}
                           fontWeight="600"
                           alignItems="center"
@@ -242,11 +264,39 @@ const MediaList = () => {
                             </Text>
                           )}
                         </Text>
+                        {mediaItem.type !== "album" && (
+                          <Text fontSize={3} fontWeight="300">
+                            Jhon Paredes
+                          </Text>
+                        )}
                         {artist && (
                           <Text fontSize={3} fontWeight="300" pb={2}>
                             {artist}
                           </Text>
                         )}
+                        <Box py={3}>
+                          <Rating
+                            fractions={2}
+                            readonly={true}
+                            emptySymbol={
+                              <Icon
+                                name="starEmpty"
+                                height="24px"
+                                width="24px"
+                                stroke="var(--primary)"
+                              />
+                            }
+                            fullSymbol={
+                              <Icon
+                                name="starFull"
+                                height="24px"
+                                width="24px"
+                                stroke="var(--primary)"
+                              />
+                            }
+                            initialRating={star}
+                          />
+                        </Box>
                         <Text>{overview}</Text>
                       </Grid>
                     </Grid>

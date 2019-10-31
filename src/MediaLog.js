@@ -42,7 +42,7 @@ const MediaContainer = props => {
 };
 
 const MediaLog = props => {
-  const { selected, setSelected, type } = props;
+  const { selected, setSelected, setType, type } = props;
   const [date, setDate] = useState(new Date());
   const [seen, setSeen] = useState(false);
   const [star, setStar] = useState(0);
@@ -125,7 +125,11 @@ const MediaLog = props => {
                 </Button>
                 <Button
                   variant="primary"
-                  onClick={() => addMedia(selected, type, date, star, seen)}
+                  onClick={() => {
+                    setType("");
+                    setSelected({});
+                    return addMedia(selected, type, date, star, seen);
+                  }}
                 >
                   Save
                 </Button>

@@ -14,18 +14,40 @@
  *
  */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { hot } from "react-hot-loader/root";
 import { Box, Text, Flex } from "./components";
 import MediaList from "./MediaList";
 import MediaModal from "./MediaModal";
+import Auth from "./config/auth";
+import * as firebase from "firebase/app";
+import "firebase/auth";
 
 const App = () => {
   document.documentElement.setAttribute("data-theme", "light");
+  const [currentUser, setCurrentUser] = useState(false);
+  // const user = firebase.auth().currentUser;
+
+  // console.log(user);
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        // User is signed in.
+        // console.log("user", user);
+        setCurrentUser(user);
+      } else {
+        // User is signed out.
+        console.log("user not log");
+      }
+    });
+  }, []);
+
   return (
     <Box
+      id="main"
       className="markdown-body"
       maxWidth={["97vw", "85vw", "75vw", "65vw"]}
+      // minHeight="98vh"
       mx="auto"
       my={2}
       p={3}
@@ -44,9 +66,7 @@ const App = () => {
             2019
           </Text>
         </Flex>
-        <Box>
-          <MediaModal />
-        </Box>
+        <Box>{currentUser ? <MediaModal /> : <Auth />}</Box>
       </Flex>
 
       <Box my={2} borderTop="1px solid #d1d5da" />

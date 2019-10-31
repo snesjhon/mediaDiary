@@ -83,6 +83,7 @@ const MediaModal = () => {
             <MediaLog
               selected={selected}
               type={type}
+              setType={setType}
               setSelected={setSelected}
             />
           ) : (
