@@ -68,7 +68,7 @@ const PosterImg = styled.img`
 const MediaContainer = props => {
   const { mediaInfo: media, mediaItem: item } = props;
 
-  console.log(props);
+  // console.log(props);
 
   let poster, title, date, overview, artist;
   if (item.type === "film") {
@@ -85,7 +85,10 @@ const MediaContainer = props => {
     poster = media.image[3]["#text"];
     title = media.name;
     artist = media.artist;
-    overview = media.wiki.summary.split("<a href")[0];
+    overview =
+      typeof media.wiki !== "undefined"
+        ? media.wiki.summary.split("<a href")[0]
+        : undefined;
   }
   return props.children({
     poster,
@@ -178,69 +181,87 @@ const MediaList = () => {
       return a;
     }, {});
 
+    // console.log(diaryDates);
+    // .map((month, monthIndex) => {
+    //   console.log(month);
+    //   return <div>asd</div>;
+    // })}
+
     return (
-      <Flex flexDirection="column">
+      <Flex
+        flexDirection="column"
+        borderTop="1px solid"
+        borderColor="border-secondary"
+      >
         {Object.keys(diaryDates)
           .reverse()
-          .map((month, monthIndex) => (
-            <Grid pt={3} pb={4} key={monthIndex} gridTemplateColumns="5rem 1fr">
-              <Text fontSize={5} fontWeight="bolder">
-                {month}
-              </Text>
-              <Box>
-                {Object.keys(diaryDates[month])
-                  .reverse()
-                  .map((day, dayIndex) => (
-                    <Grid
-                      pt={1}
-                      pb={2}
-                      mb={4}
-                      key={dayIndex}
-                      gridTemplateColumns="5rem 1fr"
-                      borderBottom="1px solid lightgray"
+          .map((month, monthIndex) =>
+            Object.keys(diaryDates[month])
+              .sort((a, b) => {
+                console.log(diaryDates[month][a].dateAdded);
+                // console.log(
+                //   new Date(diaryDates[month][b].dateAdded.toDate()),
+                //   new Date(diaryDates[month][a].dateAdded.toDate())
+                // );
+                return (
+                  diaryDates[month][b].dateAdded.seconds -
+                  diaryDates[month][a].dateAdded.seconds
+                );
+              })
+              .map((day, dayIndex) => {
+                // console.log(diaryDates[month][e]);
+                // console.log(list[diaryDates[month][e].id]);
+                return (
+                  <Grid
+                    key={monthIndex + dayIndex}
+                    gridTemplateColumns="10rem 5rem 1fr"
+                    borderBottom="1px solid"
+                    borderColor="border-secondary"
+                    py={3}
+                    alignItems="center"
+                  >
+                    {dayIndex === 0 ? (
+                      <Text fontSize={4}>{month}</Text>
+                    ) : (
+                      <div />
+                    )}
+                    <Text fontSize={3}>
+                      {new Date(day).toLocaleDateString("en-us", {
+                        day: "numeric"
+                      })}
+                    </Text>
+                    <MediaContainer
+                      mediaInfo={list[diaryDates[month][day].id]}
+                      mediaItem={diaryDates[month][day]}
                     >
-                      <Text fontSize={4}>
-                        {new Date(day).toLocaleDateString("en-us", {
-                          day: "numeric"
-                        })}
-                      </Text>
-                      <Box>
-                        {Object.keys(diaryDates[month][day]).map(
-                          (item, itemIndex) => (
-                            <MediaContainer
-                              mediaInfo={list[item]}
-                              mediaItem={diary[day][item]}
-                              key={itemIndex}
-                            >
-                              {({
-                                poster,
-                                title,
-                                date,
-                                overview,
-                                artist,
-                                star,
-                                seen
-                              }) => (
-                                <Grid gridTemplateColumns="repeat(5, 1fr)">
-                                  <Box>
-                                    <PosterImg src={poster} />
-                                  </Box>
-                                  <Text fontSize={3}>{title}</Text>
-                                  <Box>{date}</Box>
-                                  <Box>{artist}</Box>
-                                  <Box>{star}</Box>
-                                  <Box>{seen}</Box>
-                                </Grid>
-                              )}
-                            </MediaContainer>
-                          )
-                        )}
-                      </Box>
-                    </Grid>
-                  ))}
-              </Box>
-            </Grid>
-          ))}
+                      {({
+                        poster,
+                        title,
+                        date,
+                        overview,
+                        artist,
+                        star,
+                        seen
+                      }) => (
+                        <Grid
+                          gridTemplateColumns="repeat(5, 1fr)"
+                          alignItems="center"
+                        >
+                          <Box>
+                            <PosterImg src={poster} />
+                          </Box>
+                          <Text fontSize={3}>{title}</Text>
+                          <Box>{date}</Box>
+                          <Box>{artist}</Box>
+                          <Box>{star}</Box>
+                          <Box>{seen}</Box>
+                        </Grid>
+                      )}
+                    </MediaContainer>
+                  </Grid>
+                );
+              })
+          )}
       </Flex>
       //   {diaryKeys
       //     .sort((a, b) => new Date(b) - new Date(a))
@@ -265,11 +286,11 @@ const MediaList = () => {
       //         </Text>
       //         <Flex flexDirection="column">
       //           {Object.keys(diary[date])
-      //             .sort(
-      //               (a, b) =>
-      //                 new Date(diary[date][b].dateAdded.toDate()) -
-      //                 new Date(diary[date][a].dateAdded.toDate())
-      //             )
+      // .sort(
+      //   (a, b) =>
+      //     new Date(diary[date][b].dateAdded.toDate()) -
+      //     new Date(diary[date][a].dateAdded.toDate())
+      // )
       //             .map(mediaID => (
       //               <MediaListItem
       //                 id={mediaID}
@@ -392,9 +413,9 @@ export default MediaList;
 //                       ml={2}
 //                     >
 //                       (
-//                       {new Date(date).toLocaleDateString("en-us", {
-//                         year: "numeric"
-//                       })}
+// {new Date(date).toLocaleDateString("en-us", {
+//   year: "numeric"
+// })}
 //                       )
 //                     </Text>
 //                   )}
@@ -441,3 +462,102 @@ export default MediaList;
 //     </MediaListItem>
 //   </Box>
 // )}
+
+// <Grid pt={3} pb={4} key={monthIndex} gridTemplateColumns="5rem 1fr">
+//               <Text fontSize={5} fontWeight="bolder">
+//                 {month}
+//               </Text>
+//               <Box>
+//                 {Object.keys(diaryDates[month])
+//                   .sort(
+//                     (a, b) =>
+//                       new Date(diaryDates[month][a].dateAdded.toDate()) -
+//                       new Date(diaryDates[month][b].dateAdded.toDate())
+//                   )
+//                   .map((day, dayIndex) => {
+//                     // console.log(
+//                     //   // diaryDates,
+//                     //   // month,
+//                     //   // day,
+//                     //   diaryDates[month][day],
+//                     //   diaryDates[month][day].id,
+//                     //   list[diaryDates[month][day].id],
+//                     //   list
+//                     //   // dayIndex
+//                     // );
+//                     return (
+//                       <Grid
+//                         pt={1}
+//                         pb={2}
+//                         mb={4}
+//                         key={dayIndex}
+//                         gridTemplateColumns="5rem 1fr"
+//                         borderBottom="1px solid lightgray"
+//                       >
+//                         <Text fontSize={4}>
+//                           {new Date(day).toLocaleDateString("en-us", {
+//                             day: "numeric"
+//                           })}
+//                         </Text>
+//                         <Box>
+//                           <MediaContainer
+//                             mediaInfo={list[diaryDates[month][day].id]}
+//                             mediaItem={diaryDates[month][day]}
+//                           >
+//                             {({
+//                               poster,
+//                               title,
+//                               date,
+//                               overview,
+//                               artist,
+//                               star,
+//                               seen
+//                             }) => (
+//                               <Grid gridTemplateColumns="repeat(5, 1fr)">
+//                                 <Box>
+//                                   <PosterImg src={poster} />
+//                                 </Box>
+//                                 <Text fontSize={3}>{title}</Text>
+//                                 <Box>{date}</Box>
+//                                 <Box>{artist}</Box>
+//                                 <Box>{star}</Box>
+//                                 <Box>{seen}</Box>
+//                               </Grid>
+//                             )}
+//                           </MediaContainer>
+//                           {/* {Object.keys(diaryDates[month][day]).map(
+//                           (item, itemIndex) => (
+// <MediaContainer
+//   mediaInfo={list[item]}
+//   mediaItem={diary[day][item]}
+//   key={itemIndex}
+// >
+//   {({
+//     poster,
+//     title,
+//     date,
+//     overview,
+//     artist,
+//     star,
+//     seen
+//   }) => (
+//     <Grid gridTemplateColumns="repeat(5, 1fr)">
+//       <Box>
+//         <PosterImg src={poster} />
+//       </Box>
+//       <Text fontSize={3}>{title}</Text>
+//       <Box>{date}</Box>
+//       <Box>{artist}</Box>
+//       <Box>{star}</Box>
+//       <Box>{seen}</Box>
+//     </Grid>
+//   )}
+// </MediaContainer>
+//                           )
+//                         )} */}
+//                         </Box>
+//                       </Grid>
+//                     );
+//                   })}
+//               </Box>
+//             </Grid>

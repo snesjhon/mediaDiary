@@ -62,7 +62,7 @@ export const addMedia = (media, type, date, star, seen) => {
 };
 
 const addMediaToFB = (media, type, date, star, seen) => {
-  console.log(date, star, seen);
+  // console.log(date, star, seen);
   let movieID;
   if (type === "tv" || type === "film") {
     movieID = media.id.toString();
@@ -89,36 +89,26 @@ const addMediaToFB = (media, type, date, star, seen) => {
 
   db.runTransaction(transaction => {
     return transaction.get(moviesByDate).then(movieDates => {
+      // const currentDate = new Date();
       if (!movieDates.exists) {
         return transaction.set(moviesByDate, {
-          [new Date(date).toLocaleDateString().replace(/\//g, "-")]: {
-            [`${type}_${movieID}`]: {
-              id: `${type}_${movieID}`,
-              dateAdded: firebase.firestore.FieldValue.serverTimestamp(),
-              type,
-              seen,
-              star
-            }
-          }
-        });
-      }
-      let currentDate;
-      const currentData = movieDates.data();
-      if (currentData) {
-        currentDate =
-          currentData[new Date(date).toLocaleDateString().replace(/\//g, "-")];
-      }
-
-      transaction.update(moviesByDate, {
-        [new Date(date).toLocaleDateString().replace(/\//g, "-")]: {
-          ...currentDate,
-          [`${type}_${movieID}`]: {
+          [date]: {
             id: `${type}_${movieID}`,
-            dateAdded: firebase.firestore.FieldValue.serverTimestamp(),
+            dateAdded: new Date(),
             type,
             seen,
             star
           }
+        });
+      }
+
+      transaction.update(moviesByDate, {
+        [date]: {
+          id: `${type}_${movieID}`,
+          dateAdded: new Date(),
+          type,
+          seen,
+          star
         }
       });
     });

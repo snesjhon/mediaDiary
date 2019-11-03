@@ -1,11 +1,24 @@
 import styled from "styled-components";
 import Box from "./Box";
-import { grid, compose } from "styled-system";
+import {
+  grid,
+  compose,
+  alignItems,
+  alignContent,
+  justifyItems,
+  justifyContent
+} from "styled-system";
 import t from "prop-types";
 
 const Grid = styled(Box)`
   display: ${props => (props.gridItem ? undefined : "grid")};
-  ${compose(grid)}
+  ${compose(
+    grid,
+    alignItems,
+    alignContent,
+    justifyItems,
+    justifyContent
+  )}
 `;
 
 Grid.propTypes = {

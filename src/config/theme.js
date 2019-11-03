@@ -10,7 +10,9 @@ export default {
     secondary: "var(--secondary)",
     orange: "var(--orange)",
     "bg-primary": "var(--bg-primary)",
-    "bg-secondary": "var(--bg-secondary)"
+    "bg-secondary": "var(--bg-secondary)",
+    "border-primary": "var(--border-primary)",
+    "border-secondary": "var(--border-secondary)"
   },
   bg: {
     primary: "var(--bg-primary)",
