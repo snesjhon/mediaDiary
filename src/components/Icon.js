@@ -9,7 +9,8 @@ const iconComponents = {
   checked: IconRef.IconChecked,
   unchecked: IconRef.IconUnChecked,
   starFull: IconRef.IconStarFull,
-  starEmpty: IconRef.IconStarEmpty
+  starEmpty: IconRef.IconStarEmpty,
+  calendar: IconRef.IconCalendar
 };
 
 const Icon = props => {

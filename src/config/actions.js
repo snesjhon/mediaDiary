@@ -89,12 +89,12 @@ const addMediaToFB = (media, type, date, star, seen) => {
 
   db.runTransaction(transaction => {
     return transaction.get(moviesByDate).then(movieDates => {
-      // const currentDate = new Date();
       if (!movieDates.exists) {
         return transaction.set(moviesByDate, {
-          [date]: {
+          [new Date().getTime()]: {
             id: `${type}_${movieID}`,
             dateAdded: new Date(),
+            date: date,
             type,
             seen,
             star
@@ -103,9 +103,10 @@ const addMediaToFB = (media, type, date, star, seen) => {
       }
 
       transaction.update(moviesByDate, {
-        [date]: {
+        [new Date().getTime()]: {
           id: `${type}_${movieID}`,
           dateAdded: new Date(),
+          date: date,
           type,
           seen,
           star
