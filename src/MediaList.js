@@ -232,9 +232,7 @@ const MediaList = () => {
                         <Flex>
                           <PosterImg src={poster} />
                         </Flex>
-                        <Text fontSize={2} {...styleText}>
-                          {title}
-                        </Text>
+                        <Text {...styleText}>{title}</Text>
                         <Box>
                           {date
                             ? new Date(date).toLocaleDateString("en-US", {
