@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Grid, Text, Button, Flex, Icon } from "./components";
 import styled from "styled-components";
 import DatePicker from "react-date-picker";
-import Rating from "react-rating";
+// import Rating from "react-rating";
 import { addMedia } from "./config/actions";
 
 const PosterImg = styled.img`
@@ -79,7 +79,7 @@ const MediaLog = props => {
                 <Text mr={2} pb={0} color="secondary">
                   Rating
                 </Text>
-                <Rating
+                {/* <Rating
                   fractions={2}
                   emptySymbol={
                     <Icon
@@ -99,7 +99,7 @@ const MediaLog = props => {
                   }
                   onClick={e => setStar(e)}
                   initialRating={star}
-                />
+                /> */}
               </Flex>
               <Flex mt={3} alignItems="center">
                 <Text color="var(--secondary)" mr={3}>

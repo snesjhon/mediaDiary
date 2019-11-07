@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Grid, Flex, Text, Box, Icon } from "./components";
+import { Grid, Flex, Text, Box, Icon, Rating } from "./components";
 import styled from "styled-components";
 import { db } from "./config/db";
 import { Store } from "./config/store";
-import Rating from "react-rating";
+// import Rating from "@prontopro/react-rating";
 
 const MediaListItem = styled(Grid)`
   ${props =>
@@ -175,102 +175,83 @@ const MediaList = () => {
           <Text>Month</Text>
           <Text>Month</Text>
         </Grid>
+        <Rating onChange={() => {}} />
         {Object.keys(diaryDates)
           .reverse()
-          .map((month, monthIndex) =>
-            Object.keys(diaryDates[month])
-              .sort(
-                (a, b) =>
-                  diaryDates[month][b].date.seconds -
-                  diaryDates[month][a].date.seconds
-              )
-              .map((day, dayIndex) => (
-                <Grid
-                  key={monthIndex + dayIndex}
-                  gridTemplateColumns="6rem 5rem 1fr"
-                  borderBottom="1px solid"
-                  borderColor="border-secondary"
-                  py={3}
-                  alignItems="center"
-                >
-                  {dayIndex === 0 ? (
-                    <Text fontSize={4} color="secondary">
+          .map((month, monthIndex) => (
+            <Box key={monthIndex} py={3}>
+              {Object.keys(diaryDates[month])
+                .sort(
+                  (a, b) =>
+                    diaryDates[month][b].date.seconds -
+                    diaryDates[month][a].date.seconds
+                )
+                .map((day, dayIndex) => (
+                  <Grid
+                    key={monthIndex + dayIndex}
+                    gridTemplateColumns="6rem 5rem 1fr"
+                    // borderBottom="1px solid"
+                    // borderColor="border-secondary"
+                    py={3}
+                    alignItems="center"
+                  >
+                    {dayIndex === 0 ? (
+                      <Text fontSize={4} color="secondary">
+                        {new Date(
+                          diaryDates[month][day].date.toDate()
+                        ).toLocaleDateString("en-us", {
+                          month: "short"
+                        })}
+                      </Text>
+                    ) : (
+                      <div />
+                    )}
+                    <Text fontSize={3} fontWeight={300}>
                       {new Date(
                         diaryDates[month][day].date.toDate()
                       ).toLocaleDateString("en-us", {
-                        month: "short"
+                        day: "numeric"
                       })}
                     </Text>
-                  ) : (
-                    <div />
-                  )}
-                  <Text fontSize={3} fontWeight={300}>
-                    {new Date(
-                      diaryDates[month][day].date.toDate()
-                    ).toLocaleDateString("en-us", {
-                      day: "numeric"
-                    })}
-                  </Text>
-                  <MediaContainer
-                    mediaInfo={list[diaryDates[month][day].id]}
-                    mediaItem={diaryDates[month][day]}
-                  >
-                    {({
-                      poster,
-                      title,
-                      date,
-                      styleText,
-                      artist,
-                      star,
-                      seen
-                    }) => (
-                      <Grid
-                        gridTemplateColumns="2.5rem 10rem 10rem 10rem 10rem 3rem"
-                        gridGap="0 1.5rem"
-                        alignItems="center"
-                      >
-                        <Flex>
-                          <PosterImg src={poster} />
-                        </Flex>
-                        <Text {...styleText}>{title}</Text>
-                        <Box>
-                          {date
-                            ? new Date(date).toLocaleDateString("en-US", {
-                                year: "numeric"
-                              })
-                            : ""}
-                        </Box>
-                        <Box>{artist}</Box>
-                        <Box>
-                          <Rating
-                            fractions={2}
-                            readonly={true}
-                            emptySymbol={
-                              <Icon
-                                name="starEmpty"
-                                height="24px"
-                                width="24px"
-                                stroke="var(--primary)"
-                              />
-                            }
-                            fullSymbol={
-                              <Icon
-                                name="starFull"
-                                height="24px"
-                                width="24px"
-                                stroke="var(--primary)"
-                              />
-                            }
-                            initialRating={star}
-                          />
-                        </Box>
-                        <Box>?</Box>
-                      </Grid>
-                    )}
-                  </MediaContainer>
-                </Grid>
-              ))
-          )}
+                    <MediaContainer
+                      mediaInfo={list[diaryDates[month][day].id]}
+                      mediaItem={diaryDates[month][day]}
+                    >
+                      {({
+                        poster,
+                        title,
+                        date,
+                        styleText,
+                        artist,
+                        star,
+                        seen
+                      }) => (
+                        <Grid
+                          gridTemplateColumns="2.5rem 10rem 10rem 10rem 10rem 3rem"
+                          gridGap="0 1.5rem"
+                          alignItems="center"
+                        >
+                          <Flex>
+                            <PosterImg src={poster} />
+                          </Flex>
+                          <Text {...styleText}>{title}</Text>
+                          <Box>
+                            {date
+                              ? new Date(date).toLocaleDateString("en-US", {
+                                  year: "numeric"
+                                })
+                              : ""}
+                          </Box>
+                          <Box>{artist}</Box>
+                          <Box></Box>
+                          <Box>?</Box>
+                        </Grid>
+                      )}
+                    </MediaContainer>
+                  </Grid>
+                ))}
+            </Box>
+          ))}
       </Flex>
     );
   } else {
@@ -609,3 +590,50 @@ export default MediaList;
 //     }
 //   }
 // }, [mediaItem, offTop]);
+
+{
+  /* <Rating
+                              animateOnHover
+                              initialRate={star}
+                              // fractions={2}
+                              // emptyRate={
+                              //   <Icon
+                              //     name="starEmpty"
+                              //     height="24px"
+                              //     width="24px"
+                              //     stroke="var(--primary)"
+                              //   />
+                              // }
+                              // fullRate={
+                              //   <Icon
+                              //     name="starFull"
+                              //     height="24px"
+                              //     width="24px"
+                              //     stroke="var(--primary)"
+                              //   />
+                              // }
+                            /> */
+}
+{
+  /* <Rating
+                              fractions={2}
+                              readonly={true}
+                              emptySymbol={
+                                <Icon
+                                  name="starEmpty"
+                                  height="24px"
+                                  width="24px"
+                                  stroke="var(--primary)"
+                                />
+                              }
+                              fullSymbol={
+                                <Icon
+                                  name="starFull"
+                                  height="24px"
+                                  width="24px"
+                                  stroke="var(--primary)"
+                                />
+                              }
+                              initialRating={star}
+                            /> */
+}
