@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Grid, Flex, Text, Box, Icon, Rating } from "./components";
+import { Grid, Flex, Text, Box, Icon } from "./components";
 import styled from "styled-components";
 import { db } from "./config/db";
 import { Store } from "./config/store";
@@ -16,6 +16,18 @@ const MediaListItem = styled(Grid)`
                   bg={showInfo === list[movieID] && "gray"}
                   // border={showInfo === list[movieID] && "gray"}
                   style={{ outline: "1px solid gray" }} */
+`;
+
+const MediaMonth = styled(Box)`
+  &:hover .monthDate {
+    color: ${props => props.theme.colors.blue};
+  }
+  & > .monthContainer:hover {
+    & .day {
+      cursor: pointer;
+      color: ${props => props.theme.colors.blue};
+    }
+  }
 `;
 
 const PosterImg = styled.img`
@@ -118,6 +130,11 @@ const MediaList = () => {
   const [diary, setDiary] = useState({});
   const [showInfo, setShowInfo] = useState([]);
   const [offTop, setOffTop] = useState();
+  const [rating, setRating] = useState(null);
+
+  const onChange = value => {
+    setRating(value);
+  };
 
   const listKeys = Object.keys(list);
   const diaryKeys = Object.keys(diary);
@@ -175,11 +192,10 @@ const MediaList = () => {
           <Text>Month</Text>
           <Text>Month</Text>
         </Grid>
-        <Rating onChange={() => {}} />
         {Object.keys(diaryDates)
           .reverse()
           .map((month, monthIndex) => (
-            <Box key={monthIndex} py={3}>
+            <MediaMonth key={monthIndex} py={3}>
               {Object.keys(diaryDates[month])
                 .sort(
                   (a, b) =>
@@ -188,6 +204,7 @@ const MediaList = () => {
                 )
                 .map((day, dayIndex) => (
                   <Grid
+                    className="monthContainer"
                     key={monthIndex + dayIndex}
                     gridTemplateColumns="6rem 5rem 1fr"
                     // borderBottom="1px solid"
@@ -196,7 +213,11 @@ const MediaList = () => {
                     alignItems="center"
                   >
                     {dayIndex === 0 ? (
-                      <Text fontSize={4} color="secondary">
+                      <Text
+                        className="monthDate"
+                        fontSize={4}
+                        color="secondary"
+                      >
                         {new Date(
                           diaryDates[month][day].date.toDate()
                         ).toLocaleDateString("en-us", {
@@ -227,6 +248,7 @@ const MediaList = () => {
                         seen
                       }) => (
                         <Grid
+                          className="day"
                           gridTemplateColumns="2.5rem 10rem 10rem 10rem 10rem 3rem"
                           gridGap="0 1.5rem"
                           alignItems="center"
@@ -250,7 +272,7 @@ const MediaList = () => {
                     </MediaContainer>
                   </Grid>
                 ))}
-            </Box>
+            </MediaMonth>
           ))}
       </Flex>
     );
