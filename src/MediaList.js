@@ -3,7 +3,7 @@ import { Grid, Flex, Text, Box, Icon } from "./components";
 import styled from "styled-components";
 import { db } from "./config/db";
 import { Store } from "./config/store";
-// import Rating from "@prontopro/react-rating";
+import ReactStars from "react-stars";
 
 const MediaListItem = styled(Grid)`
   ${props =>
@@ -172,30 +172,34 @@ const MediaList = () => {
       a[month] = Object.assign({ ...a[month] }, { [c]: diary[c] });
       return a;
     }, {});
+    const gridLayout = "5rem 4rem 3rem 18rem 10rem 4rem 6rem 8rem 5rem";
+    const gridGap = "0 1.5rem";
 
     return (
-      <Flex
-        flexDirection="column"
-        borderTop="1px solid"
-        borderColor="border-secondary"
-      >
+      <>
         <Grid
-          gridTemplateColumns="4rem 4rem 3rem 10rem 10rem 10rem 10rem"
-          gridGap="0 1.5rem"
+          gridTemplateColumns={gridLayout}
+          gridGap={gridGap}
           alignItems="center"
+          borderBottom="1px solid"
+          borderColor="border-secondary"
+          fontSize={0}
+          color="secondary"
+          style={{ textTransform: "uppercase" }}
         >
           <Text>Month</Text>
           <Text>Day</Text>
           <Text>Poster</Text>
           <Text>Title</Text>
-          <Text>Release Date</Text>
-          <Text>Month</Text>
-          <Text>Month</Text>
+          <Text>Artist</Text>
+          <Text>Released</Text>
+          <Text>Rating</Text>
+          <Text>Rewatch</Text>
         </Grid>
         {Object.keys(diaryDates)
           .reverse()
           .map((month, monthIndex) => (
-            <MediaMonth key={monthIndex} py={3}>
+            <MediaMonth key={monthIndex} pb={3}>
               {Object.keys(diaryDates[month])
                 .sort(
                   (a, b) =>
@@ -206,9 +210,8 @@ const MediaList = () => {
                   <Grid
                     className="monthContainer"
                     key={monthIndex + dayIndex}
-                    gridTemplateColumns="6rem 5rem 1fr"
-                    // borderBottom="1px solid"
-                    // borderColor="border-secondary"
+                    gridTemplateColumns={gridLayout}
+                    gridGap={gridGap}
                     py={3}
                     alignItems="center"
                   >
@@ -247,34 +250,39 @@ const MediaList = () => {
                         star,
                         seen
                       }) => (
-                        <Grid
-                          className="day"
-                          gridTemplateColumns="2.5rem 10rem 10rem 10rem 10rem 3rem"
-                          gridGap="0 1.5rem"
-                          alignItems="center"
-                        >
+                        <>
                           <Flex>
                             <PosterImg src={poster} />
                           </Flex>
                           <Text {...styleText}>{title}</Text>
+                          <Box>{artist ? artist : "none"}</Box>
                           <Box>
                             {date
                               ? new Date(date).toLocaleDateString("en-US", {
                                   year: "numeric"
                                 })
-                              : ""}
+                              : "date"}
                           </Box>
-                          <Box>{artist}</Box>
-                          <Box></Box>
-                          <Box>?</Box>
-                        </Grid>
+                          <Box>
+                            <ReactStars
+                              count={5}
+                              half
+                              value={star}
+                              edit={false}
+                              size={16}
+                              color1="var(--secondary)"
+                              color2="var(--primary)"
+                            />
+                          </Box>
+                          <Box>{seen ? "seen" : "not seen"}</Box>
+                        </>
                       )}
                     </MediaContainer>
                   </Grid>
                 ))}
             </MediaMonth>
           ))}
-      </Flex>
+      </>
     );
   } else {
     return <div>loading</div>;

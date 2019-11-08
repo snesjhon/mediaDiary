@@ -7,10 +7,26 @@ import {
   border,
   compose,
   system,
-  position
+  position,
+  SpaceProps,
+  ColorProps,
+  TypographyProps,
+  LayoutProps,
+  BorderProps,
+  PositionProps
 } from "styled-system";
 
-const Box = styled.div`
+interface BoxProps
+  extends SpaceProps,
+    ColorProps,
+    TypographyProps,
+    LayoutProps,
+    BorderProps,
+    PositionProps {
+  cursor: string;
+}
+
+const Box = styled.div<BoxProps>`
   ${system({
     cursor: {
       property: "cursor"
