@@ -16,14 +16,14 @@ import {
   PositionProps
 } from "styled-system";
 
-interface BoxProps
+export interface BoxProps
   extends SpaceProps,
     ColorProps,
     TypographyProps,
     LayoutProps,
     BorderProps,
     PositionProps {
-  cursor: string;
+  cursor?: string;
 }
 
 const Box = styled.div<BoxProps>`

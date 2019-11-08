@@ -1,8 +1,14 @@
-import Box from "./Box";
+import Box, { BoxProps } from "./Box";
 import styled from "styled-components";
-import { border, system, variant } from "styled-system";
+import { border, system, variant, BorderProps } from "styled-system";
 
-const Button = styled(Box)`
+interface ButtonProps extends BoxProps, BorderProps {
+  hoverColor?: string;
+  hoverBg?: string;
+  variant?: "primary" | "secondary";
+}
+
+const Button = styled(Box)<ButtonProps>`
   appearance: none;
   display: inline-block;
   text-align: center;
@@ -16,7 +22,7 @@ const Button = styled(Box)`
         property: "color"
       },
       hoverBg: {
-        property: "background-color"
+        property: "backgroundColor"
       }
     })}
   }
