@@ -11,12 +11,22 @@ single collection.
 
 ### Search
 
-- Searching for albums doesn't work as expected
-- Searching for any should be part of the actions and fetching, including dispatching
+- ~~Searching for albums doesn't work as expected~~
+- ~~Searching for any should be part of the actions and fetching, including dispatching~~
+
+## Saving
+
+- Saving should gather as much information as possible.
+
+## Logging
+
+- For TV it should give the option to display the number of seasons. So during the 'onClick" you can
+  get the details for the show, and then it'd just add that information ahead of time instead
+  of doing in "onSave"
 
 ### Other
 
-- Selected is not working because we need to remove the selected whenever we close
+- ~~Selected is not working because we need to remove the selected whenever we close~~
 - Create a better save method for all of the media information
 - Add better media query throughout app container
 - add a progressive image for the preview images

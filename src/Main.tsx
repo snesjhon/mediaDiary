@@ -5,13 +5,6 @@
  * display a list of titles. Which onClick, will then display the backdrop art.
  *
  *
- *
- * movies : {
- *  byID: 123: { info }
- *  allIDs: []
- *  byDate: TS: [1,2,3,4]
- * }
- *
  */
 import * as React from "react";
 import { useState, useEffect } from "react";

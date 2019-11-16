@@ -7,43 +7,28 @@
  * components. Saving us the need of having redux as a dependency.
  */
 import { db } from "./db";
-import * as firebase from "firebase/app";
 
 export const ADD_MEDIA = "ADD_MEDIA";
 
-// export async function getFilm(search, dispatch) {
-//   const result = await fetch(
-//     `https://api.themoviedb.org/3/search/movie?api_key=${MBD_KEY}&language=en-US&query=${encodeURIComponent(
-//       search
-//     )}&page=1&include_adult=false`
-//   );
-//   const json = await result.json();
-//   return dispatch({ type: ADD_MEDIA, payload: json.results });
-// }
-
-export const addMediaLog = (media, type) => {
-  console.log(media, type);
-};
-
-// async function handleAlbumInfo(artist, name, mbid) {
-//   const r = await fetch(
-//     `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${
-//       process.env.REACT_APP_LASTFM
-//     }${
-//       mbid !== "" ? `&mbid=${mbid}` : `&artist=${artist}&album=${name}`
-//     }&format=json`
-//   );
-//   const albumInfo = await r.json();
-//   // after handling the information we can then get the info into the viewer.
-//   console.log(albumInfo);
-//   return {
-//     tvMedia: albumInfo
-//   };
-// }
-
 export const addMedia = (media, type, date, star, seen) => {
-  if (type === "tv" || type === "film") {
-    return addMediaToFB(media, type, date, star, seen);
+  if (type === "film") {
+    return fetch(
+      `https://api.themoviedb.org/3/movie/${media.id}/credits?api_key=${process.env.REACT_APP_MDB}`
+    )
+      .then(r => r.json())
+      .then(info => {
+        console.log("film", info, media);
+        return addMediaToFB(media, type, date, star, seen);
+      });
+  } else if (type === "tv") {
+    return fetch(
+      `https://api.themoviedb.org/3/tv/${media.id}?api_key=${process.env.REACT_APP_MDB}&language=en-US`
+    )
+      .then(r => r.json())
+      .then(info => {
+        console.log("tv", info, media);
+        return addMediaToFB(media, type, date, star, seen);
+      });
   } else {
     return fetch(
       `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${
@@ -62,7 +47,6 @@ export const addMedia = (media, type, date, star, seen) => {
 };
 
 const addMediaToFB = (media, type, date, star, seen) => {
-  // console.log(date, star, seen);
   let movieID;
   if (type === "tv" || type === "film") {
     movieID = media.id.toString();
