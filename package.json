@@ -24,8 +24,9 @@
     "@babel/core": "~7.6.4",
     "@babel/preset-env": "~7.6.3",
     "@babel/preset-react": "~7.6.3",
-    "@types/styled-components": "^4.1.21",
     "@types/react": "^16.9.11",
+    "@types/react-dom": "^16.9.4",
+    "@types/styled-components": "^4.1.21",
     "babel-eslint": "^10.0.3",
     "babel-loader": "~8.0.6",
     "babel-plugin-styled-components": "~1.10.6",
@@ -35,14 +36,14 @@
     "eslint-plugin-react": "~7.16.0",
     "eslint-plugin-react-hooks": "~2.1.2",
     "html-webpack-plugin": "~3.2.0",
+    "react-hot-loader": "~4.12.15",
     "style-loader": "~1.0.0",
     "ts-loader": "^6.2.1",
     "typescript": "^3.6.4",
     "webpack": "~4.41.1",
     "webpack-cli": "~3.3.9",
     "webpack-dev-server": "~3.8.2",
-    "webpack-merge": "~4.2.2",
-    "react-hot-loader": "~4.12.15"
+    "webpack-merge": "~4.2.2"
   },
   "dependencies": {
     "@types/styled-system": "^5.1.3",

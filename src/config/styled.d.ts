@@ -4,11 +4,15 @@ import "styled-components";
 // and extend them!
 declare module "styled-components" {
   export interface DefaultTheme {
-    borderRadius: string;
-
-    colors: {
-      main: string;
+    colors?: {
+      primary: string;
       secondary: string;
+      orange: string;
+      blue: string;
+      "bg-primary": string;
+      "bg-secondary": string;
+      "border-primary": string;
+      "border-secondary": string;
     };
   }
 }

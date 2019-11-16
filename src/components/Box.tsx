@@ -26,20 +26,26 @@ export interface BoxProps
   cursor?: string;
 }
 
-const Box = styled.div<BoxProps>`
+// This would be imported
+interface ThemeProps {
+  color?:
+    | "primary"
+    | "secondary"
+    | "orange"
+    | "blue"
+    | "bg-primary"
+    | "bg-secondary"
+    | "border-primary"
+    | "border-secondary";
+}
+
+const Box = styled.div<BoxProps & ThemeProps>`
   ${system({
     cursor: {
       property: "cursor"
     }
   })}
-  ${compose(
-    space,
-    color,
-    typography,
-    layout,
-    border,
-    position
-  )}
+  ${compose(space, color, typography, layout, border, position)}
 `;
 
 export default Box;

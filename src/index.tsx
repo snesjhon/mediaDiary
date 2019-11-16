@@ -7,20 +7,20 @@
  * We have to include styles before the app starts so we can keep order
  */
 
-import React from "react";
-import { render } from "react-dom";
-import theme from "./config/theme";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { myTheme } from "./config/theme";
 import { ThemeProvider } from "styled-components";
 import { StoreProvider } from "./config/store";
-import Main from "./Main.js";
+import Main from "./Main";
 
 import "./styles/reset.css";
 import "./styles/github.css";
 import "./styles/global.css";
 
-render(
+ReactDOM.render(
   <StoreProvider>
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={myTheme}>
       <Main />
     </ThemeProvider>
   </StoreProvider>,

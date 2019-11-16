@@ -10,7 +10,7 @@ const Dotenv = require("dotenv-webpack");
 
 module.exports = {
   entry: {
-    app: path.resolve(__dirname + "/../", "src/index.js")
+    app: path.resolve(__dirname + "/../", "src/index.tsx")
   },
   optimization: {
     splitChunks: {
@@ -45,7 +45,7 @@ module.exports = {
         exclude: /node_modules/
       },
       {
-        test: /\.tsx$/,
+        test: /\.(tsx|ts)$/,
         loader: "ts-loader",
         exclude: /node_modules/
       },
