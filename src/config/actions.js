@@ -21,14 +21,15 @@ export const addMedia = (media, type, date, star, seen) => {
         return addMediaToFB(media, type, date, star, seen);
       });
   } else if (type === "tv") {
-    return fetch(
-      `https://api.themoviedb.org/3/tv/${media.id}?api_key=${process.env.REACT_APP_MDB}&language=en-US`
-    )
-      .then(r => r.json())
-      .then(info => {
-        console.log("tv", info, media);
-        return addMediaToFB(media, type, date, star, seen);
-      });
+    return addMediaToFB(media, type, date, star, seen);
+    // return fetch(
+    //   `https://api.themoviedb.org/3/tv/${media.id}?api_key=${process.env.REACT_APP_MDB}&language=en-US`
+    // )
+    //   .then(r => r.json())
+    //   .then(info => {
+    //     console.log("tv", info, media);
+    //     return addMediaToFB(media, type, date, star, seen);
+    //   });
   } else {
     return fetch(
       `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${

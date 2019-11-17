@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Grid, Text, Button, Flex, Icon } from "./components";
 import styled from "styled-components";
 import DatePicker from "react-date-picker";
@@ -46,109 +46,128 @@ const MediaLog = props => {
   const [date, setDate] = useState(new Date());
   const [seen, setSeen] = useState(false);
   const [star, setStar] = useState(0);
+  const [loading, setLoading] = useState(type === "tv" ? true : false);
   // If type is Album, then make another API request for the year. LOL.
-  return (
-    <Grid gridTemplateColumns="14rem 1fr" gridGap="2rem">
-      <MediaContainer selected={selected} type={type}>
-        {({ poster, title, published, watched }) => (
-          <>
-            <Box>
-              <PosterImg src={poster} />
-            </Box>
-            <Flex flexDirection="column">
-              <Text mb={2} color="secondary">
-                I {watched} ...
-              </Text>
-              <Text mt={3} fontSize={4} alignItems="center">
-                {title}
-                <Text as="span" fontWeight="300" fontSize={3} ml={1}>
-                  (
-                  {new Date(published).toLocaleDateString("en-us", {
-                    year: "numeric"
-                  })}
-                  )
+
+  useEffect(() => {
+    if (type === "tv") {
+      fetch(
+        `https://api.themoviedb.org/3/tv/${selected.id}?api_key=${process.env.REACT_APP_MDB}&language=en-US`
+      )
+        .then(r => r.json())
+        .then(info => {
+          console.log(info);
+          setLoading(false);
+        });
+    }
+  }, [type, selected.id]);
+
+  if (loading) {
+    return <div>loading</div>;
+  } else {
+    return (
+      <Grid gridTemplateColumns="14rem 1fr" gridGap="2rem">
+        <MediaContainer selected={selected} type={type}>
+          {({ poster, title, published, watched }) => (
+            <>
+              <Box>
+                <PosterImg src={poster} />
+              </Box>
+              <Flex flexDirection="column">
+                <Text mb={2} color="secondary">
+                  I {watched} ...
                 </Text>
-              </Text>
-              <Flex mt={4} alignItems="center">
-                <Text mr={2} pb={0} color="secondary">
-                  On
+                <Text mt={3} fontSize={4} alignItems="center">
+                  {title}
+                  <Text as="span" fontWeight="300" fontSize={3} ml={1}>
+                    (
+                    {new Date(published).toLocaleDateString("en-us", {
+                      year: "numeric"
+                    })}
+                    )
+                  </Text>
                 </Text>
-                <DatePicker onChange={date => setDate(date)} value={date} />
+                <Flex mt={4} alignItems="center">
+                  <Text mr={2} pb={0} color="secondary">
+                    On
+                  </Text>
+                  <DatePicker onChange={date => setDate(date)} value={date} />
+                </Flex>
+                <Flex mt={3} pt={2}>
+                  <Text mr={2} pb={0} color="secondary">
+                    Rating
+                  </Text>
+                  {/* <Rating
+                    fractions={2}
+                    emptySymbol={
+                      <Icon
+                        name="starEmpty"
+                        height="25px"
+                        width="25px"
+                        stroke="var(--primary)"
+                      />
+                    }
+                    fullSymbol={
+                      <Icon
+                        name="starFull"
+                        height="25px"
+                        width="25px"
+                        stroke="var(--primary)"
+                      />
+                    }
+                    onClick={e => setStar(e)}
+                    initialRating={star}
+                  /> */}
+                  <ReactStars
+                    count={5}
+                    half
+                    value={star}
+                    size={20}
+                    onChange={e => setStar(e)}
+                    color1="var(--secondary)"
+                    color2="var(--primary)"
+                  />
+                </Flex>
+                <Flex mt={3} alignItems="center">
+                  <Text color="var(--secondary)" mr={3}>
+                    {watched} Before?
+                  </Text>
+                  <Icon
+                    mr={2}
+                    cursor="pointer"
+                    height="25px"
+                    width="25px"
+                    stroke="var(--primary)"
+                    name={seen ? "checked" : "unchecked"}
+                    onClick={() => setSeen(!seen)}
+                  />
+                </Flex>
+                <Flex mt="auto" pt={2} justifyContent="flex-end">
+                  <Button
+                    variant="secondary"
+                    mr={3}
+                    onClick={() => setSelected({})}
+                  >
+                    Go Back
+                  </Button>
+                  <Button
+                    variant="primary"
+                    onClick={() => {
+                      setType("");
+                      setSelected({});
+                      return addMedia(selected, type, date, star, seen);
+                    }}
+                  >
+                    Save
+                  </Button>
+                </Flex>
               </Flex>
-              <Flex mt={3} pt={2}>
-                <Text mr={2} pb={0} color="secondary">
-                  Rating
-                </Text>
-                {/* <Rating
-                  fractions={2}
-                  emptySymbol={
-                    <Icon
-                      name="starEmpty"
-                      height="25px"
-                      width="25px"
-                      stroke="var(--primary)"
-                    />
-                  }
-                  fullSymbol={
-                    <Icon
-                      name="starFull"
-                      height="25px"
-                      width="25px"
-                      stroke="var(--primary)"
-                    />
-                  }
-                  onClick={e => setStar(e)}
-                  initialRating={star}
-                /> */}
-                <ReactStars
-                  count={5}
-                  half
-                  value={star}
-                  size={20}
-                  onChange={e => setStar(e)}
-                  color1="var(--secondary)"
-                  color2="var(--primary)"
-                />
-              </Flex>
-              <Flex mt={3} alignItems="center">
-                <Text color="var(--secondary)" mr={3}>
-                  {watched} Before?
-                </Text>
-                <Icon
-                  mr={2}
-                  cursor="pointer"
-                  height="25px"
-                  width="25px"
-                  stroke="var(--primary)"
-                  name={seen ? "checked" : "unchecked"}
-                  onClick={() => setSeen(!seen)}
-                />
-              </Flex>
-              <Flex mt="auto" pt={2} justifyContent="flex-end">
-                <Button
-                  variant="secondary"
-                  mr={3}
-                  onClick={() => setSelected({})}
-                >
-                  Go Back
-                </Button>
-                <Button
-                  variant="primary"
-                  onClick={() => {
-                    setType("");
-                    setSelected({});
-                    return addMedia(selected, type, date, star, seen);
-                  }}
-                >
-                  Save
-                </Button>
-              </Flex>
-            </Flex>
-          </>
-        )}
-      </MediaContainer>
-    </Grid>
-  );
+            </>
+          )}
+        </MediaContainer>
+      </Grid>
+    );
+  }
 };
 
 export default MediaLog;
