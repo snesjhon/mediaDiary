@@ -88,6 +88,7 @@ const MediaContainer = props => {
     title = media.title;
     date = media.release_date;
     overview = media.overview;
+    artist = typeof media.director !== "undefined" && media.director;
     styleText = {
       as: "strong",
       textTransform: "uppercase"
@@ -97,6 +98,7 @@ const MediaContainer = props => {
     title = media.name;
     date = media.first_air_date;
     overview = media.overview;
+    artist = typeof media.creator !== "undefined" && media.creator;
     styleText = {
       textTransform: "uppercase"
     };

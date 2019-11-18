@@ -24,13 +24,22 @@ export const addMedia = (
       `https://api.themoviedb.org/3/movie/${media.id}/credits?api_key=${process.env.REACT_APP_MDB}`
     )
       .then(r => r.json())
-      .then(info => {
-        // console.log("film", info, media);
-        return addMediaToFB(media, type, date, star, seen);
+      .then(credits => {
+        const filmMedia = {
+          ...media,
+          director: credits.crew.find(e => e.job === "Director").name
+        };
+        return addMediaToFB(filmMedia, type, date, star, seen);
       });
   } else if (type === "tv") {
-    console.log(media, info, season);
-    return addMediaToFB(media, type, date, star, seen, info, season);
+    // console.log(media, info, season);
+    const tvMedia = {
+      ...media,
+      creator: info.created_by.map(e => e.name).join(", "),
+      season
+    };
+
+    return addMediaToFB(tvMedia, type, date, star, seen, info, season);
   } else {
     return fetch(
       `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${
