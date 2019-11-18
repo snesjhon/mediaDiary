@@ -10,8 +10,8 @@ const PosterImg = styled.img`
 `;
 
 const MediaContainer = props => {
-  const { selected, type } = props;
-  let poster, title, published, overview, artist, watched;
+  const { selected, type, info } = props;
+  let poster, title, published, overview, artist, watched, seasons;
   if (type === "film") {
     poster = `https://image.tmdb.org/t/p/w400/${selected.poster_path}`;
     title = selected.title;
@@ -24,6 +24,7 @@ const MediaContainer = props => {
     published = selected.first_air_date;
     overview = selected.overview;
     watched = "Watched";
+    seasons = info.seasons;
   } else if (type === "album") {
     poster = selected.image[3]["#text"];
     title = selected.name;
@@ -37,7 +38,8 @@ const MediaContainer = props => {
     published,
     overview,
     artist,
-    watched
+    watched,
+    seasons
   });
 };
 
@@ -46,8 +48,9 @@ const MediaLog = props => {
   const [date, setDate] = useState(new Date());
   const [seen, setSeen] = useState(false);
   const [star, setStar] = useState(0);
+  const [info, setInfo] = useState({});
+  const [season, setSeason] = useState({});
   const [loading, setLoading] = useState(type === "tv" ? true : false);
-  // If type is Album, then make another API request for the year. LOL.
 
   useEffect(() => {
     if (type === "tv") {
@@ -56,18 +59,19 @@ const MediaLog = props => {
       )
         .then(r => r.json())
         .then(info => {
-          console.log(info);
+          setInfo(info);
+          setSeason(info.seasons[0]);
           setLoading(false);
         });
     }
-  }, [type, selected.id]);
+  }, [type, selected]);
 
   if (loading) {
     return <div>loading</div>;
   } else {
     return (
       <Grid gridTemplateColumns="14rem 1fr" gridGap="2rem">
-        <MediaContainer selected={selected} type={type}>
+        <MediaContainer selected={selected} type={type} info={info}>
           {({ poster, title, published, watched }) => (
             <>
               <Box>
@@ -87,6 +91,26 @@ const MediaLog = props => {
                     )
                   </Text>
                 </Text>
+                <Flex mt={3} alignItems="center">
+                  {typeof info.seasons !== "undefined" && (
+                    <select
+                      value={season.id}
+                      onChange={e =>
+                        setSeason(
+                          info.seasons.find(
+                            u => u.id === parseInt(e.target.value)
+                          )
+                        )
+                      }
+                    >
+                      {info.seasons.map((e, i) => (
+                        <option key={e.name + i} value={e.id}>
+                          {e.name}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </Flex>
                 <Flex mt={4} alignItems="center">
                   <Text mr={2} pb={0} color="secondary">
                     On
@@ -97,27 +121,6 @@ const MediaLog = props => {
                   <Text mr={2} pb={0} color="secondary">
                     Rating
                   </Text>
-                  {/* <Rating
-                    fractions={2}
-                    emptySymbol={
-                      <Icon
-                        name="starEmpty"
-                        height="25px"
-                        width="25px"
-                        stroke="var(--primary)"
-                      />
-                    }
-                    fullSymbol={
-                      <Icon
-                        name="starFull"
-                        height="25px"
-                        width="25px"
-                        stroke="var(--primary)"
-                      />
-                    }
-                    onClick={e => setStar(e)}
-                    initialRating={star}
-                  /> */}
                   <ReactStars
                     count={5}
                     half
@@ -155,7 +158,15 @@ const MediaLog = props => {
                     onClick={() => {
                       setType("");
                       setSelected({});
-                      return addMedia(selected, type, date, star, seen);
+                      return addMedia(
+                        selected,
+                        type,
+                        date,
+                        star,
+                        seen,
+                        info,
+                        season
+                      );
                     }}
                   >
                     Save

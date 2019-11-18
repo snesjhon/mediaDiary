@@ -10,26 +10,27 @@ import { db } from "./db";
 
 export const ADD_MEDIA = "ADD_MEDIA";
 
-export const addMedia = (media, type, date, star, seen) => {
+export const addMedia = (
+  media,
+  type,
+  date,
+  star,
+  seen,
+  info = {},
+  season = {}
+) => {
   if (type === "film") {
     return fetch(
       `https://api.themoviedb.org/3/movie/${media.id}/credits?api_key=${process.env.REACT_APP_MDB}`
     )
       .then(r => r.json())
       .then(info => {
-        console.log("film", info, media);
+        // console.log("film", info, media);
         return addMediaToFB(media, type, date, star, seen);
       });
   } else if (type === "tv") {
-    return addMediaToFB(media, type, date, star, seen);
-    // return fetch(
-    //   `https://api.themoviedb.org/3/tv/${media.id}?api_key=${process.env.REACT_APP_MDB}&language=en-US`
-    // )
-    //   .then(r => r.json())
-    //   .then(info => {
-    //     console.log("tv", info, media);
-    //     return addMediaToFB(media, type, date, star, seen);
-    //   });
+    console.log(media, info, season);
+    return addMediaToFB(media, type, date, star, seen, info, season);
   } else {
     return fetch(
       `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${
