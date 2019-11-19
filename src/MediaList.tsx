@@ -1,22 +1,11 @@
-import React, { useState, useEffect, useContext } from "react";
+import * as React from "react";
+import { useState, useEffect, useContext } from "react";
 import { Grid, Flex, Text, Box, Icon } from "./components";
 import styled from "styled-components";
 import { db } from "./config/db";
-import { Store } from "./config/store";
+// import { Store } from "./config/store";
+// @ts-ignore
 import ReactStars from "react-stars";
-
-const MediaListItem = styled(Grid)`
-  ${props =>
-    props.isActive &&
-    `
-    outline: ${props.theme.borders.primary};
-    background-color: ${props.theme.bg.secondary}
-  `} /* p={2}
-                  mb={0}
-                  bg={showInfo === list[movieID] && "gray"}
-                  // border={showInfo === list[movieID] && "gray"}
-                  style={{ outline: "1px solid gray" }} */
-`;
 
 const MediaMonth = styled(Box)`
   &:hover .monthDate {
@@ -32,55 +21,12 @@ const MediaMonth = styled(Box)`
 
 const PosterImg = styled.img`
   border: 1px solid var(--border-secondary);
-  /* width: 35px; */
-  /* box-shadow: 0 1px 5px rgba(20, 24, 28, 0.2), 0 2px 10px rgba(20, 24, 28, 0.35); */
 `;
-
-// const MediaCard = styled(Grid)`
-//   position: relative;
-//   /* &:before {
-//     content: "";
-//     position: absolute;
-//     top: 0;
-//     bottom: 0;
-//     left: 0;
-//     right: 0;
-//     display: block;
-//     z-index: 1;
-//     ${props =>
-//       props.imgUrl &&
-//       `
-//       background-image: url(${props.imgUrl});
-//       filter: brightness(0.5)
-//     `}
-//   } */
-//   /* filter: "brightness(0.5)" */
-// `;
-
-// const MediaCover = styled(Grid)`
-//   padding-top: 10rem;
-//   ${props =>
-//     props.imgUrl &&
-//     `
-//       background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${props.imgUrl}) top center no-repeat;
-//       background-size: cover;
-//     `} /* &::before {
-//     content: "";
-//     display: block;
-//     position: absolute;
-//     background-color: #000;
-//     opacity: 0.5;
-//     width: 100%;
-//     height: 100%;
-//   } */
-// `;
 
 // I think it's efficient that you get a render prop with information that'll pass that down
 // into a function and not4se3o
 const MediaContainer = props => {
   const { mediaInfo: media, mediaItem: item } = props;
-
-  // console.log(props);
 
   let poster, title, date, overview, artist, styleText;
   if (item.type === "film") {
@@ -127,22 +73,22 @@ const MediaContainer = props => {
 };
 
 const MediaList = () => {
-  const { state, dispatch } = useContext(Store);
+  // const { state, dispatch } = useContext(Store);
   const [list, setList] = useState({});
-  const [diary, setDiary] = useState({});
-  const [showInfo, setShowInfo] = useState([]);
-  const [offTop, setOffTop] = useState();
-  const [rating, setRating] = useState(null);
+  const [diary, setDiary] = useState();
+  // const [showInfo, setShowInfo] = useState([]);
+  // const [offTop, setOffTop] = useState();
+  // const [rating, setRating] = useState(null);
 
-  const onChange = value => {
-    setRating(value);
-  };
+  // const onChange = value => {
+  //   setRating(value);
+  // };
 
   const listKeys = Object.keys(list);
   const diaryKeys = Object.keys(diary);
-  const mediaDate = showInfo[0];
-  const mediaItem = showInfo[1];
-  const mediaInfo = showInfo[2];
+  // const mediaDate = showInfo[0];
+  // const mediaItem = showInfo[1];
+  // const mediaInfo = showInfo[2];
 
   useEffect(() => {
     db.collection("media")
@@ -164,7 +110,7 @@ const MediaList = () => {
   }, []);
 
   if (listKeys.length > 0 && diaryKeys.length > 0) {
-    const diaryDates = diaryKeys.reduce((a, c) => {
+    const diaryDates = diaryKeys.reduce<Record<string, Object>>((a, c) => {
       const month = new Date(diary[c].date.toDate()).toLocaleDateString(
         "en-us",
         {
@@ -363,9 +309,9 @@ export default MediaList;
 //       </Grid>
 //     ))}
 // </Flex>
-{
-  /* {currentMedia(diary[date][mediaID], list[mediaID])} */
-}
+// {
+//   /* {currentMedia(diary[date][mediaID], list[mediaID])} */
+// }
 // function currentMedia(diaryItem, listItem) {
 //   console.log(diaryItem, listItem);
 //   let titleID, titleArtist, styleText;
@@ -623,49 +569,101 @@ export default MediaList;
 //   }
 // }, [mediaItem, offTop]);
 
-{
-  /* <Rating
-                              animateOnHover
-                              initialRate={star}
-                              // fractions={2}
-                              // emptyRate={
-                              //   <Icon
-                              //     name="starEmpty"
-                              //     height="24px"
-                              //     width="24px"
-                              //     stroke="var(--primary)"
-                              //   />
-                              // }
-                              // fullRate={
-                              //   <Icon
-                              //     name="starFull"
-                              //     height="24px"
-                              //     width="24px"
-                              //     stroke="var(--primary)"
-                              //   />
-                              // }
-                            /> */
-}
-{
-  /* <Rating
-                              fractions={2}
-                              readonly={true}
-                              emptySymbol={
-                                <Icon
-                                  name="starEmpty"
-                                  height="24px"
-                                  width="24px"
-                                  stroke="var(--primary)"
-                                />
-                              }
-                              fullSymbol={
-                                <Icon
-                                  name="starFull"
-                                  height="24px"
-                                  width="24px"
-                                  stroke="var(--primary)"
-                                />
-                              }
-                              initialRating={star}
-                            /> */
-}
+// {
+//   /* <Rating
+//                               animateOnHover
+//                               initialRate={star}
+//                               // fractions={2}
+//                               // emptyRate={
+//                               //   <Icon
+//                               //     name="starEmpty"
+//                               //     height="24px"
+//                               //     width="24px"
+//                               //     stroke="var(--primary)"
+//                               //   />
+//                               // }
+//                               // fullRate={
+//                               //   <Icon
+//                               //     name="starFull"
+//                               //     height="24px"
+//                               //     width="24px"
+//                               //     stroke="var(--primary)"
+//                               //   />
+//                               // }
+//                             /> */
+// }
+// {
+//   /* <Rating
+//                               fractions={2}
+//                               readonly={true}
+//                               emptySymbol={
+//                                 <Icon
+//                                   name="starEmpty"
+//                                   height="24px"
+//                                   width="24px"
+//                                   stroke="var(--primary)"
+//                                 />
+//                               }
+//                               fullSymbol={
+//                                 <Icon
+//                                   name="starFull"
+//                                   height="24px"
+//                                   width="24px"
+//                                   stroke="var(--primary)"
+//                                 />
+//                               }
+//                               initialRating={star}
+//                             /> */
+// }
+
+// const MediaCard = styled(Grid)`
+//   position: relative;
+//   /* &:before {
+//     content: "";
+//     position: absolute;
+//     top: 0;
+//     bottom: 0;
+//     left: 0;
+//     right: 0;
+//     display: block;
+//     z-index: 1;
+//     ${props =>
+//       props.imgUrl &&
+//       `
+//       background-image: url(${props.imgUrl});
+//       filter: brightness(0.5)
+//     `}
+//   } */
+//   /* filter: "brightness(0.5)" */
+// `;
+
+// const MediaCover = styled(Grid)`
+//   padding-top: 10rem;
+//   ${props =>
+//     props.imgUrl &&
+//     `
+//       background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${props.imgUrl}) top center no-repeat;
+//       background-size: cover;
+//     `} /* &::before {
+//     content: "";
+//     display: block;
+//     position: absolute;
+//     background-color: #000;
+//     opacity: 0.5;
+//     width: 100%;
+//     height: 100%;
+//   } */
+// `;
+
+// const MediaListItem = styled(Grid)`
+//   ${props =>
+//     props.isActive &&
+//     `
+//     outline: ${props.theme.borders.primary};
+//     background-color: ${props.theme.bg.secondary}
+//   `} /* p={2}
+//                   mb={0}
+//                   bg={showInfo === list[movieID] && "gray"}
+//                   // border={showInfo === list[movieID] && "gray"}
+//                   style={{ outline: "1px solid gray" }} */
+// `;

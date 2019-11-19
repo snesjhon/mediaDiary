@@ -24,10 +24,6 @@ export interface BoxProps
     BorderProps,
     PositionProps {
   cursor?: string;
-}
-
-// This would be imported
-interface ThemeProps {
   color?:
     | "primary"
     | "secondary"
@@ -39,7 +35,20 @@ interface ThemeProps {
     | "border-secondary";
 }
 
-const Box = styled.div<BoxProps & ThemeProps>`
+// This would be imported
+// interface ThemeProps {
+//   color?:
+//     | "primary"
+//     | "secondary"
+//     | "orange"
+//     | "blue"
+//     | "bg-primary"
+//     | "bg-secondary"
+//     | "border-primary"
+//     | "border-secondary";
+// }
+
+const Box = styled.div<BoxProps>`
   ${system({
     cursor: {
       property: "cursor"
