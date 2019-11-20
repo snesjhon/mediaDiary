@@ -110,7 +110,12 @@ const MediaList = () => {
   }, []);
 
   if (listKeys.length > 0 && diaryKeys.length > 0) {
-    const diaryDates = diaryKeys.reduce<Record<string, Object>>((a, c) => {
+    type Dict = {
+      [key: string]: {
+        [key: string]: firebase.firestore.Timestamp;
+      };
+    };
+    const diaryDates = diaryKeys.reduce<Dict>((a, c) => {
       const month = new Date(diary[c].date.toDate()).toLocaleDateString(
         "en-us",
         {
