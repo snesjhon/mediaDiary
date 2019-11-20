@@ -23,9 +23,28 @@ const PosterImg = styled.img`
   border: 1px solid var(--border-secondary);
 `;
 
+interface MediaContainerProps {
+  mediaInfo: {
+    [key: string]: any;
+  };
+  mediaItem: {
+    [key: string]: any;
+  };
+  children(props: {
+    poster: string;
+    title: string;
+    date: Date;
+    overview: string;
+    artist: string;
+    star: number;
+    seen: boolean;
+    styleText: Object | undefined;
+  }): JSX.Element;
+}
+
 // I think it's efficient that you get a render prop with information that'll pass that down
 // into a function and not4se3o
-const MediaContainer = props => {
+const MediaContainer = (props: MediaContainerProps) => {
   const { mediaInfo: media, mediaItem: item } = props;
 
   let poster, title, date, overview, artist, styleText;
@@ -74,7 +93,7 @@ const MediaContainer = props => {
 
 const MediaList = () => {
   // const { state, dispatch } = useContext(Store);
-  const [list, setList] = useState({});
+  const [list, setList] = useState();
   const [diary, setDiary] = useState();
   // const [showInfo, setShowInfo] = useState([]);
   // const [offTop, setOffTop] = useState();
@@ -84,8 +103,6 @@ const MediaList = () => {
   //   setRating(value);
   // };
 
-  const listKeys = Object.keys(list);
-  const diaryKeys = Object.keys(diary);
   // const mediaDate = showInfo[0];
   // const mediaItem = showInfo[1];
   // const mediaInfo = showInfo[2];
@@ -109,13 +126,11 @@ const MediaList = () => {
       });
   }, []);
 
-  if (listKeys.length > 0 && diaryKeys.length > 0) {
-    type Dict = {
-      [key: string]: {
-        [key: string]: firebase.firestore.Timestamp;
-      };
-    };
-    const diaryDates = diaryKeys.reduce<Dict>((a, c) => {
+  if (typeof list !== "undefined" && typeof diary !== "undefined") {
+    const diaryKeys = Object.keys(diary);
+    const diaryDates = diaryKeys.reduce<{
+      [key: string]: { [key: string]: any };
+    }>((a, c) => {
       const month = new Date(diary[c].date.toDate()).toLocaleDateString(
         "en-us",
         {

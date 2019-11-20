@@ -25,6 +25,7 @@ export interface BoxProps
     PositionProps {
   cursor?: string;
   color?:
+    | string
     | "primary"
     | "secondary"
     | "orange"

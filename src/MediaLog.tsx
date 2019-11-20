@@ -1,15 +1,40 @@
-import React, { useState, useEffect } from "react";
+import * as React from "react";
+import { useState, useEffect } from "react";
 import { Box, Grid, Text, Button, Flex, Icon } from "./components";
 import styled from "styled-components";
 import DatePicker from "react-date-picker";
-import ReactStars from "react-stars";
 import { addMedia } from "./config/actions";
+import { MediaTypes } from "./types";
+// @ts-ignore
+import ReactStars from "react-stars";
 
 const PosterImg = styled.img`
   box-shadow: 0 1px 5px rgba(20, 24, 28, 0.2), 0 2px 10px rgba(20, 24, 28, 0.35);
 `;
 
-const MediaContainer = props => {
+// export interface MediaTypes {
+//   type: "film" | "tv" | "album";
+// }
+
+interface MediaContainerProps extends MediaTypes {
+  selected: {
+    [key: string]: any;
+  };
+  info: {
+    [key: string]: any;
+  };
+  children(props: {
+    poster: string;
+    title: string;
+    published: Date;
+    overview: string;
+    artist: string;
+    watched: string | undefined;
+    seasons: Object | undefined;
+  }): JSX.Element;
+}
+
+const MediaContainer = (props: MediaContainerProps) => {
   const { selected, type, info } = props;
   let poster, title, published, overview, artist, watched, seasons;
   if (type === "film") {
@@ -43,13 +68,19 @@ const MediaContainer = props => {
   });
 };
 
-const MediaLog = props => {
+interface MediaLog extends MediaTypes {
+  selected: any; // based on the response
+  setSelected: React.Dispatch<React.SetStateAction<Object>>;
+  setType: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const MediaLog = (props: MediaLog) => {
   const { selected, setSelected, setType, type } = props;
   const [date, setDate] = useState(new Date());
   const [seen, setSeen] = useState(false);
   const [star, setStar] = useState(0);
-  const [info, setInfo] = useState({});
-  const [season, setSeason] = useState({});
+  const [info, setInfo] = useState();
+  const [season, setSeason] = useState();
   const [loading, setLoading] = useState(type === "tv" ? true : false);
 
   useEffect(() => {
@@ -83,7 +114,7 @@ const MediaLog = props => {
                 </Text>
                 <Text mt={3} fontSize={4} alignItems="center">
                   {title}
-                  <Text as="span" fontWeight="300" fontSize={3} ml={1}>
+                  <Text as="span" fontWeight={300} fontSize={3} ml={1}>
                     (
                     {new Date(published).toLocaleDateString("en-us", {
                       year: "numeric"
@@ -98,13 +129,13 @@ const MediaLog = props => {
                       onChange={e =>
                         setSeason(
                           info.seasons.find(
-                            u => u.id === parseInt(e.target.value)
+                            (u: any) => u.id === parseInt(e.target.value)
                           )
                         )
                       }
                     >
-                      {info.seasons.map((e, i) => (
-                        <option key={e.name + i} value={e.id}>
+                      {info.seasons.map((e: any) => (
+                        <option key={e.name} value={e.id}>
                           {e.name}
                         </option>
                       ))}
@@ -115,7 +146,10 @@ const MediaLog = props => {
                   <Text mr={2} pb={0} color="secondary">
                     On
                   </Text>
-                  <DatePicker onChange={date => setDate(date)} value={date} />
+                  <DatePicker
+                    onChange={(date: Date) => setDate(date)}
+                    value={date}
+                  />
                 </Flex>
                 <Flex mt={3} pt={2}>
                   <Text mr={2} pb={0} color="secondary">
@@ -126,13 +160,13 @@ const MediaLog = props => {
                     half
                     value={star}
                     size={20}
-                    onChange={e => setStar(e)}
+                    onChange={(e: any) => setStar(e)}
                     color1="var(--secondary)"
                     color2="var(--primary)"
                   />
                 </Flex>
                 <Flex mt={3} alignItems="center">
-                  <Text color="var(--secondary)" mr={3}>
+                  <Text color="econdary" mr={3}>
                     {watched} Before?
                   </Text>
                   <Icon

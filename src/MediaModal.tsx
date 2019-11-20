@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import * as React from "react";
+import { useState } from "react";
 import { Box, Modal, Flex, Button, Dropdown, Icon } from "./components";
 import MediaSearch from "./MediaSearch";
 import MediaLog from "./MediaLog";
+import { MediaTypes } from "./types";
 
 const MediaModal = () => {
   const [selected, setSelected] = useState({});
   const [showDropdown, setShowDropdown] = useState(false);
-  const [type, setType] = useState("");
+  const [type, setType] = useState<MediaTypes["type"]>("");
   const isOpen = type !== "";
 
-  const selectType = type => {
+  type TypeProps = "tv" | "film" | "album";
+  const selectType = (type: TypeProps) => {
     setShowDropdown(false);
     setType(type);
   };
