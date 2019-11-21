@@ -3,13 +3,18 @@
  * ---
  * We have a simple way of searching throughout three types of media. Using the API keys from each
  * respecitve service we can then get that
+ *
+ * Resources
+ * - https://medium.com/@martin_hotell/react-refs-with-typescript-a32d56c4d315
  */
-
-import React, { useState, useEffect, createRef } from "react";
-import { Box, Icon, Flex, Text, Checkbox, Input } from "./components";
+import * as React from "react";
+import { useState, useEffect, createRef } from "react";
+import { Box, Flex, Text } from "./components";
+import Input, { InputRef } from "./components/Input";
 import styled from "styled-components";
-import { addMedia, addMediaLog } from "./config/actions";
 import useDebounce from "./hooks/useDebounce";
+import { MediaTypes } from "./types";
+// import { addMedia, addMediaLog } from "./config/actions";
 
 const MediaResults = styled(Box)`
   max-height: 32vh;
@@ -21,7 +26,12 @@ const MediaResults = styled(Box)`
   }
 `;
 
-const MediaSearchList = props => {
+interface MediaSearchList extends MediaTypes {
+  item: any;
+  children(props: { name: string; artist: string; date: Date }): JSX.Element;
+}
+
+const MediaSearchList = (props: MediaSearchList) => {
   const { type, item } = props;
   let name;
   let artist;
@@ -48,23 +58,25 @@ const MediaSearchList = props => {
   });
 };
 
-const MediaSearch = props => {
+interface MediaSearch extends MediaTypes {
+  setSelected: React.Dispatch<React.SetStateAction<Object>>;
+  setType: React.Dispatch<React.SetStateAction<MediaTypes["type"]>>;
+}
+
+const MediaSearch = (props: MediaSearch) => {
   const { setSelected, type } = props;
   const [searchInput, setSearchInput] = useState("");
   const [mediaResult, setMediaResult] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const bouncedSearch = useDebounce(searchInput, 500);
-  const InputRef = createRef();
+  const InputRef = createRef<InputRef>();
 
-  // We can simply use a promise here because if we wanted to turn this into a
-  // async func we'd have to create it outside of the current flow and then
-  // maybe use useCallback(?) here. But I just want to do it inline.
   useEffect(() => {
     if (bouncedSearch) {
       setIsSearching(true);
       handleFetch(type, encodeURIComponent(bouncedSearch))
-        .then(r => r.json())
-        .then(res => {
+        .then((r: Response) => r.json())
+        .then((res: any) => {
           setIsSearching(false);
           setMediaResult(
             type !== "album" ? res.results : res.results.albummatches.album
@@ -86,10 +98,10 @@ const MediaSearch = props => {
       <Box>
         <Flex alignItems="center" justifyContent="space-between" mb={2}>
           <Flex>
-            <Text fontSize={4} fontWeight="600">
+            <Text fontSize={4} fontWeight={600}>
               Media Search
             </Text>
-            <Text as="span" fontSize={4} ml={2} fontWeight="300">
+            <Text as="span" fontSize={4} ml={2} fontWeight={300}>
               /
             </Text>
             <Text as="span" fontSize={4} ml={2} color="orange">
@@ -143,8 +155,8 @@ const MediaSearch = props => {
   );
 
   // Will return promise with appropriate film information
-  function handleFetch(searchType, search) {
-    let URL;
+  function handleFetch(searchType: MediaTypes["type"], search: string) {
+    let URL = "";
     if (searchType === "film") {
       URL = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.REACT_APP_MDB}&language=en-US&query=${search}&page=1&include_adult=false`;
     } else if (searchType === "tv") {

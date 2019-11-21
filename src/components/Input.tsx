@@ -1,4 +1,14 @@
-import React, { forwardRef } from "react";
+/**
+ * INPUT COMPONENT
+ * ---
+ * A simple input component
+ *
+ * Resources
+ * - https://medium.com/@martin_hotell/react-refs-with-typescript-a32d56c4d315
+ */
+
+import * as React from "react";
+import { forwardRef } from "react";
 import Box from "./Box";
 import styled from "styled-components";
 
@@ -13,7 +23,15 @@ const InputWrapper = styled(Box)`
   outline: none;
 `;
 
-const Input = forwardRef((props, ref) => (
+type InputProps = {
+  type?: string;
+  placeholder?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
+export type InputRef = HTMLInputElement;
+
+const Input = forwardRef<InputRef, InputProps>((props, ref) => (
   <InputWrapper
     ref={ref}
     as="input"
