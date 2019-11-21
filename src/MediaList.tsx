@@ -14,7 +14,7 @@ const MediaMonth = styled(Box)`
   & > .monthContainer:hover {
     & .day {
       cursor: pointer;
-      color: ${props => props.theme.colors.blue};
+      color: ${props => props.theme.colors["bg-primary"]};
     }
   }
 `;

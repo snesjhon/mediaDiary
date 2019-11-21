@@ -36,19 +36,6 @@ export interface BoxProps
     | "border-secondary";
 }
 
-// This would be imported
-// interface ThemeProps {
-//   color?:
-//     | "primary"
-//     | "secondary"
-//     | "orange"
-//     | "blue"
-//     | "bg-primary"
-//     | "bg-secondary"
-//     | "border-primary"
-//     | "border-secondary";
-// }
-
 const Box = styled.div<BoxProps>`
   ${system({
     cursor: {

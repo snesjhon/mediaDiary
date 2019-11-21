@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Box, Grid, Text, Button, Flex, Icon } from "./components";
 import styled from "styled-components";
 import DatePicker from "react-date-picker";
-import { addMedia } from "./config/actions";
+import { addTv, addFilm, addAlbum } from "./config/actions";
 import { MediaTypes } from "./types";
 // @ts-ignore
 import ReactStars from "react-stars";

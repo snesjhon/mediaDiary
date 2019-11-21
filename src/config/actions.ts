@@ -7,58 +7,70 @@
  * components. Saving us the need of having redux as a dependency.
  */
 import { db } from "./db";
+import { MediaTypes } from "../types";
 
 export const ADD_MEDIA = "ADD_MEDIA";
 
-export const addMedia = (
-  media,
-  type,
-  date,
-  star,
-  seen,
-  info = {},
-  season = {}
+export const addTv = (
+  media: any,
+  date: Date,
+  star: number,
+  seen: Boolean,
+  info: any,
+  season: any
 ) => {
-  if (type === "film") {
-    return fetch(
-      `https://api.themoviedb.org/3/movie/${media.id}/credits?api_key=${process.env.REACT_APP_MDB}`
-    )
-      .then(r => r.json())
-      .then(credits => {
-        const filmMedia = {
-          ...media,
-          director: credits.crew.find(e => e.job === "Director").name
-        };
-        return addMediaToFB(filmMedia, type, date, star, seen);
-      });
-  } else if (type === "tv") {
-    // console.log(media, info, season);
-    const tvMedia = {
-      ...media,
-      creator: info.created_by.map(e => e.name).join(", "),
-      season
-    };
-
-    return addMediaToFB(tvMedia, type, date, star, seen, info, season);
-  } else {
-    return fetch(
-      `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${
-        process.env.REACT_APP_LASTFM
-      }${
-        media.mbid !== ""
-          ? `&mbid=${media.mbid}`
-          : `&artist=${media.artist}&album=${media.name}`
-      }&format=json`
-    )
-      .then(r => r.json())
-      .then(info => {
-        return addMediaToFB(info.album, type, date, star, seen);
-      });
-  }
+  const tvMedia = {
+    ...media,
+    creator: info.created_by.map((e: any) => e.name).join(", "),
+    season
+  };
+  return addMediaToFB(tvMedia, "tv", date, star, seen);
 };
 
-const addMediaToFB = (media, type, date, star, seen) => {
-  let movieID;
+export const addFilm = async (
+  media: any,
+  date: Date,
+  star: number,
+  seen: Boolean
+) => {
+  const r = await fetch(
+    `https://api.themoviedb.org/3/movie/${media.id}/credits?api_key=${process.env.REACT_APP_MDB}`
+  );
+  const credits = await r.json();
+  const filmMedia = {
+    ...media,
+    director: credits.crew.find((e: any) => e.job === "Director").name
+  };
+  return addMediaToFB(filmMedia, "film", date, star, seen);
+};
+
+export const addAlbum = async (
+  media: any,
+  date: Date,
+  star: number,
+  seen: Boolean
+) => {
+  const r = await fetch(
+    `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${
+      process.env.REACT_APP_LASTFM
+    }${
+      media.mbid !== ""
+        ? `&mbid=${media.mbid}`
+        : `&artist=${media.artist}&album=${media.name}`
+    }&format=json`
+  );
+  const info = await r.json();
+  return addMediaToFB(info.album, "album", date, star, seen);
+};
+
+const addMediaToFB = (
+  media: any,
+  type: MediaTypes["type"],
+  date: Date,
+  star: number,
+  seen: Boolean
+) => {
+  let movieID: string;
   if (type === "tv" || type === "film") {
     movieID = media.id.toString();
   } else {
@@ -97,7 +109,7 @@ const addMediaToFB = (media, type, date, star, seen) => {
         });
       }
 
-      transaction.update(moviesByDate, {
+      return transaction.update(moviesByDate, {
         [new Date().getTime()]: {
           id: `${type}_${movieID}`,
           dateAdded: new Date(),
