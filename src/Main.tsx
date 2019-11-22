@@ -7,27 +7,31 @@
  *
  */
 import * as React from "react";
-import { useState, useEffect } from "react";
+// import { useContext } from "react";
+// import { Store } from "./config/store";
+// import { useState, useEffect } from "react";
 import { hot } from "react-hot-loader/root";
 import { Box, Text, Flex } from "./components";
 import MediaList from "./MediaList";
-import MediaModal from "./MediaModal";
-import Auth from "./config/auth";
-import * as firebase from "firebase/app";
-import "firebase/auth";
+// import { useStoreState } from 'easy-peasy';
+import { useStoreState } from "./config/store";
+import Navigation from "./Navigation";
+// import MediaModal from "./MediaModal";
+// import Auth from "./config/auth";
+// import { authUser } from "./config/actions";
 
 const App = () => {
-  document.documentElement.setAttribute("data-theme", "light");
-  const [currentUser, setCurrentUser] = useState();
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        setCurrentUser(user);
-      } else {
-        console.log("user not log");
-      }
-    });
-  }, []);
+  const theme = useStoreState(state => state.global.theme);
+  document.documentElement.setAttribute("data-theme", theme);
+
+  // console.log(theme);
+
+  // const { state, dispatch } = useContext(Store);
+  // console.log(state, dispatch);
+  // const [currentUser, setCurrentUser] = useState();
+  // useEffect(() => {
+  //   // authUser();
+  // }, []);
 
   return (
     <Box
@@ -52,7 +56,8 @@ const App = () => {
             2019
           </Text>
         </Flex>
-        <Box>{currentUser ? <MediaModal /> : <Auth />}</Box>
+        <Navigation />
+        {/* <Box>{currentUser ? <MediaModal /> : <Auth />}</Box> */}
       </Flex>
 
       <Box my={2} borderTop="1px solid #d1d5da" />

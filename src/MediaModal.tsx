@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Box, Modal, Flex, Button, Dropdown, Icon } from "./components";
 import MediaSearch from "./MediaSearch";
 import MediaLog from "./MediaLog";
-import { MediaTypes } from "./types";
+import { MediaTypes } from "./config/types";
 
 const MediaModal = () => {
   const [selected, setSelected] = useState({});

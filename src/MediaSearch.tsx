@@ -13,7 +13,7 @@ import { Box, Flex, Text } from "./components";
 import Input, { InputRef } from "./components/Input";
 import styled from "styled-components";
 import useDebounce from "./hooks/useDebounce";
-import { MediaTypes } from "./types";
+import { MediaTypes } from "./config/types";
 // import { addMedia, addMediaLog } from "./config/actions";
 
 const MediaResults = styled(Box)`

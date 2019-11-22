@@ -11,7 +11,8 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { myTheme } from "./config/theme";
 import { ThemeProvider } from "styled-components";
-import { StoreProvider } from "./config/store";
+import { StoreProvider } from "easy-peasy";
+import { store } from "./config/store";
 import Main from "./Main";
 
 import "./styles/reset.css";
@@ -19,7 +20,7 @@ import "./styles/github.css";
 import "./styles/global.css";
 
 ReactDOM.render(
-  <StoreProvider>
+  <StoreProvider store={store}>
     <ThemeProvider theme={myTheme}>
       <Main />
     </ThemeProvider>

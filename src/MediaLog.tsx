@@ -3,18 +3,14 @@ import { useState, useEffect } from "react";
 import { Box, Grid, Text, Button, Flex, Icon } from "./components";
 import styled from "styled-components";
 import DatePicker from "react-date-picker";
-import { addTv, addFilm, addAlbum } from "./config/actions";
-import { MediaTypes } from "./types";
+// import { addTv, addFilm, addAlbum } from "./config/actions";
+import { MediaTypes } from "./config/types";
 // @ts-ignore
 import ReactStars from "react-stars";
 
 const PosterImg = styled.img`
   box-shadow: 0 1px 5px rgba(20, 24, 28, 0.2), 0 2px 10px rgba(20, 24, 28, 0.35);
 `;
-
-// export interface MediaTypes {
-//   type: "film" | "tv" | "album";
-// }
 
 interface MediaContainerProps extends MediaTypes {
   selected: {
@@ -123,24 +119,25 @@ const MediaLog = (props: MediaLog) => {
                   </Text>
                 </Text>
                 <Flex mt={3} alignItems="center">
-                  {typeof info.seasons !== "undefined" && (
-                    <select
-                      value={season.id}
-                      onChange={e =>
-                        setSeason(
-                          info.seasons.find(
-                            (u: any) => u.id === parseInt(e.target.value)
+                  {typeof info !== "undefined" &&
+                    typeof info.seasons !== "undefined" && (
+                      <select
+                        value={season.id}
+                        onChange={e =>
+                          setSeason(
+                            info.seasons.find(
+                              (u: any) => u.id === parseInt(e.target.value)
+                            )
                           )
-                        )
-                      }
-                    >
-                      {info.seasons.map((e: any) => (
-                        <option key={e.name} value={e.id}>
-                          {e.name}
-                        </option>
-                      ))}
-                    </select>
-                  )}
+                        }
+                      >
+                        {info.seasons.map((e: any) => (
+                          <option key={e.name} value={e.id}>
+                            {e.name}
+                          </option>
+                        ))}
+                      </select>
+                    )}
                 </Flex>
                 <Flex mt={4} alignItems="center">
                   <Text mr={2} pb={0} color="secondary">
@@ -190,17 +187,15 @@ const MediaLog = (props: MediaLog) => {
                   <Button
                     variant="primary"
                     onClick={() => {
+                      // if (type === "film") {
+                      //   addFilm(selected, date, star, seen);
+                      // } else if (type === "tv") {
+                      //   addTv(selected, date, star, seen, info, season);
+                      // } else {
+                      //   addAlbum(selected, date, star, seen);
+                      // }
                       setType("");
                       setSelected({});
-                      return addMedia(
-                        selected,
-                        type,
-                        date,
-                        star,
-                        seen,
-                        info,
-                        season
-                      );
                     }}
                   >
                     Save

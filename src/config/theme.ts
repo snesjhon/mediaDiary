@@ -1,6 +1,7 @@
 import { DefaultTheme } from "styled-components";
+import { Style } from "./types";
 
-const myTheme: DefaultTheme = {
+const myTheme: DefaultTheme & Style = {
   colors: {
     primary: "var(--primary)",
     secondary: "var(--secondary)",
