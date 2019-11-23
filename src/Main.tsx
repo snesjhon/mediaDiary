@@ -23,16 +23,6 @@ import Navigation from "./Navigation";
 const App = () => {
   const theme = useStoreState(state => state.global.theme);
   document.documentElement.setAttribute("data-theme", theme);
-
-  // console.log(theme);
-
-  // const { state, dispatch } = useContext(Store);
-  // console.log(state, dispatch);
-  // const [currentUser, setCurrentUser] = useState();
-  // useEffect(() => {
-  //   // authUser();
-  // }, []);
-
   return (
     <Box
       id="main"
@@ -87,3 +77,12 @@ const App = () => {
   );
 };
 export default hot(App);
+
+// console.log(theme);
+
+// const { state, dispatch } = useContext(Store);
+// console.log(state, dispatch);
+// const [currentUser, setCurrentUser] = useState();
+// useEffect(() => {
+//   // authUser();
+// }, []);
