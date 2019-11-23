@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import { Grid, Flex, Text, Box, Icon } from "./components";
 import styled from "styled-components";
 import { db } from "./config/db";
+import { useStoreState } from "./config/store";
 // import { Store } from "./config/store";
 // @ts-ignore
 import ReactStars from "react-stars";
@@ -95,17 +96,8 @@ const MediaList = () => {
   // const { state, dispatch } = useContext(Store);
   const [list, setList] = useState();
   const [diary, setDiary] = useState();
-  // const [showInfo, setShowInfo] = useState([]);
-  // const [offTop, setOffTop] = useState();
-  // const [rating, setRating] = useState(null);
 
-  // const onChange = value => {
-  //   setRating(value);
-  // };
-
-  // const mediaDate = showInfo[0];
-  // const mediaItem = showInfo[1];
-  // const mediaInfo = showInfo[2];
+  const user = useStoreState(state => state.global.user);
 
   useEffect(() => {
     db.collection("media")
@@ -124,7 +116,7 @@ const MediaList = () => {
           setDiary(currentDiary);
         }
       });
-  }, []);
+  }, [user]);
 
   if (typeof list !== "undefined" && typeof diary !== "undefined") {
     const diaryKeys = Object.keys(diary);
@@ -259,6 +251,17 @@ const MediaList = () => {
 
 export default MediaList;
 
+// const [showInfo, setShowInfo] = useState([]);
+// const [offTop, setOffTop] = useState();
+// const [rating, setRating] = useState(null);
+
+// const onChange = value => {
+//   setRating(value);
+// };
+
+// const mediaDate = showInfo[0];
+// const mediaItem = showInfo[1];
+// const mediaInfo = showInfo[2];
 //   {diaryKeys
 //     .sort((a, b) => new Date(b) - new Date(a))
 //     .reduce((a, c) => {
