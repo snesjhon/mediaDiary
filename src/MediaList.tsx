@@ -99,154 +99,157 @@ const MediaList = () => {
 
   const user = useStoreState(state => state.global.user);
 
-  useEffect(() => {
-    db.collection("media")
-      .doc("byID")
-      .onSnapshot(function(doc) {
-        const currentList = doc.data();
-        if (currentList) {
-          setList(currentList);
-        }
-      });
-    db.collection("media")
-      .doc("byDate")
-      .onSnapshot(function(doc) {
-        const currentDiary = doc.data();
-        if (currentDiary) {
-          setDiary(currentDiary);
-        }
-      });
-  }, [user]);
+  console.log(user);
 
-  if (typeof list !== "undefined" && typeof diary !== "undefined") {
-    const diaryKeys = Object.keys(diary);
-    const diaryDates = diaryKeys.reduce<{
-      [key: string]: { [key: string]: any };
-    }>((a, c) => {
-      const month = new Date(diary[c].date.toDate()).toLocaleDateString(
-        "en-us",
-        {
-          month: "numeric"
-        }
-      );
-      a[month] = Object.assign({ ...a[month] }, { [c]: diary[c] });
-      return a;
-    }, {});
-    const gridLayout = "5rem 4rem 3rem 18rem 10rem 4rem 6rem 8rem 5rem";
-    const gridGap = "0 1.5rem";
+  return <div>sd</div>;
+  // useEffect(() => {
+  //   db.collection("media")
+  //     .doc("byID")
+  //     .onSnapshot(function(doc) {
+  //       const currentList = doc.data();
+  //       if (currentList) {
+  //         setList(currentList);
+  //       }
+  //     });
+  //   db.collection("media")
+  //     .doc("byDate")
+  //     .onSnapshot(function(doc) {
+  //       const currentDiary = doc.data();
+  //       if (currentDiary) {
+  //         setDiary(currentDiary);
+  //       }
+  //     });
+  // }, [user]);
 
-    return (
-      <>
-        <Grid
-          gridTemplateColumns={gridLayout}
-          gridGap={gridGap}
-          alignItems="center"
-          borderBottom="1px solid"
-          borderColor="border-secondary"
-          fontSize={0}
-          color="secondary"
-          style={{ textTransform: "uppercase" }}
-        >
-          <Text>Month</Text>
-          <Text>Day</Text>
-          <Text>Poster</Text>
-          <Text>Title</Text>
-          <Text>Artist</Text>
-          <Text>Released</Text>
-          <Text>Rating</Text>
-          <Text>Rewatch</Text>
-        </Grid>
-        {Object.keys(diaryDates)
-          .reverse()
-          .map((month, monthIndex) => (
-            <MediaMonth key={monthIndex} pb={3}>
-              {Object.keys(diaryDates[month])
-                .sort(
-                  (a, b) =>
-                    diaryDates[month][b].date.seconds -
-                    diaryDates[month][a].date.seconds
-                )
-                .map((day, dayIndex) => (
-                  <Grid
-                    className="monthContainer"
-                    key={monthIndex + dayIndex}
-                    gridTemplateColumns={gridLayout}
-                    gridGap={gridGap}
-                    py={3}
-                    alignItems="center"
-                  >
-                    {dayIndex === 0 ? (
-                      <Text
-                        className="monthDate"
-                        fontSize={4}
-                        color="secondary"
-                      >
-                        {new Date(
-                          diaryDates[month][day].date.toDate()
-                        ).toLocaleDateString("en-us", {
-                          month: "short"
-                        })}
-                      </Text>
-                    ) : (
-                      <div />
-                    )}
-                    <Text fontSize={3} fontWeight={300}>
-                      {new Date(
-                        diaryDates[month][day].date.toDate()
-                      ).toLocaleDateString("en-us", {
-                        day: "numeric"
-                      })}
-                    </Text>
-                    <MediaContainer
-                      mediaInfo={list[diaryDates[month][day].id]}
-                      mediaItem={diaryDates[month][day]}
-                    >
-                      {({
-                        poster,
-                        title,
-                        date,
-                        styleText,
-                        artist,
-                        star,
-                        seen
-                      }) => (
-                        <>
-                          <Flex>
-                            <PosterImg src={poster} />
-                          </Flex>
-                          <Text {...styleText}>{title}</Text>
-                          <Box>{artist ? artist : "none"}</Box>
-                          <Box>
-                            {date
-                              ? new Date(date).toLocaleDateString("en-US", {
-                                  year: "numeric"
-                                })
-                              : "date"}
-                          </Box>
-                          <Box>
-                            <ReactStars
-                              count={5}
-                              half
-                              value={star}
-                              edit={false}
-                              size={16}
-                              color1="var(--secondary)"
-                              color2="var(--primary)"
-                            />
-                          </Box>
-                          <Box>{seen ? "seen" : "not seen"}</Box>
-                        </>
-                      )}
-                    </MediaContainer>
-                  </Grid>
-                ))}
-            </MediaMonth>
-          ))}
-      </>
-    );
-  } else {
-    return <div>loading</div>;
-  }
+  // if (typeof list !== "undefined" && typeof diary !== "undefined") {
+  //   const diaryKeys = Object.keys(diary);
+  //   const diaryDates = diaryKeys.reduce<{
+  //     [key: string]: { [key: string]: any };
+  //   }>((a, c) => {
+  //     const month = new Date(diary[c].date.toDate()).toLocaleDateString(
+  //       "en-us",
+  //       {
+  //         month: "numeric"
+  //       }
+  //     );
+  //     a[month] = Object.assign({ ...a[month] }, { [c]: diary[c] });
+  //     return a;
+  //   }, {});
+  //   const gridLayout = "5rem 4rem 3rem 18rem 10rem 4rem 6rem 8rem 5rem";
+  //   const gridGap = "0 1.5rem";
+
+  //   return (
+  //     <>
+  //       <Grid
+  //         gridTemplateColumns={gridLayout}
+  //         gridGap={gridGap}
+  //         alignItems="center"
+  //         borderBottom="1px solid"
+  //         borderColor="border-secondary"
+  //         fontSize={0}
+  //         color="secondary"
+  //         style={{ textTransform: "uppercase" }}
+  //       >
+  //         <Text>Month</Text>
+  //         <Text>Day</Text>
+  //         <Text>Poster</Text>
+  //         <Text>Title</Text>
+  //         <Text>Artist</Text>
+  //         <Text>Released</Text>
+  //         <Text>Rating</Text>
+  //         <Text>Rewatch</Text>
+  //       </Grid>
+  //       {Object.keys(diaryDates)
+  //         .reverse()
+  //         .map((month, monthIndex) => (
+  //           <MediaMonth key={monthIndex} pb={3}>
+  //             {Object.keys(diaryDates[month])
+  //               .sort(
+  //                 (a, b) =>
+  //                   diaryDates[month][b].date.seconds -
+  //                   diaryDates[month][a].date.seconds
+  //               )
+  //               .map((day, dayIndex) => (
+  //                 <Grid
+  //                   className="monthContainer"
+  //                   key={monthIndex + dayIndex}
+  //                   gridTemplateColumns={gridLayout}
+  //                   gridGap={gridGap}
+  //                   py={3}
+  //                   alignItems="center"
+  //                 >
+  //                   {dayIndex === 0 ? (
+  //                     <Text
+  //                       className="monthDate"
+  //                       fontSize={4}
+  //                       color="secondary"
+  //                     >
+  //                       {new Date(
+  //                         diaryDates[month][day].date.toDate()
+  //                       ).toLocaleDateString("en-us", {
+  //                         month: "short"
+  //                       })}
+  //                     </Text>
+  //                   ) : (
+  //                     <div />
+  //                   )}
+  //                   <Text fontSize={3} fontWeight={300}>
+  //                     {new Date(
+  //                       diaryDates[month][day].date.toDate()
+  //                     ).toLocaleDateString("en-us", {
+  //                       day: "numeric"
+  //                     })}
+  //                   </Text>
+  //                   <MediaContainer
+  //                     mediaInfo={list[diaryDates[month][day].id]}
+  //                     mediaItem={diaryDates[month][day]}
+  //                   >
+  //                     {({
+  //                       poster,
+  //                       title,
+  //                       date,
+  //                       styleText,
+  //                       artist,
+  //                       star,
+  //                       seen
+  //                     }) => (
+  //                       <>
+  //                         <Flex>
+  //                           <PosterImg src={poster} />
+  //                         </Flex>
+  //                         <Text {...styleText}>{title}</Text>
+  //                         <Box>{artist ? artist : "none"}</Box>
+  //                         <Box>
+  //                           {date
+  //                             ? new Date(date).toLocaleDateString("en-US", {
+  //                                 year: "numeric"
+  //                               })
+  //                             : "date"}
+  //                         </Box>
+  //                         <Box>
+  //                           <ReactStars
+  //                             count={5}
+  //                             half
+  //                             value={star}
+  //                             edit={false}
+  //                             size={16}
+  //                             color1="var(--secondary)"
+  //                             color2="var(--primary)"
+  //                           />
+  //                         </Box>
+  //                         <Box>{seen ? "seen" : "not seen"}</Box>
+  //                       </>
+  //                     )}
+  //                   </MediaContainer>
+  //                 </Grid>
+  //               ))}
+  //           </MediaMonth>
+  //         ))}
+  //     </>
+  //   );
+  // } else {
+  //   return <div>loading</div>;
+  // }
 };
 
 export default MediaList;
