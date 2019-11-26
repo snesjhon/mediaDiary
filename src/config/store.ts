@@ -1,5 +1,5 @@
 // https://easy-peasy.now.sh/docs/quick-start.html#create-the-store
-import { createStore, createTypedHooks } from "easy-peasy";
+import { createStore, createTypedHooks, persist } from "easy-peasy";
 import { global, Global } from "./storeGlobal";
 import { data, Data } from "./storeData";
 
@@ -8,10 +8,10 @@ interface StoreModel {
   data: Data;
 }
 
-const storeModel = {
+const storeModel = persist({
   global,
   data
-};
+});
 
 const typedHooks = createTypedHooks<StoreModel>();
 
