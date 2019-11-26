@@ -4,8 +4,8 @@ import "firebase/auth";
 
 export interface Global {
   theme: "light" | "dark";
-  user: firebase.auth.UserCredential["user"];
-  addUser: Action<Global, firebase.auth.UserCredential["user"]>;
+  user: firebase.User | null;
+  addUser: Action<Global, firebase.User | null>;
   verifyUser: Thunk<Global>;
 }
 

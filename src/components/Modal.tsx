@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
-import ReactDOM from "react-dom";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { useEffect } from "react";
 import styled from "styled-components";
 import Box from "./Box";
 
-const Overlay = styled(Box)`
+const Overlay = styled(({ isOpen, ...rest }) => <Box {...rest} />)`
   display: ${props => (props.isOpen ? "block" : "none")};
   position: fixed;
   top: 0;
@@ -15,7 +16,7 @@ const Overlay = styled(Box)`
   background-color: ${props => props.theme.colors["bg-primary"]};
 `;
 
-const Presentation = styled(Box)`
+const Presentation = styled(({ isOpen, ...rest }) => <Box {...rest} />)`
   display: ${props => (props.isOpen ? "flex" : "none")};
   flex-direction: ${props => (props.isOpen ? "column" : "")};
   position: fixed;
@@ -29,16 +30,27 @@ const Presentation = styled(Box)`
   box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.05);
 `;
 
-const Portal = props => {
+interface Portal {
+  children: React.ReactNode;
+}
+
+const Portal = (props: Portal) => {
   return ReactDOM.createPortal(props.children, document.body);
 };
 
-const Modal = props => {
-  const { children, isOpen, handleClose, ...rest } = props;
+interface Modal extends React.HTMLAttributes<HTMLElement> {
+  isOpen: Boolean;
+  handleClose: React.Dispatch<React.SetStateAction<boolean>>;
+  children: React.ReactNode;
+  extend?: number;
+}
 
+const Modal = ({ children, isOpen, handleClose, ...rest }: Modal) => {
   useEffect(() => {
     document.documentElement.style.overflow = "hidden";
-    return () => (document.documentElement.style.overflow = "");
+    return () => {
+      document.documentElement.style.overflow = "";
+    };
   });
 
   return (

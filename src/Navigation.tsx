@@ -1,26 +1,33 @@
-// const Navigation = () => {
-//   return (
-//     <>
-//       <Flex justifyContent="space-between" alignItems="center">
-//         <Flex>
-//           <Text fontSize={4} fontWeight={600}>
-//             Media Diary
-//           </Text>
-//           <Text as="span" fontSize={4} ml={2} fontWeight={300}>
-//             /
-//           </Text>
-//           <Text as="span" fontSize={4} ml={2} fontWeight={300} color="orange">
-//             2019
-//           </Text>
-//         </Flex>
-//         {/* <Navigation /> */}
-//         {/* <Box>{currentUser ? <MediaModal /> : <Auth />}</Box> */}
-//       </Flex>
+import * as React from "react";
+import { Flex, Text, Box } from "./components";
+import MediaModal from "./MediaModal";
+import User from "./User";
+const Navigation = (props: any) => {
+  const { user } = props;
+  return (
+    <>
+      <Flex justifyContent="space-between" alignItems="center">
+        <Flex>
+          <Text fontSize={4} fontWeight={600}>
+            Media Diary
+          </Text>
+          <Text as="span" fontSize={4} ml={2} fontWeight={300}>
+            /
+          </Text>
+          <Text as="span" fontSize={4} ml={2} fontWeight={300} color="orange">
+            2019
+          </Text>
+        </Flex>
+        {user && <MediaModal />}
+        <User user={user} />
+      </Flex>
 
-//       <Box my={2} borderTop="1px solid #d1d5da" />
-//     </>
-//   );
-// };
+      <Box my={2} borderTop="1px solid #d1d5da" />
+    </>
+  );
+};
+
+export default Navigation;
 
 // import * as React from "react";
 // import { useState, useCallback } from "react";

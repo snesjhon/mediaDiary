@@ -1,21 +1,23 @@
 import * as React from "react";
 import { useEffect } from "react";
-import { Box, Flex, Text } from "./components";
+import { Box } from "./components";
+import Media from "./Media";
+import About from "./About";
 import { fb } from "./config/db";
 import { useStoreActions, useStoreState } from "./config/store";
 import { hot } from "react-hot-loader/root";
+import Navigation from "./Navigation";
 
 const Main = () => {
+  const theme = useStoreState(state => state.global.theme);
+  document.documentElement.setAttribute("data-theme", theme);
   const user = useStoreState(state => state.global.user);
-  const verifyUser = useStoreActions(actions => actions.global.verifyUser);
   const addUser = useStoreActions(actions => actions.global.addUser);
 
   useEffect(() => {
-    fb.auth().onAuthStateChanged(function(user) {
-      if (user) {
+    fb.auth().onAuthStateChanged(function(userRes) {
+      if (userRes) {
         addUser(user);
-      } else {
-        verifyUser();
       }
     });
   }, [user]);
@@ -31,7 +33,8 @@ const Main = () => {
       border="1px solid #d1d5da"
       borderRadius="3px"
     >
-      {user ? <div>logged</div> : <div>information</div>}
+      <Navigation user={user} />
+      {user ? <Media /> : <About />}
     </Box>
   );
 };
@@ -65,8 +68,8 @@ export default hot(Main);
 // // import { authUser } from "./config/actions";
 
 // // const App = () => {
-// //   const theme = useStoreState(state => state.global.theme);
-// //   document.documentElement.setAttribute("data-theme", theme);
+// const theme = useStoreState(state => state.global.theme);
+// document.documentElement.setAttribute("data-theme", theme);
 
 // //   const user = useStoreState(state => state.global.user);
 // //   const verifyUser = useStoreActions(actions => actions.global.verifyUser);

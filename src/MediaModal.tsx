@@ -11,8 +11,7 @@ const MediaModal = () => {
   const [type, setType] = useState<MediaTypes["type"]>("");
   const isOpen = type !== "";
 
-  type TypeProps = "tv" | "film" | "album";
-  const selectType = (type: TypeProps) => {
+  const selectType = (type: MediaTypes["type"]) => {
     setShowDropdown(false);
     setType(type);
   };
