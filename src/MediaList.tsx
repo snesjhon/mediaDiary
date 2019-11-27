@@ -1,10 +1,8 @@
 import * as React from "react";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { Grid, Flex, Text, Box, Icon } from "./components";
 import styled from "styled-components";
-import { db } from "./config/db";
-import { useStoreState } from "./config/store";
-// import { Store } from "./config/store";
+import { useStoreState, useStoreActions } from "./config/store";
 // @ts-ignore
 import ReactStars from "react-stars";
 
@@ -44,7 +42,6 @@ interface MediaContainerProps {
 }
 
 // I think it's efficient that you get a render prop with information that'll pass that down
-// into a function and not4se3o
 const MediaContainer = (props: MediaContainerProps) => {
   const { mediaInfo: media, mediaItem: item } = props;
 
@@ -92,19 +89,20 @@ const MediaContainer = (props: MediaContainerProps) => {
   });
 };
 
-const MediaList = () => {
-  // const { state, dispatch } = useContext(Store);
-  const [list, setList] = useState();
-  const [diary, setDiary] = useState();
+interface MediaListProps {
+  user: firebase.User;
+}
 
-  const user = useStoreState(state => state.global.user);
+const MediaList = (props: MediaListProps) => {
+  const list = useStoreState(state => state.data.list);
+  const diary = useStoreState(state => state.data.diary);
+  const dataGet = useStoreActions(actions => actions.data.dataGet);
 
-  console.log(user);
-
-  return <div>sd</div>;
+  console.log(list, diary);
+  return <div onClick={() => dataGet()}>asd</div>;
   // useEffect(() => {
-  //   db.collection("media")
-  //     .doc("byID")
+  // db.collection("media")
+  //   .doc("byID")
   //     .onSnapshot(function(doc) {
   //       const currentList = doc.data();
   //       if (currentList) {

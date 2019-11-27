@@ -13,8 +13,8 @@ interface UserType {
 
 const User = ({ user }: UserType) => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const verifyUser = useStoreActions(actions => actions.global.verifyUser);
-  const logout = useStoreActions(actions => actions.global.logOut);
+  const userVerify = useStoreActions(actions => actions.global.userVerify);
+  const userLogout = useStoreActions(actions => actions.global.userLogout);
 
   return (
     <Box position="relative">
@@ -44,7 +44,12 @@ const User = ({ user }: UserType) => {
               />
               Profile
             </Flex>
-            <Flex py={2} px={3} alignItems="center" onClick={() => logout()}>
+            <Flex
+              py={2}
+              px={3}
+              alignItems="center"
+              onClick={() => userLogout()}
+            >
               <Icon
                 name="tv"
                 stroke="var(--primary)"
@@ -57,7 +62,7 @@ const User = ({ user }: UserType) => {
           </Dropdown>
         </>
       ) : (
-        <div onClick={() => verifyUser()}>login</div>
+        <div onClick={() => userVerify()}>login</div>
       )}
     </Box>
   );
