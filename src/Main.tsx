@@ -12,15 +12,6 @@ const Main = () => {
   const theme = useStoreState(state => state.global.theme);
   document.documentElement.setAttribute("data-theme", theme);
   const user = useStoreState(state => state.global.user);
-  const addUser = useStoreActions(actions => actions.global.addUser);
-
-  useEffect(() => {
-    fb.auth().onAuthStateChanged(function(userRes) {
-      if (userRes) {
-        addUser(user);
-      }
-    });
-  }, [user]);
 
   return (
     <Box

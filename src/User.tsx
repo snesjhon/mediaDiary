@@ -6,8 +6,6 @@ import * as React from "react";
 import { useState } from "react";
 import { Button, Dropdown, Flex, Icon, Box } from "./components";
 import { useStoreActions } from "./config/store";
-// import * as firebase from "firebase/app";
-// import "firebase/auth";
 
 interface UserType {
   user: firebase.User;
@@ -16,6 +14,7 @@ interface UserType {
 const User = ({ user }: UserType) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const verifyUser = useStoreActions(actions => actions.global.verifyUser);
+  const logout = useStoreActions(actions => actions.global.logOut);
 
   return (
     <Box position="relative">
@@ -45,7 +44,7 @@ const User = ({ user }: UserType) => {
               />
               Profile
             </Flex>
-            <Flex py={2} px={3} alignItems="center">
+            <Flex py={2} px={3} alignItems="center" onClick={() => logout()}>
               <Icon
                 name="tv"
                 stroke="var(--primary)"

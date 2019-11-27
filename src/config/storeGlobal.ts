@@ -1,13 +1,17 @@
 import { Action, action, Thunk, thunk } from "easy-peasy";
 import * as firebase from "firebase/app";
 import "firebase/auth";
+import { fb } from "./db";
 
 export interface Global {
   theme: "light" | "dark";
   user: firebase.User | null;
   addUser: Action<Global, firebase.User | null>;
   verifyUser: Thunk<Global>;
+  logOut: Thunk<Global>;
 }
+
+const provider = new firebase.auth.GoogleAuthProvider();
 
 export const global: Global = {
   theme: "light",
@@ -15,8 +19,15 @@ export const global: Global = {
   addUser: action((state, payload) => {
     state.user = payload;
   }),
+  logOut: thunk(async actions => {
+    fb.auth()
+      .signOut()
+      .then(function() {
+        actions.addUser(null);
+      })
+      .catch(function(error) {});
+  }),
   verifyUser: thunk(async actions => {
-    const provider = new firebase.auth.GoogleAuthProvider();
     const result = await firebase.auth().signInWithPopup(provider);
     actions.addUser(result.user);
   })
