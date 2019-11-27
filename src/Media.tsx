@@ -34,5 +34,3 @@ const Media = (props: MediaProps) => {
 };
 
 export default Media;
-
-// {/* <MediaList /> */}

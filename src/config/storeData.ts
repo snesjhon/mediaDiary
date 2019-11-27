@@ -1,32 +1,34 @@
 import { Thunk, thunk, action, Action } from "easy-peasy";
 import { db } from "./db";
 
-export interface Data {
-  list: [];
-  diary: [];
-  dataSet: Action<Data, any>;
-  dataGet: Thunk<Data, any>;
+interface DataSet {
+  byID: firebase.firestore.DocumentData | undefined;
+  byDate: firebase.firestore.DocumentData | undefined;
+}
+
+export interface Data extends DataSet {
+  dataSet: Action<Data, DataSet>;
+  dataGet: Thunk<Data>;
+  dataPut: Thunk<Data>;
 }
 
 export const data: Data = {
-  list: [],
-  diary: [],
+  byID: [],
+  byDate: [],
   dataSet: action((state, payload) => {
-    state.list = payload.list;
-    state.diary = payload.diary;
+    state.byID = payload.byID;
+    state.byDate = payload.byDate;
   }),
   dataGet: thunk(async actions => {
-    // db.collection("media")
-    // .doc("byID")
-    const list = await db
+    const byID = await db
       .collection("media")
       .doc("byID")
       .get();
-    const diary = await db
+    const byDate = await db
       .collection("media")
       .doc("byDate")
       .get();
-
-    actions.dataSet({ list: list.data(), diary: diary.data() });
-  })
+    actions.dataSet({ byID: byID.data(), byDate: byDate.data() });
+  }),
+  dataPut: thunk(async (actions, payload) => {})
 };

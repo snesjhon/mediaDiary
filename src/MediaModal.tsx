@@ -4,9 +4,11 @@ import { Box, Modal, Flex, Button, Dropdown, Icon } from "./components";
 import MediaSearch from "./MediaSearch";
 import MediaLog from "./MediaLog";
 import { MediaTypes } from "./config/types";
+import { useStoreActions, useStoreState } from "./config/store";
 
 const MediaModal = () => {
-  const [selected, setSelected] = useState({});
+  const mediaSelected = useStoreState(state => state.media.mediaSelected);
+  const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
   const [showDropdown, setShowDropdown] = useState(false);
   const [type, setType] = useState<MediaTypes["type"]>("");
   const isOpen = type !== "";
@@ -78,22 +80,13 @@ const MediaModal = () => {
           isOpen={isOpen}
           handleClose={() => {
             setType("");
-            setSelected({});
+            mediaSelect({});
           }}
         >
-          {Object.keys(selected).length > 0 ? (
-            <MediaLog
-              selected={selected}
-              type={type}
-              setType={setType}
-              setSelected={setSelected}
-            />
+          {Object.keys(mediaSelected).length > 0 ? (
+            <MediaLog type={type} setType={setType} />
           ) : (
-            <MediaSearch
-              setSelected={setSelected}
-              setType={setType}
-              type={type}
-            />
+            <MediaSearch type={type} />
           )}
         </Modal>
       )}

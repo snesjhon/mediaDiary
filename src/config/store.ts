@@ -2,15 +2,18 @@
 import { createStore, createTypedHooks, persist } from "easy-peasy";
 import { global, Global } from "./storeGlobal";
 import { data, Data } from "./storeData";
+import { media, Media } from "./storeMedia";
 
 interface StoreModel {
   global: Global;
   data: Data;
+  media: Media;
 }
 
 const storeModel = persist({
   global,
-  data
+  data,
+  media
 });
 
 const typedHooks = createTypedHooks<StoreModel>();
@@ -19,70 +22,6 @@ export const store = createStore(storeModel);
 export const useStoreActions = typedHooks.useStoreActions;
 export const useStoreDispatch = typedHooks.useStoreDispatch;
 export const useStoreState = typedHooks.useStoreState;
-
-// import * as React from "react";
-// import { createContext, useReducer } from "react";
-// import reducer from "./reducer";
-
-// interface IState {
-//   theme: "light" | "dark";
-//   list: [];
-//   diary: [];
-// }
-
-// const initialState: IState = {
-//   theme: "light",
-//   list: [],
-//   diary: []
-//   // state: {},
-//   // dispatch: () => {}
-// };
-
-// type Context = {
-//   state: ArticleSearchState;
-//   dispatch: React.Dispatch<React.ReducerAction>;
-// }
-// export const Store = createContext({} as Context);
-
-// interface StoreProvider {
-//   children(): JSX.Element;
-// }
-// export const StoreProvider = (props: StoreProvider) => {
-//   const [state, dispatch] = useReducer(reducer, initialState);
-//   const value = { state, dispatch };
-//   return <Store.Provider value={value}>{props.children}</Store.Provider>;
-// };
-
-// /**
-//  * ACTIONS
-//  * ---
-//  * We have a central way of dispatching actions throughout the app without having to start multiple
-//  * states. But also, we have the store be plugged into the context. That way anytime that we dispatch
-//  * something within the state it not only updates the current value, but also updates the "connected"
-//  * components. Saving us the need of having redux as a dependency.
-//  */
-// import { MBD_KEY, MDB_URL, FM_KEY } from "./constants";
-// import { db } from "./db";
-// import { MediaTypes } from "./types";
-// import * as firebase from "firebase/app";
-// import "firebase/auth";
-
-// export const ADD_MEDIA = "ADD_MEDIA";
-// export const AUTH_GET = "AUTH_GET";
-
-// // AUTH USER
-// export const authUser = (dispatch:React.Dispatch<ReducerAction<R>>) => {
-//   firebase.auth().onAuthStateChanged(user => {
-//     if (user) {
-//       dispatch({
-//         type: AUTH_GET,
-//         payload: user
-//       })
-//     } else {
-//       console.log("user not log");
-//     }
-//   });
-// };
 
 // // ADD MEDIA
 // export const addTv = (

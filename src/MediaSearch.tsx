@@ -14,6 +14,8 @@ import Input, { InputRef } from "./components/Input";
 import styled from "styled-components";
 import useDebounce from "./hooks/useDebounce";
 import { MediaTypes } from "./config/types";
+import { useStoreActions } from "./config/store";
+import { MediaSelected } from "./config/storeMedia";
 // import { addMedia, addMediaLog } from "./config/actions";
 
 const MediaResults = styled(Box)`
@@ -58,13 +60,14 @@ const MediaSearchList = (props: MediaSearchList) => {
   });
 };
 
-interface MediaSearch extends MediaTypes {
-  setSelected: React.Dispatch<React.SetStateAction<Object>>;
-  setType: React.Dispatch<React.SetStateAction<MediaTypes["type"]>>;
-}
+// interface MediaSearch extends MediaTypes {
+//   setSelected: React.Dispatch<React.SetStateAction<Object>>;
+//   setType: React.Dispatch<React.SetStateAction<MediaTypes["type"]>>;
+// }
 
-const MediaSearch = (props: MediaSearch) => {
-  const { setSelected, type } = props;
+const MediaSearch = ({ type }: MediaTypes) => {
+  // const { setSelected, type } = props;
+  const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
   const [searchInput, setSearchInput] = useState("");
   const [mediaResult, setMediaResult] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -136,7 +139,7 @@ const MediaSearch = (props: MediaSearch) => {
                     py={2}
                     pl={2}
                     mt={0}
-                    onClick={() => setSelected(e)}
+                    onClick={() => mediaSelect(mediaNormalize(e))}
                   >
                     {name && name}
                     {artist && ` - ${artist}`}
@@ -165,6 +168,54 @@ const MediaSearch = (props: MediaSearch) => {
       URL = `http://ws.audioscrobbler.com/2.0/?method=album.search&album=${search}&api_key=${process.env.REACT_APP_LASTFM}&limit=15&format=json`;
     }
     return fetch(URL);
+  }
+
+  function mediaNormalize(media: any) {
+    let poster, title, published, overview, watched, artist;
+    if (type === "film") {
+      poster = `https://image.tmdb.org/t/p/w400/${media.poster_path}`;
+      title = media.title;
+      published = media.release_date;
+      overview = media.overview;
+      artist = typeof media.director !== "undefined" && media.director;
+      watched = "Watched";
+      // styleText = {
+      //   as: "strong",
+      //   textTransform: "uppercase"
+      // };
+    } else if (type === "tv") {
+      poster = `https://image.tmdb.org/t/p/w400/${media.poster_path}`;
+      title = media.name;
+      published = media.first_air_date;
+      overview = media.overview;
+      artist = typeof media.creator !== "undefined" && media.creator;
+      watched = "Watched";
+      // styleText = {
+      //   textTransform: "uppercase"
+      // };
+    } else if (type === "album") {
+      poster = media.image[3]["#text"];
+      title = media.name;
+      artist = media.artist;
+      overview =
+        typeof media.wiki !== "undefined"
+          ? media.wiki.summary.split("<a href")[0]
+          : undefined;
+      watched = "Listened To";
+      // styleText = {
+      //   fontStyle: "italic"
+      // };
+    }
+    const mediaReturn: MediaSelected = {
+      id: media.id,
+      poster,
+      title,
+      published,
+      overview,
+      watched,
+      artist
+    };
+    return mediaReturn;
   }
 };
 

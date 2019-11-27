@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { Box, Grid, Text, Button, Flex, Icon } from "./components";
 import styled from "styled-components";
 import DatePicker from "react-date-picker";
-// import { addTv, addFilm, addAlbum } from "./config/actions";
 import { MediaTypes } from "./config/types";
+import { useStoreState, useStoreActions } from "./config/store";
 // @ts-ignore
 import ReactStars from "react-stars";
 
@@ -12,66 +12,15 @@ const PosterImg = styled.img`
   box-shadow: 0 1px 5px rgba(20, 24, 28, 0.2), 0 2px 10px rgba(20, 24, 28, 0.35);
 `;
 
-interface MediaContainerProps extends MediaTypes {
-  selected: {
-    [key: string]: any;
-  };
-  info: {
-    [key: string]: any;
-  };
-  children(props: {
-    poster: string;
-    title: string;
-    published: Date;
-    overview: string;
-    artist: string;
-    watched: string | undefined;
-    seasons: Object | undefined;
-  }): JSX.Element;
-}
-
-const MediaContainer = (props: MediaContainerProps) => {
-  const { selected, type, info } = props;
-  let poster, title, published, overview, artist, watched, seasons;
-  if (type === "film") {
-    poster = `https://image.tmdb.org/t/p/w400/${selected.poster_path}`;
-    title = selected.title;
-    published = selected.release_date;
-    overview = selected.overview;
-    watched = "Watched";
-  } else if (type === "tv") {
-    poster = `https://image.tmdb.org/t/p/w400/${selected.poster_path}`;
-    title = selected.name;
-    published = selected.first_air_date;
-    overview = selected.overview;
-    watched = "Watched";
-    seasons = info.seasons;
-  } else if (type === "album") {
-    poster = selected.image[3]["#text"];
-    title = selected.name;
-    artist = selected.artist;
-    watched = "Listened To";
-  }
-
-  return props.children({
-    poster,
-    title,
-    published,
-    overview,
-    artist,
-    watched,
-    seasons
-  });
-};
-
 interface MediaLog extends MediaTypes {
-  selected: any; // based on the response
-  setSelected: React.Dispatch<React.SetStateAction<Object>>;
   setType: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const MediaLog = (props: MediaLog) => {
-  const { selected, setSelected, setType, type } = props;
+const MediaLog = ({ type, setType }: MediaLog) => {
+  const { artist, poster, published, id, title, watched } = useStoreState(
+    state => state.media.mediaSelected
+  );
+  const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
   const [date, setDate] = useState(new Date());
   const [seen, setSeen] = useState(false);
   const [star, setStar] = useState(0);
@@ -82,7 +31,7 @@ const MediaLog = (props: MediaLog) => {
   useEffect(() => {
     if (type === "tv") {
       fetch(
-        `https://api.themoviedb.org/3/tv/${selected.id}?api_key=${process.env.REACT_APP_MDB}&language=en-US`
+        `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.REACT_APP_MDB}&language=en-US`
       )
         .then(r => r.json())
         .then(info => {
@@ -91,123 +40,161 @@ const MediaLog = (props: MediaLog) => {
           setLoading(false);
         });
     }
-  }, [type, selected]);
+  }, [type, id]);
 
   if (loading) {
     return <div>loading</div>;
   } else {
     return (
       <Grid gridTemplateColumns="14rem 1fr" gridGap="2rem">
-        <MediaContainer selected={selected} type={type} info={info}>
-          {({ poster, title, published, watched }) => (
-            <>
-              <Box>
-                <PosterImg src={poster} />
-              </Box>
-              <Flex flexDirection="column">
-                <Text mb={2} color="secondary">
-                  I {watched} ...
-                </Text>
-                <Text mt={3} fontSize={4} alignItems="center">
-                  {title}
-                  <Text as="span" fontWeight={300} fontSize={3} ml={1}>
-                    (
-                    {new Date(published).toLocaleDateString("en-us", {
-                      year: "numeric"
-                    })}
+        <Box>
+          <PosterImg src={poster} />
+        </Box>
+        <Flex flexDirection="column">
+          <Text mb={2} color="secondary">
+            I {watched} ...
+          </Text>
+          <Text mt={3} fontSize={4} alignItems="center">
+            {title}
+            <Text as="span" fontWeight={300} fontSize={3} ml={1}>
+              (
+              {new Date(published).toLocaleDateString("en-us", {
+                year: "numeric"
+              })}
+              )
+            </Text>
+          </Text>
+          <Flex mt={3} alignItems="center">
+            {typeof info !== "undefined" &&
+              typeof info.seasons !== "undefined" && (
+                <select
+                  value={season.id}
+                  onChange={e =>
+                    setSeason(
+                      info.seasons.find(
+                        (u: any) => u.id === parseInt(e.target.value)
+                      )
                     )
-                  </Text>
-                </Text>
-                <Flex mt={3} alignItems="center">
-                  {typeof info !== "undefined" &&
-                    typeof info.seasons !== "undefined" && (
-                      <select
-                        value={season.id}
-                        onChange={e =>
-                          setSeason(
-                            info.seasons.find(
-                              (u: any) => u.id === parseInt(e.target.value)
-                            )
-                          )
-                        }
-                      >
-                        {info.seasons.map((e: any) => (
-                          <option key={e.name} value={e.id}>
-                            {e.name}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                </Flex>
-                <Flex mt={4} alignItems="center">
-                  <Text mr={2} pb={0} color="secondary">
-                    On
-                  </Text>
-                  <DatePicker
-                    onChange={(date: Date) => setDate(date)}
-                    value={date}
-                  />
-                </Flex>
-                <Flex mt={3} pt={2}>
-                  <Text mr={2} pb={0} color="secondary">
-                    Rating
-                  </Text>
-                  <ReactStars
-                    count={5}
-                    half
-                    value={star}
-                    size={20}
-                    onChange={(e: any) => setStar(e)}
-                    color1="var(--secondary)"
-                    color2="var(--primary)"
-                  />
-                </Flex>
-                <Flex mt={3} alignItems="center">
-                  <Text color="econdary" mr={3}>
-                    {watched} Before?
-                  </Text>
-                  <Icon
-                    mr={2}
-                    cursor="pointer"
-                    height="25px"
-                    width="25px"
-                    stroke="var(--primary)"
-                    name={seen ? "checked" : "unchecked"}
-                    onClick={() => setSeen(!seen)}
-                  />
-                </Flex>
-                <Flex mt="auto" pt={2} justifyContent="flex-end">
-                  <Button
-                    variant="secondary"
-                    mr={3}
-                    onClick={() => setSelected({})}
-                  >
-                    Go Back
-                  </Button>
-                  <Button
-                    variant="primary"
-                    onClick={() => {
-                      // if (type === "film") {
-                      //   addFilm(selected, date, star, seen);
-                      // } else if (type === "tv") {
-                      //   addTv(selected, date, star, seen, info, season);
-                      // } else {
-                      //   addAlbum(selected, date, star, seen);
-                      // }
-                      setType("");
-                      setSelected({});
-                    }}
-                  >
-                    Save
-                  </Button>
-                </Flex>
-              </Flex>
-            </>
-          )}
-        </MediaContainer>
+                  }
+                >
+                  {info.seasons.map((e: any) => (
+                    <option key={e.name} value={e.id}>
+                      {e.name}
+                    </option>
+                  ))}
+                </select>
+              )}
+          </Flex>
+          <Flex mt={4} alignItems="center">
+            <Text mr={2} pb={0} color="secondary">
+              On
+            </Text>
+            <DatePicker onChange={(date: Date) => setDate(date)} value={date} />
+          </Flex>
+          <Flex mt={3} pt={2}>
+            <Text mr={2} pb={0} color="secondary">
+              Rating
+            </Text>
+            <ReactStars
+              count={5}
+              half
+              value={star}
+              size={20}
+              onChange={(e: any) => setStar(e)}
+              color1="var(--secondary)"
+              color2="var(--primary)"
+            />
+          </Flex>
+          <Flex mt={3} alignItems="center">
+            <Text color="econdary" mr={3}>
+              {watched} Before?
+            </Text>
+            <Icon
+              mr={2}
+              cursor="pointer"
+              height="25px"
+              width="25px"
+              stroke="var(--primary)"
+              name={seen ? "checked" : "unchecked"}
+              onClick={() => setSeen(!seen)}
+            />
+          </Flex>
+          <Flex mt="auto" pt={2} justifyContent="flex-end">
+            <Button variant="secondary" mr={3} onClick={() => mediaSelect({})}>
+              Go Back
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => {
+                setType("");
+                mediaSelect({});
+              }}
+            >
+              Save
+            </Button>
+          </Flex>
+        </Flex>
       </Grid>
     );
   }
 };
 
 export default MediaLog;
+
+// interface MediaContainerProps extends MediaTypes {
+//   selected: {
+//     [key: string]: any;
+//   };
+//   info: {
+//     [key: string]: any;
+//   };
+//   children(props: {
+//     poster: string;
+//     title: string;
+//     published: Date;
+//     overview: string;
+//     artist: string;
+//     watched: string | undefined;
+//     seasons: Object | undefined;
+//   }): JSX.Element;
+// }
+
+// const MediaContainer = (props: MediaContainerProps) => {
+//   const { selected, type, info } = props;
+//   let poster, title, published, overview, artist, watched, seasons;
+//   if (type === "film") {
+//     poster = `https://image.tmdb.org/t/p/w400/${selected.poster_path}`;
+//     title = selected.title;
+//     published = selected.release_date;
+//     overview = selected.overview;
+//     watched = "Watched";
+//   } else if (type === "tv") {
+//     poster = `https://image.tmdb.org/t/p/w400/${selected.poster_path}`;
+//     title = selected.name;
+//     published = selected.first_air_date;
+//     overview = selected.overview;
+//     watched = "Watched";
+//     seasons = info.seasons;
+//   } else if (type === "album") {
+//     poster = selected.image[3]["#text"];
+//     title = selected.name;
+//     artist = selected.artist;
+//     watched = "Listened To";
+//   }
+
+//   return props.children({
+//     poster,
+//     title,
+//     published,
+//     overview,
+//     artist,
+//     watched,
+//     seasons
+//   });
+// };
+
+// interface MediaLog extends MediaTypes {
+//   selected: any; // based on the response
+//   setSelected: React.Dispatch<React.SetStateAction<Object>>;
+//   setType: React.Dispatch<React.SetStateAction<string>>;
+// }

@@ -94,30 +94,12 @@ interface MediaListProps {
 }
 
 const MediaList = (props: MediaListProps) => {
-  const list = useStoreState(state => state.data.list);
-  const diary = useStoreState(state => state.data.diary);
+  const byID = useStoreState(state => state.data.byID);
+  const byDate = useStoreState(state => state.data.byDate);
   const dataGet = useStoreActions(actions => actions.data.dataGet);
 
-  console.log(list, diary);
+  console.log(byID, byDate);
   return <div onClick={() => dataGet()}>asd</div>;
-  // useEffect(() => {
-  // db.collection("media")
-  //   .doc("byID")
-  //     .onSnapshot(function(doc) {
-  //       const currentList = doc.data();
-  //       if (currentList) {
-  //         setList(currentList);
-  //       }
-  //     });
-  //   db.collection("media")
-  //     .doc("byDate")
-  //     .onSnapshot(function(doc) {
-  //       const currentDiary = doc.data();
-  //       if (currentDiary) {
-  //         setDiary(currentDiary);
-  //       }
-  //     });
-  // }, [user]);
 
   // if (typeof list !== "undefined" && typeof diary !== "undefined") {
   //   const diaryKeys = Object.keys(diary);
