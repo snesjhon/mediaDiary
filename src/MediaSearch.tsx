@@ -165,7 +165,7 @@ const MediaSearch = ({ type }: MediaTypes) => {
   }
 
   function mediaNormalize(media: any) {
-    let id, poster, title, published, overview, watched, artist;
+    let id, poster, title, published, overview, watched, artist, mbid;
     if (type === "film") {
       id = media.id.toString();
       poster = `https://image.tmdb.org/t/p/w400/${media.poster_path}`;
@@ -190,9 +190,9 @@ const MediaSearch = ({ type }: MediaTypes) => {
       //   textTransform: "uppercase"
       // };
     } else if (type === "album") {
-      id = media.mbid
-        ? media.mbid
-        : encodeURIComponent(media.artist + media.name);
+      debugger;
+      mbid = media.mbid;
+      id = encodeURIComponent(media.artist + media.name);
       poster = media.image[3]["#text"];
       title = media.name;
       artist = media.artist;
@@ -201,6 +201,7 @@ const MediaSearch = ({ type }: MediaTypes) => {
           ? media.wiki.summary.split("<a href")[0]
           : undefined;
       watched = "Listened To";
+      published = "";
       // styleText = {
       //   fontStyle: "italic"
       // };
@@ -212,7 +213,8 @@ const MediaSearch = ({ type }: MediaTypes) => {
       published,
       overview,
       watched,
-      artist
+      artist,
+      mbid
     };
     return mediaReturn;
   }

@@ -24,10 +24,15 @@ const MediaLog = ({ type, setType }: MediaLog) => {
     poster,
     published,
     title,
-    watched
+    watched,
+    mbid,
+    seasons
   } = useStoreState(state => state.media.mediaSelected);
   const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
-  const dataPut = useStoreActions(actions => actions.data.dataPut);
+  const mediaPutFilm = useStoreActions(actions => actions.media.mediaPutFilm);
+  const mediaPutTV = useStoreActions(actions => actions.media.mediaPutTV);
+  const mediaPutAlbum = useStoreActions(actions => actions.media.mediaPutAlbum);
+  // const dataPut = useStoreActions(actions => actions.data.dataPut);
   const [date, setDate] = useState(new Date());
   const [seen, setSeen] = useState(false);
   const [star, setStar] = useState(0);
@@ -140,8 +145,7 @@ const MediaLog = ({ type, setType }: MediaLog) => {
   }
 
   function mediaSet() {
-    setType("");
-    dataPut({
+    const mediaObj = {
       type,
       id,
       artist,
@@ -150,8 +154,19 @@ const MediaLog = ({ type, setType }: MediaLog) => {
       published,
       title,
       seen,
-      star
-    });
+      star,
+      mbid,
+      seasons
+    };
+    if (type === "film") {
+      mediaPutFilm(mediaObj);
+    } else if (type === "tv") {
+      mediaPutTV(mediaObj);
+    } else {
+      debugger;
+      mediaPutAlbum(mediaObj);
+    }
+    setType("");
   }
 };
 

@@ -4,7 +4,7 @@ import { global, Global } from "./storeGlobal";
 import { data, Data } from "./storeData";
 import { media, Media } from "./storeMedia";
 
-interface StoreModel {
+export interface StoreModel {
   global: Global;
   data: Data;
   media: Media;

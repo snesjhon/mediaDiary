@@ -1,6 +1,7 @@
 import { Thunk, thunk, action, Action } from "easy-peasy";
 import { db } from "./db";
 import { MediaInfo, MediaTypes } from "./storeMedia";
+// import { StoreModel } from "./store";
 
 interface DataSet {
   byID: firebase.firestore.DocumentData | undefined;
@@ -37,7 +38,7 @@ export const data: Data = {
       .get();
     actions.dataSet({ byID: byID.data(), byDate: byDate.data() });
   }),
-  dataPut: thunk(async (actions, payload, { injections }) => {
+  dataPut: thunk(async (actions, payload, { getStoreActions }) => {
     const {
       id,
       type,
@@ -52,7 +53,9 @@ export const data: Data = {
     const dbByID = db.collection("media").doc("byID");
     const dbByDate = db.collection("media").doc("byDate");
 
-    db.runTransaction(transaction => {
+    // debugger;
+
+    const prByID = db.runTransaction(transaction => {
       const dataByID = {
         poster,
         title,
@@ -71,10 +74,11 @@ export const data: Data = {
         transaction.update(dbByID, {
           [`${type}_${id}`]: dataByID
         });
+        return Promise.resolve();
       });
     });
 
-    db.runTransaction(transaction => {
+    const prByDate = db.runTransaction(transaction => {
       const dataByDate = {
         [new Date().getTime()]: {
           id: `${type}_${id}`,
@@ -87,14 +91,17 @@ export const data: Data = {
       };
       return transaction.get(dbByDate).then(movieDates => {
         if (!movieDates.exists) {
-          return transaction.set(dbByDate, dataByDate);
+          transaction.set(dbByDate, dataByDate);
         }
-        return transaction.update(dbByDate, dataByDate);
+        transaction.update(dbByDate, dataByDate);
+        return Promise.resolve();
       });
     });
 
-    actions.dataGet();
-
-    console.log("something happens");
+    Promise.all([prByID, prByDate]).then(res => {
+      return actions.dataGet();
+    });
   })
 };
+
+// getStoreActions().media.mediaSelect();
