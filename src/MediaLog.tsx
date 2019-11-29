@@ -25,8 +25,7 @@ const MediaLog = ({ type, setType }: MediaLog) => {
     published,
     title,
     watched,
-    mbid,
-    seasons
+    mbid
   } = useStoreState(state => state.media.mediaSelected);
   const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
   const mediaPutFilm = useStoreActions(actions => actions.media.mediaPutFilm);
@@ -37,7 +36,7 @@ const MediaLog = ({ type, setType }: MediaLog) => {
   const [seen, setSeen] = useState(false);
   const [star, setStar] = useState(0);
   const [info, setInfo] = useState();
-  const [season, setSeason] = useState();
+  const [seasonInfo, setSeasonInfo] = useState();
   const [loading, setLoading] = useState(type === "tv" ? true : false);
 
   useEffect(() => {
@@ -48,7 +47,7 @@ const MediaLog = ({ type, setType }: MediaLog) => {
         .then(r => r.json())
         .then(info => {
           setInfo(info);
-          setSeason(info.seasons[0]);
+          setSeasonInfo(info.seasons[0]);
           setLoading(false);
         });
     }
@@ -80,9 +79,9 @@ const MediaLog = ({ type, setType }: MediaLog) => {
             {typeof info !== "undefined" &&
               typeof info.seasons !== "undefined" && (
                 <select
-                  value={season.id}
+                  value={seasonInfo.id}
                   onChange={e =>
-                    setSeason(
+                    setSeasonInfo(
                       info.seasons.find(
                         (u: any) => u.id === parseInt(e.target.value)
                       )
@@ -148,30 +147,47 @@ const MediaLog = ({ type, setType }: MediaLog) => {
     const mediaObj = {
       type,
       id,
-      artist,
       overview,
       poster,
       published,
       title,
       seen,
-      star,
-      mbid,
-      seasons
+      star
     };
     if (type === "film") {
-      mediaPutFilm(mediaObj);
+      const filmObj = {
+        ...mediaObj,
+        artist
+      };
+      mediaPutFilm(filmObj);
     } else if (type === "tv") {
-      mediaPutTV(mediaObj);
+      const tvObj = {
+        ...mediaObj,
+        artist: info.created_by.map((e: any) => e.name).join(", "),
+        season: seasonInfo
+      };
+
+      mediaPutTV(tvObj);
     } else {
-      debugger;
-      mediaPutAlbum(mediaObj);
+      const albumObj = {
+        ...mediaObj,
+        artist,
+        mbid
+      };
+      mediaPutAlbum(albumObj);
     }
     setType("");
   }
 };
 
 export default MediaLog;
-
+// mbid
+// season: seasonInfo
+//   const tvMedia = {
+//     ...media,
+//     creator: info.created_by.map((e: any) => e.name).join(", "),
+//     season
+//   };
 // interface MediaContainerProps extends MediaTypes {
 //   selected: {
 //     [key: string]: any;

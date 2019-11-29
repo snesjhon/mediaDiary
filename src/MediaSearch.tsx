@@ -190,7 +190,6 @@ const MediaSearch = ({ type }: MediaTypes) => {
       //   textTransform: "uppercase"
       // };
     } else if (type === "album") {
-      debugger;
       mbid = media.mbid;
       id = encodeURIComponent(media.artist + media.name);
       poster = media.image[3]["#text"];

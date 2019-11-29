@@ -27,6 +27,7 @@ single collection.
   get the details for the show, and then it'd just add that information ahead of time instead
   of doing in "onSave"~
 - For album, it needs to get the date from an API D:
+- TV Season should replace the "current" season if there's an option for it.
 
 ### Other
 

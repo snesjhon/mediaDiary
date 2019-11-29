@@ -1,6 +1,6 @@
 import { Thunk, thunk, action, Action } from "easy-peasy";
 import { db } from "./db";
-import { MediaInfo, MediaTypes } from "./storeMedia";
+import { MediaInfo, MediaTypes, MediaAdd } from "./storeMedia";
 // import { StoreModel } from "./store";
 
 interface DataSet {
@@ -48,15 +48,15 @@ export const data: Data = {
       overview,
       artist,
       star,
-      seen
+      seen,
+      mbid,
+      season
     } = payload;
     const dbByID = db.collection("media").doc("byID");
     const dbByDate = db.collection("media").doc("byDate");
 
-    // debugger;
-
     const prByID = db.runTransaction(transaction => {
-      const dataByID = {
+      let dataByID = {
         poster,
         title,
         published,
@@ -65,6 +65,23 @@ export const data: Data = {
         star,
         seen
       };
+      if (mbid) {
+        dataByID = {
+          ...dataByID,
+          ...(mbid && { mbid: mbid })
+        };
+      }
+      if (season) {
+        dataByID = {
+          ...dataByID,
+          ...(season && { season: season })
+        };
+      }
+      //   dataByID = {
+      //     ...dataByID,
+      //     mbid: mbid
+      //   }
+      // }
       return transaction.get(dbByID).then(movieCollection => {
         if (!movieCollection.exists) {
           transaction.set(dbByID, {
