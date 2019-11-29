@@ -17,10 +17,17 @@ interface MediaLog extends MediaTypes {
 }
 
 const MediaLog = ({ type, setType }: MediaLog) => {
-  const { artist, poster, published, id, title, watched } = useStoreState(
-    state => state.media.mediaSelected
-  );
+  const {
+    id,
+    artist,
+    overview,
+    poster,
+    published,
+    title,
+    watched
+  } = useStoreState(state => state.media.mediaSelected);
   const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
+  const dataPut = useStoreActions(actions => actions.data.dataPut);
   const [date, setDate] = useState(new Date());
   const [seen, setSeen] = useState(false);
   const [star, setStar] = useState(0);
@@ -120,22 +127,31 @@ const MediaLog = ({ type, setType }: MediaLog) => {
             />
           </Flex>
           <Flex mt="auto" pt={2} justifyContent="flex-end">
-            <Button variant="secondary" mr={3} onClick={() => mediaSelect({})}>
+            <Button variant="secondary" mr={3} onClick={() => mediaSelect()}>
               Go Back
             </Button>
-            <Button
-              variant="primary"
-              onClick={() => {
-                setType("");
-                mediaSelect({});
-              }}
-            >
+            <Button variant="primary" onClick={mediaSet}>
               Save
             </Button>
           </Flex>
         </Flex>
       </Grid>
     );
+  }
+
+  function mediaSet() {
+    setType("");
+    dataPut({
+      type,
+      id,
+      artist,
+      overview,
+      poster,
+      published,
+      title,
+      seen,
+      star
+    });
   }
 };
 

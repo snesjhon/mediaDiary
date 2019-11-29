@@ -1,68 +1,74 @@
-import { MBD_KEY, MDB_URL } from "./constants";
-import { MediaById } from "./types";
-import { Thunk, Action, action } from "easy-peasy";
+import {
+  Action,
+  action,
+  ActionOn,
+  actionOn,
+  ThunkOn,
+  thunkOn
+} from "easy-peasy";
+import { Data } from "./storeData";
 
-export interface MediaSelected {
-  id: number | undefined;
+export interface MediaInfo {
+  id: string;
   poster: string;
   title: string;
   published: Date;
   overview: string;
-  artist: string | undefined;
-  watched: string | undefined;
-  seasons?: Object | undefined;
+  artist: string;
 }
-// watched: boolean | undefined;
+
+export interface MediaSelected extends MediaInfo {
+  watched: string | undefined;
+  seasons?: Object | "";
+}
 
 export interface MediaTypes {
   type: "film" | "tv" | "album" | "";
 }
 
-export interface MediaSet {
-  media: MediaById;
-  date: Date;
-  star: number;
-  seen: Boolean;
-}
-
-export interface MediaByDate {
-  date: Date;
-  dateAdded: Date;
-  id: string;
-  seen: boolean;
-  star: number;
-  type: string;
-}
-
-export interface MediaById {
-  poster: string;
-  title: string;
-  date: Date;
-  overview: string;
-  artist: string;
-  star: number;
-  seen: boolean;
-  info: object;
-}
-
 export interface Media {
   mediaSelected: MediaSelected;
-  mediaSelect: Action<Media, MediaSelected | {}>;
+  mediaSelect: Action<Media, MediaSelected | void>;
+  onDataPut: ThunkOn<Media, null, Data>;
 }
 
-export const media: Media = {
-  mediaSelected:
-    {
-      id: undefined,
-      poster: "",
-      title: "",
-      published: new Date(),
-      overview: "",
-      artist: "",
-      watched: ""
-    } || {},
-  mediaSelect: action((state, payload) => {})
+const mediaInit = {
+  id: "",
+  poster: "",
+  title: "",
+  published: new Date(),
+  overview: "",
+  artist: "",
+  watched: undefined,
+  seasons: ""
 };
+
+export const media: Media = {
+  mediaSelected: mediaInit,
+  mediaSelect: action((state, payload) => {
+    state.mediaSelected = payload ? payload : mediaInit;
+  }),
+  onDataPut: thunkOn(
+    (actions, e) => {
+      return e.dataPut;
+    },
+    (state, target) => {
+      console.log("happening");
+      state.mediaSelected = mediaInit;
+    }
+  )
+};
+// onDataPut: actionOn(
+//   (actions, dataActions) => {
+//     console.log("actions");
+//     return dataActions.dataPut;
+//   },
+//   (state, target) => {
+//     console.log("target fired");
+
+//     state.mediaSelected = mediaInit;
+//   }
+// )
 
 // mediaSelected:
 // {
@@ -106,3 +112,31 @@ export const media: Media = {
 // //   //   return addMediaToFB(filmMedia, "film", date, star, seen);
 // //   // };
 // // })
+
+// export interface MediaSet {
+//   media: MediaById;
+//   date: Date;
+//   star: number;
+//   seen: Boolean;
+// watched: boolean | undefined;
+// }
+
+// export interface MediaByDate {
+//   date: Date;
+//   dateAdded: Date;
+//   id: string;
+//   seen: boolean;
+//   star: number;
+//   type: string;
+// }
+
+// export interface MediaById {
+//   poster: string;
+//   title: string;
+//   date: Date;
+//   overview: string;
+//   artist: string;
+//   star: number;
+//   seen: boolean;
+//   info: object;
+// }

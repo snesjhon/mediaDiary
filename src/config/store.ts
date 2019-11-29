@@ -82,45 +82,33 @@ export const useStoreState = typedHooks.useStoreState;
 //   seen: Boolean
 // ) => {
 //   let movieID: string;
-//   if (type === "tv" || type === "film") {
-//     movieID = media.id.toString();
-//   } else {
-//     movieID = media.mbid
-//       ? media.mbid
-//       : encodeURIComponent(media.artist + media.name);
-//   }
-//   const moviesByID = db.collection("media").doc("byID");
-//   const moviesByDate = db.collection("media").doc("byDate");
+// if (type === "tv" || type === "film") {
+//   movieID = media.id.toString();
+// } else {
+//   movieID = media.mbid
+//     ? media.mbid
+//     : encodeURIComponent(media.artist + media.name);
+// }
+// const moviesByID = db.collection("media").doc("byID");
+// const moviesByDate = db.collection("media").doc("byDate");
 
-//   db.runTransaction(transaction => {
-//     return transaction.get(moviesByID).then(movieCollection => {
-//       if (!movieCollection.exists) {
-//         transaction.set(moviesByID, {
-//           [`${type}_${movieID}`]: media
-//         });
-//       }
-//       transaction.update(moviesByID, {
+// db.runTransaction(transaction => {
+//   return transaction.get(moviesByID).then(movieCollection => {
+//     if (!movieCollection.exists) {
+//       transaction.set(moviesByID, {
 //         [`${type}_${movieID}`]: media
 //       });
+//     }
+//     transaction.update(moviesByID, {
+//       [`${type}_${movieID}`]: media
 //     });
 //   });
+// });
 
-//   db.runTransaction(transaction => {
-//     return transaction.get(moviesByDate).then(movieDates => {
-//       if (!movieDates.exists) {
-//         return transaction.set(moviesByDate, {
-//           [new Date().getTime()]: {
-//             id: `${type}_${movieID}`,
-//             dateAdded: new Date(),
-//             date: date,
-//             type,
-//             seen,
-//             star
-//           }
-//         });
-//       }
-
-//       return transaction.update(moviesByDate, {
+// db.runTransaction(transaction => {
+//   return transaction.get(moviesByDate).then(movieDates => {
+//     if (!movieDates.exists) {
+//       return transaction.set(moviesByDate, {
 //         [new Date().getTime()]: {
 //           id: `${type}_${movieID}`,
 //           dateAdded: new Date(),
@@ -130,6 +118,18 @@ export const useStoreState = typedHooks.useStoreState;
 //           star
 //         }
 //       });
+//     }
+
+//     return transaction.update(moviesByDate, {
+//       [new Date().getTime()]: {
+//         id: `${type}_${movieID}`,
+//         dateAdded: new Date(),
+//         date: date,
+//         type,
+//         seen,
+//         star
+//       }
 //     });
 //   });
+// });
 // };

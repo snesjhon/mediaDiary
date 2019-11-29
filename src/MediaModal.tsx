@@ -80,10 +80,10 @@ const MediaModal = () => {
           isOpen={isOpen}
           handleClose={() => {
             setType("");
-            mediaSelect({});
+            mediaSelect();
           }}
         >
-          {Object.keys(mediaSelected).length > 0 ? (
+          {mediaSelected.id !== "" ? (
             <MediaLog type={type} setType={setType} />
           ) : (
             <MediaSearch type={type} />

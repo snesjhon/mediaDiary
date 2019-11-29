@@ -60,13 +60,7 @@ const MediaSearchList = (props: MediaSearchList) => {
   });
 };
 
-// interface MediaSearch extends MediaTypes {
-//   setSelected: React.Dispatch<React.SetStateAction<Object>>;
-//   setType: React.Dispatch<React.SetStateAction<MediaTypes["type"]>>;
-// }
-
 const MediaSearch = ({ type }: MediaTypes) => {
-  // const { setSelected, type } = props;
   const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
   const [searchInput, setSearchInput] = useState("");
   const [mediaResult, setMediaResult] = useState([]);
@@ -171,8 +165,9 @@ const MediaSearch = ({ type }: MediaTypes) => {
   }
 
   function mediaNormalize(media: any) {
-    let poster, title, published, overview, watched, artist;
+    let id, poster, title, published, overview, watched, artist;
     if (type === "film") {
+      id = media.id.toString();
       poster = `https://image.tmdb.org/t/p/w400/${media.poster_path}`;
       title = media.title;
       published = media.release_date;
@@ -184,6 +179,7 @@ const MediaSearch = ({ type }: MediaTypes) => {
       //   textTransform: "uppercase"
       // };
     } else if (type === "tv") {
+      id = media.id.toString();
       poster = `https://image.tmdb.org/t/p/w400/${media.poster_path}`;
       title = media.name;
       published = media.first_air_date;
@@ -194,6 +190,9 @@ const MediaSearch = ({ type }: MediaTypes) => {
       //   textTransform: "uppercase"
       // };
     } else if (type === "album") {
+      id = media.mbid
+        ? media.mbid
+        : encodeURIComponent(media.artist + media.name);
       poster = media.image[3]["#text"];
       title = media.name;
       artist = media.artist;
@@ -207,7 +206,7 @@ const MediaSearch = ({ type }: MediaTypes) => {
       // };
     }
     const mediaReturn: MediaSelected = {
-      id: media.id,
+      id,
       poster,
       title,
       published,
