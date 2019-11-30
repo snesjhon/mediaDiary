@@ -48,9 +48,9 @@ const MediaSearchList = (props: MediaSearchList) => {
     artist = false;
     date = item.first_air_date;
   } else if (type === "album") {
-    name = item.name;
-    artist = item.artist;
-    date = item.release_date;
+    name = item.artistName;
+    artist = item.collectionName;
+    date = item.releaseDate;
   }
 
   return props.children({
@@ -75,9 +75,10 @@ const MediaSearch = ({ type }: MediaTypes) => {
         .then((r: Response) => r.json())
         .then((res: any) => {
           setIsSearching(false);
-          setMediaResult(
-            type !== "album" ? res.results : res.results.albummatches.album
-          );
+          setMediaResult(res.results);
+          // setMediaResult(
+          //   type !== "album" ? res.results : res.results.albummatches.album
+          // );
         });
     } else {
       setMediaResult([]);
@@ -159,51 +160,38 @@ const MediaSearch = ({ type }: MediaTypes) => {
     } else if (searchType === "tv") {
       URL = `https://api.themoviedb.org/3/search/tv?api_key=${process.env.REACT_APP_MDB}&language=en-US&query=${search}&page=1`;
     } else if (searchType === "album") {
-      URL = `http://ws.audioscrobbler.com/2.0/?method=album.search&album=${search}&api_key=${process.env.REACT_APP_LASTFM}&limit=15&format=json`;
+      // URL = `http://ws.audioscrobbler.com/2.0/?method=album.search&album=${search}&api_key=${process.env.REACT_APP_LASTFM}&limit=15&format=json`;
+      URL = `https://itunes.apple.com/search?term=${search}&entity=album`;
     }
     return fetch(URL);
   }
 
-  function mediaNormalize(media: any) {
+  function mediaNormalize(item: any) {
     let id, poster, title, published, overview, watched, artist, mbid;
     if (type === "film") {
-      id = media.id.toString();
-      poster = `https://image.tmdb.org/t/p/w400/${media.poster_path}`;
-      title = media.title;
-      published = media.release_date;
-      overview = media.overview;
-      artist = typeof media.director !== "undefined" && media.director;
+      id = item.id.toString();
+      poster = `https://image.tmdb.org/t/p/w400/${item.poster_path}`;
+      title = item.title;
+      published = item.release_date;
+      overview = item.overview;
+      artist = typeof item.director !== "undefined" && item.director;
       watched = "Watched";
-      // styleText = {
-      //   as: "strong",
-      //   textTransform: "uppercase"
-      // };
     } else if (type === "tv") {
-      id = media.id.toString();
-      poster = `https://image.tmdb.org/t/p/w400/${media.poster_path}`;
-      title = media.name;
-      published = media.first_air_date;
-      overview = media.overview;
-      artist = typeof media.creator !== "undefined" && media.creator;
+      id = item.id.toString();
+      poster = `https://image.tmdb.org/t/p/w400/${item.poster_path}`;
+      title = item.name;
+      published = item.first_air_date;
+      overview = item.overview;
+      artist = typeof item.creator !== "undefined" && item.creator;
       watched = "Watched";
-      // styleText = {
-      //   textTransform: "uppercase"
-      // };
     } else if (type === "album") {
-      mbid = media.mbid;
-      id = encodeURIComponent(media.artist + media.name);
-      poster = media.image[3]["#text"];
-      title = media.name;
-      artist = media.artist;
-      overview =
-        typeof media.wiki !== "undefined"
-          ? media.wiki.summary.split("<a href")[0]
-          : undefined;
+      id = encodeURIComponent(item.artistName + item.collectionName);
+      poster = item.artworkUrl100.replace("100x100", "1000x1000");
+      title = item.collectionName;
+      artist = item.artistName;
+      published = item.releaseDate;
+      overview = "";
       watched = "Listened To";
-      published = "";
-      // styleText = {
-      //   fontStyle: "italic"
-      // };
     }
     const mediaReturn: MediaSelected = {
       id,
@@ -212,8 +200,7 @@ const MediaSearch = ({ type }: MediaTypes) => {
       published,
       overview,
       watched,
-      artist,
-      mbid
+      artist
     };
     return mediaReturn;
   }

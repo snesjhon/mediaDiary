@@ -12,8 +12,8 @@ single collection.
 ### Global
 
 - ~Add actions/reducer using context to change themes, and add list to localstorage.~
-- Use `useReducer` hook to remove lots of `useState` from the equation.
-- Need to add user to localStorage, so it doesn't keep refreshing
+- ~Use `useReducer` hook to remove lots of `useState` from the equation.~
+- ~Need to add user to localStorage, so it doesn't keep refreshing~
 - Add error logging for information
 
 ### Search

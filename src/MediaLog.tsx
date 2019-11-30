@@ -24,8 +24,7 @@ const MediaLog = ({ type, setType }: MediaLog) => {
     poster,
     published,
     title,
-    watched,
-    mbid
+    watched
   } = useStoreState(state => state.media.mediaSelected);
   const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
   const mediaPutFilm = useStoreActions(actions => actions.media.mediaPutFilm);
@@ -152,7 +151,8 @@ const MediaLog = ({ type, setType }: MediaLog) => {
       published,
       title,
       seen,
-      star
+      star,
+      date
     };
     if (type === "film") {
       const filmObj = {
@@ -163,16 +163,19 @@ const MediaLog = ({ type, setType }: MediaLog) => {
     } else if (type === "tv") {
       const tvObj = {
         ...mediaObj,
+        id: seasonInfo.id,
+        title: `${title} (${seasonInfo.name})`,
         artist: info.created_by.map((e: any) => e.name).join(", "),
-        season: seasonInfo
+        season: seasonInfo.season_number,
+        published: seasonInfo.air_date,
+        poster: seasonInfo.poster_path
       };
 
       mediaPutTV(tvObj);
     } else {
       const albumObj = {
         ...mediaObj,
-        artist,
-        mbid
+        artist
       };
       mediaPutAlbum(albumObj);
     }
@@ -181,67 +184,3 @@ const MediaLog = ({ type, setType }: MediaLog) => {
 };
 
 export default MediaLog;
-// mbid
-// season: seasonInfo
-//   const tvMedia = {
-//     ...media,
-//     creator: info.created_by.map((e: any) => e.name).join(", "),
-//     season
-//   };
-// interface MediaContainerProps extends MediaTypes {
-//   selected: {
-//     [key: string]: any;
-//   };
-//   info: {
-//     [key: string]: any;
-//   };
-//   children(props: {
-//     poster: string;
-//     title: string;
-//     published: Date;
-//     overview: string;
-//     artist: string;
-//     watched: string | undefined;
-//     seasons: Object | undefined;
-//   }): JSX.Element;
-// }
-
-// const MediaContainer = (props: MediaContainerProps) => {
-//   const { selected, type, info } = props;
-//   let poster, title, published, overview, artist, watched, seasons;
-//   if (type === "film") {
-//     poster = `https://image.tmdb.org/t/p/w400/${selected.poster_path}`;
-//     title = selected.title;
-//     published = selected.release_date;
-//     overview = selected.overview;
-//     watched = "Watched";
-//   } else if (type === "tv") {
-//     poster = `https://image.tmdb.org/t/p/w400/${selected.poster_path}`;
-//     title = selected.name;
-//     published = selected.first_air_date;
-//     overview = selected.overview;
-//     watched = "Watched";
-//     seasons = info.seasons;
-//   } else if (type === "album") {
-//     poster = selected.image[3]["#text"];
-//     title = selected.name;
-//     artist = selected.artist;
-//     watched = "Listened To";
-//   }
-
-//   return props.children({
-//     poster,
-//     title,
-//     published,
-//     overview,
-//     artist,
-//     watched,
-//     seasons
-//   });
-// };
-
-// interface MediaLog extends MediaTypes {
-//   selected: any; // based on the response
-//   setSelected: React.Dispatch<React.SetStateAction<Object>>;
-//   setType: React.Dispatch<React.SetStateAction<string>>;
-// }

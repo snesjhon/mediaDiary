@@ -1,17 +1,39 @@
 import { Thunk, thunk, action, Action } from "easy-peasy";
 import { db } from "./db";
-import { MediaInfo, MediaTypes, MediaAdd } from "./storeMedia";
-// import { StoreModel } from "./store";
+import { MediaInfo, MediaTypes } from "./storeMedia";
 
-interface DataSet {
-  byID: firebase.firestore.DocumentData | undefined;
-  byDate: firebase.firestore.DocumentData | undefined;
-}
-
-interface DataPut extends MediaInfo {
+interface DataPut extends MediaInfo, MediaTypes {
+  date: Date | "";
   seen: boolean;
   star: number;
-  type: MediaTypes["type"];
+}
+
+export interface DataByID {
+  artist: string;
+  overview: string;
+  poster: string;
+  published: Date | "";
+  title: string;
+  season?: number | undefined;
+  seen: boolean;
+  star: number;
+}
+
+export interface DataByDate extends MediaTypes {
+  date: firebase.firestore.Timestamp;
+  dateAdded: firebase.firestore.Timestamp;
+  id: string;
+  seen: boolean;
+  star: number;
+}
+
+interface DataSet {
+  byID: {
+    [name: string]: DataByID;
+  };
+  byDate: {
+    [name: string]: DataByDate;
+  };
 }
 
 export interface Data extends DataSet {
@@ -21,8 +43,8 @@ export interface Data extends DataSet {
 }
 
 export const data: Data = {
-  byID: [],
-  byDate: [],
+  byID: {},
+  byDate: {},
   dataSet: action((state, payload) => {
     state.byID = payload.byID;
     state.byDate = payload.byDate;
@@ -36,7 +58,10 @@ export const data: Data = {
       .collection("media")
       .doc("byDate")
       .get();
-    actions.dataSet({ byID: byID.data(), byDate: byDate.data() });
+    actions.dataSet({
+      byID: byID.data() || {},
+      byDate: byDate.data() || {}
+    });
   }),
   dataPut: thunk(async (actions, payload, { getStoreActions }) => {
     const {
@@ -49,7 +74,7 @@ export const data: Data = {
       artist,
       star,
       seen,
-      mbid,
+      date,
       season
     } = payload;
     const dbByID = db.collection("media").doc("byID");
@@ -65,23 +90,12 @@ export const data: Data = {
         star,
         seen
       };
-      if (mbid) {
-        dataByID = {
-          ...dataByID,
-          ...(mbid && { mbid: mbid })
-        };
-      }
       if (season) {
         dataByID = {
           ...dataByID,
           ...(season && { season: season })
         };
       }
-      //   dataByID = {
-      //     ...dataByID,
-      //     mbid: mbid
-      //   }
-      // }
       return transaction.get(dbByID).then(movieCollection => {
         if (!movieCollection.exists) {
           transaction.set(dbByID, {
@@ -100,6 +114,7 @@ export const data: Data = {
         [new Date().getTime()]: {
           id: `${type}_${id}`,
           dateAdded: new Date(),
+          date,
           published,
           type,
           seen,
