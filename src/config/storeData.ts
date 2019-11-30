@@ -8,7 +8,7 @@ interface DataPut extends MediaInfo, MediaTypes {
   star: number;
 }
 
-export interface DataByID {
+export interface DataByID extends MediaTypes {
   artist: string;
   overview: string;
   poster: string;

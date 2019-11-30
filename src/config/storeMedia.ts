@@ -52,7 +52,9 @@ export const media: Media = {
   }),
   mediaPutFilm: thunk(async (actions, payload, { getStoreActions }) => {
     const mbdResult = await fetch(
-      `${MDB_URL}/movie/${payload.id}/credits?api_key=${MBD_KEY}`
+      `${MDB_URL}/movie/${encodeURIComponent(
+        payload.id
+      )}/credits?api_key=${MBD_KEY}`
     );
     const credits = await mbdResult.json();
     const filmMedia = {
@@ -68,7 +70,11 @@ export const media: Media = {
   }),
   mediaPutAlbum: thunk(async (actions, payload, { getStoreActions }) => {
     const fmResult = await fetch(
-      `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&artist=${payload.artist}&album=${payload.title}&format=json&api_key=${FM_KEY}`
+      `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&artist=${encodeURIComponent(
+        payload.artist
+      )}&album=${encodeURIComponent(
+        payload.title
+      )}&format=json&api_key=${FM_KEY}`
     );
     const info = await fmResult.json();
     const albumObj = {

@@ -12,7 +12,7 @@ import {
 } from "styled-system";
 
 interface GridCmptProps extends BoxProps, GridProps, AlignItemsProps {
-  gridItem?: string;
+  gridItem?: boolean;
 }
 
 const Grid = styled(Box)<GridCmptProps>`

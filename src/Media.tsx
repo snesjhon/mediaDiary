@@ -28,7 +28,7 @@ const Media = (props: MediaProps) => {
           </p>
         </Box>
       </Flex>
-      <MediaList user={props.user} />
+      <MediaList />
     </>
   );
 };

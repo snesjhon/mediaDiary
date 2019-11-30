@@ -30,7 +30,6 @@ const MediaLog = ({ type, setType }: MediaLog) => {
   const mediaPutFilm = useStoreActions(actions => actions.media.mediaPutFilm);
   const mediaPutTV = useStoreActions(actions => actions.media.mediaPutTV);
   const mediaPutAlbum = useStoreActions(actions => actions.media.mediaPutAlbum);
-  // const dataPut = useStoreActions(actions => actions.data.dataPut);
   const [date, setDate] = useState(new Date());
   const [seen, setSeen] = useState(false);
   const [star, setStar] = useState(0);
@@ -167,8 +166,9 @@ const MediaLog = ({ type, setType }: MediaLog) => {
         title: `${title} (${seasonInfo.name})`,
         artist: info.created_by.map((e: any) => e.name).join(", "),
         season: seasonInfo.season_number,
+        overview: seasonInfo.overview,
         published: seasonInfo.air_date,
-        poster: seasonInfo.poster_path
+        poster: `https://image.tmdb.org/t/p/w400/${seasonInfo.poster_path}`
       };
 
       mediaPutTV(tvObj);

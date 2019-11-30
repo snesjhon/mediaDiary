@@ -1,9 +1,9 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
-import { Grid, Flex, Text, Box, Icon } from "./components";
+import { useState } from "react";
+import { Grid, Flex, Text, Box, Icon, Modal } from "./components";
 import styled from "styled-components";
-import { useStoreState, useStoreActions } from "./config/store";
-import { DataByDate } from "./config/storeData";
+import { useStoreState } from "./config/store";
+import { DataByDate, DataByID } from "./config/storeData";
 // @ts-ignore
 import ReactStars from "react-stars";
 
@@ -23,24 +23,16 @@ const PosterImg = styled.img`
   border: 1px solid var(--border-secondary);
 `;
 
-const MediaList = (props: any) => {
+const MediaList = () => {
+  const [modalInfo, setModalInfo] = useState<DataByID>();
   const byID = useStoreState(state => state.data.byID);
   const byDate = useStoreState(state => state.data.byDate);
 
-  // const dataGet = useStoreActions(actions => actions.data.dataGet);
-
-  // console.log(byID, byDate);
-  // return <div onClick={() => dataGet()}>asd</div>;
-
   if (typeof byID !== "undefined" && typeof byDate !== "undefined") {
-    // const diaryKeys = Object.keys(byDate);
-
-    // Object.keys(byDate).map(e => {
-    //   byDate[e].
-    // })
-
     const diaryDates = Object.keys(byDate).reduce<{
-      [key: string]: DataByDate;
+      [key: string]: {
+        [key: string]: DataByDate;
+      };
     }>((a, c) => {
       const month = new Date(byDate[c].date.seconds * 1000).toLocaleDateString(
         "en-us",
@@ -54,9 +46,6 @@ const MediaList = (props: any) => {
     const gridLayout = "5rem 4rem 3rem 18rem 10rem 4rem 6rem 8rem 5rem";
     const gridGap = "0 1.5rem";
 
-    // console.log(diaryDates);
-
-    // return <div>asd</div>;
     return (
       <>
         <Grid
@@ -80,37 +69,137 @@ const MediaList = (props: any) => {
         </Grid>
         {Object.keys(diaryDates)
           .reverse()
-          .map((month, monthIndex) => {
-            // console.log(diaryDates[month]);
-            // console.log(Object.keys(diaryDates[month]));
-            // Object.keys(diaryDates[month]).sort((a, b) => {
-            //   console.log(diaryDates[a]., b);
-            //   // return -1;
-            // });
-            return (
-              <MediaMonth key={monthIndex} pb={3}>
-                {Object.keys(diaryDates[month])
-                  .sort((a, b) => {
-                    debugger;
-                    return (
-                      diaryDates[b].date.seconds - diaryDates[a].date.seconds
-                    );
-                  })
-                  .map((day, dayIndex) => (
+          .map((month, monthIndex) => (
+            <MediaMonth key={monthIndex} pb={3}>
+              {Object.keys(diaryDates[month])
+                .sort(
+                  (a, b) =>
+                    diaryDates[month][b].date.seconds -
+                    diaryDates[month][a].date.seconds
+                )
+                .map((day, dayIndex) => {
+                  const { title, poster, published, artist, star, seen } = byID[
+                    diaryDates[month][day].id
+                  ];
+
+                  return (
                     <Grid
-                      className="monthContainer"
                       key={monthIndex + dayIndex}
                       gridTemplateColumns={gridLayout}
                       gridGap={gridGap}
                       py={3}
                       alignItems="center"
+                      onClick={() =>
+                        setModalInfo(byID[diaryDates[month][day].id])
+                      }
                     >
-                      something
+                      {dayIndex === 0 ? (
+                        <Text
+                          className="monthDate"
+                          fontSize={4}
+                          color="secondary"
+                        >
+                          {new Date(
+                            diaryDates[month][day].date.seconds * 1000
+                          ).toLocaleDateString("en-us", {
+                            month: "short"
+                          })}
+                        </Text>
+                      ) : (
+                        <div />
+                      )}
+                      <Text fontSize={3} fontWeight={300}>
+                        {new Date(
+                          diaryDates[month][day].date.seconds * 1000
+                        ).toLocaleDateString("en-us", {
+                          day: "numeric"
+                        })}
+                      </Text>
+                      <Flex>
+                        <PosterImg src={poster} />
+                      </Flex>
+                      <Text>{title}</Text>
+                      <Box>{artist ? artist : "none"}</Box>
+                      <Box>
+                        {published
+                          ? new Date(published).toLocaleDateString("en-US", {
+                              year: "numeric"
+                            })
+                          : "date"}
+                      </Box>
+                      <Box>
+                        <ReactStars
+                          count={5}
+                          half
+                          value={star}
+                          edit={false}
+                          size={16}
+                          color1="var(--secondary)"
+                          color2="var(--primary)"
+                        />
+                      </Box>
+                      <Box>{seen ? "seen" : "not seen"}</Box>
                     </Grid>
-                  ))}
-              </MediaMonth>
-            );
-          })}
+                  );
+                })}
+            </MediaMonth>
+          ))}
+        {typeof modalInfo !== "undefined" && (
+          <Modal
+            isOpen={typeof modalInfo !== "undefined"}
+            handleClose={() => setModalInfo(undefined)}
+          >
+            <Grid
+              gridTemplateColumns={
+                modalInfo.type === "album" ? "0.7fr 1fr" : "0.5fr 1fr"
+              }
+              gridGap="1rem"
+            >
+              <Grid gridItem>
+                <PosterImg src={modalInfo.poster} />
+              </Grid>
+              <Grid gridItem>
+                <Text
+                  pt={2}
+                  pb={0}
+                  fontSize={4}
+                  fontWeight={600}
+                  alignItems="center"
+                >
+                  {modalInfo.title}
+                  {modalInfo.type !== "album" && (
+                    <Text as="span" fontWeight={300} fontSize={3} ml={2}>
+                      (
+                      {new Date(modalInfo.published).toLocaleDateString(
+                        "en-us",
+                        {
+                          year: "numeric"
+                        }
+                      )}
+                      )
+                    </Text>
+                  )}
+                </Text>
+                {modalInfo.artist && (
+                  <Text fontSize={3} fontWeight={300} pb={2}>
+                    {modalInfo.artist}
+                  </Text>
+                )}
+                <Box py={3}>
+                  <ReactStars
+                    count={5}
+                    half
+                    value={modalInfo.star}
+                    size={20}
+                    color1="var(--secondary)"
+                    color2="var(--primary)"
+                  />
+                </Box>
+                <Text>{modalInfo.overview}</Text>
+              </Grid>
+            </Grid>
+          </Modal>
+        )}
       </>
     );
   } else {
@@ -138,21 +227,21 @@ export default MediaList;
 //     py={3}
 //     alignItems="center"
 //   >
-//     {dayIndex === 0 ? (
-//       <Text
-//         className="monthDate"
-//         fontSize={4}
-//         color="secondary"
-//       >
-//         {new Date(
-//           diaryDates[month][day].date.toDate()
-//         ).toLocaleDateString("en-us", {
-//           month: "short"
-//         })}
-//       </Text>
-//     ) : (
-//       <div />
-//     )}
+// {dayIndex === 0 ? (
+//   <Text
+//     className="monthDate"
+//     fontSize={4}
+//     color="secondary"
+//   >
+//     {new Date(
+//       diaryDates[month][day].date.toDate()
+//     ).toLocaleDateString("en-us", {
+//       month: "short"
+//     })}
+//   </Text>
+// ) : (
+//   <div />
+// )}
 //     <Text fontSize={3} fontWeight={300}>
 //       {new Date(
 //         diaryDates[month][day].date.toDate()
@@ -174,30 +263,30 @@ export default MediaList;
 //         seen
 //       }) => (
 //         <>
-//           <Flex>
-//             <PosterImg src={poster} />
-//           </Flex>
-//           <Text {...styleText}>{title}</Text>
-//           <Box>{artist ? artist : "none"}</Box>
-//           <Box>
-//             {date
-//               ? new Date(date).toLocaleDateString("en-US", {
-//                   year: "numeric"
-//                 })
-//               : "date"}
-//           </Box>
-//           <Box>
-//             <ReactStars
-//               count={5}
-//               half
-//               value={star}
-//               edit={false}
-//               size={16}
-//               color1="var(--secondary)"
-//               color2="var(--primary)"
-//             />
-//           </Box>
-//           <Box>{seen ? "seen" : "not seen"}</Box>
+// <Flex>
+//   <PosterImg src={poster} />
+// </Flex>
+// <Text {...styleText}>{title}</Text>
+// <Box>{artist ? artist : "none"}</Box>
+// <Box>
+//   {date
+//     ? new Date(date).toLocaleDateString("en-US", {
+//         year: "numeric"
+//       })
+//     : "date"}
+// </Box>
+// <Box>
+//   <ReactStars
+//     count={5}
+//     half
+//     value={star}
+//     edit={false}
+//     size={16}
+//     color1="var(--secondary)"
+//     color2="var(--primary)"
+//   />
+// </Box>
+// <Box>{seen ? "seen" : "not seen"}</Box>
 //         </>
 //       )}
 //     </MediaContainer>
