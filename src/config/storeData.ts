@@ -63,7 +63,7 @@ export const data: Data = {
       byDate: byDate.data() || {}
     });
   }),
-  dataPut: thunk(async (actions, payload, { getStoreActions }) => {
+  dataPut: thunk(async (actions, payload) => {
     const {
       id,
       type,
@@ -88,7 +88,8 @@ export const data: Data = {
         overview,
         artist,
         star,
-        seen
+        seen,
+        type
       };
       if (season) {
         dataByID = {

@@ -18,8 +18,9 @@ single collection.
 
 ### List
 
-- A modal to display the relevant information
+- ~~A modal to display the relevant information~~
 - onHover information when hovering over list
+- Add filters to view specific mediaTypes
 
 ### Search
 

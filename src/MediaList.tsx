@@ -78,9 +78,15 @@ const MediaList = () => {
                     diaryDates[month][a].date.seconds
                 )
                 .map((day, dayIndex) => {
-                  const { title, poster, published, artist, star, seen } = byID[
-                    diaryDates[month][day].id
-                  ];
+                  const {
+                    title,
+                    poster,
+                    published,
+                    artist,
+                    star,
+                    seen,
+                    type
+                  } = byID[diaryDates[month][day].id];
 
                   return (
                     <Grid
@@ -118,7 +124,27 @@ const MediaList = () => {
                       <Flex>
                         <PosterImg src={poster} />
                       </Flex>
-                      <Text>{title}</Text>
+
+                      {/* //     styleText = {
+//       as: "strong",
+//       textTransform: "uppercase"
+//     };
+//     styleText = {
+//       textTransform: "uppercase"
+//     };
+//     styleText = {
+//       fontStyle: "italic"
+//     }; */}
+
+                      <Text
+                        as={type === "film" ? "strong" : undefined}
+                        textTransform={
+                          type === "album" ? undefined : "uppercase"
+                        }
+                        fontStyle={type === "album" ? "italic" : undefined}
+                      >
+                        {title}
+                      </Text>
                       <Box>{artist ? artist : "none"}</Box>
                       <Box>
                         {published
@@ -768,15 +794,18 @@ export default MediaList;
 //       as: "strong",
 //       textTransform: "uppercase"
 //     };
+//     styleText = {
+//       textTransform: "uppercase"
+//     };
+//     styleText = {
+//       fontStyle: "italic"
+//     };
 //   } else if (item.type === "tv") {
 //     poster = `https://image.tmdb.org/t/p/w400/${media.poster_path}`;
 //     title = media.name;
 //     date = media.first_air_date;
 //     overview = media.overview;
 //     artist = typeof media.creator !== "undefined" && media.creator;
-//     styleText = {
-//       textTransform: "uppercase"
-//     };
 //   } else if (item.type === "album") {
 //     poster = media.image[3]["#text"];
 //     title = media.name;
@@ -785,9 +814,6 @@ export default MediaList;
 //       typeof media.wiki !== "undefined"
 //         ? media.wiki.summary.split("<a href")[0]
 //         : undefined;
-//     styleText = {
-//       fontStyle: "italic"
-//     };
 //   }
 //   return props.children({
 //     poster,
