@@ -14,14 +14,16 @@ const iconComponents = {
 };
 
 const Icon = props => {
-  const { name, stroke, height, width, ...other } = props;
-  const IconRender =
-    iconComponents[name] !== undefined
-      ? iconComponents[name]
-      : IconRef.IconFilm;
+  const {
+    name = "film",
+    stroke = "var(--primary)",
+    height = "25px",
+    width = "25px",
+    ...other
+  } = props;
   return (
     <Box
-      as={IconRender}
+      as={iconComponents[name]}
       stroke={stroke}
       height={height}
       width={width}

@@ -16,6 +16,11 @@ single collection.
 - ~~Need to add user to localStorage, so it doesn't keep refreshing~~
 - Add error logging for information
 
+### Welcome
+
+- Add more information about the About page
+- Add a default year and save to preference for a user
+
 ### List
 
 - ~~A modal to display the relevant information~~

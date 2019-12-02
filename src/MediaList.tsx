@@ -124,18 +124,6 @@ const MediaList = () => {
                       <Flex>
                         <PosterImg src={poster} />
                       </Flex>
-
-                      {/* //     styleText = {
-//       as: "strong",
-//       textTransform: "uppercase"
-//     };
-//     styleText = {
-//       textTransform: "uppercase"
-//     };
-//     styleText = {
-//       fontStyle: "italic"
-//     }; */}
-
                       <Text
                         as={type === "film" ? "strong" : undefined}
                         textTransform={

@@ -5,7 +5,7 @@ import { border, system, variant, BorderProps } from "styled-system";
 interface ButtonProps extends BoxProps, BorderProps {
   hoverColor?: string;
   hoverBg?: string;
-  variant?: "primary" | "secondary" | "image";
+  variant?: "primary" | "secondary" | "image" | "icon";
 }
 
 const Button = styled(Box)<ButtonProps>`
@@ -44,6 +44,7 @@ const Button = styled(Box)<ButtonProps>`
         borderRadius: 3
       },
       image: {
+        display: "flex",
         bg: "tranparent",
         "& > img": {
           borderRadius: "50%"

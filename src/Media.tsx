@@ -1,13 +1,12 @@
 import * as React from "react";
 import { Flex, Box } from "./components";
 import MediaList from "./MediaList";
+import Navigation from "./Navigation";
 
-interface MediaProps {
-  user: firebase.User;
-}
-const Media = (props: MediaProps) => {
+const Media = () => {
   return (
     <>
+      <Navigation />
       <Flex justifyContent="space-between">
         <Box my={4}>
           <p>

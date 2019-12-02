@@ -77,8 +77,8 @@ export const data: Data = {
       date,
       season
     } = payload;
-    const dbByID = db.collection("media").doc("byID");
-    const dbByDate = db.collection("media").doc("byDate");
+    const dbByID = db.collection("2019").doc("byID");
+    const dbByDate = db.collection("2019").doc("byDate");
 
     const prByID = db.runTransaction(transaction => {
       let dataByID = {
