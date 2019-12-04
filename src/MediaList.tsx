@@ -1,8 +1,8 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Grid, Flex, Text, Box, Icon, Modal } from "./components";
 import styled from "styled-components";
-import { useStoreState } from "./config/store";
+import { useStoreState, useStoreActions } from "./config/store";
 import { DataByDate, DataByID } from "./config/storeData";
 // @ts-ignore
 import ReactStars from "react-stars";
@@ -27,6 +27,14 @@ const MediaList = () => {
   const [modalInfo, setModalInfo] = useState<DataByID>();
   const byID = useStoreState(state => state.data.byID);
   const byDate = useStoreState(state => state.data.byDate);
+  const dataGet = useStoreActions(actions => actions.data.dataGet);
+
+  useEffect(() => {
+    if (Object.keys(byID).length === 0 && Object.keys(byDate).length === 0) {
+      console.log("getData");
+      dataGet();
+    }
+  }, [byID, byDate]);
 
   if (typeof byID !== "undefined" && typeof byDate !== "undefined") {
     const diaryDates = Object.keys(byDate).reduce<{

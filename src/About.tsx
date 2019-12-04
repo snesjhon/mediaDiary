@@ -10,7 +10,7 @@ import { Box, Text, Icon, Flex, Button } from "./components";
 import { useStoreActions } from "./config/store";
 
 const About = () => {
-  const userVerify = useStoreActions(actions => actions.global.userVerify);
+  const userGet = useStoreActions(actions => actions.global.userGet);
   return (
     <Box>
       <Flex flexDirection="column" alignItems="center">
@@ -28,7 +28,7 @@ const About = () => {
         Track All Your Media.
       </Text>
       <Flex justifyContent="center" my={4}>
-        <Button variant="secondary" onClick={() => userVerify()}>
+        <Button variant="secondary" onClick={() => userGet()}>
           Sign In
         </Button>
       </Flex>

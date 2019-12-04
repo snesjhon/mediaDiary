@@ -136,5 +136,3 @@ export const data: Data = {
     });
   })
 };
-
-// getStoreActions().media.mediaSelect();

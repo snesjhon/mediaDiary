@@ -2,99 +2,94 @@ import { Action, action, Thunk, thunk } from "easy-peasy";
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import { fb, db } from "./db";
-import { StoreModel } from "./store";
 
-export interface Global {
-  preferences:
-    | {
-        theme: "light" | "dark";
-        year: number | null;
-      }
-    | {};
-  // hasPreferences: boolean;
+export type UserTheme = "light" | "dark";
+
+export interface UserPreferences {
   user: firebase.User | null;
-  userAdd: Action<Global, firebase.User | null>;
-  userAddPreference: Action<Global, {}>;
-  // userAddPreference: Thunk<Global, void, void, StoreModel>;
-  userGetPreference: Thunk<Global, void, void, StoreModel>;
-  userSetPreference: Thunk<Global, Global["preferences"]>;
-  userVerify: Thunk<Global, void, void, StoreModel>;
+  preferences: {
+    theme: UserTheme | null;
+    year: number | null;
+  };
+}
+
+export interface Global extends UserPreferences {
+  userGet: Thunk<Global>;
+  userSet: Action<Global, UserPreferences["user"]>;
+  userSetPreferences: Action<Global, UserPreferences["preferences"]>;
+  userGetPreferences: Thunk<Global, firebase.User | null>;
+  userPutPreferences: Thunk<Global, UserPreferences["preferences"]>;
   userLogout: Thunk<Global>;
 }
 
-const provider = new firebase.auth.GoogleAuthProvider();
-
 export const global: Global = {
   user: null,
-  preferences: {},
-  // hasPreferences: false,
-  userAdd: action((state, payload) => {
+  preferences: {
+    theme: null,
+    year: null
+  },
+  userGet: thunk(async actions => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    const result = await fb.auth().signInWithPopup(provider);
+    try {
+      actions.userGetPreferences(result.user);
+    } catch {
+      return console.log("handle no user");
+    }
+  }),
+  userSet: action((state, payload) => {
     state.user = payload;
   }),
-  userAddPreference: action((state, payload) => {
+  userSetPreferences: action((state, payload) => {
     state.preferences = payload;
   }),
-  userSetPreference: thunk(async (actions, payload) => {
+  userGetPreferences: thunk(async (actions, payload) => {
     const userRef = db.collection("user").doc("preferences");
-    userRef
-      .set(payload)
-      .then(function() {
-        actions.userAddPreference(payload);
-      })
-      .catch(function(error) {
-        console.error("Error writing document: ", error);
+    const doc = await userRef.get();
+    if (doc.exists) {
+      const data = typeof doc.data() !== "undefined" && doc.data();
+      if (data) {
+        actions.userSet(payload);
+        actions.userSetPreferences({
+          theme: data.theme,
+          year: data.year
+        });
+      }
+    } else {
+      // We have a user, but we need the user to choose their own year and then
+      // save into the preference
+      actions.userSet(payload);
+      actions.userSetPreferences({
+        theme: null,
+        year: null
       });
+    }
   }),
-  userGetPreference: thunk(async actions => {
-    const userRef = db.collection("user").doc("preferences");
-    userRef
-      .get()
-      .then(function(doc) {
-        if (doc.exists) {
-          const data = typeof doc.data() !== "undefined" && doc.data();
-          if (data) {
-            actions.userAddPreference({
-              theme: data.theme,
-              year: data.year
-            });
+  userPutPreferences: thunk(async (actions, payload) => {
+    const dbPreference = db.collection("user").doc("preferences");
+    return db
+      .runTransaction(transaction => {
+        return transaction.get(dbPreference).then(userPreference => {
+          if (!userPreference.exists) {
+            transaction.set(dbPreference, payload);
           }
-        }
+          transaction.update(dbPreference, payload);
+        });
       })
-      .catch(function(error) {
-        console.log("Error getting document:", error);
+      .then(() => {
+        actions.userSetPreferences(payload);
       });
   }),
   userLogout: thunk(async actions => {
     fb.auth()
       .signOut()
       .then(function() {
-        actions.userAdd(null);
+        actions.userSet(null);
+        actions.userSetPreferences({
+          theme: null,
+          year: null
+        });
       })
       .catch(function(error) {});
-  }),
-  userVerify: thunk(async (actions, payload, { getStoreActions }) => {
-    const result = await firebase.auth().signInWithPopup(provider);
-    actions.userAdd(result.user);
-    actions.userGetPreference();
-    // getStoreActions().data.dataGet();
   })
 };
-
-//  userAddPreference: thunk(async (actions, payload) => {
-//   const dbPreference = db.collection("user").doc("preferences");
-
-//   db.runTransaction(transaction => {
-//     return transaction.get(dbPreference).then(userPreference => {
-//       if (!userPreference.exists) {
-//         transaction.set(dbPreference, {
-//           theme: "light",
-//           year: null
-//         });
-//       }
-//       return transaction.update(dbPreference, {
-//         theme: "light",
-//         year: null
-//       });
-//     });
-//   });
-// }),
