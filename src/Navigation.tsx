@@ -1,8 +1,13 @@
 import * as React from "react";
 import { Flex, Text, Box, Grid } from "./components";
-import MediaModal from "./MediaModal";
+import MediaAdd from "./MediaAdd";
 import User from "./User";
+import { useStoreState } from "./config/store";
+
 const Navigation = () => {
+  const year = useStoreState(state =>
+    state.global.preferences.year !== null ? state.global.preferences.year : ""
+  );
   return (
     <>
       <Grid alignItems="center" gridTemplateColumns="1fr 1fr 2rem">
@@ -10,8 +15,14 @@ const Navigation = () => {
           <Text fontSize={4} fontWeight={600}>
             Media Diary
           </Text>
+          <Text as="span" fontSize={4} ml={2} fontWeight={300}>
+            /
+          </Text>
+          <Text as="span" fontSize={4} ml={2} fontWeight={300} color="orange">
+            {year}
+          </Text>
         </Flex>
-        <MediaModal />
+        <MediaAdd />
         <User />
       </Grid>
       <Box my={2} borderTop="1px solid #d1d5da" />

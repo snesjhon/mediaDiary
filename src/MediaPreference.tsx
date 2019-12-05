@@ -15,8 +15,8 @@ const MediaPreference = () => {
   const userPutPreferences = useStoreActions(
     actions => actions.global.userPutPreferences
   );
-  const [year, setYear] = useState<number>(
-    parseInt(new Date().toLocaleDateString([], { year: "numeric" }))
+  const [year, setYear] = useState(
+    new Date().toLocaleDateString([], { year: "numeric" })
   );
   const [theme, setTheme] = useState<UserTheme>("light");
   return (
@@ -48,7 +48,7 @@ const MediaPreference = () => {
       <Text>Choose Year</Text>
       <Input
         type="text"
-        onChange={e => setYear(parseInt(e.target.value))}
+        onChange={e => setYear(e.target.value)}
         placeholder={year.toString()}
       />
 

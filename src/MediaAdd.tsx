@@ -6,17 +6,11 @@ import MediaLog from "./MediaLog";
 import { MediaTypes } from "./config/types";
 import { useStoreActions, useStoreState } from "./config/store";
 
-const MediaModal = () => {
+const MediaAdd = () => {
   const mediaSelected = useStoreState(state => state.media.mediaSelected);
   const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
-  const [showDropdown, setShowDropdown] = useState(false);
   const [type, setType] = useState<MediaTypes["type"]>("");
   const isOpen = type !== "";
-
-  const selectType = (type: MediaTypes["type"]) => {
-    setShowDropdown(false);
-    setType(type);
-  };
   return (
     <>
       <Flex
@@ -33,7 +27,7 @@ const MediaModal = () => {
           stroke="var(--primary)"
           height="20px"
           width="20px"
-          onClick={() => selectType("film")}
+          onClick={() => setType("film")}
           mr={3}
         />
         <Icon
@@ -41,7 +35,7 @@ const MediaModal = () => {
           stroke="var(--primary)"
           height="20px"
           width="20px"
-          onClick={() => selectType("tv")}
+          onClick={() => setType("tv")}
           mr={3}
         />
         <Icon
@@ -49,7 +43,7 @@ const MediaModal = () => {
           stroke="var(--primary)"
           height="20px"
           width="20px"
-          onClick={() => selectType("album")}
+          onClick={() => setType("album")}
           mr={3}
         />
       </Flex>
@@ -73,52 +67,4 @@ const MediaModal = () => {
   );
 };
 
-export default MediaModal;
-
-// <Dropdown showDropdown={showDropdown} setShowDropdown={setShowDropdown}>
-// <Flex
-//   py={2}
-//   px={3}
-//   onClick={() => selectType("film")}
-//   alignItems="center"
-// >
-//   <Icon
-//     name="film"
-//     stroke="var(--primary)"
-//     height="15px"
-//     width="15px"
-//     mr={1}
-//   />
-//   Film
-// </Flex>
-// <Flex
-//   py={2}
-//   px={3}
-//   onClick={() => selectType("tv")}
-//   alignItems="center"
-// >
-//   <Icon
-//     name="tv"
-//     stroke="var(--primary)"
-//     height="15px"
-//     width="15px"
-//     mr={1}
-//   />
-//   TV
-// </Flex>
-// <Flex
-//   py={2}
-//   px={3}
-//   onClick={() => selectType("album")}
-//   alignItems="center"
-// >
-//   <Icon
-//     name="album"
-//     stroke="var(--primary)"
-//     height="15px"
-//     width="15px"
-//     mr={1}
-//   />
-//   Album
-// </Flex>
-// </Dropdown>
+export default MediaAdd;

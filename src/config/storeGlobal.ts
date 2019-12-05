@@ -10,7 +10,7 @@ export interface UserPreferences {
   user: firebase.User | null;
   preferences: {
     theme: UserTheme;
-    year: number | null;
+    year: string | null;
   };
 }
 
@@ -91,6 +91,7 @@ export const global: Global = {
           year: null
         });
         getStoreActions().data.dataSet({ byID: {}, byDate: {} });
+        sessionStorage.clear();
       })
       .catch(function(error) {});
   })

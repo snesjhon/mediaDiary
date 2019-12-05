@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { Grid, Flex, Text, Box, Icon, Modal } from "./components";
+import { Grid, Flex, Text, Box, Icon, Modal, Button } from "./components";
 import styled from "styled-components";
 import { useStoreState, useStoreActions } from "./config/store";
 import { DataByDate, DataByID } from "./config/storeData";
@@ -23,18 +23,68 @@ const PosterImg = styled.img`
   border: 1px solid var(--border-secondary);
 `;
 
+interface MediaListItemProps {
+  content: [string, DataByID];
+}
+const MediaListItem = ({ content }: MediaListItemProps) => {
+  const dataDelete = useStoreActions(actions => actions.data.dataDelete);
+  const itemID = content[0];
+  const item = content[1];
+  return (
+    <Grid
+      gridTemplateColumns={item.type === "album" ? "0.7fr 1fr" : "0.5fr 1fr"}
+      gridGap="1rem"
+    >
+      <Grid gridItem>
+        <PosterImg src={item.poster} />
+      </Grid>
+      <Grid gridItem>
+        <Text pt={2} pb={0} fontSize={4} fontWeight={600} alignItems="center">
+          {item.title}
+          {item.type !== "album" && (
+            <Text as="span" fontWeight={300} fontSize={3} ml={2}>
+              (
+              {new Date(item.published).toLocaleDateString("en-us", {
+                year: "numeric"
+              })}
+              )
+            </Text>
+          )}
+        </Text>
+        {item.artist && (
+          <Text fontSize={3} fontWeight={300} pb={2}>
+            {item.artist}
+          </Text>
+        )}
+        <Text>{item.overview}</Text>
+        <Box py={3}>
+          <Text>Rated</Text>
+          <ReactStars
+            count={5}
+            half
+            value={item.star}
+            size={20}
+            color1="var(--secondary)"
+            color2="var(--primary)"
+          />
+        </Box>
+        <Button onClick={() => dataDelete(itemID)}>Delete</Button>
+      </Grid>
+    </Grid>
+  );
+};
+
 const MediaList = () => {
-  const [modalInfo, setModalInfo] = useState<DataByID>();
+  // const [modalInfo, setDataID] = useState<DataByID>();
+  const [dataID, setDataID] = useState<[string, DataByID]>();
   const byID = useStoreState(state => state.data.byID);
   const byDate = useStoreState(state => state.data.byDate);
   const dataGet = useStoreActions(actions => actions.data.dataGet);
 
   useEffect(() => {
-    if (Object.keys(byID).length === 0 && Object.keys(byDate).length === 0) {
-      console.log("getData");
-      dataGet();
-    }
-  }, [byID, byDate]);
+    console.log("getData");
+    dataGet();
+  }, []);
 
   if (typeof byID !== "undefined" && typeof byDate !== "undefined") {
     const diaryDates = Object.keys(byDate).reduce<{
@@ -95,7 +145,6 @@ const MediaList = () => {
                     seen,
                     type
                   } = byID[diaryDates[month][day].id];
-
                   return (
                     <Grid
                       key={monthIndex + dayIndex}
@@ -104,7 +153,7 @@ const MediaList = () => {
                       py={3}
                       alignItems="center"
                       onClick={() =>
-                        setModalInfo(byID[diaryDates[month][day].id])
+                        setDataID([day, byID[diaryDates[month][day].id]])
                       }
                     >
                       {dayIndex === 0 ? (
@@ -166,60 +215,12 @@ const MediaList = () => {
                 })}
             </MediaMonth>
           ))}
-        {typeof modalInfo !== "undefined" && (
+        {typeof dataID !== "undefined" && (
           <Modal
-            isOpen={typeof modalInfo !== "undefined"}
-            handleClose={() => setModalInfo(undefined)}
+            isOpen={typeof dataID !== "undefined"}
+            handleClose={() => setDataID(undefined)}
           >
-            <Grid
-              gridTemplateColumns={
-                modalInfo.type === "album" ? "0.7fr 1fr" : "0.5fr 1fr"
-              }
-              gridGap="1rem"
-            >
-              <Grid gridItem>
-                <PosterImg src={modalInfo.poster} />
-              </Grid>
-              <Grid gridItem>
-                <Text
-                  pt={2}
-                  pb={0}
-                  fontSize={4}
-                  fontWeight={600}
-                  alignItems="center"
-                >
-                  {modalInfo.title}
-                  {modalInfo.type !== "album" && (
-                    <Text as="span" fontWeight={300} fontSize={3} ml={2}>
-                      (
-                      {new Date(modalInfo.published).toLocaleDateString(
-                        "en-us",
-                        {
-                          year: "numeric"
-                        }
-                      )}
-                      )
-                    </Text>
-                  )}
-                </Text>
-                {modalInfo.artist && (
-                  <Text fontSize={3} fontWeight={300} pb={2}>
-                    {modalInfo.artist}
-                  </Text>
-                )}
-                <Box py={3}>
-                  <ReactStars
-                    count={5}
-                    half
-                    value={modalInfo.star}
-                    size={20}
-                    color1="var(--secondary)"
-                    color2="var(--primary)"
-                  />
-                </Box>
-                <Text>{modalInfo.overview}</Text>
-              </Grid>
-            </Grid>
+            <MediaListItem content={dataID} />
           </Modal>
         )}
       </>
@@ -230,599 +231,3 @@ const MediaList = () => {
 };
 
 export default MediaList;
-
-// {Object.keys(diaryDates[month]).sort(
-//   (a, b) => {
-//     console.log(a, b);
-//     return -1;
-//   }
-//   // diaryDates.month.date.seconds
-//   //   // diaryDates.month.b.date.seconds -
-//   //   // diaryDates[month][a].date.seconds
-// )
-// .map((day, dayIndex) => (
-//   <Grid
-//     className="monthContainer"
-//     key={monthIndex + dayIndex}
-//     gridTemplateColumns={gridLayout}
-//     gridGap={gridGap}
-//     py={3}
-//     alignItems="center"
-//   >
-// {dayIndex === 0 ? (
-//   <Text
-//     className="monthDate"
-//     fontSize={4}
-//     color="secondary"
-//   >
-//     {new Date(
-//       diaryDates[month][day].date.toDate()
-//     ).toLocaleDateString("en-us", {
-//       month: "short"
-//     })}
-//   </Text>
-// ) : (
-//   <div />
-// )}
-//     <Text fontSize={3} fontWeight={300}>
-//       {new Date(
-//         diaryDates[month][day].date.toDate()
-//       ).toLocaleDateString("en-us", {
-//         day: "numeric"
-//       })}
-//     </Text>
-//     <MediaContainer
-//       mediaInfo={list[diaryDates[month][day].id]}
-//       mediaItem={diaryDates[month][day]}
-//     >
-//       {({
-//         poster,
-//         title,
-//         date,
-//         styleText,
-//         artist,
-//         star,
-//         seen
-//       }) => (
-//         <>
-// <Flex>
-//   <PosterImg src={poster} />
-// </Flex>
-// <Text {...styleText}>{title}</Text>
-// <Box>{artist ? artist : "none"}</Box>
-// <Box>
-//   {date
-//     ? new Date(date).toLocaleDateString("en-US", {
-//         year: "numeric"
-//       })
-//     : "date"}
-// </Box>
-// <Box>
-//   <ReactStars
-//     count={5}
-//     half
-//     value={star}
-//     edit={false}
-//     size={16}
-//     color1="var(--secondary)"
-//     color2="var(--primary)"
-//   />
-// </Box>
-// <Box>{seen ? "seen" : "not seen"}</Box>
-//         </>
-//       )}
-//     </MediaContainer>
-//   </Grid>
-// ))}
-// }
-
-// const [showInfo, setShowInfo] = useState([]);
-// const [offTop, setOffTop] = useState();
-// const [rating, setRating] = useState(null);
-
-// const onChange = value => {
-//   setRating(value);
-// };
-
-// const mediaDate = showInfo[0];
-// const mediaItem = showInfo[1];
-// const mediaInfo = showInfo[2];
-//   {diaryKeys
-//     .sort((a, b) => new Date(b) - new Date(a))
-//     .reduce((a, c) => {
-
-//       return a;
-//     }, [])
-//     .map((date, dateIndex) => (
-//       <Grid
-//         key={date}
-//         gridTemplateColumns="6rem 5rem 1fr"
-//         borderTop={dateIndex !== 0 ? "gray" : undefined}
-//         pt={dateIndex !== 0 ? 3 : undefined}
-//         mt={dateIndex !== 0 ? 3 : undefined}
-//       >
-//         {dateIndex === 0 ? <Text fontSize={5}>10</Text> : <div />}
-//         <Text
-//           fontSize={4}
-//           color={mediaDate === date ? "var(--blue)" : undefined}
-//         >
-//           {date.replace("-2019", "").replace("-", "/")}
-//         </Text>
-//         <Flex flexDirection="column">
-//           {Object.keys(diary[date])
-// .sort(
-//   (a, b) =>
-//     new Date(diary[date][b].dateAdded.toDate()) -
-//     new Date(diary[date][a].dateAdded.toDate())
-// )
-//             .map(mediaID => (
-//               <MediaListItem
-//                 id={mediaID}
-//                 key={date + mediaID}
-//                 isActive={mediaInfo === list[mediaID]}
-//                 p={2}
-//                 mb={0}
-//                 onClick={() =>
-//                   setShowInfo([date, diary[date][mediaID], list[mediaID]])
-//                 }
-//               >
-// <MediaContainer
-//   mediaInfo={list[mediaID]}
-//   mediaItem={diary[date][mediaID]}
-// >
-//   {({
-//     poster,
-//     title,
-//     date,
-//     overview,
-//     artist,
-//     star,
-//     seen
-//   }) => (
-// <Grid gridTemplateColumns="repeat(6, 1fr)">
-//   <Grid gridItem>
-//     <PosterImg src={poster} />
-//   </Grid>
-//   <Grid gridItem>{title}</Grid>
-//   <Grid gridItem>{date}</Grid>
-//   <Grid gridItem>{artist}</Grid>
-//   <Grid gridItem>{star}</Grid>
-//   <Grid gridItem>{seen}</Grid>
-// </Grid>
-//                   )}
-//                 </MediaContainer>
-//               </MediaListItem>
-//             ))}
-//         </Flex>
-//       </Grid>
-//     ))}
-// </Flex>
-// {
-//   /* {currentMedia(diary[date][mediaID], list[mediaID])} */
-// }
-// function currentMedia(diaryItem, listItem) {
-//   console.log(diaryItem, listItem);
-//   let titleID, titleArtist, styleText;
-//   if (diaryItem.type === "film") {
-//     titleID = "title";
-// styleText = {
-//   as: "strong",
-//   textTransform: "uppercase"
-// };
-//   } else if (diaryItem.type === "tv") {
-//     titleID = "original_name";
-//     styleText = {
-//       textTransform: "uppercase"
-//     };
-//   } else if (diaryItem.type === "album") {
-//     titleArtist = "artist";
-//     titleID = "name";
-//     styleText = {
-//       fontStyle: "italic"
-//     };
-//   }
-
-//   return (
-//     <Grid gridTemplateColumns="1fr 1fr 1fr">
-//       <Text {...styleText}>
-//         {listItem[titleID]} {titleArtist && `- ${listItem[titleArtist]}`}
-//       </Text>
-//     </Grid>
-//   );
-// }
-
-// {mediaInfo && (
-//   <Box id="mediaList" position="relative">
-//     <MediaListItem
-//       id="mediaListItem"
-//       isActive={true}
-//       position="absolute"
-//       top={offTop}
-//       maxWidth="60vw"
-//     >
-//       <Box p={3} gridTemplateColumns="0.3fr 0.7fr" gridGap="0 1rem">
-//         <MediaContainer mediaInfo={mediaInfo} mediaItem={mediaItem}>
-//           {({ poster, title, date, overview, artist, star, seen }) => (
-//             <Grid
-//               gridTemplateColumns={
-//                 mediaItem.type === "album" ? "0.7fr 1fr" : "0.5fr 1fr"
-//               }
-//               gridGap="1rem"
-//             >
-//               <Grid gridItem>
-//                 <PosterImg src={poster} />
-//               </Grid>
-//               <Grid gridItem>
-//                 <Text
-//                   pt={2}
-//                   pb={0}
-//                   fontSize={4}
-//                   fontWeight="600"
-//                   alignItems="center"
-//                 >
-//                   {title}
-//                   {mediaItem.type !== "album" && (
-//                     <Text
-//                       as="span"
-//                       fontWeight="300"
-//                       fontSize={3}
-//                       ml={2}
-//                     >
-//                       (
-// {new Date(date).toLocaleDateString("en-us", {
-//   year: "numeric"
-// })}
-//                       )
-//                     </Text>
-//                   )}
-//                 </Text>
-//                 {mediaItem.type !== "album" && (
-//                   <Text fontSize={3} fontWeight="300">
-//                     Jhon Paredes
-//                   </Text>
-//                 )}
-//                 {artist && (
-//                   <Text fontSize={3} fontWeight="300" pb={2}>
-//                     {artist}
-//                   </Text>
-//                 )}
-//                 <Box py={3}>
-// <Rating
-//   fractions={2}
-//   readonly={true}
-//   emptySymbol={
-//     <Icon
-//       name="starEmpty"
-//       height="24px"
-//       width="24px"
-//       stroke="var(--primary)"
-//     />
-//   }
-//   fullSymbol={
-//     <Icon
-//       name="starFull"
-//       height="24px"
-//       width="24px"
-//       stroke="var(--primary)"
-//     />
-//   }
-//   initialRating={star}
-// />
-//                 </Box>
-//                 <Text>{overview}</Text>
-//               </Grid>
-//             </Grid>
-//           )}
-//         </MediaContainer>
-//       </Box>
-//     </MediaListItem>
-//   </Box>
-// )}
-
-// <Grid pt={3} pb={4} key={monthIndex} gridTemplateColumns="5rem 1fr">
-//               <Text fontSize={5} fontWeight="bolder">
-//                 {month}
-//               </Text>
-//               <Box>
-//                 {Object.keys(diaryDates[month])
-//                   .sort(
-//                     (a, b) =>
-//                       new Date(diaryDates[month][a].dateAdded.toDate()) -
-//                       new Date(diaryDates[month][b].dateAdded.toDate())
-//                   )
-//                   .map((day, dayIndex) => {
-//                     // console.log(
-//                     //   // diaryDates,
-//                     //   // month,
-//                     //   // day,
-//                     //   diaryDates[month][day],
-//                     //   diaryDates[month][day].id,
-//                     //   list[diaryDates[month][day].id],
-//                     //   list
-//                     //   // dayIndex
-//                     // );
-//                     return (
-//                       <Grid
-//                         pt={1}
-//                         pb={2}
-//                         mb={4}
-//                         key={dayIndex}
-//                         gridTemplateColumns="5rem 1fr"
-//                         borderBottom="1px solid lightgray"
-//                       >
-//                         <Text fontSize={4}>
-//                           {new Date(day).toLocaleDateString("en-us", {
-//                             day: "numeric"
-//                           })}
-//                         </Text>
-//                         <Box>
-//                           <MediaContainer
-//                             mediaInfo={list[diaryDates[month][day].id]}
-//                             mediaItem={diaryDates[month][day]}
-//                           >
-//                             {({
-//                               poster,
-//                               title,
-//                               date,
-//                               overview,
-//                               artist,
-//                               star,
-//                               seen
-//                             }) => (
-//                               <Grid gridTemplateColumns="repeat(5, 1fr)">
-//                                 <Box>
-//                                   <PosterImg src={poster} />
-//                                 </Box>
-//                                 <Text fontSize={3}>{title}</Text>
-//                                 <Box>{date}</Box>
-//                                 <Box>{artist}</Box>
-//                                 <Box>{star}</Box>
-//                                 <Box>{seen}</Box>
-//                               </Grid>
-//                             )}
-//                           </MediaContainer>
-//                           {/* {Object.keys(diaryDates[month][day]).map(
-//                           (item, itemIndex) => (
-// <MediaContainer
-//   mediaInfo={list[item]}
-//   mediaItem={diary[day][item]}
-//   key={itemIndex}
-// >
-//   {({
-//     poster,
-//     title,
-//     date,
-//     overview,
-//     artist,
-//     star,
-//     seen
-//   }) => (
-//     <Grid gridTemplateColumns="repeat(5, 1fr)">
-//       <Box>
-//         <PosterImg src={poster} />
-//       </Box>
-//       <Text fontSize={3}>{title}</Text>
-//       <Box>{date}</Box>
-//       <Box>{artist}</Box>
-//       <Box>{star}</Box>
-//       <Box>{seen}</Box>
-//     </Grid>
-//   )}
-// </MediaContainer>
-//                           )
-//                         )} */}
-//                         </Box>
-//                       </Grid>
-//                     );
-//                   })}
-//               </Box>
-//             </Grid>
-
-// useEffect(() => {
-//   const initKeys = Object.keys(diary);
-//   if (initKeys.length > 0) {
-//     initKeys
-//       .sort((a, b) => new Date(b) - new Date(a))
-//       .map((date, dateIndex) => {
-//         Object.keys(diary[date])
-//           .sort(
-//             (a, b) =>
-//               new Date(diary[date][b].dateAdded.toDate()) -
-//               new Date(diary[date][a].dateAdded.toDate())
-//           )
-//           .map((mediaID, mediaIndex) => {
-//             if (dateIndex === 0 && mediaIndex === 0) {
-//               setShowInfo([date, diary[date][mediaID], list[mediaID]]);
-//             }
-//           });
-//       });
-//   }
-// }, [diary, list]);
-
-// useEffect(() => {
-//   if (mediaItem) {
-//     const nodeListHeight = document.getElementById("mediaList").offsetHeight;
-
-//     const nodeOffTop = document.getElementById(mediaItem.id).offsetTop;
-//     const nodeMainHeight = document.getElementById("mediaListItem")
-//       .offsetHeight;
-
-//     if (nodeOffTop + nodeMainHeight > nodeListHeight) {
-//       console.log("overlap", nodeOffTop, nodeMainHeight, nodeListHeight);
-//     }
-
-//     if (offTop !== nodeOffTop) {
-//       setOffTop(nodeOffTop);
-//     }
-//   }
-// }, [mediaItem, offTop]);
-
-// {
-//   /* <Rating
-//                               animateOnHover
-//                               initialRate={star}
-//                               // fractions={2}
-//                               // emptyRate={
-//                               //   <Icon
-//                               //     name="starEmpty"
-//                               //     height="24px"
-//                               //     width="24px"
-//                               //     stroke="var(--primary)"
-//                               //   />
-//                               // }
-//                               // fullRate={
-//                               //   <Icon
-//                               //     name="starFull"
-//                               //     height="24px"
-//                               //     width="24px"
-//                               //     stroke="var(--primary)"
-//                               //   />
-//                               // }
-//                             /> */
-// }
-// {
-//   /* <Rating
-//                               fractions={2}
-//                               readonly={true}
-//                               emptySymbol={
-//                                 <Icon
-//                                   name="starEmpty"
-//                                   height="24px"
-//                                   width="24px"
-//                                   stroke="var(--primary)"
-//                                 />
-//                               }
-//                               fullSymbol={
-//                                 <Icon
-//                                   name="starFull"
-//                                   height="24px"
-//                                   width="24px"
-//                                   stroke="var(--primary)"
-//                                 />
-//                               }
-//                               initialRating={star}
-//                             /> */
-// }
-
-// const MediaCard = styled(Grid)`
-//   position: relative;
-//   /* &:before {
-//     content: "";
-//     position: absolute;
-//     top: 0;
-//     bottom: 0;
-//     left: 0;
-//     right: 0;
-//     display: block;
-//     z-index: 1;
-//     ${props =>
-//       props.imgUrl &&
-//       `
-//       background-image: url(${props.imgUrl});
-//       filter: brightness(0.5)
-//     `}
-//   } */
-//   /* filter: "brightness(0.5)" */
-// `;
-
-// const MediaCover = styled(Grid)`
-//   padding-top: 10rem;
-//   ${props =>
-//     props.imgUrl &&
-//     `
-//       background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${props.imgUrl}) top center no-repeat;
-//       background-size: cover;
-//     `} /* &::before {
-//     content: "";
-//     display: block;
-//     position: absolute;
-//     background-color: #000;
-//     opacity: 0.5;
-//     width: 100%;
-//     height: 100%;
-//   } */
-// `;
-
-// const MediaListItem = styled(Grid)`
-//   ${props =>
-//     props.isActive &&
-//     `
-//     outline: ${props.theme.borders.primary};
-//     background-color: ${props.theme.bg.secondary}
-//   `} /* p={2}
-//                   mb={0}
-//                   bg={showInfo === list[movieID] && "gray"}
-//                   // border={showInfo === list[movieID] && "gray"}
-//                   style={{ outline: "1px solid gray" }} */
-// `;
-
-// interface MediaContainerProps {
-//   mediaInfo: {
-//     [key: string]: any;
-//   };
-//   mediaItem: {
-//     [key: string]: any;
-//   };
-//   children(props: {
-//     poster: string;
-//     title: string;
-//     date: Date;
-//     overview: string;
-//     artist: string;
-//     star: number;
-//     seen: boolean;
-//     styleText: Object | undefined;
-//   }): JSX.Element;
-// }
-
-// // I think it's efficient that you get a render prop with information that'll pass that down
-// const MediaContainer = (props: MediaContainerProps) => {
-//   const { mediaInfo: media, mediaItem: item } = props;
-
-//   let poster, title, date, overview, artist, styleText;
-//   if (item.type === "film") {
-//     poster = `https://image.tmdb.org/t/p/w400/${media.poster_path}`;
-//     title = media.title;
-//     date = media.release_date;
-//     overview = media.overview;
-//     artist = typeof media.director !== "undefined" && media.director;
-//     styleText = {
-//       as: "strong",
-//       textTransform: "uppercase"
-//     };
-//     styleText = {
-//       textTransform: "uppercase"
-//     };
-//     styleText = {
-//       fontStyle: "italic"
-//     };
-//   } else if (item.type === "tv") {
-//     poster = `https://image.tmdb.org/t/p/w400/${media.poster_path}`;
-//     title = media.name;
-//     date = media.first_air_date;
-//     overview = media.overview;
-//     artist = typeof media.creator !== "undefined" && media.creator;
-//   } else if (item.type === "album") {
-//     poster = media.image[3]["#text"];
-//     title = media.name;
-//     artist = media.artist;
-//     overview =
-//       typeof media.wiki !== "undefined"
-//         ? media.wiki.summary.split("<a href")[0]
-//         : undefined;
-//   }
-//   return props.children({
-//     poster,
-//     title,
-//     date,
-//     overview,
-//     artist,
-//     star: item.star,
-//     seen: item.seen,
-//     styleText
-//   });
-// };
-
-// interface MediaListProps {
-//   user: firebase.User;
-// }
