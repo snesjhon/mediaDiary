@@ -14,15 +14,17 @@ html[data-theme="light"] {
   --bg-secondary: rgb(250, 251, 252);
   --border-primary: rgb(209, 213, 217);
   --border-secondary: rgb(226, 228, 232);
+  --text-primary: rgb(36, 41, 46);
 }
 
 html[data-theme="dark"] {
-  --primary: blue;
-  --secondary: red;
-  --bg-primary: lightblue;
-  --bg-secondary: lightgray;
-  --border-primary: lightblue;
-  --border-secondary: lightyellow;
+  --primary: rgb(4, 224, 85);
+  --secondary: rgb(68, 85, 102);
+  --bg-primary: rgb(19, 24, 27);
+  --bg-secondary: rgb(31, 38, 45);
+  --border-primary: rgb(68, 85, 102);
+  --border-secondary: rgb(43, 52, 64);
+  --text-primary: rgb(255, 255, 255);
 }
 
 body {

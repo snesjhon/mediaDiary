@@ -14,17 +14,15 @@ const Main = () => {
   const preferences = useStoreState(state => state.global.preferences);
 
   useEffect(() => {
-    if (preferences.theme !== null) {
-      document.documentElement.setAttribute("data-theme", preferences.theme);
-    }
+    document.documentElement.setAttribute("data-theme", preferences.theme);
   }, [preferences.theme]);
 
   // console.log(preferences);
 
   const Display = () => {
-    if (user && Object.keys(preferences).length > 0) {
+    if (user && preferences.year !== null) {
       return <Media />;
-    } else if (user && Object.keys(preferences).length === 0) {
+    } else if (user && preferences.year === null) {
       return <MediaPreference />;
     } else {
       return <About />;
@@ -39,8 +37,9 @@ const Main = () => {
       mx="auto"
       my={2}
       p={3}
-      border="1px solid #d1d5da"
+      border="1px solid var(--border-primary)"
       borderRadius="3px"
+      bg="var(--bg-secondary)"
     >
       <Display />
     </Box>

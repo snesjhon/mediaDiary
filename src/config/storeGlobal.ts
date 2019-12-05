@@ -2,13 +2,14 @@ import { Action, action, Thunk, thunk } from "easy-peasy";
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import { fb, db } from "./db";
+import { StoreModel } from "./store";
 
 export type UserTheme = "light" | "dark";
 
 export interface UserPreferences {
   user: firebase.User | null;
   preferences: {
-    theme: UserTheme | null;
+    theme: UserTheme;
     year: number | null;
   };
 }
@@ -19,13 +20,13 @@ export interface Global extends UserPreferences {
   userSetPreferences: Action<Global, UserPreferences["preferences"]>;
   userGetPreferences: Thunk<Global, firebase.User | null>;
   userPutPreferences: Thunk<Global, UserPreferences["preferences"]>;
-  userLogout: Thunk<Global>;
+  userLogout: Thunk<Global, void, void, StoreModel>;
 }
 
 export const global: Global = {
   user: null,
   preferences: {
-    theme: null,
+    theme: "light",
     year: null
   },
   userGet: thunk(async actions => {
@@ -60,7 +61,7 @@ export const global: Global = {
       // save into the preference
       actions.userSet(payload);
       actions.userSetPreferences({
-        theme: null,
+        theme: "light",
         year: null
       });
     }
@@ -80,15 +81,16 @@ export const global: Global = {
         actions.userSetPreferences(payload);
       });
   }),
-  userLogout: thunk(async actions => {
+  userLogout: thunk(async (actions, payload, { getStoreActions }) => {
     fb.auth()
       .signOut()
       .then(function() {
         actions.userSet(null);
         actions.userSetPreferences({
-          theme: null,
+          theme: "light",
           year: null
         });
+        getStoreActions().data.dataSet({ byID: {}, byDate: {} });
       })
       .catch(function(error) {});
   })
