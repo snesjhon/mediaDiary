@@ -1,9 +1,11 @@
 import * as React from "react";
+import * as firebase from "firebase/app";
 import { useState, useEffect } from "react";
 import { Grid, Flex, Text, Box, Icon, Modal, Button } from "./components";
 import styled from "styled-components";
 import { useStoreState, useStoreActions } from "./config/store";
 import { DataByDate, DataByID } from "./config/storeData";
+import DatePicker from "react-date-picker";
 // @ts-ignore
 import ReactStars from "react-stars";
 
@@ -23,66 +25,133 @@ const PosterImg = styled.img`
   border: 1px solid var(--border-secondary);
 `;
 
-interface MediaListItemProps {
-  content: [string, DataByID];
+interface MediaListItemProps extends DataByID, DataByDate {
+  dayID: string;
 }
-const MediaListItem = ({ content }: MediaListItemProps) => {
+
+const MediaListItem = ({
+  dayID,
+  type,
+  star,
+  poster,
+  title,
+  published,
+  artist,
+  overview,
+  seen,
+  date
+}: MediaListItemProps) => {
+  // const itemID = content[0];
+  // const item = content[1];
+  const [localStar, setlocalStar] = useState(star);
+  const [localDate, setLocalDate] = useState(date);
+  const [localSeen, setLocalSeen] = useState(seen);
   const dataDelete = useStoreActions(actions => actions.data.dataDelete);
-  const itemID = content[0];
-  const item = content[1];
+  const dataUpdate = useStoreActions(actions => actions.data.dataUpdate);
+  const isModified =
+    localStar === star && localDate === date && localSeen === seen
+      ? true
+      : false;
+
+  console.log(localStar, star);
+
   return (
     <Grid
-      gridTemplateColumns={item.type === "album" ? "0.7fr 1fr" : "0.5fr 1fr"}
+      gridTemplateColumns={type === "album" ? "0.7fr 1fr" : "0.5fr 1fr"}
       gridGap="1rem"
     >
       <Grid gridItem>
-        <PosterImg src={item.poster} />
+        <PosterImg src={poster} />
       </Grid>
       <Grid gridItem>
         <Text pt={2} pb={0} fontSize={4} fontWeight={600} alignItems="center">
-          {item.title}
-          {item.type !== "album" && (
-            <Text as="span" fontWeight={300} fontSize={3} ml={2}>
-              (
-              {new Date(item.published).toLocaleDateString("en-us", {
-                year: "numeric"
-              })}
-              )
-            </Text>
-          )}
+          {title}
+          <Text as="span" fontWeight={300} fontSize={3} ml={2}>
+            (
+            {new Date(published).toLocaleDateString("en-us", {
+              year: "numeric"
+            })}
+            )
+          </Text>
         </Text>
-        {item.artist && (
+        {artist && (
           <Text fontSize={3} fontWeight={300} pb={2}>
-            {item.artist}
+            {artist}
           </Text>
         )}
-        <Text>{item.overview}</Text>
-        <Box py={3}>
-          <Text>Rated</Text>
-          <ReactStars
-            count={5}
-            half
-            value={item.star}
-            size={20}
-            color1="var(--secondary)"
-            color2="var(--primary)"
-          />
-        </Box>
-        <Button onClick={() => dataDelete(itemID)}>Delete</Button>
+        <Text>{overview}</Text>
+        <Flex justifyContent="space-between" py={4}>
+          <Box>
+            <Text color="secondary">Rated</Text>
+            <ReactStars
+              count={5}
+              half
+              value={localStar}
+              size={20}
+              color1="var(--secondary)"
+              color2="var(--primary)"
+              onChange={(e: any) => setlocalStar(e)}
+            />
+          </Box>
+          <Box>
+            <Text color="secondary">On</Text>
+            <DatePicker
+              onChange={(date: Date) =>
+                setLocalDate(firebase.firestore.Timestamp.fromDate(date))
+              }
+              value={localDate.toDate()}
+            />
+          </Box>
+          <Box>
+            <Text color="secondary">Watched?</Text>
+            <Icon
+              mr={2}
+              cursor="pointer"
+              height="25px"
+              width="25px"
+              stroke="var(--primary)"
+              name={localSeen ? "checked" : "unchecked"}
+              onClick={() => {
+                setLocalSeen(!localSeen);
+              }}
+            />
+          </Box>
+        </Flex>
+        <Flex mt="auto" pt={2} justifyContent="flex-end">
+          <Button variant="delete" mr={3} onClick={() => dataDelete(dayID)}>
+            Delete
+          </Button>
+          <Button
+            variant={isModified ? "secondary" : "primary"}
+            onClick={dataSave}
+          >
+            Save
+          </Button>
+        </Flex>
       </Grid>
     </Grid>
   );
+
+  function dataSave() {
+    dataUpdate({
+      dayID,
+      modifiedDate: localDate,
+      modifiedSeen: localSeen,
+      modifiedStar: localStar,
+      cb: () => {
+        console.log("updated");
+      }
+    });
+  }
 };
 
 const MediaList = () => {
-  // const [modalInfo, setDataID] = useState<DataByID>();
-  const [dataID, setDataID] = useState<[string, DataByID]>();
+  const [data, setData] = useState<[string, DataByDate, DataByID]>();
   const byID = useStoreState(state => state.data.byID);
   const byDate = useStoreState(state => state.data.byDate);
   const dataGet = useStoreActions(actions => actions.data.dataGet);
 
   useEffect(() => {
-    console.log("getData");
     dataGet();
   }, []);
 
@@ -101,7 +170,7 @@ const MediaList = () => {
       a[month] = Object.assign({ ...a[month] }, { [c]: byDate[c] });
       return a;
     }, {});
-    const gridLayout = "5rem 4rem 3rem 18rem 10rem 4rem 6rem 8rem 5rem";
+    const gridLayout = "3rem 2rem 3rem 22rem 10rem 4rem 6rem 6rem";
     const gridGap = "0 1.5rem";
 
     return (
@@ -117,13 +186,13 @@ const MediaList = () => {
           style={{ textTransform: "uppercase" }}
         >
           <Text>Month</Text>
-          <Text>Day</Text>
+          <Text textAlign="center">Day</Text>
           <Text>Poster</Text>
           <Text>Title</Text>
           <Text>Artist</Text>
           <Text>Released</Text>
           <Text>Rating</Text>
-          <Text>Rewatch</Text>
+          <Text textAlign="center">Rewatch</Text>
         </Grid>
         {Object.keys(diaryDates)
           .reverse()
@@ -136,15 +205,10 @@ const MediaList = () => {
                     diaryDates[month][a].date.seconds
                 )
                 .map((day, dayIndex) => {
-                  const {
-                    title,
-                    poster,
-                    published,
-                    artist,
-                    star,
-                    seen,
-                    type
-                  } = byID[diaryDates[month][day].id];
+                  const { title, poster, published, artist, type } = byID[
+                    diaryDates[month][day].id
+                  ];
+                  const { star, seen } = diaryDates[month][day];
                   return (
                     <Grid
                       key={monthIndex + dayIndex}
@@ -153,7 +217,11 @@ const MediaList = () => {
                       py={3}
                       alignItems="center"
                       onClick={() =>
-                        setDataID([day, byID[diaryDates[month][day].id]])
+                        setData([
+                          day,
+                          diaryDates[month][day],
+                          byID[diaryDates[month][day].id]
+                        ])
                       }
                     >
                       {dayIndex === 0 ? (
@@ -171,7 +239,7 @@ const MediaList = () => {
                       ) : (
                         <div />
                       )}
-                      <Text fontSize={3} fontWeight={300}>
+                      <Text fontSize={3} fontWeight={300} textAlign="center">
                         {new Date(
                           diaryDates[month][day].date.seconds * 1000
                         ).toLocaleDateString("en-us", {
@@ -209,18 +277,28 @@ const MediaList = () => {
                           color2="var(--primary)"
                         />
                       </Box>
-                      <Box>{seen ? "seen" : "not seen"}</Box>
+                      <Box textAlign="center">
+                        {seen ? (
+                          <Icon
+                            mr={2}
+                            height="20px"
+                            width="20px"
+                            stroke="var(--text-primary)"
+                            name="repeat"
+                          />
+                        ) : null}
+                      </Box>
                     </Grid>
                   );
                 })}
             </MediaMonth>
           ))}
-        {typeof dataID !== "undefined" && (
+        {typeof data !== "undefined" && (
           <Modal
-            isOpen={typeof dataID !== "undefined"}
-            handleClose={() => setDataID(undefined)}
+            isOpen={typeof data !== "undefined"}
+            handleClose={() => setData(undefined)}
           >
-            <MediaListItem content={dataID} />
+            <MediaListItem dayID={data[0]} {...data[1]} {...data[2]} />
           </Modal>
         )}
       </>

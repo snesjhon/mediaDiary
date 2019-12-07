@@ -17,8 +17,6 @@ export interface DataByID extends MediaTypes {
   published: Date | "";
   title: string;
   season?: number | undefined;
-  seen: boolean;
-  star: number;
 }
 
 export interface DataByDate extends MediaTypes {
@@ -48,11 +46,20 @@ interface DataSet {
   };
 }
 
+interface DataUpdate {
+  dayID: string;
+  modifiedDate?: firebase.firestore.Timestamp;
+  modifiedSeen?: boolean;
+  modifiedStar?: number;
+  cb?: () => void;
+}
+
 export interface Data extends DataSet {
   dataSet: Action<Data, DataSet>;
   dataGet: Thunk<Data, void, void, StoreModel>;
   dataPut: Thunk<Data, DataPut, void, StoreModel>;
   dataDelete: Thunk<Data, string, void, StoreModel>;
+  dataUpdate: Thunk<Data, DataUpdate, void, StoreModel>;
 }
 
 export const data: Data = {
@@ -107,8 +114,6 @@ export const data: Data = {
           published,
           overview,
           artist,
-          star,
-          seen,
           type
         };
         if (season) {
@@ -138,11 +143,10 @@ export const data: Data = {
             const currentItem = currentDoc[`${type}_${id}`];
             currentCount = currentItem.count;
           }
-          // console.log(currentItem);
           transaction.update(dbByID, {
             [`${type}_${id}`]: {
               ...dataByID,
-              count: currentCount + 1
+              count: typeof currentCount !== "undefined" ? currentCount + 1 : 1
             }
           });
           return Promise.resolve();
@@ -171,7 +175,7 @@ export const data: Data = {
         });
       });
 
-      Promise.all([prByID, prByDate]).then(res => {
+      Promise.all([prByID, prByDate]).then(() => {
         return actions.dataGet();
       });
     } else {
@@ -196,12 +200,10 @@ export const data: Data = {
           ) {
             const currentItem = currentDoc[itemByID];
             if (currentItem.count === 1) {
-              console.log("delete");
               transaction.update(dbByID, {
                 [itemByID]: firebase.firestore.FieldValue.delete()
               });
             } else {
-              console.log("decrement");
               transaction.update(dbByID, {
                 [itemByID]: {
                   ...currentItem,
@@ -215,7 +217,7 @@ export const data: Data = {
       });
 
       const prByDate = db.runTransaction(transaction => {
-        return transaction.get(dbByDate).then(movieDates => {
+        return transaction.get(dbByDate).then(() => {
           transaction.update(dbByDate, {
             [payload]: firebase.firestore.FieldValue.delete()
           });
@@ -223,19 +225,55 @@ export const data: Data = {
         });
       });
 
-      Promise.all([prByID, prByDate]).then(res => {
-        console.log("properly deleted?");
+      Promise.all([prByID, prByDate]).then(() => {
         return actions.dataGet();
       });
     } else {
       console.log("something went wrong with delete");
     }
+  }),
+  dataUpdate: thunk(async (actions, payload, { getStoreState }) => {
+    const year = getStoreState().global.preferences.year;
+    if (year !== null) {
+      const dbByDate = db.collection(year).doc("byDate");
+      db.runTransaction(transaction => {
+        return transaction
+          .get(dbByDate)
+          .then(byDate => {
+            // have to get the ID first.
+            const currentDoc = byDate.data();
+            if (
+              typeof currentDoc !== "undefined" &&
+              typeof currentDoc[payload.dayID] !== "undefined"
+            ) {
+              const currentItem = currentDoc[payload.dayID];
 
-    //       var cityRef = db.collection('cities').doc('BJ');
+              debugger;
 
-    // // Remove the 'capital' field from the document
-    // var removeCapital = cityRef.update({
-    //     capital: firebase.firestore.FieldValue.delete()
-    // });
+              transaction.update(dbByDate, {
+                [payload.dayID]: {
+                  ...currentItem,
+                  date: payload.modifiedDate,
+                  seen: payload.modifiedSeen,
+                  star: payload.modifiedStar
+                }
+              });
+              // return Promise.resolve();
+            } else {
+              console.log("update failed because no id found");
+              // return Promise.reject();
+            }
+          })
+          .then(() => {
+            console.log("properly edited");
+            actions.dataGet();
+            if (payload.cb) {
+              payload.cb();
+            }
+          });
+      });
+    } else {
+      console.log("update didnt work");
+    }
   })
 };
