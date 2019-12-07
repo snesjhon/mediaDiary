@@ -31,3 +31,7 @@ html[data-theme="dark"] {
 body {
   background-color: var(--bg-primary);
 }
+
+.react-date-picker__button svg {
+  stroke: var(--text-primary);
+}

@@ -55,6 +55,7 @@ hr {
 }
 
 input {
+  color: var(--text-primary);
   font: inherit;
   margin: 0;
 }
