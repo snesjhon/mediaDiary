@@ -5,6 +5,7 @@ madYellow: "rgb(247, 228, 0)" */
 html {
   --orange: rgb(251, 158, 9);
   --blue: rgb(20, 153, 162);
+  --red: rgb(219, 57, 50);
 }
 
 html[data-theme="light"] {

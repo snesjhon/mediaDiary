@@ -5,7 +5,7 @@ import { border, system, variant, BorderProps } from "styled-system";
 interface ButtonProps extends BoxProps, BorderProps {
   hoverColor?: string;
   hoverBg?: string;
-  variant?: "primary" | "secondary" | "image" | "icon";
+  variant?: "primary" | "secondary" | "image" | "icon" | "delete";
 }
 
 const Button = styled(Box)<ButtonProps>`
@@ -39,6 +39,13 @@ const Button = styled(Box)<ButtonProps>`
       secondary: {
         color: "bg-secondary",
         bg: "secondary",
+        px: 4,
+        py: 2,
+        borderRadius: 3
+      },
+      delete: {
+        color: "text-primary",
+        bg: "red",
         px: 4,
         py: 2,
         borderRadius: 3

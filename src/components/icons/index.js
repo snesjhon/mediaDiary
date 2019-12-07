@@ -6,3 +6,4 @@ export { default as IconUnChecked } from "./IconUnChecked";
 export { default as IconStarFull } from "./IconStarFull";
 export { default as IconStarEmpty } from "./IconStarEmpty";
 export { default as IconCalendar } from "./IconCalendar";
+export { default as IconRepeat } from "./IconRepeat";

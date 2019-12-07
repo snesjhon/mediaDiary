@@ -27,6 +27,7 @@ interface MediaListItemProps {
   content: [string, DataByID];
 }
 const MediaListItem = ({ content }: MediaListItemProps) => {
+  const [showEdit, setShowEdit] = useState(false);
   const dataDelete = useStoreActions(actions => actions.data.dataDelete);
   const itemID = content[0];
   const item = content[1];
@@ -41,23 +42,32 @@ const MediaListItem = ({ content }: MediaListItemProps) => {
       <Grid gridItem>
         <Text pt={2} pb={0} fontSize={4} fontWeight={600} alignItems="center">
           {item.title}
-          {item.type !== "album" && (
-            <Text as="span" fontWeight={300} fontSize={3} ml={2}>
-              (
-              {new Date(item.published).toLocaleDateString("en-us", {
-                year: "numeric"
-              })}
-              )
-            </Text>
-          )}
+          <Text as="span" fontWeight={300} fontSize={3} ml={2}>
+            (
+            {new Date(item.published).toLocaleDateString("en-us", {
+              year: "numeric"
+            })}
+            )
+          </Text>
         </Text>
         {item.artist && (
           <Text fontSize={3} fontWeight={300} pb={2}>
             {item.artist}
           </Text>
         )}
-        <Text>{item.overview}</Text>
-        <Box py={3}>
+        {showEdit ? <Edit /> : <Text>{item.overview}</Text>}
+
+        <Button variant="primary" onClick={() => setShowEdit(!showEdit)}>
+          Edit
+        </Button>
+      </Grid>
+    </Grid>
+  );
+
+  function Edit() {
+    return (
+      <>
+        <Flex>
           <Text>Rated</Text>
           <ReactStars
             count={5}
@@ -67,11 +77,28 @@ const MediaListItem = ({ content }: MediaListItemProps) => {
             color1="var(--secondary)"
             color2="var(--primary)"
           />
-        </Box>
-        <Button onClick={() => dataDelete(itemID)}>Delete</Button>
-      </Grid>
-    </Grid>
-  );
+        </Flex>
+
+        <Flex>
+          <Text>Watched Before?</Text>
+          <Icon
+            mr={2}
+            cursor="pointer"
+            height="25px"
+            width="25px"
+            stroke="var(--primary)"
+            name={item.seen ? "checked" : "unchecked"}
+          />
+        </Flex>
+        <Flex mt="auto" pt={2} justifyContent="flex-end">
+          <Button variant="delete" mr={3} onClick={() => dataDelete(itemID)}>
+            Delete
+          </Button>
+          <Button variant="primary">Save</Button>
+        </Flex>
+      </>
+    );
+  }
 };
 
 const MediaList = () => {
@@ -101,7 +128,7 @@ const MediaList = () => {
       a[month] = Object.assign({ ...a[month] }, { [c]: byDate[c] });
       return a;
     }, {});
-    const gridLayout = "5rem 4rem 3rem 18rem 10rem 4rem 6rem 8rem 5rem";
+    const gridLayout = "5rem 4rem 3rem 18rem 10rem 4rem 6rem 6rem";
     const gridGap = "0 1.5rem";
 
     return (
@@ -209,7 +236,17 @@ const MediaList = () => {
                           color2="var(--primary)"
                         />
                       </Box>
-                      <Box>{seen ? "seen" : "not seen"}</Box>
+                      <Box textAlign="center">
+                        {seen ? (
+                          <Icon
+                            mr={2}
+                            height="20px"
+                            width="20px"
+                            stroke="var(--text-primary)"
+                            name="repeat"
+                          />
+                        ) : null}
+                      </Box>
                     </Grid>
                   );
                 })}

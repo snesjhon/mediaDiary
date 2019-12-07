@@ -21,6 +21,7 @@ const InputWrapper = styled(Box)`
   border: 1px solid var(--border-primary);
   background-color: transparent;
   outline: none;
+  color: var(--text-primary);
 `;
 
 type InputProps = {
