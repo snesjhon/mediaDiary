@@ -1,4 +1,4 @@
-export { default as IconFilm } from "./IconFilm";
+export { default as IconFilm } from "./IconFilm.js";
 export { default as IconAlbum } from "./IconAlbum";
 export { default as IconTv } from "./IconTv";
 export { default as IconChecked } from "./IconChecked";
@@ -6,4 +6,4 @@ export { default as IconUnChecked } from "./IconUnChecked";
 export { default as IconStarFull } from "./IconStarFull";
 export { default as IconStarEmpty } from "./IconStarEmpty";
 export { default as IconCalendar } from "./IconCalendar";
-export { default as IconRepeat } from "./IconRepeat";
+export { default as IconRepeat } from "./IconRepeat.tsx";
