@@ -8,6 +8,7 @@
  * 	 def a personal opinion.
  */
 
+const path = require("path");
 const merge = require("webpack-merge");
 const common = require("./webpack.base.js");
 
@@ -17,7 +18,8 @@ module.exports = merge(common, {
   output: {
     filename: "[name].[chunkhash].js",
     publicPath: "/",
-    sourceMapFilename: "[name].js.map"
+    sourceMapFilename: "[name].js.map",
+    path: path.resolve("./build")
   },
   stats: {
     assets: false,

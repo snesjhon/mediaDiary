@@ -31,9 +31,6 @@ module.exports = {
     }),
     new Dotenv()
   ],
-  output: {
-    path: path.resolve(__dirname + "/../", "dist")
-  },
   resolve: {
     extensions: [".ts", ".tsx", ".js"]
   },
