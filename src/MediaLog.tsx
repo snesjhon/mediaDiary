@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
+import { MBDKEY } from "./config/constants";
 import { Box, Grid, Text, Button, Flex, Icon } from "./components";
 import styled from "styled-components";
 import DatePicker from "react-date-picker";
@@ -40,7 +41,7 @@ const MediaLog = ({ type, setType }: MediaLog) => {
   useEffect(() => {
     if (type === "tv") {
       fetch(
-        `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.REACT_APP_MDB}&language=en-US`
+        `https://api.themoviedb.org/3/tv/${id}?api_key=${MBDKEY}&language=en-US`
       )
         .then(r => r.json())
         .then(info => {

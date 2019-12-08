@@ -1,5 +1,5 @@
 import { Action, action, Thunk, thunk } from "easy-peasy";
-import { MDB_URL, MBD_KEY, FM_KEY } from "./constants";
+import { MDBURL, MBDKEY, LASTFMKEY } from "./constants";
 import { StoreModel } from "./store";
 
 export interface MediaInfo {
@@ -52,9 +52,9 @@ export const media: Media = {
   }),
   mediaPutFilm: thunk(async (actions, payload, { getStoreActions }) => {
     const mbdResult = await fetch(
-      `${MDB_URL}/movie/${encodeURIComponent(
+      `${MDBURL}/movie/${encodeURIComponent(
         payload.id
-      )}/credits?api_key=${MBD_KEY}`
+      )}/credits?api_key=${MBDKEY}`
     );
     const credits = await mbdResult.json();
     const filmMedia = {
@@ -74,7 +74,7 @@ export const media: Media = {
         payload.artist
       )}&album=${encodeURIComponent(
         payload.title
-      )}&format=json&api_key=${FM_KEY}`
+      )}&format=json&api_key=${LASTFMKEY}`
     );
     const info = await fmResult.json();
     const albumObj = {

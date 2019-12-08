@@ -8,6 +8,7 @@
  * - https://medium.com/@martin_hotell/react-refs-with-typescript-a32d56c4d315
  */
 import * as React from "react";
+import { MBDKEY } from "./config/constants";
 import { useState, useEffect, createRef } from "react";
 import { Box, Flex, Text } from "./components";
 import Input, { InputRef } from "./components/Input";
@@ -156,11 +157,11 @@ const MediaSearch = ({ type }: MediaTypes) => {
   function handleFetch(searchType: MediaTypes["type"], search: string) {
     let URL = "";
     if (searchType === "film") {
-      URL = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.REACT_APP_MDB}&language=en-US&query=${search}&page=1&include_adult=false`;
+      URL = `https://api.themoviedb.org/3/search/movie?api_key=${MBDKEY}&language=en-US&query=${search}&page=1&include_adult=false`;
     } else if (searchType === "tv") {
-      URL = `https://api.themoviedb.org/3/search/tv?api_key=${process.env.REACT_APP_MDB}&language=en-US&query=${search}&page=1`;
+      URL = `https://api.themoviedb.org/3/search/tv?api_key=${MBDKEY}&language=en-US&query=${search}&page=1`;
     } else if (searchType === "album") {
-      // URL = `http://ws.audioscrobbler.com/2.0/?method=album.search&album=${search}&api_key=${process.env.REACT_APP_LASTFM}&limit=15&format=json`;
+      // URL = `http://ws.audioscrobbler.com/2.0/?method=album.search&album=${search}&api_key=${MBDKEY}&limit=15&format=json`;
       URL = `https://itunes.apple.com/search?term=${search}&entity=album`;
     }
     return fetch(URL);

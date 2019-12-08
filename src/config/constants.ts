@@ -1,3 +1,10 @@
-export const FM_KEY = process.env.REACT_APP_LASTFM;
-export const MBD_KEY = process.env.REACT_APP_MDB;
-export const MDB_URL = "https://api.themoviedb.org/3";
+export const LASTFMKEY = process.env.LASTFMKEY;
+export const MBDKEY = process.env.MDBKEY;
+export const MDBURL = "https://api.themoviedb.org/3";
+export const FBKEY = process.env.FBKEY;
+export const FBDOMAIN = process.env.FBDOMAIN;
+export const FBDBURL = process.env.FBDBURL;
+export const FBPROJECTID = process.env.FBPROJECTID;
+export const FBSTORAGE = process.env.FBSTORAGE;
+export const FBMESSAGEID = process.env.FBMESSAGEID;
+export const FBAPPID = process.env.FBAPPID;

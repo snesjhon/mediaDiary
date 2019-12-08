@@ -1,14 +1,23 @@
+import {
+  FBKEY,
+  FBDOMAIN,
+  FBDBURL,
+  FBPROJECTID,
+  FBSTORAGE,
+  FBMESSAGEID,
+  FBAPPID
+} from "./constants";
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_APIKEY,
-  authDomain: process.env.REACT_APP_AUTHDOMAIN,
-  databaseURL: process.env.REACT_APP_DATABASEURL,
-  projectId: process.env.REACT_APP_PROJECTID,
-  storageBucket: "",
-  messagingSenderId: process.env.REACT_APP_MESSAGINGSENDERID,
-  appId: process.env.REACT_APP_APPID
+  apiKey: FBKEY,
+  authDomain: FBDOMAIN,
+  databaseURL: FBDBURL,
+  projectId: FBPROJECTID,
+  storageBucket: FBSTORAGE,
+  messagingSenderId: FBMESSAGEID,
+  appId: FBAPPID
 };
 
 export const fb = firebase.initializeApp(firebaseConfig);
