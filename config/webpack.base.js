@@ -29,7 +29,7 @@ module.exports = {
       template: path.resolve(__dirname + "/index.html"),
       inject: true
     }),
-    new Dotenv()
+    new Dotenv({ systemvars: true })
   ],
   resolve: {
     extensions: [".ts", ".tsx", ".js"]
