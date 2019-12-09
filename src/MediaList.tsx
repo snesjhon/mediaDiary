@@ -41,8 +41,6 @@ const MediaListItem = ({
   seen,
   date
 }: MediaListItemProps) => {
-  // const itemID = content[0];
-  // const item = content[1];
   const [localStar, setlocalStar] = useState(star);
   const [localDate, setLocalDate] = useState(date);
   const [localSeen, setLocalSeen] = useState(seen);
@@ -52,8 +50,6 @@ const MediaListItem = ({
     localStar === star && localDate === date && localSeen === seen
       ? true
       : false;
-
-  console.log(localStar, star);
 
   return (
     <Grid

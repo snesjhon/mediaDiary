@@ -6,6 +6,7 @@ import * as React from "react";
 import { useState } from "react";
 import { Button, Dropdown, Flex, Icon, Box } from "./components";
 import { useStoreActions, useStoreState } from "./config/store";
+import { Link } from "react-router-dom";
 
 const User = () => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -22,14 +23,16 @@ const User = () => {
         extend={3}
       >
         <Flex py={2} px={3} alignItems="center">
-          <Icon
-            name="film"
-            stroke="var(--primary)"
-            height="15px"
-            width="15px"
-            mr={1}
-          />
-          Profile
+          <Link to="/profile">
+            <Icon
+              name="film"
+              stroke="var(--primary)"
+              height="15px"
+              width="15px"
+              mr={1}
+            />
+            Profile
+          </Link>
         </Flex>
         <Flex py={2} px={3} alignItems="center" onClick={() => userLogout()}>
           <Icon
