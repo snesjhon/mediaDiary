@@ -18,6 +18,7 @@ export interface Global extends UserPreferences {
   userGet: Thunk<Global>;
   userSet: Action<Global, UserPreferences["user"]>;
   userSetPreferences: Action<Global, UserPreferences["preferences"]>;
+  userSetConfig: Action<Global, UserPreferences>;
   userGetPreferences: Thunk<Global, firebase.User | null>;
   userPutPreferences: Thunk<Global, UserPreferences["preferences"]>;
   userLogout: Thunk<Global, void, void, StoreModel>;
@@ -44,25 +45,33 @@ export const global: Global = {
   userSetPreferences: action((state, payload) => {
     state.preferences = payload;
   }),
+  userSetConfig: action((state, payload) => {
+    state.user = payload.user;
+    state.preferences = payload.preferences;
+  }),
   userGetPreferences: thunk(async (actions, payload) => {
     const userRef = db.collection("user").doc("preferences");
     const doc = await userRef.get();
     if (doc.exists) {
       const data = typeof doc.data() !== "undefined" && doc.data();
       if (data) {
-        actions.userSet(payload);
-        actions.userSetPreferences({
-          theme: data.theme,
-          year: data.year
+        actions.userSetConfig({
+          user: payload,
+          preferences: {
+            theme: data.theme,
+            year: data.year
+          }
         });
       }
     } else {
       // We have a user, but we need the user to choose their own year and then
       // save into the preference
-      actions.userSet(payload);
-      actions.userSetPreferences({
-        theme: "light",
-        year: null
+      actions.userSetConfig({
+        user: payload,
+        preferences: {
+          theme: "light",
+          year: null
+        }
       });
     }
   }),

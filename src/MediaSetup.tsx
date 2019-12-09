@@ -11,7 +11,7 @@ import { Box, Text, Icon, Flex, Button, Input } from "./components";
 import { useStoreActions } from "./config/store";
 import { UserTheme } from "./config/storeGlobal";
 
-const MediaPreference = () => {
+const MediaSetup = () => {
   const userPutPreferences = useStoreActions(
     actions => actions.global.userPutPreferences
   );
@@ -59,4 +59,4 @@ const MediaPreference = () => {
   );
 };
 
-export default MediaPreference;
+export default MediaSetup;
