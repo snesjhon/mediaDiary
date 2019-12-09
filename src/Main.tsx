@@ -2,32 +2,24 @@ import * as React from "react";
 import { useEffect } from "react";
 import { Box } from "./components";
 import { useStoreState } from "./config/store";
-import MediaPreference from "./MediaPreference";
+import MediaSetup from "./MediaSetup";
 import Media from "./Media";
 import About from "./About";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
 import { hot } from "react-hot-loader/root";
 
 const Main = () => {
-  // const theme = useStoreState(state => state.global.preferences.theme);
-  // document.documentElement.setAttribute("data-theme", theme);
   const user = useStoreState(state => state.global.user);
   const preferences = useStoreState(state => state.global.preferences);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", preferences.theme);
   }, [preferences.theme]);
-
-  // console.log(preferences);
-
-  const Display = () => {
-    if (user && preferences.year !== null) {
-      return <Media />;
-    } else if (user && preferences.year === null) {
-      return <MediaPreference />;
-    } else {
-      return <About />;
-    }
-  };
 
   return (
     <Box
@@ -41,9 +33,51 @@ const Main = () => {
       borderRadius="3px"
       bg="var(--bg-secondary)"
     >
-      <Display />
+      <Router>
+        <Switch>
+          <Route exact path="/">
+            <HomeRoute />
+          </Route>
+          <PrivateRoute exact path="/setup">
+            <MediaSetup />
+          </PrivateRoute>
+          <PrivateRoute path="/:id">
+            <Media />
+          </PrivateRoute>
+        </Switch>
+      </Router>
     </Box>
   );
+
+  function HomeRoute() {
+    if (user && preferences.year !== null) {
+      return <Redirect to={`/${preferences.year}`} />;
+    } else if (user && preferences.year === null) {
+      return <Redirect to="/setup" />;
+    } else {
+      return <About />;
+    }
+  }
+
+  function PrivateRoute({ children, ...rest }: any) {
+    return (
+      <Route
+        {...rest}
+        render={({ location }) =>
+          user ? (
+            children
+          ) : (
+            <Redirect
+              to={{
+                pathname: "/",
+                state: { from: location }
+              }}
+            />
+          )
+        }
+      />
+    );
+  }
 };
 
 export default hot(Main);
