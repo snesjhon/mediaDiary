@@ -2,15 +2,17 @@ import * as React from "react";
 import { useEffect } from "react";
 import { Box } from "./components";
 import { useStoreState } from "./config/store";
-import MediaSetup from "./MediaSetup";
-import Media from "./Media";
-import About from "./About";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect
 } from "react-router-dom";
+import MediaSetup from "./MediaSetup";
+import Media from "./Media";
+import About from "./About";
+import MediaProfile from "./MediaProfile";
+
 import { hot } from "react-hot-loader/root";
 
 const Main = () => {
@@ -38,11 +40,14 @@ const Main = () => {
           <Route exact path="/">
             <HomeRoute />
           </Route>
+          <PrivateRoute exact path="/:id(\d+)">
+            <Media />
+          </PrivateRoute>
           <PrivateRoute exact path="/setup">
             <MediaSetup />
           </PrivateRoute>
-          <PrivateRoute path="/:id">
-            <Media />
+          <PrivateRoute exact path="/profile">
+            <MediaProfile />
           </PrivateRoute>
         </Switch>
       </Router>

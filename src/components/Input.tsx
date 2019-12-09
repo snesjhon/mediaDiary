@@ -27,6 +27,7 @@ const InputWrapper = styled(Box)`
 type InputProps = {
   type?: string;
   placeholder?: string;
+  defaultValue?: string | number | string[] | undefined;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -39,6 +40,7 @@ const Input = forwardRef<InputRef, InputProps>((props, ref) => (
     px={3}
     py={2}
     type={props.type ? props.type : "text"}
+    defaultValue={props.defaultValue && props.defaultValue}
     {...props}
   />
 ));

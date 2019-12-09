@@ -3,6 +3,7 @@ import { Flex, Text, Box, Grid } from "./components";
 import MediaAdd from "./MediaAdd";
 import User from "./User";
 import { useStoreState } from "./config/store";
+import { Link } from "react-router-dom";
 
 const Navigation = () => {
   const year = useStoreState(state =>
@@ -13,7 +14,7 @@ const Navigation = () => {
       <Grid alignItems="center" gridTemplateColumns="1fr 1fr 2rem">
         <Flex>
           <Text fontSize={4} fontWeight={600}>
-            Media Diary
+            <Link to="/">Media Diary</Link>
           </Text>
           <Text as="span" fontSize={4} ml={2} fontWeight={300}>
             /
