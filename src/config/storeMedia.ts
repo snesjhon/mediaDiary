@@ -70,7 +70,7 @@ export const media: Media = {
   }),
   mediaPutAlbum: thunk(async (actions, payload, { getStoreActions }) => {
     const fmResult = await fetch(
-      `http://ws.audioscrobbler.com/2.0/?method=album.getinfo&artist=${encodeURIComponent(
+      `https://ws.audioscrobbler.com/2.0/?method=album.getinfo&artist=${encodeURIComponent(
         payload.artist
       )}&album=${encodeURIComponent(
         payload.title
