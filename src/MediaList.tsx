@@ -170,7 +170,7 @@ const MediaList = () => {
     const gridGap = "0 1.5rem";
 
     return (
-      <>
+      <Box overflow="scroll">
         <Grid
           gridTemplateColumns={gridLayout}
           gridGap={gridGap}
@@ -297,7 +297,7 @@ const MediaList = () => {
             <MediaListItem dayID={data[0]} {...data[1]} {...data[2]} />
           </Modal>
         )}
-      </>
+      </Box>
     );
   } else {
     return <div>loading</div>;
