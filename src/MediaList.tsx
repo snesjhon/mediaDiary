@@ -242,9 +242,9 @@ const MediaList = () => {
                           day: "numeric"
                         })}
                       </Text>
-                      <Flex>
+                      <Box>
                         <PosterImg src={poster} />
-                      </Flex>
+                      </Box>
                       <Text
                         as={type === "film" ? "strong" : undefined}
                         textTransform={
