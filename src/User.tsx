@@ -14,9 +14,14 @@ const User = () => {
   const user = useStoreState(state => state.global.user);
   return (
     <Box position="relative">
-      <Button variant="image" onClick={() => setShowDropdown(!showDropdown)}>
-        <img src={(user !== null && user.photoURL) || undefined} width="40px" />
-      </Button>
+      <Box>
+        <Button variant="image" onClick={() => setShowDropdown(!showDropdown)}>
+          <img
+            src={(user !== null && user.photoURL) || undefined}
+            width="40px"
+          />
+        </Button>
+      </Box>
       <Dropdown
         showDropdown={showDropdown}
         setShowDropdown={setShowDropdown}
