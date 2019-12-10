@@ -4,7 +4,7 @@
  */
 import * as React from "react";
 import { useState } from "react";
-import { Button, Dropdown, Flex, Icon, Box } from "./components";
+import { Dropdown, Flex, Icon, Box } from "./components";
 import { useStoreActions, useStoreState } from "./config/store";
 import { Link } from "react-router-dom";
 
@@ -14,13 +14,8 @@ const User = () => {
   const user = useStoreState(state => state.global.user);
   return (
     <Box position="relative">
-      <Box>
-        <Button variant="image" onClick={() => setShowDropdown(!showDropdown)}>
-          <img
-            src={(user !== null && user.photoURL) || undefined}
-            width="40px"
-          />
-        </Button>
+      <Box onClick={() => setShowDropdown(!showDropdown)}>
+        <img src={(user !== null && user.photoURL) || undefined} width="40px" />
       </Box>
       <Dropdown
         showDropdown={showDropdown}
