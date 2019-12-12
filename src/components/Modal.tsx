@@ -20,7 +20,6 @@ const Presentation = styled(({ isOpen, ...rest }) => <Box {...rest} />)`
   display: ${props => (props.isOpen ? "flex" : "none")};
   flex-direction: ${props => (props.isOpen ? "column" : "")};
   position: fixed;
-  top: 30%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 50;
@@ -28,6 +27,7 @@ const Presentation = styled(({ isOpen, ...rest }) => <Box {...rest} />)`
   border: 1px solid #d1d5da;
   border-radius: 3px;
   box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.05);
+  overflow-y: auto;
 `;
 
 interface Portal {
@@ -59,7 +59,9 @@ const Modal = ({ children, isOpen, handleClose, ...rest }: Modal) => {
       <Presentation
         isOpen={isOpen}
         p={4}
-        width={["3vw", "10vw", "45vw"]}
+        width={[1, "10vw", "45vw"]}
+        maxHeight={["90vh", "40vh"]}
+        top={["5vh", "30%"]}
         {...rest}
       >
         {children}

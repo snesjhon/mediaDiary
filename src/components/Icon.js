@@ -11,7 +11,8 @@ const iconComponents = {
   starFull: IconRef.IconStarFull,
   starEmpty: IconRef.IconStarEmpty,
   calendar: IconRef.IconCalendar,
-  repeat: IconRef.IconRepeat
+  repeat: IconRef.IconRepeat,
+  close: IconRef.IconClose
 };
 
 const Icon = props => {
