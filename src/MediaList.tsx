@@ -25,12 +25,20 @@ const PosterImg = styled.img`
   border: 1px solid var(--border-secondary);
 `;
 
+const CloseContainer = styled(Box)`
+  position: absolute;
+  top: 0;
+  right: 0;
+`;
+
 interface MediaListItemProps extends DataByID, DataByDate {
   dayID: string;
+  handleClose: () => void;
 }
 
 const MediaListItem = ({
   dayID,
+  handleClose,
   type,
   star,
   poster,
@@ -50,82 +58,97 @@ const MediaListItem = ({
     localStar === star && localDate === date && localSeen === seen
       ? true
       : false;
+  const gridColumn = type === "album" ? "0.7fr 1fr" : "0.5fr 1fr";
 
   return (
-    <Grid
-      gridTemplateColumns={type === "album" ? "0.7fr 1fr" : "0.5fr 1fr"}
-      gridGap="1rem"
-    >
-      <Grid gridItem>
-        <PosterImg src={poster} />
-      </Grid>
-      <Grid gridItem>
-        <Text pt={2} pb={0} fontSize={4} fontWeight={600} alignItems="center">
-          {title}
-          <Text as="span" fontWeight={300} fontSize={3} ml={2}>
-            (
-            {new Date(published).toLocaleDateString("en-us", {
-              year: "numeric"
-            })}
-            )
-          </Text>
-        </Text>
-        {artist && (
-          <Text fontSize={3} fontWeight={300} pb={2}>
-            {artist}
-          </Text>
-        )}
-        <Text>{overview}</Text>
-        <Flex justifyContent="space-between" py={4}>
-          <Box>
-            <Text color="secondary">Rated</Text>
-            <ReactStars
-              count={5}
-              half
-              value={localStar}
-              size={20}
-              color1="var(--secondary)"
-              color2="var(--primary)"
-              onChange={(e: any) => setlocalStar(e)}
-            />
-          </Box>
-          <Box>
-            <Text color="secondary">On</Text>
-            <DatePicker
-              onChange={(date: Date) =>
-                setLocalDate(firebase.firestore.Timestamp.fromDate(date))
-              }
-              value={localDate.toDate()}
-            />
-          </Box>
-          <Box>
-            <Text color="secondary">Watched?</Text>
-            <Icon
-              mr={2}
-              cursor="pointer"
-              height="25px"
-              width="25px"
-              stroke="var(--primary)"
-              name={localSeen ? "checked" : "unchecked"}
-              onClick={() => {
-                setLocalSeen(!localSeen);
-              }}
-            />
-          </Box>
-        </Flex>
-        <Flex mt="auto" pt={2} justifyContent="flex-end">
-          <Button variant="delete" mr={3} onClick={() => dataDelete(dayID)}>
-            Delete
-          </Button>
-          <Button
-            variant={isModified ? "secondary" : "primary"}
-            onClick={dataSave}
+    <Box position="relative">
+      <Grid gridTemplateColumns={["", gridColumn]} gridGap={["", "1rem"]}>
+        <Grid gridItem textAlign="center">
+          <PosterImg src={poster} width="50%" />
+        </Grid>
+        <Grid gridItem>
+          <Text
+            pt={2}
+            pb={0}
+            fontSize={4}
+            fontWeight={600}
+            alignItems="center"
+            textAlign={["center", "left"]}
           >
-            Save
-          </Button>
-        </Flex>
+            {title}
+            <Text as="span" fontWeight={300} fontSize={3} ml={2}>
+              (
+              {new Date(published).toLocaleDateString("en-us", {
+                year: "numeric"
+              })}
+              )
+            </Text>
+          </Text>
+          {artist && (
+            <Text
+              fontSize={3}
+              fontWeight={300}
+              pb={2}
+              textAlign={["center", "left"]}
+            >
+              {artist}
+            </Text>
+          )}
+          <Text>{overview}</Text>
+          <Flex justifyContent="space-between" py={4}>
+            <Box>
+              <Text color="secondary">Rated</Text>
+              <ReactStars
+                count={5}
+                half
+                value={localStar}
+                size={20}
+                color1="var(--secondary)"
+                color2="var(--primary)"
+                onChange={(e: any) => setlocalStar(e)}
+              />
+            </Box>
+            <Box>
+              <Text color="secondary">On</Text>
+              <DatePicker
+                onChange={(date: Date) =>
+                  setLocalDate(firebase.firestore.Timestamp.fromDate(date))
+                }
+                value={localDate.toDate()}
+              />
+            </Box>
+            <Box>
+              <Text color="secondary">Watched?</Text>
+              <Icon
+                mr={2}
+                cursor="pointer"
+                height="25px"
+                width="25px"
+                stroke="var(--primary)"
+                name={localSeen ? "checked" : "unchecked"}
+                onClick={() => {
+                  setLocalSeen(!localSeen);
+                }}
+              />
+            </Box>
+          </Flex>
+          <Flex mt="auto" pt={2} justifyContent="flex-end">
+            <Button variant="delete" mr={3} onClick={() => dataDelete(dayID)}>
+              Delete
+            </Button>
+            <Button
+              variant={isModified ? "secondary" : "primary"}
+              onClick={dataSave}
+            >
+              Save
+            </Button>
+          </Flex>
+        </Grid>
       </Grid>
-    </Grid>
+      <CloseContainer>
+        <Icon name="close" onClick={handleClose} />
+      </CloseContainer>
+    </Box>
   );
 
   function dataSave() {
@@ -294,7 +317,12 @@ const MediaList = () => {
             isOpen={typeof data !== "undefined"}
             handleClose={() => setData(undefined)}
           >
-            <MediaListItem dayID={data[0]} {...data[1]} {...data[2]} />
+            <MediaListItem
+              dayID={data[0]}
+              {...data[1]}
+              {...data[2]}
+              handleClose={() => setData(undefined)}
+            />
           </Modal>
         )}
       </Box>
