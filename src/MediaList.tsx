@@ -137,7 +137,7 @@ const MediaListItem = ({
                 cursor="pointer"
                 height="25px"
                 width="25px"
-                stroke="var(--primary)"
+                stroke="primary"
                 name={localSeen ? "checked" : "unchecked"}
                 onClick={() => {
                   setLocalSeen(!localSeen);
@@ -318,7 +318,7 @@ const MediaList = () => {
                             mr={2}
                             height="20px"
                             width="20px"
-                            stroke="var(--text-primary)"
+                            stroke="text-primary"
                             name="repeat"
                           />
                         ) : null}

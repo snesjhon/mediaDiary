@@ -22,14 +22,20 @@ export interface Style {
     "bg-secondary": string;
     "border-primary": string;
     "border-secondary": string;
+    "text-primary": string;
+  };
+  stroke: {
+    primary: string;
+    secondary: string;
+    orange: string;
+    blue: string;
+    "bg-primary": string;
+    "bg-secondary": string;
+    "border-primary": string;
+    "border-secondary": string;
+    "text-primary": string;
   };
 }
-
-// --font-size-base: calc(1rem * var(--rem-base));
-// --font-size-lg: calc(var(--font-size-base) * 1.25);
-// --font-size-md: calc(var(--font-size-base) * 1);
-// --font-size-sm: calc(var(--font-size-base) * 0.8);
-// --font-size-xs: calc(var(--font-size-base) * 0.7);
 
 const myTheme: DefaultTheme & Style = {
   fontSizes: [
@@ -64,7 +70,19 @@ const myTheme: DefaultTheme & Style = {
     "bg-primary": "var(--bg-primary)",
     "bg-secondary": "var(--bg-secondary)",
     "border-primary": "var(--border-primary)",
-    "border-secondary": "var(--border-secondary)"
+    "border-secondary": "var(--border-secondary)",
+    "text-primary": "var(--text-primary)"
+  },
+  stroke: {
+    primary: "var(--primary)",
+    secondary: "var(--secondary)",
+    orange: "var(--orange)",
+    blue: "var(--blue)",
+    "bg-primary": "var(--bg-primary)",
+    "bg-secondary": "var(--bg-secondary)",
+    "border-primary": "var(--border-primary)",
+    "border-secondary": "var(--border-secondary)",
+    "text-primary": "var(--text-primary)"
   }
 };
 

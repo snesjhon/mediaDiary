@@ -1,7 +1,7 @@
-import React from "react";
+import * as React from "react";
+import { IconBaseProps } from "../Icon";
 
-const IconCalendar = props => {
-  const { stroke, height, width, ...other } = props;
+const IconCalendar = ({ stroke, height, width, ...rest }: IconBaseProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -13,7 +13,7 @@ const IconCalendar = props => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      {...other}
+      {...rest}
     >
       <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
       <line x1="16" y1="2" x2="16" y2="6"></line>

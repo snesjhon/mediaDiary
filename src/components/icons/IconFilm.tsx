@@ -1,7 +1,7 @@
-import React from "react";
+import * as React from "react";
+import { IconBaseProps } from "../Icon";
 
-const IconFilm = props => {
-  const { stroke, height, width, ...other } = props;
+const IconFilm = ({ stroke, height, width, ...rest }: IconBaseProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -13,7 +13,7 @@ const IconFilm = props => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      {...other}
+      {...rest}
     >
       <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
       <line x1="7" y1="2" x2="7" y2="22"></line>

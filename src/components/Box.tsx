@@ -25,7 +25,6 @@ export interface BoxProps
     PositionProps {
   cursor?: string;
   color?:
-    | string
     | "primary"
     | "secondary"
     | "orange"
@@ -33,7 +32,8 @@ export interface BoxProps
     | "bg-primary"
     | "bg-secondary"
     | "border-primary"
-    | "border-secondary";
+    | "border-secondary"
+    | "text-primary";
 }
 
 const Box = styled.div<BoxProps>`

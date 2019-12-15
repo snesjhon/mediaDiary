@@ -29,7 +29,7 @@ const User = () => {
           <Link to="/profile">
             <Icon
               name="film"
-              stroke="var(--primary)"
+              stroke="primary"
               height="15px"
               width="15px"
               mr={1}
@@ -38,13 +38,7 @@ const User = () => {
           </Link>
         </Flex>
         <Flex py={2} px={3} alignItems="center" onClick={() => userLogout()}>
-          <Icon
-            name="tv"
-            stroke="var(--primary)"
-            height="15px"
-            width="15px"
-            mr={1}
-          />
+          <Icon name="tv" stroke="primary" height="15px" width="15px" mr={1} />
           Logout
         </Flex>
       </Dropdown>

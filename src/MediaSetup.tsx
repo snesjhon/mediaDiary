@@ -23,9 +23,9 @@ const MediaSetup = () => {
     <Box>
       <Flex flexDirection="column" alignItems="center">
         <Flex mt={4}>
-          <Icon name="album" mr={3} stroke="var(--orange)" />
-          <Icon name="tv" mr={3} stroke="var(--blue)" />
-          <Icon name="film" mr={3} stroke="var(--secondary)" />
+          <Icon name="album" mr={3} stroke="orange" />
+          <Icon name="tv" mr={3} stroke="blue" />
+          <Icon name="film" mr={3} stroke="secondary" />
         </Flex>
         <Text fontSize={5} textAlign="center" fontWeight={600} mt={2}>
           MediaDiary

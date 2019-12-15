@@ -1,7 +1,7 @@
 import * as React from "react";
 import { IconBaseProps } from "../Icon";
 
-const IconClose = ({ stroke, height, width, ...rest }: IconBaseProps) => {
+const IconChecked = ({ stroke, height, width, ...rest }: IconBaseProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -15,11 +15,10 @@ const IconClose = ({ stroke, height, width, ...rest }: IconBaseProps) => {
       strokeLinejoin="round"
       {...rest}
     >
-      <circle cx="12" cy="12" r="10"></circle>
-      <line x1="15" y1="9" x2="9" y2="15"></line>
-      <line x1="9" y1="9" x2="15" y2="15"></line>
+      <polyline points="9 11 12 14 22 4"></polyline>
+      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
     </svg>
   );
 };
 
-export default IconClose;
+export default IconChecked;

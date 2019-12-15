@@ -24,7 +24,7 @@ const MediaAdd = () => {
         </Text>
         <Icon
           name="film"
-          stroke="var(--primary)"
+          stroke="primary"
           height="20px"
           width="20px"
           onClick={() => setType("film")}
@@ -32,7 +32,7 @@ const MediaAdd = () => {
         />
         <Icon
           name="tv"
-          stroke="var(--primary)"
+          stroke="primary"
           height="20px"
           width="20px"
           onClick={() => setType("tv")}
@@ -40,7 +40,7 @@ const MediaAdd = () => {
         />
         <Icon
           name="album"
-          stroke="var(--primary)"
+          stroke="primary"
           height="20px"
           width="20px"
           onClick={() => setType("album")}

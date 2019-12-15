@@ -1,7 +1,7 @@
-import React from "react";
+import * as React from "react";
+import { IconBaseProps } from "../Icon";
 
-const IconTv = props => {
-  const { stroke, height, width, ...other } = props;
+const IconUnChecked = ({ stroke, height, width, ...rest }: IconBaseProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -13,12 +13,11 @@ const IconTv = props => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      {...other}
+      {...rest}
     >
-      <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
-      <polyline points="17 2 12 7 7 2"></polyline>
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
     </svg>
   );
 };
 
-export default IconTv;
+export default IconUnChecked;
