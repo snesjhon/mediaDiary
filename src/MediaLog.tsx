@@ -4,7 +4,7 @@ import { MBDKEY } from "./config/constants";
 import { Box, Grid, Text, Button, Flex, Icon } from "./components";
 import styled from "styled-components";
 import DatePicker from "react-date-picker";
-import { MediaTypes } from "./config/types";
+import { MediaTypes } from "./config/storeMedia";
 import { useStoreState, useStoreActions } from "./config/store";
 // @ts-ignore
 import ReactStars from "react-stars";
@@ -116,7 +116,7 @@ const MediaLog = ({ type, setType }: MediaLog) => {
             />
           </Flex>
           <Flex mt={3} alignItems="center">
-            <Text color="econdary" mr={3}>
+            <Text color="secondary" mr={3}>
               {watched} Before?
             </Text>
             <Icon
@@ -124,7 +124,7 @@ const MediaLog = ({ type, setType }: MediaLog) => {
               cursor="pointer"
               height="25px"
               width="25px"
-              stroke="var(--primary)"
+              stroke="primary"
               name={seen ? "checked" : "unchecked"}
               onClick={() => setSeen(!seen)}
             />

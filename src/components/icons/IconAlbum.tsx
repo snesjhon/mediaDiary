@@ -1,7 +1,7 @@
-import React from "react";
+import * as React from "react";
+import { IconBaseProps } from "../Icon";
 
-const IconAlbum = props => {
-  const { stroke, height, width, ...other } = props;
+const IconAlbum = ({ stroke, height, width, ...rest }: IconBaseProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -13,7 +13,7 @@ const IconAlbum = props => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      {...other}
+      {...rest}
     >
       <path d="M9 18V5l12-2v13"></path>
       <circle cx="6" cy="18" r="3"></circle>

@@ -4,7 +4,7 @@
  */
 import * as React from "react";
 import { useState } from "react";
-import { Dropdown, Flex, Icon, Box } from "./components";
+import { Dropdown, Flex, Icon, Box, Image } from "./components";
 import { useStoreActions, useStoreState } from "./config/store";
 import { Link } from "react-router-dom";
 
@@ -15,7 +15,10 @@ const User = () => {
   return (
     <Box position="relative">
       <Box onClick={() => setShowDropdown(!showDropdown)}>
-        <img src={(user !== null && user.photoURL) || undefined} width="40px" />
+        <Image
+          src={(user !== null && user.photoURL) || ""}
+          borderRadius="50%"
+        />
       </Box>
       <Dropdown
         showDropdown={showDropdown}
@@ -26,7 +29,7 @@ const User = () => {
           <Link to="/profile">
             <Icon
               name="film"
-              stroke="var(--primary)"
+              stroke="primary"
               height="15px"
               width="15px"
               mr={1}
@@ -35,13 +38,7 @@ const User = () => {
           </Link>
         </Flex>
         <Flex py={2} px={3} alignItems="center" onClick={() => userLogout()}>
-          <Icon
-            name="tv"
-            stroke="var(--primary)"
-            height="15px"
-            width="15px"
-            mr={1}
-          />
+          <Icon name="tv" stroke="primary" height="15px" width="15px" mr={1} />
           Logout
         </Flex>
       </Dropdown>

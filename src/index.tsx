@@ -13,10 +13,10 @@ import { myTheme } from "./config/theme";
 import { ThemeProvider } from "styled-components";
 import { StoreProvider } from "easy-peasy";
 import { store } from "./config/store";
+
 import Main from "./Main";
 
 import "./styles/reset.css";
-import "./styles/github.css";
 import "./styles/global.css";
 
 ReactDOM.render(

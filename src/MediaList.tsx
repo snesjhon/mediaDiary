@@ -1,7 +1,16 @@
 import * as React from "react";
 import * as firebase from "firebase/app";
 import { useState, useEffect } from "react";
-import { Grid, Flex, Text, Box, Icon, Modal, Button } from "./components";
+import {
+  Grid,
+  Flex,
+  Text,
+  Box,
+  Icon,
+  Modal,
+  Button,
+  Image
+} from "./components";
 import styled from "styled-components";
 import { useStoreState, useStoreActions } from "./config/store";
 import { DataByDate, DataByID } from "./config/storeData";
@@ -64,7 +73,11 @@ const MediaListItem = ({
     <Box position="relative">
       <Grid gridTemplateColumns={["", gridColumn]} gridGap={["", "1rem"]}>
         <Grid gridItem textAlign="center">
-          <PosterImg src={poster} width="50%" />
+          <Image
+            src={poster}
+            textAlign={["center", "left"]}
+            width={["30vw", ""]}
+          />
         </Grid>
         <Grid gridItem>
           <Text
@@ -124,7 +137,7 @@ const MediaListItem = ({
                 cursor="pointer"
                 height="25px"
                 width="25px"
-                stroke="var(--primary)"
+                stroke="primary"
                 name={localSeen ? "checked" : "unchecked"}
                 onClick={() => {
                   setLocalSeen(!localSeen);
@@ -189,8 +202,8 @@ const MediaList = () => {
       a[month] = Object.assign({ ...a[month] }, { [c]: byDate[c] });
       return a;
     }, {});
-    const gridLayout = "3rem 2rem 3rem 22rem 10rem 4rem 6rem 6rem";
-    const gridGap = "0 1.5rem";
+    const gridLayout = "3rem 2rem 4rem 22rem 10rem 4rem 6rem 6rem";
+    const gridGap = "0 1.6rem";
 
     return (
       <Box overflow="scroll">
@@ -266,7 +279,10 @@ const MediaList = () => {
                         })}
                       </Text>
                       <Box>
-                        <PosterImg src={poster} />
+                        <Image
+                          src={poster}
+                          border="1px solid var(--border-secondary)"
+                        />
                       </Box>
                       <Text
                         as={type === "film" ? "strong" : undefined}
@@ -302,7 +318,7 @@ const MediaList = () => {
                             mr={2}
                             height="20px"
                             width="20px"
-                            stroke="var(--text-primary)"
+                            stroke="text-primary"
                             name="repeat"
                           />
                         ) : null}
