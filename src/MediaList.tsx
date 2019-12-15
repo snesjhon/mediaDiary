@@ -271,7 +271,7 @@ const MediaList = () => {
                       ) : (
                         <div />
                       )}
-                      <Text fontSize={3} fontWeight={300} textAlign="center">
+                      <Text fontSize={4} fontWeight={300} textAlign="center">
                         {new Date(
                           diaryDates[month][day].date.seconds * 1000
                         ).toLocaleDateString("en-us", {

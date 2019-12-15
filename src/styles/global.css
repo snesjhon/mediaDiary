@@ -106,6 +106,7 @@ body {
   font-weight: var(--font-weight-normal);
   line-height: var(--line-height-base);
   color: var(--text-primary);
+  background-color: var(--bg-secondary);
 }
 
 .react-date-picker__button svg {

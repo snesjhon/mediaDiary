@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { MBDKEY } from "./config/constants";
-import { Box, Grid, Text, Button, Flex, Icon } from "./components";
+import { Box, Grid, Text, Button, Flex, Icon, Image } from "./components";
 import styled from "styled-components";
 import DatePicker from "react-date-picker";
 import { MediaTypes } from "./config/storeMedia";
@@ -9,7 +9,7 @@ import { useStoreState, useStoreActions } from "./config/store";
 // @ts-ignore
 import ReactStars from "react-stars";
 
-const PosterImg = styled.img`
+const PosterImg = styled(Image)`
   box-shadow: 0 1px 5px rgba(20, 24, 28, 0.2), 0 2px 10px rgba(20, 24, 28, 0.35);
 `;
 

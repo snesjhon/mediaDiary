@@ -27,7 +27,6 @@ const Presentation = styled(({ isOpen, ...rest }) => <Box {...rest} />)`
   border: 1px solid #d1d5da;
   border-radius: 3px;
   box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.05);
-  overflow-y: auto;
 `;
 
 interface Portal {
