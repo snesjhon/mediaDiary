@@ -4,7 +4,7 @@ import { MBDKEY } from "./config/constants";
 import { Box, Grid, Text, Button, Flex, Icon } from "./components";
 import styled from "styled-components";
 import DatePicker from "react-date-picker";
-import { MediaTypes } from "./config/types";
+import { MediaTypes } from "./config/storeMedia";
 import { useStoreState, useStoreActions } from "./config/store";
 // @ts-ignore
 import ReactStars from "react-stars";

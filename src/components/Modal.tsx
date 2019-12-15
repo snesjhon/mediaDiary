@@ -59,7 +59,7 @@ const Modal = ({ children, isOpen, handleClose, ...rest }: Modal) => {
       <Presentation
         isOpen={isOpen}
         p={4}
-        width={[1, "10vw", "45vw"]}
+        width={["90vw", "10vw", "45vw"]}
         maxHeight={["90vh", "40vh"]}
         top={["5vh", "30%"]}
         {...rest}

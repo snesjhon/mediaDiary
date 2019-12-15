@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Box, Modal, Flex, Button, Dropdown, Icon, Text } from "./components";
 import MediaSearch from "./MediaSearch";
 import MediaLog from "./MediaLog";
-import { MediaTypes } from "./config/types";
+import { MediaTypes } from "./config/storeMedia";
 import { useStoreActions, useStoreState } from "./config/store";
 
 const MediaAdd = () => {

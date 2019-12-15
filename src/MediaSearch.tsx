@@ -14,9 +14,8 @@ import { Box, Flex, Text } from "./components";
 import Input, { InputRef } from "./components/Input";
 import styled from "styled-components";
 import useDebounce from "./hooks/useDebounce";
-import { MediaTypes } from "./config/types";
 import { useStoreActions } from "./config/store";
-import { MediaSelected } from "./config/storeMedia";
+import { MediaSelected, MediaTypes } from "./config/storeMedia";
 // import { addMedia, addMediaLog } from "./config/actions";
 
 const MediaResults = styled(Box)`
