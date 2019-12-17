@@ -30,10 +30,6 @@ const MediaMonth = styled(Box)`
   }
 `;
 
-const PosterImg = styled.img`
-  border: 1px solid var(--border-secondary);
-`;
-
 const CloseContainer = styled(Box)`
   position: absolute;
   top: 0;
@@ -75,7 +71,7 @@ const MediaListItem = ({
         <Grid gridItem textAlign="center">
           <Image
             src={poster}
-            textAlign={["center", "left"]}
+            // textAlign={["center", "left"]}
             width={["30vw", ""]}
           />
         </Grid>
@@ -83,13 +79,13 @@ const MediaListItem = ({
           <Text
             pt={2}
             pb={0}
-            fontSize={4}
+            fontSize={5}
             fontWeight={600}
             alignItems="center"
             textAlign={["center", "left"]}
           >
             {title}
-            <Text as="span" fontWeight={300} fontSize={3} ml={2}>
+            <Text as="span" fontWeight={300} fontSize={4} ml={2}>
               (
               {new Date(published).toLocaleDateString("en-us", {
                 year: "numeric"
@@ -99,7 +95,7 @@ const MediaListItem = ({
           </Text>
           {artist && (
             <Text
-              fontSize={3}
+              fontSize={4}
               fontWeight={300}
               pb={2}
               textAlign={["center", "left"]}

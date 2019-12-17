@@ -41,10 +41,11 @@ interface Modal extends React.HTMLAttributes<HTMLElement> {
   isOpen: Boolean;
   handleClose: React.Dispatch<React.SetStateAction<boolean>>;
   children: React.ReactNode;
+  width?: number | string | string[];
   extend?: number;
 }
 
-const Modal = ({ children, isOpen, handleClose, ...rest }: Modal) => {
+const Modal = ({ children, isOpen, handleClose, width, ...rest }: Modal) => {
   useEffect(() => {
     document.documentElement.style.overflow = "hidden";
     return () => {
@@ -58,9 +59,9 @@ const Modal = ({ children, isOpen, handleClose, ...rest }: Modal) => {
       <Presentation
         isOpen={isOpen}
         p={4}
-        width={["90vw", "10vw", "45vw"]}
-        maxHeight={["90vh", "40vh"]}
-        top={["5vh", "30%"]}
+        width={width ? width : ["85vw", "80vw", "60vw", "45vw"]}
+        maxHeight={["90vh", ""]}
+        top={["10vh", "30%"]}
         {...rest}
       >
         {children}

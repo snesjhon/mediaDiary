@@ -50,6 +50,7 @@ const MediaAdd = () => {
       {isOpen && (
         <Modal
           className="markdown-body"
+          width={["85vw", "80vw", "60vw", "40vw"]}
           isOpen={isOpen}
           handleClose={() => {
             setType("");

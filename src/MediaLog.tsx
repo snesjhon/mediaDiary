@@ -56,9 +56,9 @@ const MediaLog = ({ type, setType }: MediaLog) => {
     return <div>loading</div>;
   } else {
     return (
-      <Grid gridTemplateColumns="14rem 1fr" gridGap="2rem">
-        <Box>
-          <PosterImg src={poster} />
+      <Grid gridTemplateColumns={["", "14rem 1fr"]} gridGap={["", "2rem"]}>
+        <Box textAlign="center">
+          <Image src={poster} width={["30vw", ""]} />
         </Box>
         <Flex flexDirection="column">
           <Text mb={2} color="secondary">

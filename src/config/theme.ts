@@ -43,7 +43,11 @@ const myTheme: DefaultTheme & Style = {
     "var(--font-size-sm)",
     "var(--font-size-base)",
     "var(--font-size-md)",
-    "var(--font-size-lg)"
+    "var(--font-size-lg)",
+    "var(--font-size-h4)",
+    "var(--font-size-h3)",
+    "var(--font-size-h2)",
+    "var(--font-size-h1)"
   ],
   fontWeights: [
     "var(--font-weight-light)",

@@ -40,6 +40,10 @@ html[data-theme="dark"] {
 
   /* FONT SIZES -- Assumes the browser default, typically `16px` */
   --font-size-base: calc(1rem * var(--rem-base));
+  --font-size-h1: calc(var(--font-size-base) * 2.5);
+  --font-size-h2: calc(var(--font-size-base) * 2);
+  --font-size-h3: calc(var(--font-size-base) * 1.75);
+  --font-size-h4: calc(var(--font-size-base) * 1.5);
   --font-size-lg: calc(var(--font-size-base) * 1.25);
   --font-size-md: calc(var(--font-size-base) * 1);
   --font-size-sm: calc(var(--font-size-base) * 0.8);
