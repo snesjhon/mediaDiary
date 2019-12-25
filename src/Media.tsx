@@ -24,7 +24,7 @@ const Media = () => {
           <p>
             All caps, bold: <strong>MOVIES</strong>
           </p>
-          <p>All caps: TV SERIES</p>
+          <p>All caps: TV SERIES (and season)</p>
           <p>
             Italics: <em>Albums</em>
           </p>
