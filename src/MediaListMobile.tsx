@@ -170,16 +170,11 @@ const MediaListItem = ({
   }
 };
 
-const MediaList = () => {
+const MediaListMobile = () => {
   const [data, setData] = useState<[string, DataByDate, DataByID]>();
   const byID = useStoreState(state => state.data.byID);
   const byDate = useStoreState(state => state.data.byDate);
   const dataGet = useStoreActions(actions => actions.data.dataGet);
-  // const bp = useBP();
-
-  // console.log(bp);
-
-  // console.log("Current theme: ", themeContext);
 
   useEffect(() => {
     dataGet();
@@ -200,30 +195,11 @@ const MediaList = () => {
       a[month] = Object.assign({ ...a[month] }, { [c]: byDate[c] });
       return a;
     }, {});
-    const gridLayout = "3rem 2rem 4rem 22rem 10rem 4rem 6rem 6rem";
-    const gridGap = "0 1.6rem";
+    const gridLayout = "1.5rem 3rem 1fr";
+    const gridGap = "0 1rem";
 
     return (
-      <Box overflow="scroll">
-        <Grid
-          gridTemplateColumns={gridLayout}
-          gridGap={gridGap}
-          alignItems="center"
-          borderBottom="1px solid"
-          borderColor="border-secondary"
-          fontSize={0}
-          color="secondary"
-          style={{ textTransform: "uppercase" }}
-        >
-          <Text>Month</Text>
-          <Text textAlign="center">Day</Text>
-          <Text>Poster</Text>
-          <Text>Title</Text>
-          <Text>Artist</Text>
-          <Text>Released</Text>
-          <Text>Rating</Text>
-          <Text textAlign="center">Rewatch</Text>
-        </Grid>
+      <Box>
         {Object.keys(diaryDates)
           .reverse()
           .map((month, monthIndex) => (
@@ -238,24 +214,12 @@ const MediaList = () => {
                   const { title, poster, published, artist, type } = byID[
                     diaryDates[month][day].id
                   ];
-                  const { star, seen } = diaryDates[month][day];
+                  const { star } = diaryDates[month][day];
                   return (
-                    <Grid
-                      key={monthIndex + dayIndex}
-                      gridTemplateColumns={gridLayout}
-                      gridGap={gridGap}
-                      py={3}
-                      alignItems="center"
-                      onClick={() =>
-                        setData([
-                          day,
-                          diaryDates[month][day],
-                          byID[diaryDates[month][day].id]
-                        ])
-                      }
-                    >
+                    <>
                       {dayIndex === 0 ? (
                         <Text
+                          key={diaryDates[month][day].date.seconds}
                           className="monthDate"
                           fontSize={4}
                           color="secondary"
@@ -263,65 +227,77 @@ const MediaList = () => {
                           {new Date(
                             diaryDates[month][day].date.seconds * 1000
                           ).toLocaleDateString("en-us", {
-                            month: "short"
+                            month: "long",
+                            year: "numeric"
                           })}
                         </Text>
                       ) : (
                         <div />
                       )}
-                      <Text fontSize={4} fontWeight={300} textAlign="center">
-                        {new Date(
-                          diaryDates[month][day].date.seconds * 1000
-                        ).toLocaleDateString("en-us", {
-                          day: "numeric"
-                        })}
-                      </Text>
-                      <Box>
-                        <Image
-                          src={poster}
-                          border="1px solid var(--border-secondary)"
-                        />
-                      </Box>
-                      <Text
-                        as={type === "film" ? "strong" : undefined}
-                        textTransform={
-                          type === "album" ? undefined : "uppercase"
+                      <Grid
+                        key={monthIndex + dayIndex}
+                        gridTemplateColumns={gridLayout}
+                        gridGap={gridGap}
+                        py={4}
+                        alignItems="center"
+                        onClick={() =>
+                          setData([
+                            day,
+                            diaryDates[month][day],
+                            byID[diaryDates[month][day].id]
+                          ])
                         }
-                        fontStyle={type === "album" ? "italic" : undefined}
                       >
-                        {title}
-                      </Text>
-                      <Box>{artist ? artist : "none"}</Box>
-                      <Box>
-                        {published
-                          ? new Date(published).toLocaleDateString("en-US", {
-                              year: "numeric"
-                            })
-                          : "date"}
-                      </Box>
-                      <Box>
-                        <ReactStars
-                          count={5}
-                          half
-                          value={star}
-                          edit={false}
-                          size={16}
-                          color1="var(--secondary)"
-                          color2="var(--primary)"
-                        />
-                      </Box>
-                      <Box textAlign="center">
-                        {seen ? (
-                          <Icon
-                            mr={2}
-                            height="20px"
-                            width="20px"
-                            stroke="text-primary"
-                            name="repeat"
+                        <Text fontSize={4} fontWeight={300} textAlign="center">
+                          {new Date(
+                            diaryDates[month][day].date.seconds * 1000
+                          ).toLocaleDateString("en-us", {
+                            day: "numeric"
+                          })}
+                        </Text>
+                        <Box>
+                          <Image
+                            src={poster}
+                            border="1px solid var(--border-secondary)"
                           />
-                        ) : null}
-                      </Box>
-                    </Grid>
+                        </Box>
+                        <Box>
+                          <Flex>
+                            <Text
+                              as={type === "film" ? "strong" : undefined}
+                              textTransform={
+                                type === "album" ? undefined : "uppercase"
+                              }
+                              fontStyle={
+                                type === "album" ? "italic" : undefined
+                              }
+                            >
+                              {title}
+                            </Text>
+                            <Text pl={2}>
+                              {published
+                                ? new Date(published).toLocaleDateString(
+                                    "en-US",
+                                    {
+                                      year: "numeric"
+                                    }
+                                  )
+                                : "date"}
+                            </Text>
+                          </Flex>
+                          <Box>{artist ? artist : "none"}</Box>
+                          <ReactStars
+                            count={5}
+                            half
+                            value={star}
+                            edit={false}
+                            size={16}
+                            color1="var(--secondary)"
+                            color2="var(--primary)"
+                          />
+                        </Box>
+                      </Grid>
+                    </>
                   );
                 })}
             </MediaMonth>
@@ -346,4 +322,4 @@ const MediaList = () => {
   }
 };
 
-export default MediaList;
+export default MediaListMobile;

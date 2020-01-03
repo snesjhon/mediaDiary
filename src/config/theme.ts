@@ -1,6 +1,15 @@
 import { DefaultTheme } from "styled-components";
 
-const BP = {
+interface breakpoints {
+  tablet: number;
+  laptop: number;
+  laptopL: number;
+  desktop: number;
+  tv: number;
+  [key: string]: number;
+}
+
+export const BP: breakpoints = {
   tablet: 768,
   laptop: 1024,
   laptopL: 1366,

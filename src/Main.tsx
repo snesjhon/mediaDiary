@@ -27,9 +27,9 @@ const Main = () => {
     <Box
       id="main"
       className="markdown-body"
-      maxWidth={["97vw", "85vw", "75vw", "65vw"]}
+      maxWidth={["97vw", "95vw", "95vw", "65vw"]}
       mx="auto"
-      my={2}
+      my={[0, 1, 2]}
       p={3}
       border="1px solid var(--border-primary)"
       borderRadius="3px"

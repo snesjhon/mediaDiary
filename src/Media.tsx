@@ -1,8 +1,10 @@
 import * as React from "react";
 import { Flex, Box } from "./components";
 import MediaList from "./MediaList";
+import MediaListMobile from "./MediaListMobile";
 import Navigation from "./Navigation";
 import { useStoreState } from "./config/store";
+import useBP from "./hooks/useBP";
 
 const Media = () => {
   const media = useStoreState(state => state.data.byID);
@@ -16,30 +18,37 @@ const Media = () => {
     }
     return a;
   }, {});
+  const bp = useBP();
   return (
     <>
       <Navigation />
-      <Flex justifyContent="space-between">
-        <Box my={4}>
-          <p>
-            All caps, bold: <strong>MOVIES</strong>
-          </p>
-          <p>All caps: TV SERIES (and season)</p>
-          <p>
-            Italics: <em>Albums</em>
-          </p>
-        </Box>
-        <Box my={4}>
-          <p>
-            <strong> {types.film} MOVIES</strong>
-          </p>
-          <p>{types.tv} TV SERIES</p>
-          <p>
-            {types.album} <em>Albums</em>
-          </p>
-        </Box>
-      </Flex>
-      <MediaList />
+      {bp !== "mobile" ? (
+        <>
+          <Flex justifyContent="space-between">
+            <Box my={4}>
+              <p>
+                All caps, bold: <strong>MOVIES</strong>
+              </p>
+              <p>All caps: TV SERIES (and season)</p>
+              <p>
+                Italics: <em>Albums</em>
+              </p>
+            </Box>
+            <Box my={4}>
+              <p>
+                <strong> {types.film} MOVIES</strong>
+              </p>
+              <p>{types.tv} TV SERIES</p>
+              <p>
+                {types.album} <em>Albums</em>
+              </p>
+            </Box>
+          </Flex>
+          <MediaList />
+        </>
+      ) : (
+        <MediaListMobile />
+      )}
     </>
   );
 };

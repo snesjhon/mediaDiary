@@ -93,7 +93,7 @@ html[data-theme="dark"] {
 /* var(--bp-desktop) */
 @media (min-width: 1920px) {
   :root {
-    --rem-base: 1.25;
+    --rem-base: 1.1;
   }
 }
 
