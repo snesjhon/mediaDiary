@@ -18,18 +18,16 @@ import { MediaTypes } from "./config/storeMedia";
 // import DatePicker from "react-date-picker";
 // @ts-ignore
 // import ReactStars from "react-stars";
+import { Grid, Box, Typography, Divider, Dialog } from "@material-ui/core";
 import {
-  Grid,
-  Box,
-  Typography,
-  Divider,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText
-} from "@material-ui/core";
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker
+} from "@material-ui/pickers";
 import Rating from "@material-ui/lab/Rating";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, styled } from "@material-ui/core/styles";
+
+import DayjsUtils from "@date-io/dayjs";
+// import DateFnsUtils from "@date-io/date-fns";
 
 // const MediaMonth = styled(Box)``;
 // &:hover .monthDate {
@@ -41,12 +39,6 @@ import { makeStyles } from "@material-ui/core/styles";
 //   //   color: ${props => props.theme.colors["bg-primary"]};
 //   // }
 // }
-
-// const CloseContainer = styled(Box)`
-//   position: absolute;
-//   top: 0;
-//   right: 0;
-// `;
 
 interface MediaListItemProps extends DataByID, DataByDate {
   dayID: string;
@@ -87,21 +79,49 @@ const MediaListItem = ({
   const classes = useStyles();
   return (
     <>
-      <DialogTitle id="alert-dialog-title">
-        {title} (
-        {new Date(published).toLocaleDateString("en-us", {
-          year: "numeric"
-        })}
-        )
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          {artist}
-        </DialogContentText>
-        <DialogContentText id="alert-dialog-description">
-          {overview}
-        </DialogContentText>
-      </DialogContent>
+      <Box p={2}>
+        <Grid container spacing={3}>
+          <Grid item xs={type === "album" ? 4 : 3}>
+            <img className={classes.image} src={poster} />
+          </Grid>
+          <Grid item xs={type === "album" ? 8 : 9}>
+            <Typography variant="h5">
+              {title} (
+              {new Date(published).toLocaleDateString("en-us", {
+                year: "numeric"
+              })}
+              )
+            </Typography>
+            <Typography variant="h6">{artist}</Typography>
+            <Box py={2}>
+              <Typography variant="body1">{overview}</Typography>
+            </Box>
+            <Box display="flex">
+              <Typography>Rating:</Typography>
+              <Rating value={localStar} name="rated" precision={0.5} />
+            </Box>
+            <Box display="flex">
+              <Typography>Date:</Typography>
+              <MuiPickersUtilsProvider utils={DayjsUtils}>
+                <KeyboardDatePicker
+                  disableToolbar
+                  variant="inline"
+                  format="MM/dd/yyyy"
+                  margin="normal"
+                  id="date-picker-inline"
+                  label="Date picker inline"
+                  value={localDate}
+                  onChange={() => {}}
+                  // onChange={(e) => e !== null ? setLocalDate(e) : null}
+                  KeyboardButtonProps={{
+                    "aria-label": "change date"
+                  }}
+                />
+              </MuiPickersUtilsProvider>
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
     </>
     // <Card>
     //   <img className={classes.image} src={poster} />
@@ -235,11 +255,45 @@ const typeStyles = makeStyles(theme => ({
   }
 }));
 
+// const TypedTypography = styled({type, ...other}:MediaTypes) => (<Typography {...other}/>))
+// const MyButton = styled(({ type, ...other }: MediaTypes) => (
+//   <Typography {...other} />
+// ))({
+//   fontWeight: (props: MediaTypes) =>
+//     props.type === "film" ? "bolder" : undefined,
+//   textTransform: (props: MediaTypes) =>
+//     props.type === "film" || props.type === "tv" ? "uppercase" : undefined,
+//   fontStyle: (props: MediaTypes) =>
+//     props.type === "album" ? "italic" : undefined
+// });
+
+const TypedTypography = styled(props => <Typography {...props} />)({
+  fontWeight: (props: MediaTypes) =>
+    props.type === "film" ? "bolder" : undefined
+});
+
+// background: (props: MyButtonProps) =>
+//   props.color === 'red'
+//     ? 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
+//     : 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+// border: 0,
+// borderRadius: 3,
+// boxShadow: (props: MyButtonProps) =>
+//   props.color === 'red'
+//     ? '0 3px 5px 2px rgba(255, 105, 135, .3)'
+//     : '0 3px 5px 2px rgba(33, 203, 243, .3)',
+// color: 'white',
+// height: 48,
+// padding: '0 30px',
+// margin: 8,
+
 const MediaList = () => {
   const [data, setData] = useState<[string, DataByDate, DataByID]>();
   const byID = useStoreState(state => state.data.byID);
   const byDate = useStoreState(state => state.data.byDate);
   const dataGet = useStoreActions(actions => actions.data.dataGet);
+
+  const classes = useStyles();
 
   useEffect(() => {
     dataGet();
@@ -306,7 +360,6 @@ const MediaList = () => {
                     diaryDates[month][day].id
                   ];
                   const { star, seen } = diaryDates[month][day];
-                  const classes = typeStyles({ type: type });
                   return (
                     <Box
                       key={monthIndex + dayIndex}
@@ -350,9 +403,7 @@ const MediaList = () => {
                           <img className={classes.image} src={poster} />
                         </Grid>
                         <Grid item xs={3}>
-                          <Typography className={classes.root}>
-                            {title}
-                          </Typography>
+                          <TypedTypography type={type}>{title}</TypedTypography>
                         </Grid>
                         <Grid item xs={3}>
                           <Typography>{artist ? artist : "none"}</Typography>
@@ -391,6 +442,7 @@ const MediaList = () => {
           <Dialog
             open={typeof data !== "undefined"}
             onClose={() => setData(undefined)}
+            maxWidth="md"
           >
             <MediaListItem
               dayID={data[0]}

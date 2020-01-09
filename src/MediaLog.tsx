@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { MBDKEY } from "./config/constants";
 import { Box, Grid, Text, Button, Flex, Icon, Image } from "./components";
 import styled from "styled-components";
-import DatePicker from "react-date-picker";
+// import DatePicker from "react-date-picker";
 import { MediaTypes } from "./config/storeMedia";
 import { useStoreState, useStoreActions } from "./config/store";
 // @ts-ignore
@@ -99,7 +99,7 @@ const MediaLog = ({ type, setType }: MediaLog) => {
             <Text mr={2} pb={0} color="secondary">
               On
             </Text>
-            <DatePicker onChange={(date: Date) => setDate(date)} value={date} />
+            {/* <DatePicker onChange={(date: Date) => setDate(date)} value={date} /> */}
           </Flex>
           <Flex mt={3} pt={2}>
             <Text mr={2} pb={0} color="secondary">
