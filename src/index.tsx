@@ -9,19 +9,55 @@
 
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { myTheme } from "./config/theme";
-import { ThemeProvider } from "styled-components";
+// import { myTheme } from "./config/theme";
+// import { ThemeProvider } from "styled-components";
 import { StoreProvider } from "easy-peasy";
 import { store } from "./config/store";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
 import Main from "./Main";
 
-import "./styles/reset.css";
-import "./styles/global.css";
+// import "./styles/reset.css";
+// import "./styles/global.css";
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      light: "#85D7FF",
+      main: "#1FB6FF",
+      dark: "#009EEB"
+    },
+    secondary: {
+      light: "#29EB7F",
+      main: "#13CE66",
+      dark: "#13CE66"
+    },
+    text: {
+      primary: "#3c4858",
+      secondary: "#8492a6"
+    }
+  },
+  typography: {
+    fontFamily: [
+      "-apple-system",
+      "BlinkMacSystemFont",
+      '"Segoe UI"',
+      "Roboto",
+      '"Helvetica Neue"',
+      "Arial",
+      "sans-serif",
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"'
+    ].join(","),
+    fontWeightRegular: 500
+  }
+});
 
 ReactDOM.render(
   <StoreProvider store={store}>
-    <ThemeProvider theme={myTheme}>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Main />
     </ThemeProvider>
   </StoreProvider>,

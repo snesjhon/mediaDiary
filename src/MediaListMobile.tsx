@@ -19,17 +19,16 @@ import DatePicker from "react-date-picker";
 // @ts-ignore
 import ReactStars from "react-stars";
 
-const MediaMonth = styled(Box)`
-  &:hover .monthDate {
-    color: ${props => props.theme.colors.blue};
-  }
-  & > .monthContainer:hover {
-    & .day {
-      cursor: pointer;
-      color: ${props => props.theme.colors["bg-primary"]};
-    }
-  }
-`;
+const MediaMonth = styled(Box)``;
+// &:hover .monthDate {
+//   // color: ${props => props.theme.colors.blue};
+// }
+// & > .monthContainer:hover {
+//   & .day {
+//     cursor: pointer;
+//     color: ${props => props.theme.colors["bg-primary"]};
+//   }
+// }
 
 const CloseContainer = styled(Box)`
   position: absolute;
