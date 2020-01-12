@@ -25,20 +25,7 @@ import {
 } from "@material-ui/pickers";
 import Rating from "@material-ui/lab/Rating";
 import { makeStyles, styled } from "@material-ui/core/styles";
-
 import DayjsUtils from "@date-io/dayjs";
-// import DateFnsUtils from "@date-io/date-fns";
-
-// const MediaMonth = styled(Box)``;
-// &:hover .monthDate {
-//   color: ${props => props.theme.colors.blue};
-// }
-// & > .monthContainer:hover {
-//   // & .day {
-//   //   cursor: pointer;
-//   //   color: ${props => props.theme.colors["bg-primary"]};
-//   // }
-// }
 
 interface MediaListItemProps extends DataByID, DataByDate {
   dayID: string;
@@ -48,8 +35,21 @@ interface MediaListItemProps extends DataByID, DataByDate {
 const useStyles = makeStyles(theme => ({
   image: {
     maxWidth: "100%",
-    border: `1px solid ${theme.palette.grey["300"]}`,
+    border: `1px solid ${theme.palette.grey[300]}`,
     borderRadius: "5px"
+  },
+  tableHeadings: {
+    "& > *": {
+      textTransform: "uppercase",
+      color: theme.palette.grey[500],
+      fontSize: theme.typography.button.fontSize
+    }
+  },
+  tableItem: {
+    "&:hover div:nth-child(4) p": {
+      cursor: "pointer",
+      color: theme.palette.primary.dark
+    }
   }
 }));
 
@@ -75,7 +75,6 @@ const MediaListItem = ({
     localStar === star && localDate === date && localSeen === seen
       ? true
       : false;
-  const gridColumn = type === "album" ? "0.7fr 1fr" : "0.5fr 1fr";
   const classes = useStyles();
   return (
     <>
@@ -86,11 +85,14 @@ const MediaListItem = ({
           </Grid>
           <Grid item xs={type === "album" ? 8 : 9}>
             <Typography variant="h5">
-              {title} (
-              {new Date(published).toLocaleDateString("en-us", {
-                year: "numeric"
-              })}
-              )
+              {title}
+              <Box component="span" fontWeight="light">
+                (
+                {new Date(published).toLocaleDateString("en-us", {
+                  year: "numeric"
+                })}
+                )
+              </Box>
             </Typography>
             <Typography variant="h6">{artist}</Typography>
             <Box py={2}>
@@ -105,13 +107,18 @@ const MediaListItem = ({
               <MuiPickersUtilsProvider utils={DayjsUtils}>
                 <KeyboardDatePicker
                   disableToolbar
+                  disableFuture
                   variant="inline"
-                  format="MM/dd/yyyy"
-                  margin="normal"
-                  id="date-picker-inline"
-                  label="Date picker inline"
-                  value={localDate}
-                  onChange={() => {}}
+                  format="MM/DD/YYYY"
+                  value={localDate.toDate()}
+                  autoOk={true}
+                  onChange={e => {
+                    setLocalDate(
+                      e !== null && e.toDate() !== null
+                        ? firebase.firestore.Timestamp.fromDate(e.toDate())
+                        : firebase.firestore.Timestamp.now()
+                    );
+                  }}
                   // onChange={(e) => e !== null ? setLocalDate(e) : null}
                   KeyboardButtonProps={{
                     "aria-label": "change date"
@@ -123,107 +130,6 @@ const MediaListItem = ({
         </Grid>
       </Box>
     </>
-    // <Card>
-    //   <img className={classes.image} src={poster} />
-    //   <CardContent>
-    //     <Typography>
-    // {title} (
-    // {new Date(published).toLocaleDateString("en-us", {
-    //   year: "numeric"
-    // })}
-    // )
-    //     </Typography>
-    //     {artist && <Typography>{artist}</Typography>}
-    //     <Typography>{overview}</Typography>
-    //   </CardContent>
-    // </Card>
-    // <Box position="relative">
-    //   <Grid gridTemplateColumns={["", gridColumn]} gridGap={["", "1rem"]}>
-    //     <Grid gridItem textAlign="center">
-    //       <Image src={poster} width={["30vw", ""]} />
-    //     </Grid>
-    //     <Grid gridItem>
-    //       <Text
-    //         pt={2}
-    //         pb={0}
-    //         fontSize={5}
-    //         fontWeight={600}
-    //         alignItems="center"
-    //         textAlign={["center", "left"]}
-    //       >
-    //         {title}
-    //         <Text as="span" fontWeight={300} fontSize={4} ml={2}>
-    // (
-    // {new Date(published).toLocaleDateString("en-us", {
-    //   year: "numeric"
-    // })}
-    // )
-    //         </Text>
-    //       </Text>
-    // {artist && (
-    //   <Text
-    //     fontSize={4}
-    //     fontWeight={300}
-    //     pb={2}
-    //     textAlign={["center", "left"]}
-    //   >
-    //     {artist}
-    //   </Text>
-    // )}
-    //       <Text>{overview}</Text>
-    //       <Flex justifyContent="space-between" py={4}>
-    //         <Box>
-    //           <Text>Rated</Text>
-    //           <ReactStars
-    //             count={5}
-    //             half
-    //             value={localStar}
-    //             size={20}
-    //             color2="var(--primary)"
-    //             onChange={(e: any) => setlocalStar(e)}
-    //           />
-    //         </Box>
-    //         <Box>
-    //           <Text>On</Text>
-    //           <DatePicker
-    //             onChange={(date: Date) =>
-    //               setLocalDate(firebase.firestore.Timestamp.fromDate(date))
-    //             }
-    //             value={localDate.toDate()}
-    //           />
-    //         </Box>
-    //         <Box>
-    //           <Text>Watched?</Text>
-    //           <Icon
-    //             mr={2}
-    //             cursor="pointer"
-    //             height="25px"
-    //             width="25px"
-    //             stroke="primary"
-    //             name={localSeen ? "checked" : "unchecked"}
-    //             onClick={() => {
-    //               setLocalSeen(!localSeen);
-    //             }}
-    //           />
-    //         </Box>
-    //       </Flex>
-    //       <Flex mt="auto" pt={2} justifyContent="flex-end">
-    //         <Button variant="delete" mr={3} onClick={() => dataDelete(dayID)}>
-    //           Delete
-    //         </Button>
-    //         <Button
-    //           variant={isModified ? "secondary" : "primary"}
-    //           onClick={dataSave}
-    //         >
-    //           Save
-    //         </Button>
-    //       </Flex>
-    //     </Grid>
-    //   </Grid>
-    //   <CloseContainer>
-    //     <Icon name="close" onClick={handleClose} />
-    //   </CloseContainer>
-    // </Box>
   );
 
   function dataSave() {
@@ -239,53 +145,10 @@ const MediaListItem = ({
   }
 };
 
-const typeStyles = makeStyles(theme => ({
-  root: {
-    fontWeight: (props: MediaTypes) =>
-      props.type === "film" ? "bolder" : undefined,
-    textTransform: (props: MediaTypes) =>
-      props.type === "film" || props.type === "tv" ? "uppercase" : undefined,
-    fontStyle: (props: MediaTypes) =>
-      props.type === "album" ? "italic" : undefined
-  },
-  image: {
-    maxWidth: "100%",
-    border: `1px solid ${theme.palette.grey["300"]}`,
-    borderRadius: "5px"
-  }
-}));
-
-// const TypedTypography = styled({type, ...other}:MediaTypes) => (<Typography {...other}/>))
-// const MyButton = styled(({ type, ...other }: MediaTypes) => (
-//   <Typography {...other} />
-// ))({
-//   fontWeight: (props: MediaTypes) =>
-//     props.type === "film" ? "bolder" : undefined,
-//   textTransform: (props: MediaTypes) =>
-//     props.type === "film" || props.type === "tv" ? "uppercase" : undefined,
-//   fontStyle: (props: MediaTypes) =>
-//     props.type === "album" ? "italic" : undefined
-// });
-
 const TypedTypography = styled(props => <Typography {...props} />)({
   fontWeight: (props: MediaTypes) =>
     props.type === "film" ? "bolder" : undefined
 });
-
-// background: (props: MyButtonProps) =>
-//   props.color === 'red'
-//     ? 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
-//     : 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
-// border: 0,
-// borderRadius: 3,
-// boxShadow: (props: MyButtonProps) =>
-//   props.color === 'red'
-//     ? '0 3px 5px 2px rgba(255, 105, 135, .3)'
-//     : '0 3px 5px 2px rgba(33, 203, 243, .3)',
-// color: 'white',
-// height: 48,
-// padding: '0 30px',
-// margin: 8,
 
 const MediaList = () => {
   const [data, setData] = useState<[string, DataByDate, DataByID]>();
@@ -316,12 +179,12 @@ const MediaList = () => {
     }, {});
     return (
       <>
-        <Grid container spacing={4}>
+        <Grid className={classes.tableHeadings} container spacing={4}>
           <Grid item style={{ width: "6%" }}>
-            <Typography variant="button">Month</Typography>
+            Month
           </Grid>
           <Grid item style={{ width: "5%" }}>
-            <Typography variant="button">Day</Typography>
+            Day
           </Grid>
           <Grid item xs={1}>
             Poster
@@ -375,6 +238,7 @@ const MediaList = () => {
                           byID[diaryDates[month][day].id]
                         ])
                       }
+                      className={classes.tableItem}
                     >
                       <Grid container spacing={4} alignItems="center">
                         <Grid item style={{ width: "6%" }}>
@@ -460,3 +324,105 @@ const MediaList = () => {
 };
 
 export default MediaList;
+
+// <Card>
+//   <img className={classes.image} src={poster} />
+//   <CardContent>
+//     <Typography>
+// {title} (
+// {new Date(published).toLocaleDateString("en-us", {
+//   year: "numeric"
+// })}
+// )
+//     </Typography>
+//     {artist && <Typography>{artist}</Typography>}
+//     <Typography>{overview}</Typography>
+//   </CardContent>
+// </Card>
+// <Box position="relative">
+//   <Grid gridTemplateColumns={["", gridColumn]} gridGap={["", "1rem"]}>
+//     <Grid gridItem textAlign="center">
+//       <Image src={poster} width={["30vw", ""]} />
+//     </Grid>
+//     <Grid gridItem>
+//       <Text
+//         pt={2}
+//         pb={0}
+//         fontSize={5}
+//         fontWeight={600}
+//         alignItems="center"
+//         textAlign={["center", "left"]}
+//       >
+//         {title}
+//         <Text as="span" fontWeight={300} fontSize={4} ml={2}>
+// (
+// {new Date(published).toLocaleDateString("en-us", {
+//   year: "numeric"
+// })}
+// )
+//         </Text>
+//       </Text>
+// {artist && (
+//   <Text
+//     fontSize={4}
+//     fontWeight={300}
+//     pb={2}
+//     textAlign={["center", "left"]}
+//   >
+//     {artist}
+//   </Text>
+// )}
+//       <Text>{overview}</Text>
+//       <Flex justifyContent="space-between" py={4}>
+//         <Box>
+//           <Text>Rated</Text>
+//           <ReactStars
+//             count={5}
+//             half
+//             value={localStar}
+//             size={20}
+//             color2="var(--primary)"
+//             onChange={(e: any) => setlocalStar(e)}
+//           />
+//         </Box>
+//         <Box>
+//           <Text>On</Text>
+//           <DatePicker
+//             onChange={(date: Date) =>
+//               setLocalDate(firebase.firestore.Timestamp.fromDate(date))
+//             }
+//             value={localDate.toDate()}
+//           />
+//         </Box>
+//         <Box>
+//           <Text>Watched?</Text>
+//           <Icon
+//             mr={2}
+//             cursor="pointer"
+//             height="25px"
+//             width="25px"
+//             stroke="primary"
+//             name={localSeen ? "checked" : "unchecked"}
+//             onClick={() => {
+//               setLocalSeen(!localSeen);
+//             }}
+//           />
+//         </Box>
+//       </Flex>
+//       <Flex mt="auto" pt={2} justifyContent="flex-end">
+//         <Button variant="delete" mr={3} onClick={() => dataDelete(dayID)}>
+//           Delete
+//         </Button>
+//         <Button
+//           variant={isModified ? "secondary" : "primary"}
+//           onClick={dataSave}
+//         >
+//           Save
+//         </Button>
+//       </Flex>
+//     </Grid>
+//   </Grid>
+//   <CloseContainer>
+//     <Icon name="close" onClick={handleClose} />
+//   </CloseContainer>
+// </Box>
