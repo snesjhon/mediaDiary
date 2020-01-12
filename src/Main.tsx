@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useEffect } from "react";
-import { Box } from "./components";
+// import { Box } from "./components";
+
 import { useStoreState } from "./config/store";
 import {
   BrowserRouter as Router,
@@ -24,34 +25,34 @@ const Main = () => {
   }, [preferences.theme]);
 
   return (
-    <Box
-      id="main"
-      className="markdown-body"
-      maxWidth={["97vw", "95vw", "95vw", "65vw"]}
-      mx="auto"
-      my={[0, 1, 2]}
-      p={3}
-      border="1px solid var(--border-primary)"
-      borderRadius="3px"
-      bg="var(--bg-secondary)"
-    >
-      <Router>
-        <Switch>
-          <Route exact path="/">
-            <HomeRoute />
-          </Route>
-          <PrivateRoute exact path="/:id(\d+)">
-            <Media />
-          </PrivateRoute>
-          <PrivateRoute exact path="/setup">
-            <MediaSetup />
-          </PrivateRoute>
-          <PrivateRoute exact path="/profile">
-            <MediaProfile />
-          </PrivateRoute>
-        </Switch>
-      </Router>
-    </Box>
+    // <Box
+    //   id="main"
+    //   className="markdown-body"
+    //   maxWidth={["97vw", "95vw", "95vw", "65vw"]}
+    //   mx="auto"
+    //   my={[0, 1, 2]}
+    //   p={3}
+    //   border="1px solid var(--border-primary)"
+    //   borderRadius="3px"
+    //   bg="var(--bg-secondary)"
+    // >
+    <Router>
+      <Switch>
+        <Route exact path="/">
+          <HomeRoute />
+        </Route>
+        <PrivateRoute exact path="/:id(\d+)">
+          <Media />
+        </PrivateRoute>
+        <PrivateRoute exact path="/setup">
+          <MediaSetup />
+        </PrivateRoute>
+        <PrivateRoute exact path="/profile">
+          <MediaProfile />
+        </PrivateRoute>
+      </Switch>
+    </Router>
+    // </Box>
   );
 
   function HomeRoute() {

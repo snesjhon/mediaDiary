@@ -14,22 +14,21 @@ import {
 import styled from "styled-components";
 import { useStoreState, useStoreActions } from "./config/store";
 import { DataByDate, DataByID } from "./config/storeData";
-import DatePicker from "react-date-picker";
+// import DatePicker from "react-date-picker";
 // import useBP from "./hooks/useBP";
 // @ts-ignore
-import ReactStars from "react-stars";
+// import ReactStars from "react-stars";
 
-const MediaMonth = styled(Box)`
-  &:hover .monthDate {
-    color: ${props => props.theme.colors.blue};
-  }
-  & > .monthContainer:hover {
-    & .day {
-      cursor: pointer;
-      color: ${props => props.theme.colors["bg-primary"]};
-    }
-  }
-`;
+const MediaMonth = styled(Box)``;
+// &:hover .monthDate {
+//   // color: ${props => props.theme.colors.blue};
+// }
+// & > .monthContainer:hover {
+//   & .day {
+//     cursor: pointer;
+//     color: ${props => props.theme.colors["bg-primary"]};
+//   }
+// }
 
 const CloseContainer = styled(Box)`
   position: absolute;
@@ -104,7 +103,7 @@ const MediaListItem = ({
           <Flex justifyContent="space-between" py={4}>
             <Box>
               <Text color="secondary">Rated</Text>
-              <ReactStars
+              {/* <ReactStars
                 count={5}
                 half
                 value={localStar}
@@ -112,16 +111,16 @@ const MediaListItem = ({
                 color1="var(--secondary)"
                 color2="var(--primary)"
                 onChange={(e: any) => setlocalStar(e)}
-              />
+              /> */}
             </Box>
             <Box>
               <Text color="secondary">On</Text>
-              <DatePicker
+              {/* <DatePicker
                 onChange={(date: Date) =>
                   setLocalDate(firebase.firestore.Timestamp.fromDate(date))
                 }
                 value={localDate.toDate()}
-              />
+              /> */}
             </Box>
             <Box>
               <Text color="secondary">Watched?</Text>
@@ -286,7 +285,7 @@ const MediaListMobile = () => {
                             </Text>
                           </Flex>
                           <Box>{artist ? artist : "none"}</Box>
-                          <ReactStars
+                          {/* <ReactStars
                             count={5}
                             half
                             value={star}
@@ -294,7 +293,7 @@ const MediaListMobile = () => {
                             size={16}
                             color1="var(--secondary)"
                             color2="var(--primary)"
-                          />
+                          /> */}
                         </Box>
                       </Grid>
                     </>

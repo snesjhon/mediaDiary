@@ -1,10 +1,17 @@
 import * as React from "react";
-import { Flex, Box } from "./components";
+// import { Flex, Box } from "./components";
 import MediaList from "./MediaList";
 import MediaListMobile from "./MediaListMobile";
 import Navigation from "./Navigation";
 import { useStoreState } from "./config/store";
 import useBP from "./hooks/useBP";
+import {
+  Container,
+  // CircularProgress,
+  // Button,
+  Box,
+  Typography
+} from "@material-ui/core";
 
 const Media = () => {
   const media = useStoreState(state => state.data.byID);
@@ -20,36 +27,55 @@ const Media = () => {
   }, {});
   const bp = useBP();
   return (
-    <>
-      <Navigation />
-      {bp !== "mobile" ? (
-        <>
-          <Flex justifyContent="space-between">
-            <Box my={4}>
-              <p>
-                All caps, bold: <strong>MOVIES</strong>
-              </p>
-              <p>All caps: TV SERIES (and season)</p>
-              <p>
-                Italics: <em>Albums</em>
-              </p>
+    <Box my={2}>
+      <Container maxWidth="lg">
+        <Navigation />
+        <Box borderColor="grey.300" border={1} borderTop={0} p={2}>
+          <Box display="flex" justifyContent="space-between" pt={3} pb={5}>
+            <Box>
+              <Typography>
+                All caps, bold:{" "}
+                <Box
+                  component="span"
+                  color="text.secondary"
+                  fontWeight="fontWeightBold"
+                >
+                  MOVIES
+                </Box>
+              </Typography>
+              <Typography>
+                All caps:{" "}
+                <Box component="span" color="text.secondary">
+                  TV SERIES
+                </Box>
+              </Typography>
+              <Typography>
+                Italics:{" "}
+                <Box component="em" color="text.secondary">
+                  Albums
+                </Box>
+              </Typography>
             </Box>
-            <Box my={4}>
-              <p>
+            <Box>
+              <Typography>
                 <strong> {types.film} MOVIES</strong>
-              </p>
-              <p>{types.tv} TV SERIES</p>
-              <p>
+              </Typography>
+              <Typography>{types.tv} TV SERIES</Typography>
+              <Typography>
                 {types.album} <em>Albums</em>
-              </p>
+              </Typography>
             </Box>
-          </Flex>
-          <MediaList />
-        </>
-      ) : (
-        <MediaListMobile />
-      )}
-    </>
+          </Box>
+          {bp !== "mobile" ? (
+            <>
+              <MediaList />
+            </>
+          ) : (
+            <MediaListMobile />
+          )}
+        </Box>
+      </Container>
+    </Box>
   );
 };
 
