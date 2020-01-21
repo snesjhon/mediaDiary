@@ -28,11 +28,11 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.default
   },
   linkColor: {
-    color: theme.palette.primary.dark,
+    color: theme.palette.primary.main,
     fontWeight: theme.typography.fontWeightBold
   },
   year: {
-    color: orange["500"]
+    color: theme.palette.secondary.main
   }
 }));
 
