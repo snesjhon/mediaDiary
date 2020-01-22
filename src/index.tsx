@@ -24,17 +24,17 @@ const theme = createMuiTheme({
   palette: {
     primary: {
       light: "#85D7FF",
-      main: "#1FB6FF",
+      main: "#03b021",
       dark: "#009EEB"
     },
     secondary: {
       light: "#29EB7F",
-      main: "#13CE66",
+      main: "#ff8001",
       dark: "#13CE66"
     },
     text: {
-      primary: "#3c4858",
-      secondary: "#8492a6"
+      primary: "#445567",
+      secondary: "#2d3440"
     }
   },
   typography: {
@@ -50,7 +50,7 @@ const theme = createMuiTheme({
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"'
     ].join(","),
-    fontWeightRegular: 500
+    fontWeightRegular: 400
   }
 });
 

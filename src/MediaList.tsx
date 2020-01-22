@@ -18,7 +18,14 @@ import { MediaTypes } from "./config/storeMedia";
 // import DatePicker from "react-date-picker";
 // @ts-ignore
 // import ReactStars from "react-stars";
-import { Grid, Box, Typography, Divider, Dialog } from "@material-ui/core";
+import {
+  Grid,
+  Box,
+  Typography,
+  Divider,
+  Dialog,
+  Tooltip
+} from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
@@ -26,6 +33,23 @@ import {
 import Rating from "@material-ui/lab/Rating";
 import { makeStyles, styled } from "@material-ui/core/styles";
 import DayjsUtils from "@date-io/dayjs";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardMedia from "@material-ui/core/CardMedia";
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions";
+import Collapse from "@material-ui/core/Collapse";
+import Avatar from "@material-ui/core/Avatar";
+import IconButton from "@material-ui/core/IconButton";
+import { red } from "@material-ui/core/colors";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import ShareIcon from "@material-ui/icons/Share";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import EditIcon from "@material-ui/icons/Edit";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import DescriptionIcon from "@material-ui/icons/Description";
+import StarIcon from "@material-ui/icons/Star";
+import StarBorderIcon from "@material-ui/icons/StarBorder";
 
 interface MediaListItemProps extends DataByID, DataByDate {
   dayID: string;
@@ -46,10 +70,33 @@ const useStyles = makeStyles(theme => ({
     }
   },
   tableItem: {
-    "&:hover div:nth-child(4) p": {
+    "& div:nth-child(4) p:hover": {
       cursor: "pointer",
       color: theme.palette.primary.dark
     }
+  },
+  card: {
+    maxWidth: 345
+  },
+  media: {
+    // height: 0,
+    // paddingTop: "56.25%" // 16:9
+  },
+  expand: {
+    transform: "rotate(0deg)",
+    marginLeft: "auto",
+    transition: theme.transitions.create("transform", {
+      duration: theme.transitions.duration.shortest
+    })
+  },
+  expandOpen: {
+    transform: "rotate(180deg)"
+  },
+  avatar: {
+    backgroundColor: red[500]
+  },
+  cardHeader: {
+    // color: theme.palette.primary.dark
   }
 }));
 
@@ -76,59 +123,88 @@ const MediaListItem = ({
       ? true
       : false;
   const classes = useStyles();
+  const [expanded, setExpanded] = React.useState(false);
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
   return (
     <>
-      <Box p={2}>
-        <Grid container spacing={3}>
-          <Grid item xs={type === "album" ? 4 : 3}>
-            <img className={classes.image} src={poster} />
-          </Grid>
-          <Grid item xs={type === "album" ? 8 : 9}>
-            <Typography variant="h5">
-              {title}
-              <Box component="span" fontWeight="light">
-                (
-                {new Date(published).toLocaleDateString("en-us", {
-                  year: "numeric"
+      <Card className={classes.card}>
+        <CardHeader
+          className={classes.cardHeader}
+          // avatar={
+          //   <Avatar aria-label="recipe" className={classes.avatar}>
+          //     R
+          //   </Avatar>
+          // }
+          // action={
+          //   <Typography>Jan 19</Typography>
+          //   // <IconButton aria-label="settings">
+          //   //   <MoreVertIcon />
+          //   // </IconButton>
+          // }
+          title={`${title} (${new Date(published).toLocaleDateString("en-us", {
+            year: "numeric"
+          })})`}
+          subheader={artist}
+        />
+        <CardMedia
+          component="img"
+          className={classes.media}
+          image={poster}
+          title="Paella dish"
+        />
+        {/* <CardContent>
+          <Typography variant="body2" color="textSecondary" component="p">
+            This impressive paella is a perfect party dish and a fun meal to
+            cook together with your guests. Add 1 cup of frozen peas along with
+            the mussels, if you like.
+          </Typography>
+        </CardContent> */}
+        <CardActions
+          disableSpacing={true}
+          style={{ justifyContent: "space-between" }}
+        >
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Box mr={2}>
+              <Typography variant="h6">
+                {new Date(localDate.toDate()).toLocaleDateString("en-us", {
+                  month: "short",
+                  day: "numeric"
                 })}
-                )
-              </Box>
-            </Typography>
-            <Typography variant="h6">{artist}</Typography>
-            <Box py={2}>
-              <Typography variant="body1">{overview}</Typography>
+              </Typography>
             </Box>
-            <Box display="flex">
-              <Typography>Rating:</Typography>
-              <Rating value={localStar} name="rated" precision={0.5} />
-            </Box>
-            <Box display="flex">
-              <Typography>Date:</Typography>
-              <MuiPickersUtilsProvider utils={DayjsUtils}>
-                <KeyboardDatePicker
-                  disableToolbar
-                  disableFuture
-                  variant="inline"
-                  format="MM/DD/YYYY"
-                  value={localDate.toDate()}
-                  autoOk={true}
-                  onChange={e => {
-                    setLocalDate(
-                      e !== null && e.toDate() !== null
-                        ? firebase.firestore.Timestamp.fromDate(e.toDate())
-                        : firebase.firestore.Timestamp.now()
-                    );
-                  }}
-                  // onChange={(e) => e !== null ? setLocalDate(e) : null}
-                  KeyboardButtonProps={{
-                    "aria-label": "change date"
-                  }}
-                />
-              </MuiPickersUtilsProvider>
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
+            <Rating
+              value={localStar}
+              name="rated"
+              precision={0.5}
+              size="small"
+              readOnly
+              emptyIcon={<StarBorderIcon fontSize="small" />}
+              icon={<StarIcon fontSize="small" color="primary" />}
+            />
+          </Box>
+          <Box display="flex" justifyContent="space-between">
+            {(overview !== "" || typeof overview === "undefined") && (
+              <Tooltip title="Show Overview" placement="left">
+                <IconButton onClick={handleExpandClick}>
+                  <DescriptionIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            <IconButton>
+              <EditIcon />
+            </IconButton>
+          </Box>
+        </CardActions>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <CardContent>{overview}</CardContent>
+        </Collapse>
+      </Card>
     </>
   );
 
@@ -147,7 +223,11 @@ const MediaListItem = ({
 
 const TypedTypography = styled(props => <Typography {...props} />)({
   fontWeight: (props: MediaTypes) =>
-    props.type === "film" ? "bolder" : undefined
+    props.type === "film" ? "bolder" : undefined,
+  textTransform: (props: MediaTypes) =>
+    props.type === "film" || props.type === "tv" ? "uppercase" : undefined,
+  fontStyle: (props: MediaTypes) =>
+    props.type === "album" ? "italic" : undefined
 });
 
 const MediaList = () => {
@@ -291,6 +371,8 @@ const MediaList = () => {
                             precision={0.5}
                             size="small"
                             readOnly
+                            emptyIcon={<StarBorderIcon fontSize="small" />}
+                            icon={<StarIcon fontSize="small" color="primary" />}
                           />
                         </Grid>
                         <Grid item xs={1}>
@@ -426,3 +508,58 @@ export default MediaList;
 //     <Icon name="close" onClick={handleClose} />
 //   </CloseContainer>
 // </Box>
+
+{
+  /* <Box p={2}>
+<Grid container spacing={3}>
+  <Grid item xs={type === "album" ? 4 : 4}>
+    <img className={classes.image} src={poster} />
+  </Grid>
+  <Grid container item xs={type === "album" ? 8 : 8} direction="column">
+    <Typography component="h5" variant="h5">
+      {title}
+      <Box component="span" fontWeight="light">
+        (
+        {new Date(published).toLocaleDateString("en-us", {
+          year: "numeric"
+        })}
+        )
+      </Box>
+    </Typography>
+    <Typography variant="subtitle1" color="textSecondary">
+      {artist}
+    </Typography>
+    <Box display="flex" mt="auto">
+      <Box mr={3}>
+        <Typography>Rating:</Typography>
+        <Rating value={localStar} name="rated" precision={0.5} />
+      </Box>
+      <Box mr={3}>
+        <Typography>Date:</Typography>
+        <MuiPickersUtilsProvider utils={DayjsUtils}>
+          <KeyboardDatePicker
+            disableToolbar
+            disableFuture
+            variant="inline"
+            format="MM/DD/YYYY"
+            value={localDate.toDate()}
+            autoOk={true}
+            onChange={e => {
+              setLocalDate(
+                e !== null && e.toDate() !== null
+                  ? firebase.firestore.Timestamp.fromDate(e.toDate())
+                  : firebase.firestore.Timestamp.now()
+              );
+            }}
+            // onChange={(e) => e !== null ? setLocalDate(e) : null}
+            KeyboardButtonProps={{
+              "aria-label": "change date"
+            }}
+          />
+        </MuiPickersUtilsProvider>
+      </Box>
+    </Box>
+  </Grid>
+</Grid>
+</Box> */
+}

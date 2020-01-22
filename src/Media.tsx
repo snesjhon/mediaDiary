@@ -33,25 +33,35 @@ const Media = () => {
         <Box borderColor="grey.300" border={1} borderTop={0} p={2}>
           <Box display="flex" justifyContent="space-between" pt={3} pb={5}>
             <Box>
-              <Typography>
-                All caps, bold:{" "}
-                <Box
-                  component="span"
-                  color="text.secondary"
-                  fontWeight="fontWeightBold"
-                >
-                  MOVIES
-                </Box>
-              </Typography>
-              <Typography>
-                All caps:{" "}
-                <Box component="span" color="text.secondary">
-                  TV SERIES
-                </Box>
-              </Typography>
+              <Box pb={2}>
+                <Typography>
+                  All caps, bold:{" "}
+                  <Box
+                    component="span"
+                    // color="secondary.main"
+                    fontWeight="fontWeightBold"
+                  >
+                    MOVIES
+                  </Box>
+                </Typography>
+              </Box>
+              <Box pb={2}>
+                <Typography>
+                  All caps:{" "}
+                  <Box
+                    component="span"
+                    // color="secondary.main"
+                  >
+                    TV SERIESS
+                  </Box>
+                </Typography>
+              </Box>
               <Typography>
                 Italics:{" "}
-                <Box component="em" color="text.secondary">
+                <Box
+                  component="em"
+                  // color="secondary.main"
+                >
                   Albums
                 </Box>
               </Typography>
