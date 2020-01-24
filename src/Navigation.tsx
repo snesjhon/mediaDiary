@@ -72,25 +72,6 @@ const Navigation = () => {
       </AppBar>
     </div>
   );
-  // return (
-  //   <>
-  //     <Grid alignItems="center" gridTemplateColumns="1fr 1fr 2rem">
-  //       <Flex>
-  //         <Text fontSize={4} fontWeight={600}>
-  //           <Link to="/">Media Diary</Link>
-  //         </Text>
-  //         <Text as="span" fontSize={4} ml={2} fontWeight={300}>
-  //           /
-  //         </Text>
-  //         <Text as="span" fontSize={4} ml={2} fontWeight={300} color="orange">
-  //           {year}
-  //         </Text>
-  //       </Flex>
-  //       <MediaAdd />
-  //     </Grid>
-  //     <Box my={2} borderTop="1px solid #d1d5da" />
-  //   </>
-  // );
 };
 
 export default Navigation;

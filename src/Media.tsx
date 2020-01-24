@@ -1,5 +1,5 @@
 import * as React from "react";
-// import { Flex, Box } from "./components";
+import { Flex } from "./components";
 import MediaList from "./MediaList";
 import MediaListMobile from "./MediaListMobile";
 import Navigation from "./Navigation";
@@ -27,19 +27,19 @@ const Media = () => {
   }, {});
   const bp = useBP();
   return (
-    <Box my={2}>
-      <Container maxWidth="lg">
+    <Box>
+      <Container maxWidth="md">
         <Navigation />
-        <Box borderColor="grey.300" border={1} borderTop={0} p={2}>
-          <Box display="flex" justifyContent="space-between" pt={3} pb={5}>
-            <Box>
+        <Box borderColor="grey.300" border={1} borderTop={0} px={2}>
+          <Box display="flex" justifyContent="space-between" pt={3}>
+            <Box display="flex">
               <Box pb={2}>
                 <Typography>
                   All caps, bold:{" "}
                   <Box
                     component="span"
                     // color="secondary.main"
-                    fontWeight="fontWeightBold"
+                    // fontWeight="fontWeightBold"
                   >
                     MOVIES
                   </Box>
@@ -66,7 +66,7 @@ const Media = () => {
                 </Box>
               </Typography>
             </Box>
-            <Box>
+            <Box display="flex">
               <Typography>
                 <strong> {types.film} MOVIES</strong>
               </Typography>
@@ -76,13 +76,13 @@ const Media = () => {
               </Typography>
             </Box>
           </Box>
-          {bp !== "mobile" ? (
+          <MediaList />
+          {/* {bp !== "mobile" ? (
             <>
-              <MediaList />
             </>
           ) : (
             <MediaListMobile />
-          )}
+          )} */}
         </Box>
       </Container>
     </Box>

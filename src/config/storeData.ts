@@ -248,8 +248,6 @@ export const data: Data = {
             ) {
               const currentItem = currentDoc[payload.dayID];
 
-              debugger;
-
               transaction.update(dbByDate, {
                 [payload.dayID]: {
                   ...currentItem,
