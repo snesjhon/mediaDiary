@@ -28,7 +28,7 @@ const Media = () => {
   const bp = useBP();
   return (
     <Box>
-      <Container maxWidth="lg">
+      <Container maxWidth="md">
         <Navigation />
         <Box borderColor="grey.300" border={1} borderTop={0} px={2}>
           <Box display="flex" justifyContent="space-between" pt={3}>
