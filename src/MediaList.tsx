@@ -21,6 +21,7 @@ import StarBorderIcon from "@material-ui/icons/StarBorder";
 import EditIcon from "@material-ui/icons/Edit";
 import DescriptionIcon from "@material-ui/icons/Description";
 import { LiveTv, MusicVideo, MovieOutlined } from "@material-ui/icons";
+import useBP from "./hooks/useBP";
 
 const useStyles = makeStyles(theme => ({
   image: {
@@ -46,7 +47,6 @@ const useStyles = makeStyles(theme => ({
     }
   },
   mediaContainer: {
-    gridTemplateColumns: "5rem 1fr",
     gridGap: "1rem",
     display: "grid"
   },
@@ -96,6 +96,7 @@ function MediaList() {
   const dataGet = useStoreActions(actions => actions.data.dataGet);
 
   const classes = useStyles();
+  const bp = useBP();
 
   useEffect(() => {
     dataGet();
@@ -132,10 +133,16 @@ function MediaList() {
           .sort((a, b) => (new Date(a) > new Date(b) ? -1 : 1))
           .map((month, monthIndex) => {
             return (
-              <Box className={classes.mediaContainer} key={monthIndex}>
+              <Box
+                className={classes.mediaContainer}
+                key={monthIndex}
+                style={{
+                  gridTemplateColumns: bp !== "mobile" ? "5rem 1fr" : "3rem 1fr"
+                }}
+              >
                 <Box>
                   <Typography
-                    variant="h4"
+                    variant={bp !== "mobile" ? "h4" : "h5"}
                     style={{ position: "sticky", top: "3rem" }}
                   >
                     {new Date(month).toLocaleDateString("en-us", {
@@ -257,7 +264,7 @@ function MediaList() {
                               </Box>
                             </Box>
                           </Box>
-                          <Box pt={3}>
+                          <Box pt={bp !== "mobile" ? 3 : undefined}>
                             <Divider />
                           </Box>
                         </Box>
