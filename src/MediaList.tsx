@@ -29,6 +29,16 @@ const useStyles = makeStyles(theme => ({
     borderRadius: "5px"
   },
   tableHeadings: {
+    gridTemplateColumns: "5rem 1fr",
+    gridGap: "1rem",
+    display: "grid",
+    position: "sticky",
+    top: "0",
+    borderBottom: `1px solid ${theme.palette.grey[300]}`,
+    marginBottom: theme.spacing(2),
+    backgroundColor: theme.palette.background.default,
+    paddingTop: "1rem",
+    zIndex: 9,
     "& > *": {
       textTransform: "uppercase",
       color: theme.palette.grey[500],
@@ -46,8 +56,22 @@ const useStyles = makeStyles(theme => ({
   },
   mediaList: {
     gridTemplateColumns: "3rem 6rem 1fr",
-    gridGap: "2rem"
+    gridGap: "2rem",
+    "&:hover": {
+      backgroundColor: "rgba(0, 0, 0, 0.04)",
+      transition:
+        "background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms"
+    },
+    "&:hover .mediaListCTA": {
+      visibility: "visible",
+      transition:
+        "all 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms"
+    }
   },
+  // mediaListItem:{
+  //   paddingTop: theme.spacing(2),
+  //   paddingBottom: theme.spacing(2),
+  // },
   mediaImage: {
     display: "block",
     maxWidth: "100%",
@@ -96,26 +120,13 @@ function MediaList() {
 
     return (
       <>
-        <Grid className={classes.tableHeadings} container direction="row">
-          <Grid item xs={1}>
-            Month
-          </Grid>
-          <Grid item xs={11}>
-            <Grid container spacing={3} alignItems="center">
-              <Grid item style={{ width: "5%" }}>
-                Day
-              </Grid>
-              <Grid item style={{ width: "10%" }}>
-                Poster
-              </Grid>
-              <Grid item xs={3}>
-                Title
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Box pb={2}>
-          <Divider />
+        <Box className={classes.tableHeadings}>
+          <Box>Month</Box>
+          <Box display="grid" className={classes.mediaList}>
+            <Box textAlign="center">Day</Box>
+            <Box>Poster</Box>
+            <Box>Title</Box>
+          </Box>
         </Box>
         {Object.keys(diaryDates)
           .sort((a, b) => (new Date(a) > new Date(b) ? -1 : 1))
@@ -125,7 +136,7 @@ function MediaList() {
                 <Box>
                   <Typography
                     variant="h4"
-                    style={{ position: "sticky", top: 0 }}
+                    style={{ position: "sticky", top: "3rem" }}
                   >
                     {new Date(month).toLocaleDateString("en-us", {
                       month: "short"
@@ -146,7 +157,11 @@ function MediaList() {
                       const { star, seen } = diaryDates[month][day];
                       return (
                         <Box key={monthIndex + dayIndex}>
-                          <Box display="grid" className={classes.mediaList}>
+                          <Box
+                            display="grid"
+                            className={classes.mediaList}
+                            py={1}
+                          >
                             <Box textAlign="center">
                               <Typography
                                 variant="h6"
@@ -218,7 +233,10 @@ function MediaList() {
                                     }
                                   />
                                 </Box>
-                                <Box>
+                                <Box
+                                  className="mediaListCTA"
+                                  visibility="hidden"
+                                >
                                   <Tooltip
                                     title="Show Overview"
                                     placement="left"

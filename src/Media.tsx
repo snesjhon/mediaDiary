@@ -76,13 +76,13 @@ const Media = () => {
               </Typography>
             </Box>
           </Box>
-          {bp !== "mobile" ? (
+          <MediaList />
+          {/* {bp !== "mobile" ? (
             <>
-              <MediaList />
             </>
           ) : (
             <MediaListMobile />
-          )}
+          )} */}
         </Box>
       </Container>
     </Box>
