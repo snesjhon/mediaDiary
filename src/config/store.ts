@@ -10,11 +10,14 @@ export interface StoreModel {
   media: Media;
 }
 
-const storeModel = persist({
-  global,
-  data,
-  media
-});
+const storeModel = persist(
+  {
+    global,
+    data,
+    media
+  },
+  { whitelist: ["global"] }
+);
 
 const typedHooks = createTypedHooks<StoreModel>();
 
