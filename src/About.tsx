@@ -7,7 +7,6 @@
 
 import * as React from "react";
 import { useState, useEffect } from "react";
-// import { Box, Text, Icon, Flex } from "./components";
 import { useStoreActions, useStoreState } from "./config/store";
 import {
   Container,
@@ -60,18 +59,3 @@ const About = () => {
 };
 
 export default About;
-
-// <Flex flexDirection="column" alignItems="center">
-// <Flex mt={4}>
-
-// </Flex>
-//           <Text as="h1" textAlign="center" fontWeight={600} mt={2}>
-//             MediaDiary
-//           </Text>
-//         </Flex>
-//         <Box my={3} borderTop="1px solid #d1d5da" />
-//         <Text fontSize={4} textAlign="center">
-//           Track All Your Media.
-//         </Text>
-//         <Flex justifyContent="center" my={4}>
-//         </Flex>

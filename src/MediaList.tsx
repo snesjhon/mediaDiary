@@ -1,38 +1,22 @@
-import {
-  Box,
-  Typography,
-  Grid,
-  Divider,
-  IconButton,
-  Tooltip,
-  Avatar
-} from "@material-ui/core";
-import * as React from "react";
-import { useEffect, useState } from "react";
-import { FixedSizeList as List, ListChildComponentProps } from "react-window";
-import { makeStyles, styled } from "@material-ui/core/styles";
-import { useStoreActions, useStoreState } from "./config/store";
-import { DataByDate, DataByID } from "./config/storeData";
-import { MediaTypes } from "./config/storeMedia";
-import Rating from "@material-ui/lab/Rating";
-// import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
+import { Box, Button, Divider, Typography } from "@material-ui/core";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import { makeStyles } from "@material-ui/core/styles";
+import { LiveTv, MovieOutlined, MusicVideo } from "@material-ui/icons";
 import StarIcon from "@material-ui/icons/Star";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
-import EditIcon from "@material-ui/icons/Edit";
-import DescriptionIcon from "@material-ui/icons/Description";
-import { LiveTv, MusicVideo, MovieOutlined } from "@material-ui/icons";
+import Rating from "@material-ui/lab/Rating";
+import * as React from "react";
+import { useEffect } from "react";
+import { useStoreActions, useStoreState } from "./config/store";
+import { DataByDate } from "./config/storeData";
 import useBP from "./hooks/useBP";
 
 const useStyles = makeStyles(theme => ({
-  image: {
-    maxWidth: "100%",
-    border: `1px solid ${theme.palette.grey[300]}`,
-    borderRadius: "5px"
-  },
   tableHeadings: {
     gridTemplateColumns: "5rem 1fr",
     gridGap: "1rem",
     display: "grid",
+    alignItems: "center",
     position: "sticky",
     top: "0",
     borderBottom: `1px solid ${theme.palette.grey[300]}`,
@@ -46,6 +30,12 @@ const useStyles = makeStyles(theme => ({
       fontSize: theme.typography.button.fontSize
     }
   },
+  tableHeadingList: {
+    gridTemplateColumns: "3rem 6rem 0.9fr 1fr",
+    gridGap: "2rem",
+    alignItems: "center",
+    marginBottom: theme.spacing(1)
+  },
   mediaContainer: {
     gridGap: "1rem",
     display: "grid"
@@ -58,7 +48,7 @@ const useStyles = makeStyles(theme => ({
     gridTemplateColumns: "3rem 6rem 1fr",
     gridGap: "2rem",
     "&:hover": {
-      backgroundColor: "rgba(0, 0, 0, 0.04)",
+      backgroundColor: theme.palette.grey[200],
       transition:
         "background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms"
     },
@@ -68,29 +58,25 @@ const useStyles = makeStyles(theme => ({
         "all 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms"
     }
   },
-  // mediaListItem:{
-  //   paddingTop: theme.spacing(2),
-  //   paddingBottom: theme.spacing(2),
-  // },
+  mediaListItem: {
+    alignItems: "center",
+    gridTemplateColumns: "3rem 6rem 1fr 1fr",
+    gridGap: "2rem"
+  },
   mediaImage: {
     display: "block",
     maxWidth: "100%",
     border: `1px solid ${theme.palette.grey[300]}`,
     borderRadius: "5px"
+  },
+  mediaFab: {
+    position: "sticky",
+    bottom: "2vh"
   }
 }));
 
-const TypedTypography = styled(props => <Typography {...props} />)({
-  fontWeight: (props: MediaTypes) =>
-    props.type === "film" ? "bolder" : undefined,
-  textTransform: (props: MediaTypes) =>
-    props.type === "film" || props.type === "tv" ? "uppercase" : undefined,
-  fontStyle: (props: MediaTypes) =>
-    props.type === "album" ? "italic" : undefined
-});
-
 function MediaList() {
-  const [data, setData] = useState<[string, DataByDate, DataByID]>();
+  // const [data, setData] = useState<[string, DataByDate, DataByID]>();
   const byID = useStoreState(state => state.data.byID);
   const byDate = useStoreState(state => state.data.byDate);
   const dataGet = useStoreActions(actions => actions.data.dataGet);
@@ -123,10 +109,53 @@ function MediaList() {
       <>
         <Box className={classes.tableHeadings}>
           <Box>Month</Box>
-          <Box display="grid" className={classes.mediaList}>
+          <Box display="grid" className={classes.tableHeadingList}>
             <Box textAlign="center">Day</Box>
             <Box>Poster</Box>
             <Box>Title</Box>
+            <Breadcrumbs aria-label="breadcrumb">
+              <Box display="flex">
+                <Typography
+                  align="center"
+                  style={{
+                    color: "#9e9e9e",
+                    display: "flex",
+                    alignItems: "center"
+                  }}
+                >
+                  32
+                  <Box display="flex" component="span" ml={1}>
+                    <MovieOutlined />
+                  </Box>
+                </Typography>
+              </Box>
+              <Typography
+                align="center"
+                style={{
+                  color: "#9e9e9e",
+                  display: "flex",
+                  alignItems: "center"
+                }}
+              >
+                20
+                <Box display="flex" component="span" ml={1}>
+                  <LiveTv />
+                </Box>
+              </Typography>
+              <Typography
+                align="center"
+                style={{
+                  color: "#9e9e9e",
+                  display: "flex",
+                  alignItems: "center"
+                }}
+              >
+                11
+                <Box display="flex" component="span" ml={1}>
+                  <MusicVideo />
+                </Box>
+              </Typography>
+            </Breadcrumbs>
           </Box>
         </Box>
         {Object.keys(diaryDates)
@@ -140,7 +169,7 @@ function MediaList() {
                   gridTemplateColumns: bp !== "mobile" ? "5rem 1fr" : "3rem 1fr"
                 }}
               >
-                <Box>
+                <Box mt={1}>
                   <Typography
                     variant={bp !== "mobile" ? "h4" : "h5"}
                     style={{ position: "sticky", top: "3rem" }}
@@ -161,7 +190,7 @@ function MediaList() {
                       const { title, poster, published, artist, type } = byID[
                         diaryDates[month][day].id
                       ];
-                      const { star, seen } = diaryDates[month][day];
+                      const { star } = diaryDates[month][day];
                       return (
                         <Box key={monthIndex + dayIndex}>
                           <Box
@@ -192,18 +221,15 @@ function MediaList() {
                                 display="flex"
                                 justifyContent="space-between"
                               >
-                                <Typography>
-                                  <Box
-                                    component="span"
-                                    fontWeight="fontWeightBold"
-                                    style={{ textTransform: "uppercase" }}
-                                  >
-                                    {title}
-                                  </Box>
+                                <Typography variant="h5" component="h5">
+                                  <Box component="span">{title}</Box>
                                 </Typography>
                               </Box>
                               <Box display="flex" my={1}>
-                                <Typography>
+                                <Typography
+                                  variant="subtitle1"
+                                  color="textSecondary"
+                                >
                                   {new Date(published).toLocaleDateString(
                                     "en-US",
                                     {
@@ -212,9 +238,16 @@ function MediaList() {
                                   )}
                                 </Typography>
                                 <Box mx={1}>
-                                  <Typography>·</Typography>
+                                  <Typography color="textSecondary">
+                                    ·
+                                  </Typography>
                                 </Box>
-                                <Typography>{artist}</Typography>
+                                <Typography
+                                  variant="subtitle1"
+                                  color="textSecondary"
+                                >
+                                  {artist}
+                                </Typography>
                               </Box>
                               <Box
                                 mt="auto"
@@ -239,27 +272,19 @@ function MediaList() {
                                       />
                                     }
                                   />
+                                  <Button size="small">Edit</Button>
+                                  <Button size="small">Overview</Button>
                                 </Box>
-                                <Box
-                                  className="mediaListCTA"
-                                  visibility="hidden"
-                                >
-                                  <Tooltip
-                                    title="Show Overview"
-                                    placement="left"
-                                  >
-                                    <IconButton>
-                                      <DescriptionIcon />
-                                    </IconButton>
-                                  </Tooltip>
-                                  <Tooltip
-                                    title="Show Overview"
-                                    placement="top"
-                                  >
-                                    <IconButton>
-                                      <EditIcon />
-                                    </IconButton>
-                                  </Tooltip>
+                                <Box pr={2}>
+                                  {type === "film" && (
+                                    <MovieOutlined htmlColor="rgba(0, 0, 0, 0.54)" />
+                                  )}
+                                  {type === "tv" && (
+                                    <LiveTv htmlColor="rgba(0, 0, 0, 0.54)" />
+                                  )}
+                                  {type === "album" && (
+                                    <MusicVideo htmlColor="rgba(0, 0, 0, 0.54)" />
+                                  )}
                                 </Box>
                               </Box>
                             </Box>
@@ -274,35 +299,19 @@ function MediaList() {
               </Box>
             );
           })}
+        <Button
+          className={classes.mediaFab}
+          color="primary"
+          variant="contained"
+          disableElevation
+        >
+          +
+        </Button>
       </>
     );
   } else {
     return <div>loading</div>;
   }
 }
-
-{
-  /* <IconButton color="secondary">
-<AddShoppingCartIcon />
-</IconButton>
-<IconButton color="secondary">
-<AddShoppingCartIcon />
-</IconButton>
-<IconButton color="secondary">
-<AddShoppingCartIcon />
-</IconButton>
-{star}
-{seen.toString()} */
-}
-// {/* <Typography>{published}</Typography> */}
-
-// const TypedTypography = styled(props => <Typography {...props} />)({
-//   fontWeight: (props: MediaTypes) =>
-//     props.type === "film" ? "bolder" : undefined,
-//   textTransform: (props: MediaTypes) =>
-//     props.type === "film" || props.type === "tv" ? "uppercase" : undefined,
-//   fontStyle: (props: MediaTypes) =>
-//     props.type === "album" ? "italic" : undefined
-// });
 
 export default MediaList;

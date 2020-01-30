@@ -1,20 +1,17 @@
 import * as React from "react";
 import { useEffect } from "react";
-// import { Box } from "./components";
-
-import { useStoreState } from "./config/store";
+import { hot } from "react-hot-loader/root";
 import {
   BrowserRouter as Router,
-  Switch,
+  Redirect,
   Route,
-  Redirect
+  Switch
 } from "react-router-dom";
-import MediaSetup from "./MediaSetup";
-import Media from "./Media";
 import About from "./About";
+import { useStoreState } from "./config/store";
+import Media from "./Media";
 import MediaProfile from "./MediaProfile";
-
-import { hot } from "react-hot-loader/root";
+import MediaSetup from "./MediaSetup";
 
 const Main = () => {
   const user = useStoreState(state => state.global.user);
@@ -25,17 +22,6 @@ const Main = () => {
   }, [preferences.theme]);
 
   return (
-    // <Box
-    //   id="main"
-    //   className="markdown-body"
-    //   maxWidth={["97vw", "95vw", "95vw", "65vw"]}
-    //   mx="auto"
-    //   my={[0, 1, 2]}
-    //   p={3}
-    //   border="1px solid var(--border-primary)"
-    //   borderRadius="3px"
-    //   bg="var(--bg-secondary)"
-    // >
     <Router>
       <Switch>
         <Route exact path="/">
@@ -52,7 +38,6 @@ const Main = () => {
         </PrivateRoute>
       </Switch>
     </Router>
-    // </Box>
   );
 
   function HomeRoute() {
