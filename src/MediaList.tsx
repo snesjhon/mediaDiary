@@ -16,8 +16,13 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { useStoreActions, useStoreState } from "./config/store";
 import { DataByDate } from "./config/storeData";
+import { MediaTyper } from "./config/storeMedia";
 import useBP from "./hooks/useBP";
-import MediaAdd from "./MediaAdd";
+// import MediaAdd from "./MediaAdd";
+import Card from "@material-ui/core/Card";
+
+import MediaSearch from "./MediaSearch";
+import MediaLog from "./MediaLog";
 
 const useStyles = makeStyles(theme => ({
   tableHeadings: {
@@ -73,20 +78,35 @@ const useStyles = makeStyles(theme => ({
   },
   mediaFab: {
     position: "sticky",
-    bottom: "2vh",
-    boxShadow: "none"
+    bottom: "4vh",
+    marginLeft: "1rem",
+    marginBottom: "-1.5rem"
+    // boxShadow: "none"
+  },
+  card: {
+    width: theme.breakpoints.values.sm
+  },
+  cardxs: {
+    width: theme.breakpoints.values.sm / 1.5
+  },
+  mediaResults: {
+    overflow: "scroll",
+    maxHeight: "32vh"
   }
 }));
 
 function MediaList() {
+  const classes = useStyles();
+  const bp = useBP();
   // const [data, setData] = useState<[string, DataByDate, DataByID]>();
-  const [dialog, setDialog] = useState({ isOpen: false, type: "" });
+  const mediaSelected = useStoreState(state => state.media.mediaSelected);
+  const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
   const byID = useStoreState(state => state.data.byID);
   const byDate = useStoreState(state => state.data.byDate);
   const dataGet = useStoreActions(actions => actions.data.dataGet);
 
-  const classes = useStyles();
-  const bp = useBP();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [type, setType] = useState<MediaTyper>("film");
 
   useEffect(() => {
     dataGet();
@@ -306,18 +326,30 @@ function MediaList() {
         <Fab
           className={classes.mediaFab}
           color="primary"
-          onClick={() => setDialog({ isOpen: true, type: "mediaAdd" })}
+          onClick={() => setDialogOpen(true)}
         >
           +
         </Fab>
-        {dialog.isOpen && (
+        {dialogOpen && (
           <Dialog
-            open={dialog.isOpen}
-            onClose={() => setDialog({ isOpen: false, type: "" })}
+            open={dialogOpen}
+            onClose={() => {
+              mediaSelect();
+              return setDialogOpen(false);
+            }}
             maxWidth="md"
           >
-            {dialog.type === "mediaListItem" && <div>mediaListItem</div>}
-            {dialog.type === "mediaAdd" && <MediaAdd />}
+            <Card
+              className={
+                mediaSelected.id !== "" ? classes.cardxs : classes.card
+              }
+            >
+              {mediaSelected.id !== "" ? (
+                <MediaLog type={type} setType={setType} />
+              ) : (
+                <MediaSearch type={type} setType={setType} />
+              )}
+            </Card>
           </Dialog>
         )}
       </>

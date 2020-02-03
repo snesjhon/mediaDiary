@@ -16,7 +16,7 @@ const storeModel = persist(
     data,
     media
   },
-  { whitelist: ["global"] }
+  { whitelist: ["global", "media"] }
 );
 
 const typedHooks = createTypedHooks<StoreModel>();
