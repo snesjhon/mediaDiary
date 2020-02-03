@@ -1,4 +1,11 @@
-import { Box, Button, Divider, Typography } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  Divider,
+  Typography,
+  Fab,
+  Dialog
+} from "@material-ui/core";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import { makeStyles } from "@material-ui/core/styles";
 import { LiveTv, MovieOutlined, MusicVideo } from "@material-ui/icons";
@@ -6,10 +13,11 @@ import StarIcon from "@material-ui/icons/Star";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
 import Rating from "@material-ui/lab/Rating";
 import * as React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useStoreActions, useStoreState } from "./config/store";
 import { DataByDate } from "./config/storeData";
 import useBP from "./hooks/useBP";
+import MediaAdd from "./MediaAdd";
 
 const useStyles = makeStyles(theme => ({
   tableHeadings: {
@@ -49,13 +57,7 @@ const useStyles = makeStyles(theme => ({
     gridGap: "2rem",
     "&:hover": {
       backgroundColor: theme.palette.grey[200],
-      transition:
-        "background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms"
-    },
-    "&:hover .mediaListCTA": {
-      visibility: "visible",
-      transition:
-        "all 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms"
+      transition: `all ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeInOut} 0ms`
     }
   },
   mediaListItem: {
@@ -71,12 +73,14 @@ const useStyles = makeStyles(theme => ({
   },
   mediaFab: {
     position: "sticky",
-    bottom: "2vh"
+    bottom: "2vh",
+    boxShadow: "none"
   }
 }));
 
 function MediaList() {
   // const [data, setData] = useState<[string, DataByDate, DataByID]>();
+  const [dialog, setDialog] = useState({ isOpen: false, type: "" });
   const byID = useStoreState(state => state.data.byID);
   const byDate = useStoreState(state => state.data.byDate);
   const dataGet = useStoreActions(actions => actions.data.dataGet);
@@ -299,14 +303,23 @@ function MediaList() {
               </Box>
             );
           })}
-        <Button
+        <Fab
           className={classes.mediaFab}
           color="primary"
-          variant="contained"
-          disableElevation
+          onClick={() => setDialog({ isOpen: true, type: "mediaAdd" })}
         >
           +
-        </Button>
+        </Fab>
+        {dialog.isOpen && (
+          <Dialog
+            open={dialog.isOpen}
+            onClose={() => setDialog({ isOpen: false, type: "" })}
+            maxWidth="md"
+          >
+            {dialog.type === "mediaListItem" && <div>mediaListItem</div>}
+            {dialog.type === "mediaAdd" && <MediaAdd />}
+          </Dialog>
+        )}
       </>
     );
   } else {

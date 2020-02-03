@@ -28,12 +28,12 @@ const MediaResults = styled(Box)`
   }
 `;
 
-interface MediaSearchList extends MediaTypes {
+interface MediaSearchListProps extends MediaTypes {
   item: any;
   children(props: { name: string; artist: string; date: Date }): JSX.Element;
 }
 
-const MediaSearchList = (props: MediaSearchList) => {
+const MediaSearchList = (props: MediaSearchListProps) => {
   const { type, item } = props;
   let name;
   let artist;

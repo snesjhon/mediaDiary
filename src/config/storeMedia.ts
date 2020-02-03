@@ -26,6 +26,8 @@ export interface MediaTypes {
   type: "film" | "tv" | "album" | "";
 }
 
+export type MediaTyper = "film" | "tv" | "album" | "";
+
 export interface Media {
   mediaSelected: MediaSelected;
   mediaSelect: Action<Media, MediaSelected | void>;
