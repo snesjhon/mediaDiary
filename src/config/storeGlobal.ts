@@ -5,22 +5,21 @@ import { fb, db } from "./db";
 import { StoreModel } from "./store";
 
 export type UserTheme = "light" | "dark";
+export type User = firebase.User | null;
+export type UserPreferences = {
+  theme: UserTheme;
+  year: string | null;
+};
 
-export interface UserPreferences {
-  user: firebase.User | null;
-  preferences: {
-    theme: UserTheme;
-    year: string | null;
-  };
-}
-
-export interface Global extends UserPreferences {
+export interface Global {
+  user: User;
+  preferences: UserPreferences;
   userGet: Thunk<Global>;
-  userSet: Action<Global, UserPreferences["user"]>;
-  userSetPreferences: Action<Global, UserPreferences["preferences"]>;
-  userSetConfig: Action<Global, UserPreferences>;
+  userSet: Action<Global, User>;
+  userSetPreferences: Action<Global, UserPreferences>;
+  userSetConfig: Action<Global, { user: User; preferences: UserPreferences }>;
   userGetPreferences: Thunk<Global, firebase.User | null>;
-  userPutPreferences: Thunk<Global, UserPreferences["preferences"]>;
+  userPutPreferences: Thunk<Global, UserPreferences>;
   userLogout: Thunk<Global, void, void, StoreModel>;
 }
 

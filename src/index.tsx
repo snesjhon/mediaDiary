@@ -7,19 +7,14 @@
  * We have to include styles before the app starts so we can keep order
  */
 
-import * as React from "react";
-import * as ReactDOM from "react-dom";
-// import { myTheme } from "./config/theme";
-// import { ThemeProvider } from "styled-components";
-import { StoreProvider } from "easy-peasy";
-import { store } from "./config/store";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-
+import { StoreProvider } from "easy-peasy";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { store } from "./config/store";
 import Main from "./Main";
 
-// import "./styles/reset.css";
-// import "./styles/global.css";
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -34,7 +29,6 @@ const theme = createMuiTheme({
     },
     text: {
       primary: "#445567"
-      // secondary: "#2d3440"
     }
   },
   typography: {

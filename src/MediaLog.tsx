@@ -1,34 +1,38 @@
-import * as React from "react";
-import { useState, useEffect } from "react";
-import { MBDKEY, MDBURL } from "./config/constants";
-// import { Box, Grid, Text, Button, Flex, Icon, Image } from "./components";
-// import styled from "styled-components";
-// import DatePicker from "react-date-picker";
-import { MediaTypes } from "./config/storeMedia";
-import { useStoreState, useStoreActions } from "./config/store";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
+import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
-import CardActions from "@material-ui/core/CardActions";
-import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import Rating from "@material-ui/lab/Rating/Rating";
+import EditOutlined from "@material-ui/icons/EditOutlined";
 import StarIcon from "@material-ui/icons/Star";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
-import Tooltip from "@material-ui/core/Tooltip";
-import IconButton from "@material-ui/core/IconButton";
-import EditOutlined from "@material-ui/icons/EditOutlined";
-// @ts-ignore
-// import ReactStars from "react-stars";
-
-// const PosterImg = styled(Image)`
-//   box-shadow: 0 1px 5px rgba(20, 24, 28, 0.2), 0 2px 10px rgba(20, 24, 28, 0.35);
-// `;
+import Rating from "@material-ui/lab/Rating/Rating";
+import * as React from "react";
+import { useEffect, useState } from "react";
+import { MBDKEY, MDBURL } from "./config/constants";
+import { useStoreActions, useStoreState } from "./config/store";
+import { MediaTypes } from "./config/storeMedia";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker
+} from "@material-ui/pickers";
+import DayjsUtils from "@date-io/dayjs";
 
 const useStyles = makeStyles(theme => ({
-  mediaResults: {
-    overflow: "scroll",
-    maxHeight: "32vh"
+  metadata: {
+    display: "grid",
+    gridTemplateColumns: "1fr 0.5fr 0.5fr",
+    alignItems: "center",
+    gridGap: "2rem",
+    marginBottom: 0
+  },
+  actions: {
+    display: "flex",
+    justifyContent: "space-between"
   }
 }));
 interface MediaLogProps extends MediaTypes {
@@ -36,6 +40,7 @@ interface MediaLogProps extends MediaTypes {
 }
 
 const MediaLog = ({ type, setType }: MediaLogProps) => {
+  const classes = useStyles();
   const {
     id,
     artist,
@@ -90,50 +95,50 @@ const MediaLog = ({ type, setType }: MediaLogProps) => {
         <CardHeader
           title={title}
           subheader={
-            localArtist
-              ? localArtist +
-                `(${new Date(published).toLocaleDateString("en-us", {
+            <Box display="flex">
+              <Typography variant="subtitle1" color="textSecondary">
+                {new Date(published).toLocaleDateString("en-US", {
                   year: "numeric"
-                })})`
-              : `(${new Date(published).toLocaleDateString("en-us", {
-                  year: "numeric"
-                })})`
+                })}
+              </Typography>
+              <Box mx={1}>
+                <Typography color="textSecondary">·</Typography>
+              </Box>
+              <Typography variant="subtitle1" color="textSecondary">
+                {localArtist}
+              </Typography>
+            </Box>
           }
         />
         <CardMedia component="img" image={poster} title={title} />
-        <CardActions
-          disableSpacing={true}
-          style={{ justifyContent: "space-between" }}
-        >
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Box mr={2}>
-              <Typography variant="h6">
-                {date.toLocaleDateString("en-us", {
-                  month: "short",
-                  day: "numeric"
-                })}
-              </Typography>
-            </Box>
-            <Rating
-              // value={star}
-              value={star}
-              name="rated"
-              precision={0.5}
-              size="small"
-              readOnly
-              emptyIcon={<StarBorderIcon fontSize="small" />}
-              icon={<StarIcon fontSize="small" color="primary" />}
-            />
-          </Box>
-          <Box display="flex" justifyContent="space-between">
-            <IconButton>
-              <EditOutlined />
-            </IconButton>
-          </Box>
+        <CardContent className={classes.metadata}>
+          <Typography variant="h6">
+            <MuiPickersUtilsProvider utils={DayjsUtils}>
+              <KeyboardDatePicker
+                disableToolbar
+                disableFuture
+                variant="inline"
+                format="MM/DD/YYYY"
+                value={date}
+                autoOk={true}
+                onChange={e => (e !== null ? setDate(e.toDate()) : null)}
+                KeyboardButtonProps={{
+                  "aria-label": "change date"
+                }}
+              />
+            </MuiPickersUtilsProvider>
+          </Typography>
+          <Rating
+            value={star}
+            name="rated"
+            precision={0.5}
+            onChange={(_, newValue: number) => setStar(newValue)}
+          />
+          <Box>[ X ]</Box>
+        </CardContent>
+        <CardActions className={classes.actions}>
+          <Button onClick={() => mediaSelect()}>Go Back</Button>
+          <Button onClick={mediaSet}>Save</Button>
         </CardActions>
       </>
     );
