@@ -1,11 +1,29 @@
 import * as React from "react";
 import { useState } from "react";
-import { Box, Text, Button, Input } from "./components";
 import Navigation from "./Navigation";
 import { useStoreState, useStoreActions } from "./config/store";
+import { makeStyles } from "@material-ui/core/styles";
+import {
+  Box,
+  Container,
+  Button,
+  TextField,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select
+} from "@material-ui/core";
+
+const useStyles = makeStyles(theme => ({
+  formControl: {
+    minWidth: 120,
+    marginRight: theme.spacing(2),
+    paddingBottom: theme.spacing(2)
+  }
+}));
 
 const MediaProfile = () => {
-  const user = useStoreState(state => state.global.user);
+  const classes = useStyles();
   const preferences = useStoreState(state => state.global.preferences);
   const userPutPreferences = useStoreActions(
     actions => actions.global.userPutPreferences
@@ -14,42 +32,49 @@ const MediaProfile = () => {
   const [localYear, setLocalYear] = useState(preferences.year);
 
   return (
-    <>
+    <Container maxWidth="md">
       <Navigation />
-      <Box>
-        <Text>Preferences</Text>
-        <Text>User Information</Text>
-        <img src={(user !== null && user.photoURL) || undefined} width="40px" />
-        <Text>Theme</Text>
-        <select
-          onChange={e => {
-            const target = e.target.value;
-            if (target === "light" || target === "dark") {
-              setLocalTheme(target);
-            }
-          }}
-          value={localTheme}
-        >
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
-        </select>
+      <Box borderColor="grey.300" border={1} borderTop={0} p={2}>
+        <Box mb={2} fontWeight="fontWeightMedium" fontSize="h5.fontSize">
+          Preferences
+        </Box>
+        <FormControl className={classes.formControl}>
+          <InputLabel id="theme-label">Theme</InputLabel>
+          <Select
+            labelId="theme-label"
+            id="theme"
+            value={localTheme}
+            onChange={e => {
+              const target = e.target.value;
+              if (target === "light" || target === "dark") {
+                setLocalTheme(target);
+              }
+            }}
+          >
+            <MenuItem value="light">Light</MenuItem>
+            <MenuItem value="dark">Dark</MenuItem>
+          </Select>
+        </FormControl>
 
-        <Text>Year</Text>
-        <Input
-          type="text"
+        <TextField
+          label="Year"
           onChange={e => setLocalYear(e.target.value)}
           defaultValue={localYear !== null ? localYear : undefined}
         />
-
-        <Button
-          onClick={() =>
-            userPutPreferences({ theme: localTheme, year: localYear })
-          }
-        >
-          Save
-        </Button>
+        <Box py={2}>
+          <Button
+            color="secondary"
+            variant="contained"
+            disableElevation
+            onClick={() =>
+              userPutPreferences({ theme: localTheme, year: localYear })
+            }
+          >
+            Save
+          </Button>
+        </Box>
       </Box>
-    </>
+    </Container>
   );
 };
 

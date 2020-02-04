@@ -26,6 +26,8 @@ export interface MediaTypes {
   type: "film" | "tv" | "album" | "";
 }
 
+export type MediaTyper = "film" | "tv" | "album" | "";
+
 export interface Media {
   mediaSelected: MediaSelected;
   mediaSelect: Action<Media, MediaSelected | void>;
@@ -51,18 +53,8 @@ export const media: Media = {
     state.mediaSelected = payload ? payload : mediaInit;
   }),
   mediaPutFilm: thunk(async (actions, payload, { getStoreActions }) => {
-    const mbdResult = await fetch(
-      `${MDBURL}/movie/${encodeURIComponent(
-        payload.id
-      )}/credits?api_key=${MBDKEY}`
-    );
-    const credits = await mbdResult.json();
-    const filmMedia = {
-      ...payload,
-      artist: credits.crew.find((e: any) => e.job === "Director").name
-    };
     actions.mediaSelect();
-    getStoreActions().data.dataPut(filmMedia);
+    getStoreActions().data.dataPut(payload);
   }),
   mediaPutTV: thunk(async (actions, payload, { getStoreActions }) => {
     actions.mediaSelect();

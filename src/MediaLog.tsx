@@ -1,23 +1,46 @@
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardMedia from "@material-ui/core/CardMedia";
+import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import EditOutlined from "@material-ui/icons/EditOutlined";
+import StarIcon from "@material-ui/icons/Star";
+import StarBorderIcon from "@material-ui/icons/StarBorder";
+import Rating from "@material-ui/lab/Rating/Rating";
 import * as React from "react";
-import { useState, useEffect } from "react";
-import { MBDKEY } from "./config/constants";
-import { Box, Grid, Text, Button, Flex, Icon, Image } from "./components";
-import styled from "styled-components";
-// import DatePicker from "react-date-picker";
+import { useEffect, useState } from "react";
+import { MBDKEY, MDBURL } from "./config/constants";
+import { useStoreActions, useStoreState } from "./config/store";
 import { MediaTypes } from "./config/storeMedia";
-import { useStoreState, useStoreActions } from "./config/store";
-// @ts-ignore
-import ReactStars from "react-stars";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker
+} from "@material-ui/pickers";
+import DayjsUtils from "@date-io/dayjs";
 
-const PosterImg = styled(Image)`
-  box-shadow: 0 1px 5px rgba(20, 24, 28, 0.2), 0 2px 10px rgba(20, 24, 28, 0.35);
-`;
-
-interface MediaLog extends MediaTypes {
+const useStyles = makeStyles(theme => ({
+  metadata: {
+    display: "grid",
+    gridTemplateColumns: "1fr 0.5fr 0.5fr",
+    alignItems: "center",
+    gridGap: "2rem",
+    marginBottom: 0
+  },
+  actions: {
+    display: "flex",
+    justifyContent: "space-between"
+  }
+}));
+interface MediaLogProps extends MediaTypes {
   setType: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const MediaLog = ({ type, setType }: MediaLog) => {
+const MediaLog = ({ type, setType }: MediaLogProps) => {
+  const classes = useStyles();
   const {
     id,
     artist,
@@ -35,6 +58,7 @@ const MediaLog = ({ type, setType }: MediaLog) => {
   const [seen, setSeen] = useState(false);
   const [star, setStar] = useState(0);
   const [info, setInfo] = useState();
+  const [localArtist, setLocalArtist] = useState(artist);
   const [seasonInfo, setSeasonInfo] = useState();
   const [loading, setLoading] = useState(type === "tv" ? true : false);
 
@@ -49,6 +73,17 @@ const MediaLog = ({ type, setType }: MediaLog) => {
           setSeasonInfo(info.seasons[0]);
           setLoading(false);
         });
+    } else if (type === "film") {
+      fetch(
+        `${MDBURL}/movie/${encodeURIComponent(id)}/credits?api_key=${MBDKEY}`
+      )
+        .then(r => r.json())
+        .then(credits => {
+          setLocalArtist(
+            credits.crew.find((e: any) => e.job === "Director").name
+          );
+          setLoading(false);
+        });
     }
   }, [type, id]);
 
@@ -56,89 +91,56 @@ const MediaLog = ({ type, setType }: MediaLog) => {
     return <div>loading</div>;
   } else {
     return (
-      <Grid gridTemplateColumns={["", "14rem 1fr"]} gridGap={["", "2rem"]}>
-        <Box textAlign="center">
-          <Image src={poster} width={["30vw", ""]} />
-        </Box>
-        <Flex flexDirection="column">
-          <Text mb={2} color="secondary">
-            I {watched} ...
-          </Text>
-          <Text mt={3} fontSize={4} alignItems="center">
-            {title}
-            <Text as="span" fontWeight={300} fontSize={3} ml={1}>
-              (
-              {new Date(published).toLocaleDateString("en-us", {
-                year: "numeric"
-              })}
-              )
-            </Text>
-          </Text>
-          <Flex mt={3} alignItems="center">
-            {typeof info !== "undefined" &&
-              typeof info.seasons !== "undefined" && (
-                <select
-                  value={seasonInfo.id}
-                  onChange={e =>
-                    setSeasonInfo(
-                      info.seasons.find(
-                        (u: any) => u.id === parseInt(e.target.value)
-                      )
-                    )
-                  }
-                >
-                  {info.seasons.map((e: any) => (
-                    <option key={e.name} value={e.id}>
-                      {e.name}
-                    </option>
-                  ))}
-                </select>
-              )}
-          </Flex>
-          <Flex mt={4} alignItems="center">
-            <Text mr={2} pb={0} color="secondary">
-              On
-            </Text>
-            {/* <DatePicker onChange={(date: Date) => setDate(date)} value={date} /> */}
-          </Flex>
-          <Flex mt={3} pt={2}>
-            <Text mr={2} pb={0} color="secondary">
-              Rating
-            </Text>
-            <ReactStars
-              count={5}
-              half
-              value={star}
-              size={20}
-              onChange={(e: any) => setStar(e)}
-              color1="var(--secondary)"
-              color2="var(--primary)"
-            />
-          </Flex>
-          <Flex mt={3} alignItems="center">
-            <Text color="secondary" mr={3}>
-              {watched} Before?
-            </Text>
-            <Icon
-              mr={2}
-              cursor="pointer"
-              height="25px"
-              width="25px"
-              stroke="primary"
-              name={seen ? "checked" : "unchecked"}
-              onClick={() => setSeen(!seen)}
-            />
-          </Flex>
-          <Flex mt="auto" pt={2} justifyContent="flex-end">
-            <Button variant="secondary" mr={3} onClick={() => mediaSelect()}>
-              Go Back
-            </Button>
-            <Button variant="primary" onClick={mediaSet}>
-              Save
-            </Button>
-          </Flex>
-        </Flex>
-      </Grid>
+      <>
+        <CardHeader
+          title={title}
+          subheader={
+            <Box display="flex">
+              <Typography variant="subtitle1" color="textSecondary">
+                {new Date(published).toLocaleDateString("en-US", {
+                  year: "numeric"
+                })}
+              </Typography>
+              <Box mx={1}>
+                <Typography color="textSecondary">·</Typography>
+              </Box>
+              <Typography variant="subtitle1" color="textSecondary">
+                {localArtist}
+              </Typography>
+            </Box>
+          }
+        />
+        <CardMedia component="img" image={poster} title={title} />
+        <CardContent className={classes.metadata}>
+          <Typography variant="h6">
+            <MuiPickersUtilsProvider utils={DayjsUtils}>
+              <KeyboardDatePicker
+                disableToolbar
+                disableFuture
+                variant="inline"
+                format="MM/DD/YYYY"
+                value={date}
+                autoOk={true}
+                onChange={e => (e !== null ? setDate(e.toDate()) : null)}
+                KeyboardButtonProps={{
+                  "aria-label": "change date"
+                }}
+              />
+            </MuiPickersUtilsProvider>
+          </Typography>
+          <Rating
+            value={star}
+            name="rated"
+            precision={0.5}
+            onChange={(_, newValue: number) => setStar(newValue)}
+          />
+          <Box>[ X ]</Box>
+        </CardContent>
+        <CardActions className={classes.actions}>
+          <Button onClick={() => mediaSelect()}>Go Back</Button>
+          <Button onClick={mediaSet}>Save</Button>
+        </CardActions>
+      </>
     );
   }
 

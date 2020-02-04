@@ -7,7 +7,6 @@
 
 import * as React from "react";
 import { useState } from "react";
-import { Box, Text, Icon, Flex, Button, Input } from "./components";
 import { useStoreActions } from "./config/store";
 import { UserTheme } from "./config/storeGlobal";
 
@@ -19,44 +18,44 @@ const MediaSetup = () => {
     new Date().toLocaleDateString([], { year: "numeric" })
   );
   const [theme, setTheme] = useState<UserTheme>("light");
-  return (
-    <Box>
-      <Flex flexDirection="column" alignItems="center">
-        <Flex mt={4}>
-          <Icon name="album" mr={3} stroke="orange" />
-          <Icon name="tv" mr={3} stroke="blue" />
-          <Icon name="film" mr={3} stroke="secondary" />
-        </Flex>
-        <Text fontSize={5} textAlign="center" fontWeight={600} mt={2}>
-          MediaDiary
-        </Text>
-      </Flex>
-      <Box my={3} borderTop="1px solid #d1d5da" />
-      <Text>Choose Theme</Text>
-      <select
-        onChange={e => {
-          const target = e.target.value;
-          if (target === "light" || target === "dark") {
-            setTheme(target);
-          }
-        }}
-        value={theme}
-      >
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
-      </select>
-      <Text>Choose Year</Text>
-      <Input
-        type="text"
-        onChange={e => setYear(e.target.value)}
-        placeholder={year.toString()}
-      />
-
-      <Button onClick={() => userPutPreferences({ theme, year })}>
-        Submit
-      </Button>
-    </Box>
-  );
+  return <div>setup</div>;
 };
 
 export default MediaSetup;
+
+// <Box>
+//       <Flex flexDirection="column" alignItems="center">
+//         <Flex mt={4}>
+//           <Icon name="album" mr={3} stroke="orange" />
+//           <Icon name="tv" mr={3} stroke="blue" />
+//           <Icon name="film" mr={3} stroke="secondary" />
+//         </Flex>
+//         <Text fontSize={5} textAlign="center" fontWeight={600} mt={2}>
+//           MediaDiary
+//         </Text>
+//       </Flex>
+//       <Box my={3} borderTop="1px solid #d1d5da" />
+//       <Text>Choose Theme</Text>
+//       <select
+//         onChange={e => {
+//           const target = e.target.value;
+//           if (target === "light" || target === "dark") {
+//             setTheme(target);
+//           }
+//         }}
+//         value={theme}
+//       >
+//         <option value="light">Light</option>
+//         <option value="dark">Dark</option>
+//       </select>
+//       <Text>Choose Year</Text>
+//       <Input
+//         type="text"
+//         onChange={e => setYear(e.target.value)}
+//         placeholder={year.toString()}
+//       />
+
+//       <Button onClick={() => userPutPreferences({ theme, year })}>
+//         Submit
+//       </Button>
+//     </Box>

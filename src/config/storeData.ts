@@ -256,10 +256,8 @@ export const data: Data = {
                   star: payload.modifiedStar
                 }
               });
-              // return Promise.resolve();
             } else {
               console.log("update failed because no id found");
-              // return Promise.reject();
             }
           })
           .then(() => {

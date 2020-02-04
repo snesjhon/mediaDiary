@@ -1,91 +1,18 @@
+import { Box, Container } from "@material-ui/core";
 import * as React from "react";
-import { Flex } from "./components";
 import MediaList from "./MediaList";
-import MediaListMobile from "./MediaListMobile";
 import Navigation from "./Navigation";
-import { useStoreState } from "./config/store";
-import useBP from "./hooks/useBP";
-import {
-  Container,
-  // CircularProgress,
-  // Button,
-  Box,
-  Typography
-} from "@material-ui/core";
 
 const Media = () => {
-  const media = useStoreState(state => state.data.byID);
-  const types = Object.keys(media).reduce<{
-    [key: string]: number;
-  }>((a, c) => {
-    if (typeof a[media[c]["type"]] !== "undefined") {
-      a[media[c]["type"]] = ++a[media[c]["type"]];
-    } else {
-      a[media[c]["type"]] = 1;
-    }
-    return a;
-  }, {});
-  const bp = useBP();
+  // const media = useStoreState(state => state.data.byID);
+  // const bp = useBP();
   return (
-    <Box>
-      <Container maxWidth="md">
-        <Navigation />
-        <Box borderColor="grey.300" border={1} borderTop={0} px={2}>
-          <Box display="flex" justifyContent="space-between" pt={3}>
-            <Box display="flex">
-              <Box pb={2}>
-                <Typography>
-                  All caps, bold:{" "}
-                  <Box
-                    component="span"
-                    // color="secondary.main"
-                    // fontWeight="fontWeightBold"
-                  >
-                    MOVIES
-                  </Box>
-                </Typography>
-              </Box>
-              <Box pb={2}>
-                <Typography>
-                  All caps:{" "}
-                  <Box
-                    component="span"
-                    // color="secondary.main"
-                  >
-                    TV SERIESS
-                  </Box>
-                </Typography>
-              </Box>
-              <Typography>
-                Italics:{" "}
-                <Box
-                  component="em"
-                  // color="secondary.main"
-                >
-                  Albums
-                </Box>
-              </Typography>
-            </Box>
-            <Box display="flex">
-              <Typography>
-                <strong> {types.film} MOVIES</strong>
-              </Typography>
-              <Typography>{types.tv} TV SERIES</Typography>
-              <Typography>
-                {types.album} <em>Albums</em>
-              </Typography>
-            </Box>
-          </Box>
-          <MediaList />
-          {/* {bp !== "mobile" ? (
-            <>
-            </>
-          ) : (
-            <MediaListMobile />
-          )} */}
-        </Box>
-      </Container>
-    </Box>
+    <Container maxWidth="md">
+      <Navigation />
+      <Box borderColor="grey.300" border={1} borderTop={0} px={2}>
+        <MediaList />
+      </Box>
+    </Container>
   );
 };
 
