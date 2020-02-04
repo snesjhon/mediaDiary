@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { useStoreActions, useStoreState } from "./config/store";
 import { DataByDate } from "./config/storeData";
 import { MediaTyper } from "./config/storeMedia";
-import useBP from "./hooks/useBP";
+// import useBP from "./hooks/useBP";
 // import MediaAdd from "./MediaAdd";
 import Card from "@material-ui/core/Card";
 
@@ -97,7 +97,7 @@ const useStyles = makeStyles(theme => ({
 
 function MediaList() {
   const classes = useStyles();
-  const bp = useBP();
+  // const bp = useBP();
   // const [data, setData] = useState<[string, DataByDate, DataByID]>();
   const mediaSelected = useStoreState(state => state.media.mediaSelected);
   const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
@@ -189,13 +189,13 @@ function MediaList() {
               <Box
                 className={classes.mediaContainer}
                 key={monthIndex}
-                style={{
-                  gridTemplateColumns: bp !== "mobile" ? "5rem 1fr" : "3rem 1fr"
-                }}
+                // style={{
+                //   gridTemplateColumns: bp !== "mobile" ? "5rem 1fr" : "3rem 1fr"
+                // }}
               >
                 <Box mt={1}>
                   <Typography
-                    variant={bp !== "mobile" ? "h4" : "h5"}
+                    // variant={bp !== "mobile" ? "h4" : "h5"}
                     style={{ position: "sticky", top: "3rem" }}
                   >
                     {new Date(month).toLocaleDateString("en-us", {
@@ -313,7 +313,9 @@ function MediaList() {
                               </Box>
                             </Box>
                           </Box>
-                          <Box pt={bp !== "mobile" ? 3 : undefined}>
+                          <Box
+                          // pt={bp !== "mobile" ? 3 : undefined}
+                          >
                             <Divider />
                           </Box>
                         </Box>
