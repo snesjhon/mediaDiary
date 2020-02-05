@@ -20,6 +20,7 @@ import { MediaTyper } from "./config/storeMedia";
 // import useBP from "./hooks/useBP";
 // import MediaAdd from "./MediaAdd";
 import Card from "@material-ui/core/Card";
+import { IconPlus, IconStar } from "./icons";
 
 import MediaSearch from "./MediaSearch";
 import MediaLog from "./MediaLog";
@@ -189,13 +190,13 @@ function MediaList() {
               <Box
                 className={classes.mediaContainer}
                 key={monthIndex}
-                // style={{
-                //   gridTemplateColumns: bp !== "mobile" ? "5rem 1fr" : "3rem 1fr"
-                // }}
+                style={{
+                  gridTemplateColumns: "5rem 1fr"
+                }}
               >
                 <Box mt={1}>
                   <Typography
-                    // variant={bp !== "mobile" ? "h4" : "h5"}
+                    variant="h4"
                     style={{ position: "sticky", top: "3rem" }}
                   >
                     {new Date(month).toLocaleDateString("en-us", {
@@ -241,14 +242,9 @@ function MediaList() {
                               />
                             </Box>
                             <Box display="flex" flexDirection="column">
-                              <Box
-                                display="flex"
-                                justifyContent="space-between"
-                              >
-                                <Typography variant="h5" component="h5">
-                                  <Box component="span">{title}</Box>
-                                </Typography>
-                              </Box>
+                              <Typography variant="h5" component="h5">
+                                {title}
+                              </Typography>
                               <Box display="flex" my={1}>
                                 <Typography
                                   variant="subtitle1"
@@ -287,12 +283,19 @@ function MediaList() {
                                     size="small"
                                     readOnly
                                     emptyIcon={
-                                      <StarBorderIcon fontSize="small" />
+                                      <IconStar
+                                        width={15}
+                                        height={15}
+                                        empty
+                                        fill="#03b021"
+                                      />
                                     }
                                     icon={
-                                      <StarIcon
-                                        fontSize="small"
-                                        color="primary"
+                                      <IconStar
+                                        width={15}
+                                        height={15}
+                                        fill="#03b021"
+                                        stroke="#03b021"
                                       />
                                     }
                                   />
@@ -314,7 +317,8 @@ function MediaList() {
                             </Box>
                           </Box>
                           <Box
-                          // pt={bp !== "mobile" ? 3 : undefined}
+                            // pt={bp !== "mobile" ? 3 : undefined}
+                            pt={3}
                           >
                             <Divider />
                           </Box>
@@ -330,26 +334,27 @@ function MediaList() {
           color="primary"
           onClick={() => setDialogOpen(true)}
         >
-          +
+          <IconPlus />
         </Fab>
         {dialogOpen && (
-          <Dialog
-            open={dialogOpen}
-            onClose={() => {
-              mediaSelect();
-              return setDialogOpen(false);
-            }}
-            maxWidth="md"
-          >
+          <Dialog open={dialogOpen} onClose={closeDialog} maxWidth="md">
             <Card
               className={
                 mediaSelected.id !== "" ? classes.cardxs : classes.card
               }
             >
               {mediaSelected.id !== "" ? (
-                <MediaLog type={type} setType={setType} />
+                <MediaLog
+                  type={type}
+                  setType={setType}
+                  closeDialog={closeDialog}
+                />
               ) : (
-                <MediaSearch type={type} setType={setType} />
+                <MediaSearch
+                  type={type}
+                  setType={setType}
+                  closeDialog={closeDialog}
+                />
               )}
             </Card>
           </Dialog>
@@ -358,6 +363,12 @@ function MediaList() {
     );
   } else {
     return <div>loading</div>;
+  }
+
+  function closeDialog() {
+    mediaSelect();
+    setType("film");
+    return setDialogOpen(false);
   }
 }
 

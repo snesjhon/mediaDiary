@@ -4,12 +4,9 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
-import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import EditOutlined from "@material-ui/icons/EditOutlined";
-import StarIcon from "@material-ui/icons/Star";
-import StarBorderIcon from "@material-ui/icons/StarBorder";
+import { IconStar, IconX, IconChevronLeft, IconRepeat } from "./icons";
 import Rating from "@material-ui/lab/Rating/Rating";
 import * as React from "react";
 import { useEffect, useState } from "react";
@@ -21,13 +18,16 @@ import {
   KeyboardDatePicker
 } from "@material-ui/pickers";
 import DayjsUtils from "@date-io/dayjs";
+import Divider from "@material-ui/core/Divider";
+import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const useStyles = makeStyles(theme => ({
   metadata: {
     display: "grid",
-    gridTemplateColumns: "1fr 0.5fr 0.5fr",
+    gridTemplateColumns: "1fr 0.5fr 0.3fr",
     alignItems: "center",
-    gridGap: "2rem",
+    gridGap: "1.5rem",
     marginBottom: 0
   },
   actions: {
@@ -37,9 +37,10 @@ const useStyles = makeStyles(theme => ({
 }));
 interface MediaLogProps extends MediaTypes {
   setType: React.Dispatch<React.SetStateAction<string>>;
+  closeDialog: () => void;
 }
 
-const MediaLog = ({ type, setType }: MediaLogProps) => {
+const MediaLog = ({ type, setType, closeDialog }: MediaLogProps) => {
   const classes = useStyles();
   const {
     id,
@@ -109,6 +110,11 @@ const MediaLog = ({ type, setType }: MediaLogProps) => {
               </Typography>
             </Box>
           }
+          action={
+            <IconButton onClick={closeDialog}>
+              <IconX onClick={closeDialog} />
+            </IconButton>
+          }
         />
         <CardMedia component="img" image={poster} title={title} />
         <CardContent className={classes.metadata}>
@@ -133,11 +139,22 @@ const MediaLog = ({ type, setType }: MediaLogProps) => {
             name="rated"
             precision={0.5}
             onChange={(_, newValue: number) => setStar(newValue)}
+            emptyIcon={<IconStar empty fill="#03b021" />}
+            icon={<IconStar fill="#03b021" stroke="#03b021" />}
           />
-          <Box>[ X ]</Box>
+          <Box>
+            <Tooltip title="Seen Before?" placement="top">
+              <IconButton>
+                <IconRepeat />
+              </IconButton>
+            </Tooltip>
+          </Box>
         </CardContent>
+        <Divider />
         <CardActions className={classes.actions}>
-          <Button onClick={() => mediaSelect()}>Go Back</Button>
+          <IconButton size="small" onClick={() => mediaSelect()}>
+            <IconChevronLeft />
+          </IconButton>
           <Button onClick={mediaSet}>Save</Button>
         </CardActions>
       </>
