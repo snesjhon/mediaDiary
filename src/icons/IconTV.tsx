@@ -1,6 +1,6 @@
 import * as React from "react";
 
-function IconTV({ width = 24, height = 24, stroke = "currentColor", ...rest }) {
+function IconTV({ width = 20, height = 20, stroke = "currentColor", ...rest }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

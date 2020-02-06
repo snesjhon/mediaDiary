@@ -1,8 +1,8 @@
 import * as React from "react";
 
 function IconMusic({
-  width = 24,
-  height = 24,
+  width = 20,
+  height = 20,
   stroke = "currentColor",
   ...rest
 }) {

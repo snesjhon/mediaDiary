@@ -112,7 +112,7 @@ const MediaLog = ({ type, setType, closeDialog }: MediaLogProps) => {
           }
           action={
             <IconButton onClick={closeDialog}>
-              <IconX onClick={closeDialog} />
+              <IconX />
             </IconButton>
           }
         />
@@ -200,6 +200,7 @@ const MediaLog = ({ type, setType, closeDialog }: MediaLogProps) => {
       mediaPutAlbum(albumObj);
     }
     setType("");
+    closeDialog();
   }
 };
 

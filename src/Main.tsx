@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useEffect } from "react";
-import { hot } from "react-hot-loader/root";
 import {
   BrowserRouter as Router,
   Redirect,
@@ -71,4 +70,4 @@ const Main = () => {
   }
 };
 
-export default hot(Main);
+export default Main;

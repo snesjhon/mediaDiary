@@ -5,17 +5,14 @@
  *
  */
 
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Container from "@material-ui/core/Container";
+import Typography from "@material-ui/core/Typography";
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useStoreActions, useStoreState } from "./config/store";
-import {
-  Container,
-  CircularProgress,
-  Button,
-  Box,
-  Typography
-} from "@material-ui/core";
-import { LiveTv, MusicVideo, MovieOutlined } from "@material-ui/icons";
 
 const About = () => {
   const userGet = useStoreActions(actions => actions.global.userGet);
@@ -34,11 +31,6 @@ const About = () => {
     return (
       <Container maxWidth="lg">
         <Box border={1} p={2} mt={2} textAlign="center">
-          <Box display="flex" justifyContent="center">
-            <MovieOutlined />
-            <LiveTv />
-            <MusicVideo />
-          </Box>
           <Typography variant="h3">Media Diary</Typography>
           <Typography variant="h4">
             <Box fontWeight="fontWeightLight">Track All Your Media.</Box>

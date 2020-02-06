@@ -1,29 +1,21 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Typography,
-  Fab,
-  Dialog
-} from "@material-ui/core";
+import Box from "@material-ui/core/Box";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import { makeStyles } from "@material-ui/core/styles";
-import { LiveTv, MovieOutlined, MusicVideo } from "@material-ui/icons";
-import StarIcon from "@material-ui/icons/Star";
-import StarBorderIcon from "@material-ui/icons/StarBorder";
+import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import Dialog from "@material-ui/core/Dialog";
+import Divider from "@material-ui/core/Divider";
+import Fab from "@material-ui/core/Fab";
+import makeStyles from "@material-ui/core/styles/makeStyles";
+import Typography from "@material-ui/core/Typography";
 import Rating from "@material-ui/lab/Rating";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { useStoreActions, useStoreState } from "./config/store";
 import { DataByDate } from "./config/storeData";
 import { MediaTyper } from "./config/storeMedia";
-// import useBP from "./hooks/useBP";
-// import MediaAdd from "./MediaAdd";
-import Card from "@material-ui/core/Card";
-import { IconPlus, IconStar } from "./icons";
-
-import MediaSearch from "./MediaSearch";
+import { IconFilm, IconMusic, IconPlus, IconStar, IconTV } from "./icons";
 import MediaLog from "./MediaLog";
+import MediaSearch from "./MediaSearch";
 
 const useStyles = makeStyles(theme => ({
   tableHeadings: {
@@ -150,7 +142,7 @@ function MediaList() {
                 >
                   32
                   <Box display="flex" component="span" ml={1}>
-                    <MovieOutlined />
+                    <IconFilm />
                   </Box>
                 </Typography>
               </Box>
@@ -164,7 +156,7 @@ function MediaList() {
               >
                 20
                 <Box display="flex" component="span" ml={1}>
-                  <LiveTv />
+                  <IconTV />
                 </Box>
               </Typography>
               <Typography
@@ -177,7 +169,7 @@ function MediaList() {
               >
                 11
                 <Box display="flex" component="span" ml={1}>
-                  <MusicVideo />
+                  <IconMusic />
                 </Box>
               </Typography>
             </Breadcrumbs>
@@ -304,22 +296,19 @@ function MediaList() {
                                 </Box>
                                 <Box pr={2}>
                                   {type === "film" && (
-                                    <MovieOutlined htmlColor="rgba(0, 0, 0, 0.54)" />
+                                    <IconFilm stroke="rgba(0, 0, 0, 0.54)" />
                                   )}
                                   {type === "tv" && (
-                                    <LiveTv htmlColor="rgba(0, 0, 0, 0.54)" />
+                                    <IconTV stroke="rgba(0, 0, 0, 0.54)" />
                                   )}
                                   {type === "album" && (
-                                    <MusicVideo htmlColor="rgba(0, 0, 0, 0.54)" />
+                                    <IconMusic stroke="rgba(0, 0, 0, 0.54)" />
                                   )}
                                 </Box>
                               </Box>
                             </Box>
                           </Box>
-                          <Box
-                            // pt={bp !== "mobile" ? 3 : undefined}
-                            pt={3}
-                          >
+                          <Box pt={3}>
                             <Divider />
                           </Box>
                         </Box>

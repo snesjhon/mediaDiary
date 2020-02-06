@@ -1,11 +1,10 @@
-import { Box, Container } from "@material-ui/core";
+import Box from "@material-ui/core/Box";
+import Container from "@material-ui/core/Container";
 import * as React from "react";
 import MediaList from "./MediaList";
 import Navigation from "./Navigation";
 
 const Media = () => {
-  // const media = useStoreState(state => state.data.byID);
-  // const bp = useBP();
   return (
     <Container maxWidth="md">
       <Navigation />

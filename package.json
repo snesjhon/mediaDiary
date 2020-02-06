@@ -30,14 +30,11 @@
     "@types/react-router-dom": "~5.1.3",
     "babel-eslint": "~10.0.3",
     "babel-loader": "~8.0.6",
-    "css-loader": "~3.2.1",
     "dotenv-webpack": "~1.7.0",
     "eslint": "~6.5.1",
     "eslint-plugin-react": "~7.16.0",
     "eslint-plugin-react-hooks": "~2.1.2",
     "html-webpack-plugin": "~3.2.0",
-    "react-hot-loader": "~4.12.19",
-    "style-loader": "~1.0.2",
     "ts-loader": "~6.2.1",
     "typescript": "~3.6.5",
     "webpack": "~4.41.5",
@@ -49,7 +46,6 @@
     "@date-io/core": "~1.3.13",
     "@date-io/dayjs": "~1.3.13",
     "@material-ui/core": "~4.9.1",
-    "@material-ui/icons": "~4.5.1",
     "@material-ui/lab": "~4.0.0-alpha.41",
     "@material-ui/pickers": "~3.2.10",
     "dayjs": "~1.8.19",
@@ -58,7 +54,6 @@
     "react": "~16.10.2",
     "react-dom": "~16.10.2",
     "react-router": "~5.1.2",
-    "react-router-dom": "~5.1.2",
-    "react-window": "~1.8.5"
+    "react-router-dom": "~5.1.2"
   }
 }
