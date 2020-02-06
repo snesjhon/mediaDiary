@@ -1,28 +1,21 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Typography,
-  Fab,
-  Dialog
-} from "@material-ui/core";
+import Box from "@material-ui/core/Box";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import { makeStyles } from "@material-ui/core/styles";
-import { LiveTv, MovieOutlined, MusicVideo } from "@material-ui/icons";
-import StarIcon from "@material-ui/icons/Star";
-import StarBorderIcon from "@material-ui/icons/StarBorder";
+import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import Dialog from "@material-ui/core/Dialog";
+import Divider from "@material-ui/core/Divider";
+import Fab from "@material-ui/core/Fab";
+import makeStyles from "@material-ui/core/styles/makeStyles";
+import Typography from "@material-ui/core/Typography";
 import Rating from "@material-ui/lab/Rating";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { useStoreActions, useStoreState } from "./config/store";
 import { DataByDate } from "./config/storeData";
 import { MediaTyper } from "./config/storeMedia";
-// import useBP from "./hooks/useBP";
-// import MediaAdd from "./MediaAdd";
-import Card from "@material-ui/core/Card";
-
-import MediaSearch from "./MediaSearch";
+import { IconFilm, IconMusic, IconPlus, IconStar, IconTV } from "./icons";
 import MediaLog from "./MediaLog";
+import MediaSearch from "./MediaSearch";
 
 const useStyles = makeStyles(theme => ({
   tableHeadings: {
@@ -149,7 +142,7 @@ function MediaList() {
                 >
                   32
                   <Box display="flex" component="span" ml={1}>
-                    <MovieOutlined />
+                    <IconFilm />
                   </Box>
                 </Typography>
               </Box>
@@ -163,7 +156,7 @@ function MediaList() {
               >
                 20
                 <Box display="flex" component="span" ml={1}>
-                  <LiveTv />
+                  <IconTV />
                 </Box>
               </Typography>
               <Typography
@@ -176,7 +169,7 @@ function MediaList() {
               >
                 11
                 <Box display="flex" component="span" ml={1}>
-                  <MusicVideo />
+                  <IconMusic />
                 </Box>
               </Typography>
             </Breadcrumbs>
@@ -189,13 +182,13 @@ function MediaList() {
               <Box
                 className={classes.mediaContainer}
                 key={monthIndex}
-                // style={{
-                //   gridTemplateColumns: bp !== "mobile" ? "5rem 1fr" : "3rem 1fr"
-                // }}
+                style={{
+                  gridTemplateColumns: "5rem 1fr"
+                }}
               >
                 <Box mt={1}>
                   <Typography
-                    // variant={bp !== "mobile" ? "h4" : "h5"}
+                    variant="h4"
                     style={{ position: "sticky", top: "3rem" }}
                   >
                     {new Date(month).toLocaleDateString("en-us", {
@@ -241,14 +234,9 @@ function MediaList() {
                               />
                             </Box>
                             <Box display="flex" flexDirection="column">
-                              <Box
-                                display="flex"
-                                justifyContent="space-between"
-                              >
-                                <Typography variant="h5" component="h5">
-                                  <Box component="span">{title}</Box>
-                                </Typography>
-                              </Box>
+                              <Typography variant="h5" component="h5">
+                                {title}
+                              </Typography>
                               <Box display="flex" my={1}>
                                 <Typography
                                   variant="subtitle1"
@@ -287,12 +275,19 @@ function MediaList() {
                                     size="small"
                                     readOnly
                                     emptyIcon={
-                                      <StarBorderIcon fontSize="small" />
+                                      <IconStar
+                                        width={15}
+                                        height={15}
+                                        empty
+                                        fill="#03b021"
+                                      />
                                     }
                                     icon={
-                                      <StarIcon
-                                        fontSize="small"
-                                        color="primary"
+                                      <IconStar
+                                        width={15}
+                                        height={15}
+                                        fill="#03b021"
+                                        stroke="#03b021"
                                       />
                                     }
                                   />
@@ -301,21 +296,19 @@ function MediaList() {
                                 </Box>
                                 <Box pr={2}>
                                   {type === "film" && (
-                                    <MovieOutlined htmlColor="rgba(0, 0, 0, 0.54)" />
+                                    <IconFilm stroke="rgba(0, 0, 0, 0.54)" />
                                   )}
                                   {type === "tv" && (
-                                    <LiveTv htmlColor="rgba(0, 0, 0, 0.54)" />
+                                    <IconTV stroke="rgba(0, 0, 0, 0.54)" />
                                   )}
                                   {type === "album" && (
-                                    <MusicVideo htmlColor="rgba(0, 0, 0, 0.54)" />
+                                    <IconMusic stroke="rgba(0, 0, 0, 0.54)" />
                                   )}
                                 </Box>
                               </Box>
                             </Box>
                           </Box>
-                          <Box
-                          // pt={bp !== "mobile" ? 3 : undefined}
-                          >
+                          <Box pt={3}>
                             <Divider />
                           </Box>
                         </Box>
@@ -330,26 +323,27 @@ function MediaList() {
           color="primary"
           onClick={() => setDialogOpen(true)}
         >
-          +
+          <IconPlus />
         </Fab>
         {dialogOpen && (
-          <Dialog
-            open={dialogOpen}
-            onClose={() => {
-              mediaSelect();
-              return setDialogOpen(false);
-            }}
-            maxWidth="md"
-          >
+          <Dialog open={dialogOpen} onClose={closeDialog} maxWidth="md">
             <Card
               className={
                 mediaSelected.id !== "" ? classes.cardxs : classes.card
               }
             >
               {mediaSelected.id !== "" ? (
-                <MediaLog type={type} setType={setType} />
+                <MediaLog
+                  type={type}
+                  setType={setType}
+                  closeDialog={closeDialog}
+                />
               ) : (
-                <MediaSearch type={type} setType={setType} />
+                <MediaSearch
+                  type={type}
+                  setType={setType}
+                  closeDialog={closeDialog}
+                />
               )}
             </Card>
           </Dialog>
@@ -358,6 +352,12 @@ function MediaList() {
     );
   } else {
     return <div>loading</div>;
+  }
+
+  function closeDialog() {
+    mediaSelect();
+    setType("film");
+    return setDialogOpen(false);
   }
 }
 

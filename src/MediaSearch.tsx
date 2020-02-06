@@ -19,17 +19,15 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import PersonPinIcon from "@material-ui/icons/PersonPin";
-import SearchIcon from "@material-ui/icons/Search";
 import Skeleton from "@material-ui/lab/Skeleton";
 import * as React from "react";
 import { useEffect, useReducer } from "react";
 import { MBDKEY } from "./config/constants";
-import { useStoreActions, useStoreState } from "./config/store";
-import { MediaSelected, MediaTyper, MediaTypes } from "./config/storeMedia";
+import { useStoreActions } from "./config/store";
+import { MediaSelected, MediaTypes } from "./config/storeMedia";
 import useDebounce from "./hooks/useDebounce";
 import { makeStyles } from "@material-ui/core/styles";
+import { IconFilm, IconMusic, IconTV, IconSearch, IconX } from "./icons";
 
 interface MediaSearchListProps extends MediaTypes {
   item: any;
@@ -120,9 +118,10 @@ const useStyles = makeStyles(theme => ({
 
 interface MediaLogProps extends MediaTypes {
   setType: React.Dispatch<React.SetStateAction<string>>;
+  closeDialog: () => void;
 }
 
-function MediaSearch({ type, setType }: MediaLogProps) {
+function MediaSearch({ type, setType, closeDialog }: MediaLogProps) {
   const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
   const classes = useStyles();
   const [
@@ -151,6 +150,7 @@ function MediaSearch({ type, setType }: MediaLogProps) {
       dispatch({ type: "noResults" });
     }
   }, [bouncedSearch, type]);
+
   return (
     <>
       <CardContent>
@@ -159,37 +159,31 @@ function MediaSearch({ type, setType }: MediaLogProps) {
             <Typography variant="h5" component="h1">
               Media Search
             </Typography>
-            <Divider orientation="vertical" />
-
+            <Box ml={2} mr={1}>
+              <Typography variant="h5">/</Typography>
+            </Box>
             <IconButton
-              aria-label="toggle password visibility"
               onClick={() => setType("film")}
-              color={type === "film" ? "primary" : "secondary"}
+              color={type === "film" ? "primary" : undefined}
             >
-              <PersonPinIcon />
+              <IconFilm />
             </IconButton>
             <IconButton
-              aria-label="toggle password visibility"
               onClick={() => setType("tv")}
-              color={type === "tv" ? "primary" : "secondary"}
+              color={type === "tv" ? "primary" : undefined}
             >
-              <FavoriteIcon />
+              <IconTV />
             </IconButton>
             <IconButton
-              aria-label="toggle password visibility"
               onClick={() => setType("album")}
-              color={type === "album" ? "primary" : "secondary"}
+              color={type === "album" ? "primary" : undefined}
             >
-              <FavoriteIcon />
+              <IconMusic />
             </IconButton>
           </Box>
           <Box>
-            <IconButton
-              aria-label="toggle password visibility"
-              onClick={() => setType("film")}
-              color={type === "film" ? "primary" : "secondary"}
-            >
-              X
+            <IconButton onClick={closeDialog}>
+              <IconX />
             </IconButton>
           </Box>
         </Box>
@@ -206,7 +200,7 @@ function MediaSearch({ type, setType }: MediaLogProps) {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon />
+                <IconSearch />
               </InputAdornment>
             )
           }}

@@ -1,0 +1,9 @@
+export { default as IconPlus } from "./IconPlus";
+export { default as IconFilm } from "./IconFilm";
+export { default as IconMusic } from "./IconMusic";
+export { default as IconTV } from "./IconTV";
+export { default as IconStar } from "./IconStar";
+export { default as IconSearch } from "./IconSearch";
+export { default as IconX } from "./IconX";
+export { default as IconChevronLeft } from "./IconChevronLeft";
+export { default as IconRepeat } from "./IconRepeat";
