@@ -1,26 +1,24 @@
+import DayjsUtils from "@date-io/dayjs";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
+import Divider from "@material-ui/core/Divider";
+import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
+import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
-import { IconStar, IconX, IconChevronLeft, IconRepeat } from "./icons";
 import Rating from "@material-ui/lab/Rating/Rating";
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider
+} from "@material-ui/pickers";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { MBDKEY, MDBURL } from "./config/constants";
 import { useStoreActions, useStoreState } from "./config/store";
-import { MediaTypes } from "./config/storeMedia";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker
-} from "@material-ui/pickers";
-import DayjsUtils from "@date-io/dayjs";
-import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
+import { IconChevronLeft, IconRepeat, IconStar } from "./icons";
+import MediaInfo from "./MediaInfo";
 
 const useStyles = makeStyles(theme => ({
   metadata: {
@@ -35,12 +33,11 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "space-between"
   }
 }));
-interface MediaLogProps extends MediaTypes {
-  setType: React.Dispatch<React.SetStateAction<string>>;
-  closeDialog: () => void;
+interface MediaLogProps {
+  dialogClose: () => void;
 }
 
-const MediaLog = ({ type, setType, closeDialog }: MediaLogProps) => {
+const MediaLog = ({ dialogClose }: MediaLogProps) => {
   const classes = useStyles();
   const {
     id,
@@ -49,6 +46,7 @@ const MediaLog = ({ type, setType, closeDialog }: MediaLogProps) => {
     poster,
     published,
     title,
+    type,
     watched
   } = useStoreState(state => state.media.mediaSelected);
   const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
@@ -93,30 +91,14 @@ const MediaLog = ({ type, setType, closeDialog }: MediaLogProps) => {
   } else {
     return (
       <>
-        <CardHeader
+        <MediaInfo
+          id={id}
           title={title}
-          subheader={
-            <Box display="flex">
-              <Typography variant="subtitle1" color="textSecondary">
-                {new Date(published).toLocaleDateString("en-US", {
-                  year: "numeric"
-                })}
-              </Typography>
-              <Box mx={1}>
-                <Typography color="textSecondary">·</Typography>
-              </Box>
-              <Typography variant="subtitle1" color="textSecondary">
-                {localArtist}
-              </Typography>
-            </Box>
-          }
-          action={
-            <IconButton onClick={closeDialog}>
-              <IconX />
-            </IconButton>
-          }
+          published={published}
+          artist={localArtist}
+          dialogClose={dialogClose}
+          poster={poster}
         />
-        <CardMedia component="img" image={poster} title={title} />
         <CardContent className={classes.metadata}>
           <Typography variant="h6">
             <MuiPickersUtilsProvider utils={DayjsUtils}>
@@ -144,8 +126,8 @@ const MediaLog = ({ type, setType, closeDialog }: MediaLogProps) => {
           />
           <Box>
             <Tooltip title="Seen Before?" placement="top">
-              <IconButton>
-                <IconRepeat />
+              <IconButton onClick={() => setSeen(!seen)}>
+                <IconRepeat stroke={seen ? "blue" : undefined} />
               </IconButton>
             </Tooltip>
           </Box>
@@ -199,8 +181,7 @@ const MediaLog = ({ type, setType, closeDialog }: MediaLogProps) => {
       };
       mediaPutAlbum(albumObj);
     }
-    setType("");
-    closeDialog();
+    dialogClose();
   }
 };
 

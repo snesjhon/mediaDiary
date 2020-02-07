@@ -2,31 +2,33 @@ import { Action, action, Thunk, thunk } from "easy-peasy";
 import { MDBURL, MBDKEY, LASTFMKEY } from "./constants";
 import { StoreModel } from "./store";
 
+export type MediaTyper = "film" | "tv" | "album" | "";
+
 export interface MediaInfo {
   id: string;
   poster: string;
   title: string;
   published: Date | "";
-  overview: string;
   artist: string;
+  overview?: string;
   season?: number | undefined;
 }
 
-export interface MediaAdd extends MediaInfo, MediaTypes {
+export interface MediaAdd extends MediaInfo {
   date: Date | "";
   seen: boolean;
   star: number;
+  type: MediaTyper;
 }
 
 export interface MediaSelected extends MediaInfo {
   watched: string | undefined;
+  type: MediaTyper;
 }
 
 export interface MediaTypes {
-  type: "film" | "tv" | "album" | "";
+  type: MediaTyper;
 }
-
-export type MediaTyper = "film" | "tv" | "album" | "";
 
 export interface Media {
   mediaSelected: MediaSelected;
@@ -36,7 +38,7 @@ export interface Media {
   mediaPutAlbum: Thunk<Media, MediaAdd, void, StoreModel>;
 }
 
-const mediaInit = {
+const mediaInit: MediaSelected = {
   id: "",
   poster: "",
   title: "",
@@ -44,6 +46,7 @@ const mediaInit = {
   overview: "",
   artist: "",
   watched: undefined,
+  type: "",
   season: undefined
 };
 
