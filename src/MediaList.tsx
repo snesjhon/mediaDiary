@@ -10,7 +10,6 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { useStoreActions, useStoreState } from "./config/store";
 import { DataByDate } from "./config/storeData";
-import { MediaTyper } from "./config/storeMedia";
 import { IconFilm, IconMusic, IconPlus, IconStar, IconTV } from "./icons";
 import MediaDialog, { viewType } from "./MediaDialog";
 
@@ -78,6 +77,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+export interface MediaListView {
+  open: boolean;
+  type: viewType;
+  mediaID?: string;
+}
+
 function MediaList() {
   const classes = useStyles();
   const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
@@ -86,12 +91,10 @@ function MediaList() {
   const dataGet = useStoreActions(actions => actions.data.dataGet);
 
   // const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogActions, setDialogActions] = useState<{
-    open: boolean;
-    type: viewType;
-  }>({
+  const [listView, setListView] = useState<MediaListView>({
     open: false,
-    type: "search"
+    type: "search",
+    mediaID: ""
   });
 
   useEffect(() => {
@@ -292,9 +295,10 @@ function MediaList() {
                                   <Button
                                     size="small"
                                     onClick={() =>
-                                      setDialogActions({
+                                      setListView({
                                         open: true,
-                                        type: "edit"
+                                        type: "edit",
+                                        mediaID: day
                                       })
                                     }
                                   >
@@ -304,9 +308,10 @@ function MediaList() {
                                     <Button
                                       size="small"
                                       onClick={() =>
-                                        setDialogActions({
+                                        setListView({
                                           open: true,
-                                          type: "edit"
+                                          type: "edit",
+                                          mediaID: day
                                         })
                                       }
                                     >
@@ -341,15 +346,12 @@ function MediaList() {
         <Fab
           className={classes.mediaFab}
           color="primary"
-          onClick={() => setDialogActions({ open: true, type: "search" })}
+          onClick={() => setListView({ open: true, type: "search" })}
         >
           <IconPlus />
         </Fab>
-        {dialogActions.open && (
-          <MediaDialog
-            dialogActions={dialogActions}
-            dialogClose={dialogClose}
-          />
+        {listView.open && (
+          <MediaDialog listView={listView} dialogClose={dialogClose} />
         )}
       </>
     );
@@ -359,7 +361,7 @@ function MediaList() {
 
   function dialogClose() {
     mediaSelect();
-    return setDialogActions({ open: false, type: "search" });
+    return setListView({ open: false, type: "search" });
     // return setDialogOpen(false);
   }
 }
