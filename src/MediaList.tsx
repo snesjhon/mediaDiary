@@ -1,8 +1,6 @@
 import Box from "@material-ui/core/Box";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import Dialog from "@material-ui/core/Dialog";
 import Divider from "@material-ui/core/Divider";
 import Fab from "@material-ui/core/Fab";
 import makeStyles from "@material-ui/core/styles/makeStyles";
@@ -12,10 +10,8 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { useStoreActions, useStoreState } from "./config/store";
 import { DataByDate } from "./config/storeData";
-import { MediaTyper } from "./config/storeMedia";
 import { IconFilm, IconMusic, IconPlus, IconStar, IconTV } from "./icons";
-import MediaLog from "./MediaLog";
-import MediaSearch from "./MediaSearch";
+import MediaDialog, { viewType } from "./MediaDialog";
 
 const useStyles = makeStyles(theme => ({
   tableHeadings: {
@@ -74,13 +70,6 @@ const useStyles = makeStyles(theme => ({
     bottom: "4vh",
     marginLeft: "1rem",
     marginBottom: "-1.5rem"
-    // boxShadow: "none"
-  },
-  card: {
-    width: theme.breakpoints.values.sm
-  },
-  cardxs: {
-    width: theme.breakpoints.values.sm / 1.5
   },
   mediaResults: {
     overflow: "scroll",
@@ -88,18 +77,25 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+export interface MediaListView {
+  open: boolean;
+  type: viewType;
+  mediaID?: string;
+}
+
 function MediaList() {
   const classes = useStyles();
-  // const bp = useBP();
-  // const [data, setData] = useState<[string, DataByDate, DataByID]>();
-  const mediaSelected = useStoreState(state => state.media.mediaSelected);
   const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
   const byID = useStoreState(state => state.data.byID);
   const byDate = useStoreState(state => state.data.byDate);
   const dataGet = useStoreActions(actions => actions.data.dataGet);
 
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [type, setType] = useState<MediaTyper>("film");
+  // const [dialogOpen, setDialogOpen] = useState(false);
+  const [listView, setListView] = useState<MediaListView>({
+    open: false,
+    type: "search",
+    mediaID: ""
+  });
 
   useEffect(() => {
     dataGet();
@@ -204,10 +200,15 @@ function MediaList() {
                         diaryDates[month][a].date.seconds
                     )
                     .map((day, dayIndex) => {
-                      const { title, poster, published, artist, type } = byID[
-                        diaryDates[month][day].id
-                      ];
-                      const { star } = diaryDates[month][day];
+                      const {
+                        title,
+                        poster,
+                        published,
+                        artist,
+                        type,
+                        overview
+                      } = byID[diaryDates[month][day].id];
+                      const { star, id } = diaryDates[month][day];
                       return (
                         <Box key={monthIndex + dayIndex}>
                           <Box
@@ -291,8 +292,32 @@ function MediaList() {
                                       />
                                     }
                                   />
-                                  <Button size="small">Edit</Button>
-                                  <Button size="small">Overview</Button>
+                                  <Button
+                                    size="small"
+                                    onClick={() =>
+                                      setListView({
+                                        open: true,
+                                        type: "edit",
+                                        mediaID: day
+                                      })
+                                    }
+                                  >
+                                    Edit
+                                  </Button>
+                                  {overview !== "" && (
+                                    <Button
+                                      size="small"
+                                      onClick={() =>
+                                        setListView({
+                                          open: true,
+                                          type: "edit",
+                                          mediaID: day
+                                        })
+                                      }
+                                    >
+                                      Overview
+                                    </Button>
+                                  )}
                                 </Box>
                                 <Box pr={2}>
                                   {type === "film" && (
@@ -321,32 +346,12 @@ function MediaList() {
         <Fab
           className={classes.mediaFab}
           color="primary"
-          onClick={() => setDialogOpen(true)}
+          onClick={() => setListView({ open: true, type: "search" })}
         >
           <IconPlus />
         </Fab>
-        {dialogOpen && (
-          <Dialog open={dialogOpen} onClose={closeDialog} maxWidth="md">
-            <Card
-              className={
-                mediaSelected.id !== "" ? classes.cardxs : classes.card
-              }
-            >
-              {mediaSelected.id !== "" ? (
-                <MediaLog
-                  type={type}
-                  setType={setType}
-                  closeDialog={closeDialog}
-                />
-              ) : (
-                <MediaSearch
-                  type={type}
-                  setType={setType}
-                  closeDialog={closeDialog}
-                />
-              )}
-            </Card>
-          </Dialog>
+        {listView.open && (
+          <MediaDialog listView={listView} dialogClose={dialogClose} />
         )}
       </>
     );
@@ -354,10 +359,10 @@ function MediaList() {
     return <div>loading</div>;
   }
 
-  function closeDialog() {
+  function dialogClose() {
     mediaSelect();
-    setType("film");
-    return setDialogOpen(false);
+    return setListView({ open: false, type: "search" });
+    // return setDialogOpen(false);
   }
 }
 

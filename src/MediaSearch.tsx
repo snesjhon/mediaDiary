@@ -24,7 +24,7 @@ import * as React from "react";
 import { useEffect, useReducer } from "react";
 import { MBDKEY } from "./config/constants";
 import { useStoreActions } from "./config/store";
-import { MediaSelected, MediaTypes } from "./config/storeMedia";
+import { MediaSelected, MediaTypes, MediaTyper } from "./config/storeMedia";
 import useDebounce from "./hooks/useDebounce";
 import { makeStyles } from "@material-ui/core/styles";
 import { IconFilm, IconMusic, IconTV, IconSearch, IconX } from "./icons";
@@ -65,10 +65,11 @@ type StateType = {
   searchInput: string;
   mediaResult: Array<string>;
   isSearching: boolean;
+  type: MediaTyper;
 };
 
 type ActionType = {
-  type: "hasResults" | "isSearching" | "noResults" | "searchInput";
+  type: "hasResults" | "isSearching" | "noResults" | "searchInput" | "setType";
   payload?: any;
 };
 
@@ -101,6 +102,12 @@ const MediaAddReducer = (state: StateType, action: ActionType) => {
         expanded: false
       };
     }
+    case "setType": {
+      return {
+        ...state,
+        type: action.payload
+      };
+    }
     default:
       return state;
   }
@@ -116,22 +123,23 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-interface MediaLogProps extends MediaTypes {
-  setType: React.Dispatch<React.SetStateAction<string>>;
-  closeDialog: () => void;
+interface MediaLogProps {
+  setViewType: React.Dispatch<React.SetStateAction<string>>;
+  dialogClose: () => void;
 }
 
-function MediaSearch({ type, setType, closeDialog }: MediaLogProps) {
+function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
   const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
   const classes = useStyles();
   const [
-    { expanded, searchInput, mediaResult, isSearching },
+    { expanded, searchInput, mediaResult, isSearching, type },
     dispatch
   ] = useReducer(MediaAddReducer, {
     expanded: false,
     searchInput: "",
     mediaResult: [],
-    isSearching: false
+    isSearching: false,
+    type: "film"
   });
   const bouncedSearch = useDebounce(searchInput, 500);
 
@@ -163,26 +171,26 @@ function MediaSearch({ type, setType, closeDialog }: MediaLogProps) {
               <Typography variant="h5">/</Typography>
             </Box>
             <IconButton
-              onClick={() => setType("film")}
+              onClick={() => dispatch({ type: "setType", payload: "film" })}
               color={type === "film" ? "primary" : undefined}
             >
               <IconFilm />
             </IconButton>
             <IconButton
-              onClick={() => setType("tv")}
+              onClick={() => dispatch({ type: "setType", payload: "tv" })}
               color={type === "tv" ? "primary" : undefined}
             >
               <IconTV />
             </IconButton>
             <IconButton
-              onClick={() => setType("album")}
+              onClick={() => dispatch({ type: "setType", payload: "album" })}
               color={type === "album" ? "primary" : undefined}
             >
               <IconMusic />
             </IconButton>
           </Box>
           <Box>
-            <IconButton onClick={closeDialog}>
+            <IconButton onClick={dialogClose}>
               <IconX />
             </IconButton>
           </Box>
@@ -212,10 +220,7 @@ function MediaSearch({ type, setType, closeDialog }: MediaLogProps) {
                 {mediaResult.map((e: any, i: number) => (
                   <MediaSearchList key={type + i} type={type} item={e}>
                     {({ name, artist, date }) => (
-                      <TableRow
-                        hover
-                        onClick={() => mediaSelect(mediaNormalize(e))}
-                      >
+                      <TableRow hover onClick={() => handleSelect(e)}>
                         <TableCell>
                           {isSearching ? (
                             <Skeleton animation="wave" />
@@ -242,6 +247,11 @@ function MediaSearch({ type, setType, closeDialog }: MediaLogProps) {
       </CardContent>
     </>
   );
+
+  function handleSelect(e: any) {
+    mediaSelect(mediaNormalize(e));
+    return setViewType("log");
+  }
 
   // Will return promise with appropriate film information
   function handleFetch(searchType: string, search: string) {
@@ -291,7 +301,8 @@ function MediaSearch({ type, setType, closeDialog }: MediaLogProps) {
       published,
       overview,
       watched,
-      artist
+      artist,
+      type
     };
     return mediaReturn;
   }
