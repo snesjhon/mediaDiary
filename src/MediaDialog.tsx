@@ -7,6 +7,7 @@ import { MediaListView } from "./MediaList";
 import MediaLog from "./MediaLog";
 import MediaSearch from "./MediaSearch";
 import MediaEdit from "./MediaEdit";
+import MediaOverview from "./MediaOverview";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -37,6 +38,9 @@ function MediaDialog({ listView, dialogClose }: MediaDialogProps) {
         {viewType === "log" && <MediaLog dialogClose={dialogClose} />}
         {viewType === "edit" && (
           <MediaEdit listView={listView} dialogClose={dialogClose} />
+        )}
+        {viewType === "overview" && (
+          <MediaOverview listView={listView} dialogClose={dialogClose} />
         )}
       </Card>
     </Dialog>

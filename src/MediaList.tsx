@@ -310,7 +310,7 @@ function MediaList() {
                                       onClick={() =>
                                         setListView({
                                           open: true,
-                                          type: "edit",
+                                          type: "overview",
                                           mediaID: day
                                         })
                                       }
