@@ -15,7 +15,13 @@ import {
 } from "@material-ui/pickers";
 import * as React from "react";
 import { useReducer } from "react";
-import { IconChevronLeft, IconRepeat, IconStar } from "./icons";
+import {
+  IconChevronLeft,
+  IconRepeat,
+  IconStar,
+  IconTrash,
+  IconText
+} from "./icons";
 import MediaInfo from "./MediaInfo";
 import { MediaListView } from "./MediaList";
 import { useStoreActions, useStoreState } from "./config/store";
@@ -31,7 +37,8 @@ const useStyles = makeStyles(theme => ({
   },
   actions: {
     display: "flex",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    alignItems: "center"
   }
 }));
 
@@ -115,12 +122,9 @@ function MediaEdit({ listView, dialogClose }: MediaEditProps) {
         artist={artist}
         dialogClose={dialogClose}
         poster={poster}
+        expanded={expanded}
+        overview={overview}
       />
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography>{overview}</Typography>
-        </CardContent>
-      </Collapse>
       <CardContent className={classes.actions}>
         <Typography variant="h6">
           {new Date(published).toLocaleDateString("en-us", {
@@ -132,27 +136,27 @@ function MediaEdit({ listView, dialogClose }: MediaEditProps) {
           name="half-rating"
           value={star}
           precision={0.5}
-          size="small"
           readOnly
-          emptyIcon={<IconStar width={15} height={15} empty fill="#03b021" />}
-          icon={
-            <IconStar width={15} height={15} fill="#03b021" stroke="#03b021" />
-          }
+          emptyIcon={<IconStar empty fill="#03b021" />}
+          icon={<IconStar fill="#03b021" stroke="#03b021" />}
         />
-        <IconButton>
-          <IconRepeat stroke={localSeen ? "blue" : undefined} />
-        </IconButton>
+        {overview !== "" && (
+          <IconButton
+            onClick={() => dispatch({ type: "expanded", payload: !expanded })}
+          >
+            <IconText />
+          </IconButton>
+        )}
+        {localSeen && (
+          <IconButton>
+            <IconRepeat stroke={localSeen ? "blue" : undefined} />
+          </IconButton>
+        )}
       </CardContent>
       <Divider />
       <CardActions className={classes.actions}>
-        <IconButton>
-          <IconRepeat stroke={localSeen ? "blue" : undefined} />
-        </IconButton>
-        <IconButton
-          onClick={() => dispatch({ type: "expanded", payload: !expanded })}
-        >
-          <IconRepeat stroke={localSeen ? "blue" : undefined} />
-        </IconButton>
+        <Button size="small">Delete</Button>
+        <Button size="small">Edit</Button>
       </CardActions>
     </>
   );

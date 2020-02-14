@@ -6,18 +6,32 @@ import Typography from "@material-ui/core/Typography";
 import * as React from "react";
 import { IconX } from "./icons";
 import { MediaInfo as MediaInfoProps } from "./config/storeMedia";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 
 interface MediaInfoInterface extends MediaInfoProps {
   dialogClose: () => void;
+  expanded?: boolean;
 }
+
+const useStyles = makeStyles(theme => ({
+  isBlurred: {
+    width: "100%",
+    position: "absolute",
+    height: "100%",
+    backdropFilter: "blur(7px)"
+  }
+}));
 
 function MediaInfo({
   title,
   published,
   artist,
   dialogClose,
-  poster
+  poster,
+  overview,
+  expanded
 }: MediaInfoInterface) {
+  const classes = useStyles();
   return (
     <>
       <CardHeader
@@ -43,7 +57,15 @@ function MediaInfo({
           </IconButton>
         }
       />
-      <CardMedia component="img" image={poster} title={title} />
+      <Box position="relative">
+        <CardMedia component="img" image={poster} title={title} />
+        {expanded && (
+          <>
+            <Box className={classes.isBlurred}></Box>
+            <Box>{overview}</Box>
+          </>
+        )}
+      </Box>
     </>
   );
 }
