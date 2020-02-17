@@ -14,15 +14,22 @@ interface MediaInfoInterface extends MediaInfoProps {
 }
 
 const useStyles = makeStyles(theme => ({
-  isBlurred: {
+  expandedContainer: {
+    backdropFilter: "blur(5px)"
+  },
+  expanded: {
     width: "100%",
     position: "absolute",
+    top: 0,
     height: "100%",
-    backdropFilter: "blur(7px)"
+    backdropFilter: "blur(5px) brightness(50%)",
+    color: theme.palette.background.paper,
+    padding: `${theme.spacing(3)}px ${theme.spacing(2)}px`,
+    overflow: "scroll"
   }
 }));
 
-function MediaInfo({
+function MediaCardInfo({
   title,
   published,
   artist,
@@ -57,17 +64,19 @@ function MediaInfo({
           </IconButton>
         }
       />
-      <Box position="relative">
+      <Box
+        className={expanded ? classes.expandedContainer : undefined}
+        position="relative"
+      >
         <CardMedia component="img" image={poster} title={title} />
         {expanded && (
-          <>
-            <Box className={classes.isBlurred}></Box>
-            <Box>{overview}</Box>
-          </>
+          <Box className={classes.expanded}>
+            <Typography variant="h6">{overview}</Typography>
+          </Box>
         )}
       </Box>
     </>
   );
 }
 
-export default MediaInfo;
+export default MediaCardInfo;

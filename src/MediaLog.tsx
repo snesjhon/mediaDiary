@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 import { MBDKEY, MDBURL } from "./config/constants";
 import { useStoreActions, useStoreState } from "./config/store";
 import { IconChevronLeft, IconRepeat, IconStar } from "./icons";
-import MediaInfo from "./MediaInfo";
+import MediaCardInfo from "./MediaCardInfo";
 
 const useStyles = makeStyles(theme => ({
   metadata: {
@@ -91,7 +91,7 @@ const MediaLog = ({ dialogClose }: MediaLogProps) => {
   } else {
     return (
       <>
-        <MediaInfo
+        <MediaCardInfo
           id={id}
           title={title}
           published={published}

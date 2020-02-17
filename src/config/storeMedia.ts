@@ -15,7 +15,7 @@ export interface MediaInfo {
 }
 
 export interface MediaAdd extends MediaInfo {
-  date: Date | "";
+  date: Date;
   seen: boolean;
   star: number;
   type: MediaTyper;

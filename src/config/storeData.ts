@@ -58,7 +58,12 @@ export interface Data extends DataSet {
   dataSet: Action<Data, DataSet>;
   dataGet: Thunk<Data, void, void, StoreModel>;
   dataPut: Thunk<Data, DataPut, void, StoreModel>;
-  dataDelete: Thunk<Data, string, void, StoreModel>;
+  dataDelete: Thunk<
+    Data,
+    { mediaID: string; cb: () => void },
+    void,
+    StoreModel
+  >;
   dataUpdate: Thunk<Data, DataUpdate, void, StoreModel>;
 }
 
@@ -184,7 +189,7 @@ export const data: Data = {
   }),
   dataDelete: thunk(async (actions, payload, { getStoreState }) => {
     const year = getStoreState().global.preferences.year;
-    const itemByDate = getStoreState().data.byDate[payload];
+    const itemByDate = getStoreState().data.byDate[payload.mediaID];
     const itemByID = itemByDate.id;
     if (year !== null) {
       const dbByID = db.collection(year).doc("byID");
@@ -219,14 +224,15 @@ export const data: Data = {
       const prByDate = db.runTransaction(transaction => {
         return transaction.get(dbByDate).then(() => {
           transaction.update(dbByDate, {
-            [payload]: firebase.firestore.FieldValue.delete()
+            [payload.mediaID]: firebase.firestore.FieldValue.delete()
           });
           return Promise.resolve();
         });
       });
 
       Promise.all([prByID, prByDate]).then(() => {
-        return actions.dataGet();
+        actions.dataGet();
+        return payload.cb();
       });
     } else {
       console.log("something went wrong with delete");
@@ -242,6 +248,7 @@ export const data: Data = {
           .then(byDate => {
             // have to get the ID first.
             const currentDoc = byDate.data();
+            debugger;
             if (
               typeof currentDoc !== "undefined" &&
               typeof currentDoc[payload.dayID] !== "undefined"
