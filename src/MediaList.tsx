@@ -10,7 +10,14 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { useStoreActions, useStoreState } from "./config/store";
 import { DataByDate } from "./config/storeData";
-import { IconFilm, IconMusic, IconPlus, IconStar, IconTV } from "./icons";
+import {
+  IconFilm,
+  IconMusic,
+  IconPlus,
+  IconStar,
+  IconTV,
+  IconRepeat
+} from "./icons";
 import MediaDialog, { viewType } from "./MediaDialog";
 
 const useStyles = makeStyles(theme => ({
@@ -208,7 +215,7 @@ function MediaList() {
                         type,
                         overview
                       } = byID[diaryDates[month][day].id];
-                      const { star, id } = diaryDates[month][day];
+                      const { star, seen } = diaryDates[month][day];
                       return (
                         <Box key={monthIndex + dayIndex}>
                           <Box
@@ -310,7 +317,7 @@ function MediaList() {
                                       onClick={() =>
                                         setListView({
                                           open: true,
-                                          type: "edit",
+                                          type: "overview",
                                           mediaID: day
                                         })
                                       }
@@ -319,7 +326,8 @@ function MediaList() {
                                     </Button>
                                   )}
                                 </Box>
-                                <Box pr={2}>
+                                <Box display="flex" pr={2}>
+                                  <Box pr={2}>{seen && <IconRepeat />}</Box>
                                   {type === "film" && (
                                     <IconFilm stroke="rgba(0, 0, 0, 0.54)" />
                                   )}

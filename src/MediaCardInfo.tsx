@@ -6,18 +6,39 @@ import Typography from "@material-ui/core/Typography";
 import * as React from "react";
 import { IconX } from "./icons";
 import { MediaInfo as MediaInfoProps } from "./config/storeMedia";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 
 interface MediaInfoInterface extends MediaInfoProps {
   dialogClose: () => void;
+  expanded?: boolean;
 }
 
-function MediaInfo({
+const useStyles = makeStyles(theme => ({
+  expandedContainer: {
+    backdropFilter: "blur(5px)"
+  },
+  expanded: {
+    width: "100%",
+    position: "absolute",
+    top: 0,
+    height: "100%",
+    backdropFilter: "blur(5px) brightness(50%)",
+    color: theme.palette.background.paper,
+    padding: `${theme.spacing(3)}px ${theme.spacing(2)}px`,
+    overflow: "scroll"
+  }
+}));
+
+function MediaCardInfo({
   title,
   published,
   artist,
   dialogClose,
-  poster
+  poster,
+  overview,
+  expanded
 }: MediaInfoInterface) {
+  const classes = useStyles();
   return (
     <>
       <CardHeader
@@ -43,9 +64,19 @@ function MediaInfo({
           </IconButton>
         }
       />
-      <CardMedia component="img" image={poster} title={title} />
+      <Box
+        className={expanded ? classes.expandedContainer : undefined}
+        position="relative"
+      >
+        <CardMedia component="img" image={poster} title={title} />
+        {expanded && (
+          <Box className={classes.expanded}>
+            <Typography variant="h6">{overview}</Typography>
+          </Box>
+        )}
+      </Box>
     </>
   );
 }
 
-export default MediaInfo;
+export default MediaCardInfo;
