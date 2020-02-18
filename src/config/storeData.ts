@@ -105,7 +105,8 @@ export const data: Data = {
       star,
       seen,
       date,
-      season
+      season,
+      episode
     } = payload;
     const year = getStoreState().global.preferences.year;
     if (year !== null) {
@@ -160,17 +161,19 @@ export const data: Data = {
 
       const prByDate = db.runTransaction(transaction => {
         const dateAdded = new Date();
-        const dataByDate = {
+        let dataByDate = {
           [dateAdded.getTime()]: {
             id: `${type}_${id}`,
             dateAdded,
             date,
-            published,
             type,
             seen,
-            star
+            star,
+            ...(season && { season }),
+            ...(episode && { episode })
           }
         };
+
         return transaction.get(dbByDate).then(movieDates => {
           if (!movieDates.exists) {
             transaction.set(dbByDate, dataByDate);
