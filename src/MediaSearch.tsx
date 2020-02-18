@@ -21,7 +21,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Skeleton from "@material-ui/lab/Skeleton";
 import * as React from "react";
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useRef } from "react";
 import { MBDKEY } from "./config/constants";
 import { useStoreActions } from "./config/store";
 import { MediaSelected, MediaTypes, MediaTyper } from "./config/storeMedia";
@@ -129,8 +129,9 @@ interface MediaLogProps {
 }
 
 function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
-  const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
+  const InputRef = useRef<HTMLInputElement>(null);
   const classes = useStyles();
+  const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
   const [
     { expanded, searchInput, mediaResult, isSearching, type },
     dispatch
@@ -141,6 +142,7 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
     isSearching: false,
     type: "film"
   });
+
   const bouncedSearch = useDebounce(searchInput, 500);
 
   useEffect(() => {
@@ -158,6 +160,12 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
       dispatch({ type: "noResults" });
     }
   }, [bouncedSearch, type]);
+
+  useEffect(() => {
+    if (InputRef.current) {
+      InputRef.current.focus();
+    }
+  }, [type]);
 
   return (
     <>
@@ -197,6 +205,7 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
         </Box>
         <Box my={2} />
         <TextField
+          inputRef={InputRef}
           fullWidth
           autoFocus
           variant="outlined"
@@ -268,10 +277,10 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
   }
 
   function mediaNormalize(item: any) {
-    let id, poster, title, published, overview, watched, artist, mbid;
+    let id, poster, title, published, overview, watched, artist;
     if (type === "film") {
       id = item.id.toString();
-      poster = `https://image.tmdb.org/t/p/w400/${item.poster_path}`;
+      poster = item.poster_path;
       title = item.title;
       published = item.release_date;
       overview = item.overview;
@@ -279,7 +288,7 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
       watched = "Watched";
     } else if (type === "tv") {
       id = item.id.toString();
-      poster = `https://image.tmdb.org/t/p/w400/${item.poster_path}`;
+      poster = item.poster_path;
       title = item.name;
       published = item.first_air_date;
       overview = item.overview;
@@ -287,7 +296,7 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
       watched = "Watched";
     } else if (type === "album") {
       id = encodeURIComponent(item.artistName + item.collectionName);
-      poster = item.artworkUrl100.replace("100x100", "1000x1000");
+      poster = item.artworkUrl100;
       title = item.collectionName;
       artist = item.artistName;
       published = item.releaseDate;

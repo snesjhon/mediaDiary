@@ -50,12 +50,16 @@ function MediaCardInfo({
                 year: "numeric"
               })}
             </Typography>
-            <Box mx={1}>
-              <Typography color="textSecondary">·</Typography>
-            </Box>
-            <Typography variant="subtitle1" color="textSecondary">
-              {artist}
-            </Typography>
+            {artist && (
+              <>
+                <Box mx={1}>
+                  <Typography color="textSecondary">·</Typography>
+                </Box>
+                <Typography variant="subtitle1" color="textSecondary">
+                  {artist}
+                </Typography>
+              </>
+            )}
           </Box>
         }
         action={

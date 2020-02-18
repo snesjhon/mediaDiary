@@ -13,21 +13,14 @@ import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
 } from "@material-ui/pickers";
+import * as firebase from "firebase/app";
 import * as React from "react";
-import { useReducer, useState } from "react";
-import {
-  IconChevronLeft,
-  IconRepeat,
-  IconStar,
-  IconTrash,
-  IconText
-} from "./icons";
+import { useReducer } from "react";
+import { useStoreActions, useStoreState } from "./config/store";
+import { IconChevronLeft, IconRepeat, IconStar, IconText } from "./icons";
 import MediaCardInfo from "./MediaCardInfo";
 import { MediaListView } from "./MediaList";
-import { useStoreActions, useStoreState } from "./config/store";
-import Collapse from "@material-ui/core/Collapse";
-import { DataByID, DataByDate } from "./config/storeData";
-import * as firebase from "firebase/app";
+import { createPosterURL } from "./utilities/helpers";
 
 const useStyles = makeStyles(theme => ({
   metadata: {
@@ -124,6 +117,11 @@ function MediaCard({ listView, dialogClose }: MediaCardProps) {
     localSeen: seen
   });
 
+  const localPoster = createPosterURL({
+    type,
+    poster
+  });
+
   // console.log(localDate);
 
   return (
@@ -134,7 +132,7 @@ function MediaCard({ listView, dialogClose }: MediaCardProps) {
         published={published}
         artist={artist}
         dialogClose={dialogClose}
-        poster={poster}
+        poster={localPoster}
         expanded={expanded}
         overview={overview}
       />
@@ -176,16 +174,16 @@ function MediaInfo({
   const dataDelete = useStoreActions(actions => actions.data.dataDelete);
 
   const { mediaID } = listView;
-  const { id, seen, star } = byDate[
+  const { id, seen, star, date } = byDate[
     typeof mediaID !== "undefined" ? mediaID : ""
   ];
-  const { overview, published } = byID[id];
+  const { overview } = byID[id];
   const classes = useStyles();
   return (
     <>
       <CardContent className={classes.actions}>
         <Typography variant="h6">
-          {new Date(published).toLocaleDateString("en-us", {
+          {new Date(date.toDate()).toLocaleDateString("en-us", {
             month: "short",
             day: "numeric"
           })}

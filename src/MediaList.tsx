@@ -19,6 +19,7 @@ import {
   IconRepeat
 } from "./icons";
 import MediaDialog, { viewType } from "./MediaDialog";
+import { createPosterURL } from "./utilities/helpers";
 
 const useStyles = makeStyles(theme => ({
   tableHeadings: {
@@ -216,6 +217,11 @@ function MediaList() {
                         overview
                       } = byID[diaryDates[month][day].id];
                       const { star, seen } = diaryDates[month][day];
+                      const localPoster = createPosterURL({
+                        type,
+                        poster,
+                        size: 200
+                      });
                       return (
                         <Box key={monthIndex + dayIndex}>
                           <Box
@@ -238,7 +244,7 @@ function MediaList() {
                             <Box>
                               <img
                                 className={classes.mediaImage}
-                                src={poster}
+                                src={localPoster}
                               />
                             </Box>
                             <Box display="flex" flexDirection="column">
