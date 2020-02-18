@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const MediaProfile = () => {
+function Profile() {
   const classes = useStyles();
   const preferences = useStoreState(state => state.global.preferences);
   const userPutPreferences = useStoreActions(
@@ -74,6 +74,6 @@ const MediaProfile = () => {
       </Box>
     </Container>
   );
-};
+}
 
-export default MediaProfile;
+export default Profile;

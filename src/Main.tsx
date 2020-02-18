@@ -9,8 +9,8 @@ import {
 import About from "./About";
 import { useStoreState } from "./config/store";
 import Media from "./Media";
-import MediaProfile from "./MediaProfile";
-import MediaSetup from "./MediaSetup";
+import Profile from "./Profile";
+import Setup from "./Setup";
 
 const Main = () => {
   const user = useStoreState(state => state.global.user);
@@ -30,10 +30,10 @@ const Main = () => {
           <Media />
         </PrivateRoute>
         <PrivateRoute exact path="/setup">
-          <MediaSetup />
+          <Setup />
         </PrivateRoute>
         <PrivateRoute exact path="/profile">
-          <MediaProfile />
+          <Profile />
         </PrivateRoute>
       </Switch>
     </Router>

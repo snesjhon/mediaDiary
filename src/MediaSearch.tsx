@@ -10,9 +10,9 @@
 import Box from "@material-ui/core/Box";
 import CardContent from "@material-ui/core/CardContent";
 import Collapse from "@material-ui/core/Collapse";
-import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -24,10 +24,9 @@ import * as React from "react";
 import { useEffect, useReducer } from "react";
 import { MBDKEY } from "./config/constants";
 import { useStoreActions } from "./config/store";
-import { MediaSelected, MediaTypes, MediaTyper } from "./config/storeMedia";
+import { MediaSelected, MediaTyper, MediaTypes } from "./config/storeMedia";
 import useDebounce from "./hooks/useDebounce";
-import { makeStyles } from "@material-ui/core/styles";
-import { IconFilm, IconMusic, IconTV, IconSearch, IconX } from "./icons";
+import { IconFilm, IconMusic, IconSearch, IconTV, IconX } from "./icons";
 
 interface MediaSearchListProps extends MediaTypes {
   item: any;
