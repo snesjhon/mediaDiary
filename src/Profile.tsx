@@ -11,6 +11,7 @@ import * as React from "react";
 import { useState } from "react";
 import { useStoreActions, useStoreState } from "./config/store";
 import Navigation from "./Navigation";
+import { Typography, Divider } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -29,15 +30,31 @@ function Profile() {
   const [localTheme, setLocalTheme] = useState(preferences.theme);
   const [localYear, setLocalYear] = useState(preferences.year);
 
+  const currentDate = new Date();
+  const yearsRange = Array.from(
+    { length: 11 },
+    (_, i) => currentDate.getFullYear() - i
+  );
+
+  const yearsSelected = yearsRange.filter(year =>
+    preferences.years.includes(year.toString())
+  );
+  const yearsAvailable = yearsRange.filter(
+    year => !preferences.years.includes(year.toString())
+  );
+
   return (
     <Container maxWidth="md">
       <Navigation />
       <Box borderColor="grey.300" border={1} borderTop={0} p={2}>
-        <Box mb={2} fontWeight="fontWeightMedium" fontSize="h5.fontSize">
-          Preferences
+        <Typography variant="h5">Settings</Typography>
+        <Box pb={2} pt={1}>
+          <Divider />
         </Box>
-        <FormControl className={classes.formControl}>
-          <InputLabel id="theme-label">Theme</InputLabel>
+        <Box display="flex">
+          <Box fontWeight="bolder">
+            <Typography>Theme</Typography>
+          </Box>
           <Select
             labelId="theme-label"
             id="theme"
@@ -52,7 +69,31 @@ function Profile() {
             <MenuItem value="light">Light</MenuItem>
             <MenuItem value="dark">Dark</MenuItem>
           </Select>
-        </FormControl>
+        </Box>
+        <Box>
+          <Typography variant="h5">Years</Typography>
+          <Typography>Years Available</Typography>
+
+          <Select
+            value={localYear}
+            onChange={() => {}}
+            // onChange={e => {
+            //   const target = e.target.value;
+            //   if (target === "light" || target === "dark") {
+            //     setLocalTheme(target);
+            //   }
+            // }}
+          >
+            {yearsSelected.map((e, i) => (
+              <MenuItem key={e + i} value={e}>
+                {e}
+              </MenuItem>
+            ))}
+            {/* <MenuItem value="light">Light</MenuItem>
+              <MenuItem value="dark">Dark</MenuItem> */}
+          </Select>
+          <Typography>Add a new Year</Typography>
+        </Box>
 
         <TextField
           label="Year"
@@ -65,7 +106,11 @@ function Profile() {
             variant="contained"
             disableElevation
             onClick={() =>
-              userPutPreferences({ theme: localTheme, year: localYear })
+              userPutPreferences({
+                theme: localTheme,
+                year: localYear,
+                years: []
+              })
             }
           >
             Save
@@ -77,3 +122,7 @@ function Profile() {
 }
 
 export default Profile;
+
+// <Box mb={2} fontWeight="fontWeightMedium" fontSize="h5.fontSize">
+// Add a new year
+// </Box>

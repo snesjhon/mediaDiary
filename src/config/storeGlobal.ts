@@ -9,6 +9,7 @@ export type User = firebase.User | null;
 export type UserPreferences = {
   theme: UserTheme;
   year: string | null;
+  years: string[];
 };
 
 export interface Global {
@@ -27,7 +28,8 @@ export const global: Global = {
   user: null,
   preferences: {
     theme: "light",
-    year: null
+    year: null,
+    years: []
   },
   userGet: thunk(async actions => {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -58,7 +60,8 @@ export const global: Global = {
           user: payload,
           preferences: {
             theme: data.theme,
-            year: data.year
+            year: data.year,
+            years: data.years
           }
         });
       }
@@ -69,7 +72,8 @@ export const global: Global = {
         user: payload,
         preferences: {
           theme: "light",
-          year: null
+          year: null,
+          years: []
         }
       });
     }
@@ -96,7 +100,8 @@ export const global: Global = {
         actions.userSet(null);
         actions.userSetPreferences({
           theme: "light",
-          year: null
+          year: null,
+          years: []
         });
         getStoreActions().data.dataSet({ byID: {}, byDate: {} });
         sessionStorage.clear();
