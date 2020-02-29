@@ -30,6 +30,10 @@ const useStyles = makeStyles(theme => ({
   },
   year: {
     color: theme.palette.secondary.main
+  },
+  avatar: {
+    width: theme.spacing(4),
+    height: theme.spacing(4)
   }
 }));
 
@@ -51,69 +55,72 @@ function Navigation() {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <Box className={classes.root}>
       <AppBar
         className={classes.navColors}
         position="static"
         variant="outlined"
       >
-        <Toolbar variant="dense">
-          <Link
-            className={classes.linkColor}
-            variant="h6"
-            component={RouterLink}
-            to="/"
-          >
-            MediaDiary
-          </Link>
-          <Box display="flex" pl={1} flexGrow={1}>
-            <Typography className={classes.divider} variant="h6">
-              /
-            </Typography>
-            <Typography className={classes.year} variant="h6">
-              {" "}
-              {year}
-            </Typography>
-          </Box>
-
-          <Button
-            aria-controls="user-menu"
-            aria-haspopup="true"
-            onClick={handleClick}
-          >
-            <Avatar
-              alt={(user !== null && user.displayName) || ""}
-              src={(user !== null && user.photoURL) || ""}
-            />
-          </Button>
-          <Menu
-            id="user-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-            getContentAnchorEl={null}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "center"
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "center"
-            }}
-          >
-            <MenuItem
+        <Box px={2}>
+          <Toolbar variant="dense" disableGutters={true}>
+            <Link
+              className={classes.linkColor}
+              variant="h6"
               component={RouterLink}
-              to="/profile"
-              onClick={() => handleClose()}
+              to="/"
             >
-              Profile
-            </MenuItem>
-            <MenuItem onClick={() => userLogout()}>Logout</MenuItem>
-          </Menu>
-        </Toolbar>
+              MediaDiary
+            </Link>
+            <Box display="flex" pl={1} flexGrow={1}>
+              <Typography className={classes.divider} variant="h6">
+                /
+              </Typography>
+              <Typography className={classes.year} variant="h6">
+                {" "}
+                {year}
+              </Typography>
+            </Box>
+
+            <Button
+              aria-controls="user-menu"
+              aria-haspopup="true"
+              onClick={handleClick}
+            >
+              <Avatar
+                className={classes.avatar}
+                alt={(user !== null && user.displayName) || ""}
+                src={(user !== null && user.photoURL) || ""}
+              />
+            </Button>
+            <Menu
+              id="user-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              getContentAnchorEl={null}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center"
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "center"
+              }}
+            >
+              <MenuItem
+                component={RouterLink}
+                to="/profile"
+                onClick={() => handleClose()}
+              >
+                Profile
+              </MenuItem>
+              <MenuItem onClick={() => userLogout()}>Logout</MenuItem>
+            </Menu>
+          </Toolbar>
+        </Box>
       </AppBar>
-    </div>
+    </Box>
   );
 }
 

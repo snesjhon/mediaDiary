@@ -74,7 +74,7 @@ export const data: Data = {
     state.byID = payload.byID;
     state.byDate = payload.byDate;
   }),
-  dataGet: thunk(async (actions, payload, { getStoreState }) => {
+  dataGet: thunk(async (actions, _, { getStoreState }) => {
     const year = getStoreState().global.preferences.year;
     if (year !== null) {
       const byID = await db
@@ -110,8 +110,8 @@ export const data: Data = {
     } = payload;
     const year = getStoreState().global.preferences.year;
     if (year !== null) {
-      const dbByID = db.collection(year).doc("byID");
-      const dbByDate = db.collection(year).doc("byDate");
+      const dbByID = db.collection(year.toString()).doc("byID");
+      const dbByDate = db.collection(year.toString()).doc("byDate");
 
       const prByID = db.runTransaction(transaction => {
         let dataByID = {
@@ -195,8 +195,8 @@ export const data: Data = {
     const itemByDate = getStoreState().data.byDate[payload.mediaID];
     const itemByID = itemByDate.id;
     if (year !== null) {
-      const dbByID = db.collection(year).doc("byID");
-      const dbByDate = db.collection(year).doc("byDate");
+      const dbByID = db.collection(year.toString()).doc("byID");
+      const dbByDate = db.collection(year.toString()).doc("byDate");
 
       const prByID = db.runTransaction(transaction => {
         return transaction.get(dbByID).then(movieCollection => {
@@ -244,7 +244,7 @@ export const data: Data = {
   dataUpdate: thunk(async (actions, payload, { getStoreState }) => {
     const year = getStoreState().global.preferences.year;
     if (year !== null) {
-      const dbByDate = db.collection(year).doc("byDate");
+      const dbByDate = db.collection(year.toString()).doc("byDate");
       db.runTransaction(transaction => {
         return transaction
           .get(dbByDate)
