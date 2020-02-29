@@ -9,7 +9,7 @@ export type User = firebase.User | null;
 export type UserPreferences = {
   theme: UserTheme;
   year: string | null;
-  years: string[];
+  years: number[];
 };
 
 export interface Global {

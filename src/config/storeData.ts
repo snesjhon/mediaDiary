@@ -78,11 +78,11 @@ export const data: Data = {
     const year = getStoreState().global.preferences.year;
     if (year !== null) {
       const byID = await db
-        .collection(year)
+        .collection(year.toString())
         .doc("byID")
         .get();
       const byDate = await db
-        .collection(year)
+        .collection(year.toString())
         .doc("byDate")
         .get();
       actions.dataSet({
