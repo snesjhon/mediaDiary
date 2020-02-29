@@ -89,7 +89,7 @@ function Navigation() {
               <Avatar
                 className={classes.avatar}
                 alt={(user !== null && user.displayName) || ""}
-                src={(user !== null && user.photoURL) || ""}
+                src={(user !== null && user.photoURL + "=s50-c") || ""}
               />
             </Button>
             <Menu

@@ -58,7 +58,7 @@ function Profile() {
               <Box textAlign="center">
                 <img
                   className={classes.avatar}
-                  src={(user !== null && user.photoURL) || ""}
+                  src={(user !== null && user.photoURL + "=s130-c") || ""}
                 />
                 <Typography component="div">
                   <Box fontWeight="fontWeightBold">
