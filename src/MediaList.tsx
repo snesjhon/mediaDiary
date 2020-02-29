@@ -36,8 +36,7 @@ const useStyles = makeStyles(theme => ({
     zIndex: 9,
     "& > *": {
       textTransform: "uppercase",
-      color: theme.palette.grey[500],
-      fontSize: theme.typography.button.fontSize
+      color: theme.palette.grey[500]
     }
   },
   tableHeadingList: {
@@ -45,6 +44,17 @@ const useStyles = makeStyles(theme => ({
     gridGap: "2rem",
     alignItems: "center",
     marginBottom: theme.spacing(1)
+  },
+  tableHeadingIcons: {
+    display: "flex",
+    "& > div": {
+      display: "flex",
+      alignItems: "center"
+    },
+    "& > div:hover": {
+      cursor: "pointer",
+      color: theme.palette.primary.main
+    }
   },
   mediaContainer: {
     gridGap: "1rem",
@@ -112,31 +122,44 @@ function MediaList() {
   const byDate = useStoreState(state => state.data.byDate);
   const dataGet = useStoreActions(actions => actions.data.dataGet);
 
-  // const [dialogOpen, setDialogOpen] = useState(false);
   const [listView, setListView] = useState<MediaListView>({
     open: false,
     type: "search",
     mediaID: ""
   });
+  const [filterBy, setFilterBy] = useState("");
 
   useEffect(() => {
     dataGet();
   }, [dataGet]);
 
   if (typeof byID !== "undefined" && typeof byDate !== "undefined") {
-    const diaryDates = Object.keys(byDate).reduce<{
-      [key: string]: {
-        [key: string]: DataByDate;
-      };
+    const diaryDates = Object.keys(byDate)
+      .filter(e => (filterBy === "" ? e : byDate[e].type === filterBy))
+      .reduce<{
+        [key: string]: {
+          [key: string]: DataByDate;
+        };
+      }>((a, c) => {
+        const dateString = byDate[c].date.toDate().toLocaleDateString("en-us", {
+          month: "short",
+          year: "numeric"
+        });
+        a[`01-${dateString}`] = Object.assign(
+          { ...a[`01-${dateString}`] },
+          { [c]: byDate[c] }
+        );
+        return a;
+      }, {});
+
+    const dataCounts = Object.keys(byID).reduce<{
+      [key: string]: number;
     }>((a, c) => {
-      const dateString = byDate[c].date.toDate().toLocaleDateString("en-us", {
-        month: "short",
-        year: "numeric"
-      });
-      a[`01-${dateString}`] = Object.assign(
-        { ...a[`01-${dateString}`] },
-        { [c]: byDate[c] }
-      );
+      if (typeof a[byID[c]["type"]] !== "undefined") {
+        a[byID[c]["type"]] = ++a[byID[c]["type"]];
+      } else {
+        a[byID[c]["type"]] = 1;
+      }
       return a;
     }, {});
 
@@ -148,49 +171,28 @@ function MediaList() {
             <Box textAlign="center">Day</Box>
             <Box>Poster</Box>
             <Box>Title</Box>
-            <Breadcrumbs aria-label="breadcrumb">
-              <Box display="flex">
-                <Typography
-                  align="center"
-                  style={{
-                    color: "#9e9e9e",
-                    display: "flex",
-                    alignItems: "center"
-                  }}
-                >
-                  32
-                  <Box display="flex" component="span" ml={1}>
-                    <IconFilm />
-                  </Box>
-                </Typography>
-              </Box>
-              <Typography
-                align="center"
-                style={{
-                  color: "#9e9e9e",
-                  display: "flex",
-                  alignItems: "center"
-                }}
-              >
-                20
-                <Box display="flex" component="span" ml={1}>
-                  <IconTV />
+            <Box className={classes.tableHeadingIcons}>
+              {filterBy !== "" && (
+                <Button size="small" onClick={() => setFilterBy("")}>
+                  X
+                </Button>
+              )}
+              {Object.keys(dataCounts).map((e: string, i: number) => (
+                <Box key={e} onClick={() => setFilterBy(e)}>
+                  <Typography component="div">
+                    <Box mr={1}>{dataCounts[e]}</Box>
+                  </Typography>
+                  {e === "tv" && <IconTV />}
+                  {e === "film" && <IconFilm />}
+                  {e === "album" && <IconMusic />}
+                  {(i === 0 || i === 1) && (
+                    <Typography component="div">
+                      <Box px={2}>/</Box>
+                    </Typography>
+                  )}
                 </Box>
-              </Typography>
-              <Typography
-                align="center"
-                style={{
-                  color: "#9e9e9e",
-                  display: "flex",
-                  alignItems: "center"
-                }}
-              >
-                11
-                <Box display="flex" component="span" ml={1}>
-                  <IconMusic />
-                </Box>
-              </Typography>
-            </Breadcrumbs>
+              ))}
+            </Box>
           </Box>
         </Box>
         {Object.keys(diaryDates)
