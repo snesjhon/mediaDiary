@@ -75,7 +75,9 @@ function MediaCardInfo({
         <CardMedia component="img" image={poster} title={title} />
         {expanded && (
           <Box className={classes.expanded}>
-            <Typography variant="h6">{overview}</Typography>
+            <Typography variant="h6" component="div">
+              <Box fontWeight={400}>{overview}</Box>
+            </Typography>
           </Box>
         )}
       </Box>

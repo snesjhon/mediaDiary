@@ -67,11 +67,23 @@ const useStyles = makeStyles(theme => ({
     gridTemplateColumns: "3rem 6rem 1fr 1fr",
     gridGap: "2rem"
   },
+  mediaListTitle: {
+    "&:hover": {
+      color: theme.palette.primary.main,
+      cursor: "pointer"
+    }
+  },
   mediaImage: {
     display: "block",
     maxWidth: "100%",
     border: `1px solid ${theme.palette.grey[300]}`,
-    borderRadius: "5px"
+    borderRadius: "5px",
+    "&:hover": {
+      border: `1px solid ${theme.palette.primary.main}`,
+      outline: `2px solid ${theme.palette.primary.main}`,
+      borderRadius: 0,
+      cursor: "pointer"
+    }
   },
   mediaFab: {
     position: "sticky",
@@ -89,6 +101,8 @@ export interface MediaListView {
   open: boolean;
   type: viewType;
   mediaID?: string;
+  showOverview?: boolean;
+  showEdit?: boolean;
 }
 
 function MediaList() {
@@ -129,7 +143,7 @@ function MediaList() {
     return (
       <>
         <Box className={classes.tableHeadings}>
-          <Box>Month</Box>
+          <Box mb={1}>Month</Box>
           <Box display="grid" className={classes.tableHeadingList}>
             <Box textAlign="center">Day</Box>
             <Box>Poster</Box>
@@ -193,7 +207,7 @@ function MediaList() {
                 <Box mt={1}>
                   <Typography
                     variant="h4"
-                    style={{ position: "sticky", top: "3rem" }}
+                    style={{ position: "sticky", top: "4rem" }}
                   >
                     {new Date(month).toLocaleDateString("en-us", {
                       month: "short"
@@ -229,26 +243,41 @@ function MediaList() {
                             className={classes.mediaList}
                             py={1}
                           >
-                            <Box textAlign="center">
-                              <Typography
-                                variant="h6"
-                                style={{ marginTop: "0.5rem" }}
-                              >
+                            <Typography variant="h6" component="h6">
+                              <Box textAlign="center" mt={1}>
                                 {new Date(
                                   diaryDates[month][day].date.toDate()
                                 ).toLocaleDateString("en-us", {
                                   day: "numeric"
                                 })}
-                              </Typography>
-                            </Box>
+                              </Box>
+                            </Typography>
                             <Box>
                               <img
                                 className={classes.mediaImage}
                                 src={localPoster}
+                                onClick={() =>
+                                  setListView({
+                                    open: true,
+                                    type: "edit",
+                                    mediaID: day
+                                  })
+                                }
                               />
                             </Box>
                             <Box display="flex" flexDirection="column">
-                              <Typography variant="h5" component="h5">
+                              <Typography
+                                className={classes.mediaListTitle}
+                                variant="h5"
+                                component="h5"
+                                onClick={() =>
+                                  setListView({
+                                    open: true,
+                                    type: "edit",
+                                    mediaID: day
+                                  })
+                                }
+                              >
                                 {title}
                               </Typography>
                               <Box display="flex" my={1}>
@@ -311,7 +340,8 @@ function MediaList() {
                                       setListView({
                                         open: true,
                                         type: "edit",
-                                        mediaID: day
+                                        mediaID: day,
+                                        showEdit: true
                                       })
                                     }
                                   >
@@ -323,8 +353,9 @@ function MediaList() {
                                       onClick={() =>
                                         setListView({
                                           open: true,
-                                          type: "overview",
-                                          mediaID: day
+                                          type: "edit",
+                                          mediaID: day,
+                                          showOverview: true
                                         })
                                       }
                                     >

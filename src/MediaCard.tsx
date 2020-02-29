@@ -28,12 +28,15 @@ const useStyles = makeStyles(theme => ({
     gridTemplateColumns: "1fr 0.5fr 0.3fr",
     alignItems: "center",
     gridGap: "1.5rem"
-    // marginBottom: 0
   },
   actions: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center"
+  },
+  itemActive: {
+    boxShadow: `0 0 0 2px ${theme.palette.primary.main}`,
+    backgroundColor: "rgba(0, 0, 0, 0.04)"
   }
 }));
 
@@ -100,7 +103,7 @@ function MediaCard({ listView, dialogClose }: MediaCardProps) {
   const byDate = useStoreState(state => state.data.byDate);
   const byID = useStoreState(state => state.data.byID);
 
-  const { mediaID } = listView;
+  const { mediaID, showOverview, showEdit } = listView;
   const { id, seen, star, date, type } = byDate[
     typeof mediaID !== "undefined" ? mediaID : ""
   ];
@@ -110,8 +113,8 @@ function MediaCard({ listView, dialogClose }: MediaCardProps) {
     { expanded, editing, localDate, localSeen, localStar },
     dispatch
   ] = useReducer(MediaEditReducer, {
-    expanded: false,
-    editing: false,
+    expanded: showOverview,
+    editing: showEdit,
     localDate: date,
     localStar: star,
     localSeen: seen
@@ -121,8 +124,6 @@ function MediaCard({ listView, dialogClose }: MediaCardProps) {
     type,
     poster
   });
-
-  // console.log(localDate);
 
   return (
     <>
@@ -198,6 +199,7 @@ function MediaInfo({
         />
         {overview !== "" && (
           <IconButton
+            className={expanded ? classes.itemActive : ""}
             onClick={() => dispatch({ type: "expanded", payload: !expanded })}
           >
             <IconText />
@@ -247,16 +249,8 @@ function MediaEdit({
   dispatch,
   dialogClose
 }: MediaEditProps) {
-  const byDate = useStoreState(state => state.data.byDate);
-  // const byID = useStoreState(state => state.data.byID);
   const mediaUpdate = useStoreActions(actions => actions.data.dataUpdate);
-  // const mediaPutFilm = useStoreActions(actions => actions.media.mediaPutFilm);
-  // const mediaPutTV = useStoreActions(actions => actions.media.mediaPutTV);
-  // const mediaPutAlbum = useStoreActions(actions => actions.media.mediaPutAlbum);
-
   const { mediaID } = listView;
-  const { id } = byDate[typeof mediaID !== "undefined" ? mediaID : ""];
-  // const { artist, overview, poster, title, season, published } = byID[id];
   const classes = useStyles();
   return (
     <>
@@ -270,7 +264,6 @@ function MediaEdit({
             value={localDate.toDate()}
             autoOk={true}
             onChange={e => {
-              debugger;
               return e !== null
                 ? dispatch({
                     type: "setLocalDate",
@@ -322,7 +315,6 @@ function MediaEdit({
 
   function handleMediaUpdate() {
     if (typeof mediaID !== "undefined") {
-      debugger;
       return mediaUpdate({
         dayID: mediaID,
         modifiedDate: localDate,
@@ -335,155 +327,3 @@ function MediaEdit({
 }
 
 export default MediaCard;
-
-// const [date, setDate] = useState(new Date());
-// const [seen, setSeen] = useState(false);
-// const [star, setStar] = useState(0);
-// const [info, setInfo] = useState();
-// const [localArtist, setLocalArtist] = useState(artist);
-// const [seasonInfo, setSeasonInfo] = useState();
-// const [loading, setLoading] = useState(type === "tv" ? true : false);
-
-// if (loading) {
-//   return <div>loading</div>;
-// } else {
-// return (
-//   <>
-//     <MediaInfo
-//       id={id}
-//       title={title}
-//       published={published}
-//       artist={localArtist}
-//       dialogClose={dialogClose}
-//       poster={poster}
-//     />
-//     <CardContent className={classes.metadata}>
-//       <Typography variant="h6">
-//         <MuiPickersUtilsProvider utils={DayjsUtils}>
-//           <KeyboardDatePicker
-//             disableToolbar
-//             disableFuture
-//             variant="inline"
-//             format="MM/DD/YYYY"
-//             value={date}
-//             autoOk={true}
-//             onChange={e => (e !== null ? setDate(e.toDate()) : null)}
-//             KeyboardButtonProps={{
-//               "aria-label": "change date"
-//             }}
-//           />
-//         </MuiPickersUtilsProvider>
-//       </Typography>
-// <Rating
-//   value={star}
-//   name="rated"
-//   precision={0.5}
-//   onChange={(_, newValue: number) => setStar(newValue)}
-//   emptyIcon={<IconStar empty fill="#03b021" />}
-//   icon={<IconStar fill="#03b021" stroke="#03b021" />}
-// />
-//       <Box>
-//         <Tooltip title="Seen Before?" placement="top">
-//           <IconButton onClick={() => setSeen(!seen)}>
-//             <IconRepeat stroke={seen ? "blue" : undefined} />
-//           </IconButton>
-//         </Tooltip>
-//       </Box>
-//     </CardContent>
-//     <Divider />
-//     <CardActions className={classes.actions}>
-//       <IconButton size="small" onClick={() => mediaSelect()}>
-//         <IconChevronLeft />
-//       </IconButton>
-//       <Button onClick={mediaSet}>Save</Button>
-//     </CardActions>
-//   </>
-// );
-// }
-
-// function mediaSet() {
-//   const mediaObj = {
-//     type,
-//     id,
-//     overview,
-//     poster,
-//     published,
-//     title,
-//     seen,
-//     star,
-//     date
-//   };
-//   if (type === "film") {
-//     const filmObj = {
-//       ...mediaObj,
-//       artist
-//     };
-//     mediaPutFilm(filmObj);
-//   } else if (type === "tv") {
-//     const tvObj = {
-//       ...mediaObj,
-//       id: seasonInfo.id,
-//       title: `${title} (${seasonInfo.name})`,
-//       artist: info.created_by.map((e: any) => e.name).join(", "),
-//       season: seasonInfo.season_number,
-//       overview: seasonInfo.overview,
-//       published: seasonInfo.air_date,
-//       poster: `https://image.tmdb.org/t/p/w400/${seasonInfo.poster_path}`
-//     };
-
-//     mediaPutTV(tvObj);
-//   } else {
-//     const albumObj = {
-//       ...mediaObj,
-//       artist
-//     };
-//     mediaPutAlbum(albumObj);
-//   }
-//   dialogClose();
-// }
-
-//   <Typography variant="h6">
-//   <MuiPickersUtilsProvider utils={DayjsUtils}>
-//     <KeyboardDatePicker
-//       disableToolbar
-//       disableFuture
-//       variant="inline"
-//       format="MM/DD/YYYY"
-//       value={localDate}
-//       autoOk={true}
-//       onChange={e =>
-//         e !== null
-//           ? dispatch({ type: "setLocalDate", payload: e.toDate() })
-//           : null
-//       }
-//       KeyboardButtonProps={{
-//         "aria-label": "change date"
-//       }}
-//     />
-//   </MuiPickersUtilsProvider>
-// </Typography>
-{
-  /* <Rating
-  value={localStar}
-  name="rated"
-  precision={0.5}
-  onChange={(_, newValue: number) =>
-    dispatch({ type: "setLocalStar", payload: newValue })
-  }
-  emptyIcon={<IconStar empty fill="#03b021" />}
-  icon={<IconStar fill="#03b021" stroke="#03b021" />}
-/> */
-}
-// <Box>
-//   <Tooltip title="Seen Before?" placement="top">
-{
-  /* <IconButton
-  onClick={() =>
-    dispatch({ type: "setLocalSeen", payload: !localSeen })
-  }
->
-  <IconRepeat stroke={localSeen ? "blue" : undefined} />
-</IconButton> */
-}
-//   </Tooltip>
-// </Box>
