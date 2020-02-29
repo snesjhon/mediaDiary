@@ -250,6 +250,7 @@ function MediaEdit({
   dialogClose
 }: MediaEditProps) {
   const mediaUpdate = useStoreActions(actions => actions.data.dataUpdate);
+  const dataDelete = useStoreActions(actions => actions.data.dataDelete);
   const { mediaID } = listView;
   const classes = useStyles();
   return (
@@ -306,6 +307,19 @@ function MediaEdit({
         >
           <IconChevronLeft />
         </IconButton>
+        <Button
+          size="small"
+          onClick={() => {
+            if (typeof mediaID !== "undefined") {
+              return dataDelete({
+                mediaID,
+                cb: () => dialogClose()
+              });
+            }
+          }}
+        >
+          Delete
+        </Button>
         <Button size="small" onClick={handleMediaUpdate}>
           Save
         </Button>
