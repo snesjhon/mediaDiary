@@ -8,7 +8,7 @@
  */
 import { useEffect, useState } from "react";
 
-export default (value, delay) => {
+export default (value: string, delay: number) => {
   // State and setters for debounced value
   const [debouncedValue, setDebouncedValue] = useState(value);
 
