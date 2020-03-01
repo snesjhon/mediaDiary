@@ -1,6 +1,3 @@
-import Box from "@material-ui/core/Box";
-import Container from "@material-ui/core/Container";
-import makeStyles from "@material-ui/core/styles/makeStyles";
 import * as React from "react";
 import { useEffect } from "react";
 import {
@@ -11,18 +8,11 @@ import {
 } from "react-router-dom";
 import About from "./About";
 import { useStoreState } from "./config/store";
-import MediaList from "./MediaList";
-import Navigation from "./Navigation";
+import Media from "./Media";
 import Profile from "./Profile";
 import Setup from "./Setup";
 
-const useStyles = makeStyles(_ => ({
-  container: {
-    minHeight: "95vh"
-  }
-}));
-
-function Main() {
+const Main = () => {
   const user = useStoreState(state => state.global.user);
   const preferences = useStoreState(state => state.global.preferences);
 
@@ -30,7 +20,6 @@ function Main() {
     document.documentElement.setAttribute("data-theme", preferences.theme);
   }, [preferences.theme]);
 
-  const classes = useStyles();
   return (
     <Router>
       <Switch>
@@ -38,7 +27,7 @@ function Main() {
           <HomeRoute />
         </Route>
         <PrivateRoute exact path="/:id(\d+)">
-          <MediaList />
+          <Media />
         </PrivateRoute>
         <PrivateRoute exact path="/setup">
           <Setup />
@@ -66,18 +55,7 @@ function Main() {
         {...rest}
         render={({ location }) =>
           user ? (
-            <Container maxWidth="md">
-              <Navigation />
-              <Box
-                className={classes.container}
-                borderColor="grey.300"
-                border={1}
-                borderTop={0}
-                px={2}
-              >
-                {children}
-              </Box>
-            </Container>
+            children
           ) : (
             <Redirect
               to={{
@@ -90,6 +68,6 @@ function Main() {
       />
     );
   }
-}
+};
 
 export default Main;

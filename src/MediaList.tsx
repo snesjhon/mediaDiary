@@ -1,4 +1,5 @@
 import Box from "@material-ui/core/Box";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import Fab from "@material-ui/core/Fab";
@@ -13,13 +14,12 @@ import {
   IconFilm,
   IconMusic,
   IconPlus,
-  IconRepeat,
   IconStar,
-  IconTV
+  IconTV,
+  IconRepeat
 } from "./icons";
 import MediaDialog, { viewType } from "./MediaDialog";
 import { createPosterURL } from "./utilities/helpers";
-import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 
 const useStyles = makeStyles(theme => ({
   tableHeadings: {
@@ -133,7 +133,7 @@ function MediaList() {
     dataGet();
   }, [dataGet]);
 
-  if (Object.keys(byID).length > 0 && Object.keys(byDate).length > 0) {
+  if (typeof byID !== "undefined" && typeof byDate !== "undefined") {
     const diaryDates = Object.keys(byDate)
       .filter(e => (filterBy === "" ? e : byDate[e].type === filterBy))
       .reduce<{
@@ -403,12 +403,13 @@ function MediaList() {
       </>
     );
   } else {
-    return <CircularProgress />;
+    return <div>loading</div>;
   }
 
   function dialogClose() {
     mediaSelect();
     return setListView({ open: false, type: "search" });
+    // return setDialogOpen(false);
   }
 }
 

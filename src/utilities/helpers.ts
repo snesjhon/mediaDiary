@@ -1,5 +1,10 @@
 import { MBDIMGURL } from "../config/constants";
 
+// type createPosterURLProps = {
+// 	type : string,
+// 	poster: string,
+// 	size?: number
+// }
 export function createPosterURL({
   type,
   poster,

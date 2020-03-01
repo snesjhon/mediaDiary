@@ -28,7 +28,7 @@
     "eslint": "~6.5.1",
     "eslint-plugin-react": "~7.16.0",
     "eslint-plugin-react-hooks": "~2.1.2",
-    "parcel": "~2.0.0-nightly.130"
+    "parcel": "^2.0.0-nightly.130"
   },
   "dependencies": {
     "@date-io/core": "~1.3.13",
