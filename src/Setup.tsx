@@ -10,7 +10,7 @@ import { useState } from "react";
 import { useStoreActions } from "./config/store";
 import { UserTheme } from "./config/storeGlobal";
 
-const MediaSetup = () => {
+const Setup = () => {
   const userPutPreferences = useStoreActions(
     actions => actions.global.userPutPreferences
   );
@@ -21,7 +21,7 @@ const MediaSetup = () => {
   return <div>setup</div>;
 };
 
-export default MediaSetup;
+export default Setup;
 
 // <Box>
 //       <Flex flexDirection="column" alignItems="center">

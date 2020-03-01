@@ -1,5 +1,5 @@
 import { Action, action, Thunk, thunk } from "easy-peasy";
-import { MDBURL, MBDKEY, LASTFMKEY } from "./constants";
+import { LASTFMKEY } from "./constants";
 import { StoreModel } from "./store";
 
 export type MediaTyper = "film" | "tv" | "album" | "";
@@ -12,10 +12,11 @@ export interface MediaInfo {
   artist: string;
   overview?: string;
   season?: number | undefined;
+  episode?: number | undefined;
 }
 
 export interface MediaAdd extends MediaInfo {
-  date: Date | "";
+  date: Date;
   seen: boolean;
   star: number;
   type: MediaTyper;

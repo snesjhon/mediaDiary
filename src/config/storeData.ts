@@ -58,7 +58,12 @@ export interface Data extends DataSet {
   dataSet: Action<Data, DataSet>;
   dataGet: Thunk<Data, void, void, StoreModel>;
   dataPut: Thunk<Data, DataPut, void, StoreModel>;
-  dataDelete: Thunk<Data, string, void, StoreModel>;
+  dataDelete: Thunk<
+    Data,
+    { mediaID: string; cb: () => void },
+    void,
+    StoreModel
+  >;
   dataUpdate: Thunk<Data, DataUpdate, void, StoreModel>;
 }
 
@@ -69,15 +74,15 @@ export const data: Data = {
     state.byID = payload.byID;
     state.byDate = payload.byDate;
   }),
-  dataGet: thunk(async (actions, payload, { getStoreState }) => {
+  dataGet: thunk(async (actions, _, { getStoreState }) => {
     const year = getStoreState().global.preferences.year;
     if (year !== null) {
       const byID = await db
-        .collection(year)
+        .collection(year.toString())
         .doc("byID")
         .get();
       const byDate = await db
-        .collection(year)
+        .collection(year.toString())
         .doc("byDate")
         .get();
       actions.dataSet({
@@ -100,12 +105,13 @@ export const data: Data = {
       star,
       seen,
       date,
-      season
+      season,
+      episode
     } = payload;
     const year = getStoreState().global.preferences.year;
     if (year !== null) {
-      const dbByID = db.collection(year).doc("byID");
-      const dbByDate = db.collection(year).doc("byDate");
+      const dbByID = db.collection(year.toString()).doc("byID");
+      const dbByDate = db.collection(year.toString()).doc("byDate");
 
       const prByID = db.runTransaction(transaction => {
         let dataByID = {
@@ -155,17 +161,19 @@ export const data: Data = {
 
       const prByDate = db.runTransaction(transaction => {
         const dateAdded = new Date();
-        const dataByDate = {
+        let dataByDate = {
           [dateAdded.getTime()]: {
             id: `${type}_${id}`,
             dateAdded,
             date,
-            published,
             type,
             seen,
-            star
+            star,
+            ...(season && { season }),
+            ...(episode && { episode })
           }
         };
+
         return transaction.get(dbByDate).then(movieDates => {
           if (!movieDates.exists) {
             transaction.set(dbByDate, dataByDate);
@@ -184,11 +192,11 @@ export const data: Data = {
   }),
   dataDelete: thunk(async (actions, payload, { getStoreState }) => {
     const year = getStoreState().global.preferences.year;
-    const itemByDate = getStoreState().data.byDate[payload];
+    const itemByDate = getStoreState().data.byDate[payload.mediaID];
     const itemByID = itemByDate.id;
     if (year !== null) {
-      const dbByID = db.collection(year).doc("byID");
-      const dbByDate = db.collection(year).doc("byDate");
+      const dbByID = db.collection(year.toString()).doc("byID");
+      const dbByDate = db.collection(year.toString()).doc("byDate");
 
       const prByID = db.runTransaction(transaction => {
         return transaction.get(dbByID).then(movieCollection => {
@@ -219,14 +227,15 @@ export const data: Data = {
       const prByDate = db.runTransaction(transaction => {
         return transaction.get(dbByDate).then(() => {
           transaction.update(dbByDate, {
-            [payload]: firebase.firestore.FieldValue.delete()
+            [payload.mediaID]: firebase.firestore.FieldValue.delete()
           });
           return Promise.resolve();
         });
       });
 
       Promise.all([prByID, prByDate]).then(() => {
-        return actions.dataGet();
+        actions.dataGet();
+        return payload.cb();
       });
     } else {
       console.log("something went wrong with delete");
@@ -235,13 +244,14 @@ export const data: Data = {
   dataUpdate: thunk(async (actions, payload, { getStoreState }) => {
     const year = getStoreState().global.preferences.year;
     if (year !== null) {
-      const dbByDate = db.collection(year).doc("byDate");
+      const dbByDate = db.collection(year.toString()).doc("byDate");
       db.runTransaction(transaction => {
         return transaction
           .get(dbByDate)
           .then(byDate => {
             // have to get the ID first.
             const currentDoc = byDate.data();
+            debugger;
             if (
               typeof currentDoc !== "undefined" &&
               typeof currentDoc[payload.dayID] !== "undefined"
