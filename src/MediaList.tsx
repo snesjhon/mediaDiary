@@ -19,25 +19,29 @@ import {
 } from "./icons";
 import MediaDialog, { viewType } from "./MediaDialog";
 import { createPosterURL } from "./utilities/helpers";
+import MediaSearch from "./MediaSearch";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
+import { IconButton } from "@material-ui/core";
+import Avatar from "@material-ui/core/Avatar";
 
 const useStyles = makeStyles(theme => ({
   tableHeadings: {
-    gridTemplateColumns: "5rem 1fr",
+    gridTemplateColumns: "8.5rem 1fr",
     gridGap: "1rem",
     display: "grid",
     alignItems: "center",
     position: "sticky",
     top: "0",
-    borderBottom: `1px solid ${theme.palette.grey[300]}`,
+    borderBottom: `5px solid ${theme.palette.grey[300]}`,
     marginBottom: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
     backgroundColor: theme.palette.background.default,
     paddingTop: "1rem",
-    zIndex: 9,
-    "& > *": {
-      textTransform: "uppercase",
-      color: theme.palette.grey[500]
-    }
+    zIndex: 9
+    // "& > *": {
+    //   textTransform: "uppercase",
+    //   color: theme.palette.grey[500]
+    // }
   },
   tableHeadingList: {
     gridTemplateColumns: "3rem 6rem 0.9fr 1fr",
@@ -166,34 +170,18 @@ function MediaList() {
     return (
       <>
         <Box className={classes.tableHeadings}>
-          <Box mb={1}>Month</Box>
-          <Box display="grid" className={classes.tableHeadingList}>
-            <Box textAlign="center">Day</Box>
-            <Box>Poster</Box>
-            <Box>Title</Box>
-            <Box className={classes.tableHeadingIcons}>
-              {filterBy !== "" && (
-                <Button size="small" onClick={() => setFilterBy("")}>
-                  X
-                </Button>
-              )}
-              {Object.keys(dataCounts).map((e: string, i: number) => (
-                <Box key={e} onClick={() => setFilterBy(e)}>
-                  <Typography component="div">
-                    <Box mr={1}>{dataCounts[e]}</Box>
-                  </Typography>
-                  {e === "tv" && <IconTV />}
-                  {e === "film" && <IconFilm />}
-                  {e === "album" && <IconMusic />}
-                  {(i === 0 || i === 1) && (
-                    <Typography component="div">
-                      <Box px={2}>/</Box>
-                    </Typography>
-                  )}
-                </Box>
-              ))}
-            </Box>
+          <Box display="flex" alignItems="center">
+            <IconButton>
+              <IconFilm />
+            </IconButton>
+            <IconButton>
+              <IconTV />
+            </IconButton>
+            <IconButton>
+              <IconMusic />
+            </IconButton>
           </Box>
+          <MediaSearch setViewType={() => {}} dialogClose={dialogClose} />
         </Box>
         {Object.keys(diaryDates)
           .sort((a, b) => (new Date(a) > new Date(b) ? -1 : 1))
@@ -443,3 +431,32 @@ function MediaList() {
 }
 
 export default MediaList;
+
+// <Box mb={1}>Month</Box>
+//           <Box display="grid" className={classes.tableHeadingList}>
+//             <Box textAlign="center">Day</Box>
+//             <Box>Poster</Box>
+//             <Box>Title</Box>
+//             <Box className={classes.tableHeadingIcons}>
+//               {filterBy !== "" && (
+//                 <Button size="small" onClick={() => setFilterBy("")}>
+//                   X
+//                 </Button>
+//               )}
+//               {Object.keys(dataCounts).map((e: string, i: number) => (
+//                 <Box key={e} onClick={() => setFilterBy(e)}>
+//                   <Typography component="div">
+//                     <Box mr={1}>{dataCounts[e]}</Box>
+//                   </Typography>
+//                   {e === "tv" && <IconTV />}
+//                   {e === "film" && <IconFilm />}
+//                   {e === "album" && <IconMusic />}
+//                   {(i === 0 || i === 1) && (
+//                     <Typography component="div">
+//                       <Box px={2}>/</Box>
+//                     </Typography>
+//                   )}
+//                 </Box>
+//               ))}
+//             </Box>
+//           </Box>

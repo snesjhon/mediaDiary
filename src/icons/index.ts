@@ -9,3 +9,6 @@ export { default as IconChevronLeft } from "./IconChevronLeft";
 export { default as IconRepeat } from "./IconRepeat";
 export { default as IconTrash } from "./IconTrash";
 export { default as IconText } from "./IconText";
+export { default as IconHome } from "./IconHome";
+export { default as IconChart } from "./IconChart";
+export { default as IconSettings } from "./IconSettings";

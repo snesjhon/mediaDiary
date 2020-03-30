@@ -160,100 +160,88 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
     }
   }, [bouncedSearch, type]);
 
-  useEffect(() => {
-    if (InputRef.current) {
-      InputRef.current.focus();
-    }
-  }, [type]);
+  // useEffect(() => {
+  //   if (InputRef.current) {
+  //     InputRef.current.focus();
+  //   }
+  // }, [type]);
 
   return (
-    <>
-      <CardContent>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Box display="flex" alignItems="center">
-            <Typography variant="h5" component="h1">
-              Media Search
-            </Typography>
-            <Box ml={2} mr={1}>
-              <Typography variant="h5">/</Typography>
-            </Box>
-            <IconButton
-              onClick={() => dispatch({ type: "setType", payload: "film" })}
-              color={type === "film" ? "primary" : undefined}
-            >
-              <IconFilm />
-            </IconButton>
-            <IconButton
-              onClick={() => dispatch({ type: "setType", payload: "tv" })}
-              color={type === "tv" ? "primary" : undefined}
-            >
-              <IconTV />
-            </IconButton>
-            <IconButton
-              onClick={() => dispatch({ type: "setType", payload: "album" })}
-              color={type === "album" ? "primary" : undefined}
-            >
-              <IconMusic />
-            </IconButton>
+    <Box>
+      <TextField
+        inputRef={InputRef}
+        size="small"
+        fullWidth
+        // autoFocus
+        // variant="outlined"
+        // id="input-with-icon-textfield"
+        label={`Add Your Media`}
+        onChange={e =>
+          dispatch({ type: "searchInput", payload: e.target.value })
+        }
+        // InputProps={{
+        //   startAdornment: (
+        //     <InputAdornment position="start">
+        //       <IconSearch />
+        //     </InputAdornment>
+        //   )
+        // }}
+      />
+      {/* <Box display="flex" alignItems="center">
+          <Box ml={2} mr={1}>
+            <Typography variant="h5">/</Typography>
           </Box>
-          <Box>
-            <IconButton onClick={dialogClose}>
-              <IconX />
-            </IconButton>
-          </Box>
+          <IconButton
+            onClick={() => dispatch({ type: "setType", payload: "film" })}
+            color={type === "film" ? "primary" : undefined}
+          >
+            <IconFilm />
+          </IconButton>
+          <IconButton
+            onClick={() => dispatch({ type: "setType", payload: "tv" })}
+            color={type === "tv" ? "primary" : undefined}
+          >
+            <IconTV />
+          </IconButton>
+          <IconButton
+            onClick={() => dispatch({ type: "setType", payload: "album" })}
+            color={type === "album" ? "primary" : undefined}
+          >
+            <IconMusic />
+          </IconButton>
+        </Box> */}
+      <Collapse in={expanded} timeout="auto">
+        <Box className={classes.mediaResults}>
+          <Table>
+            <TableBody>
+              {mediaResult.map((e: any, i: number) => (
+                <MediaSearchList key={type + i} type={type} item={e}>
+                  {({ name, artist, date }) => (
+                    <TableRow hover onClick={() => handleSelect(e)}>
+                      <TableCell>
+                        {isSearching ? (
+                          <Skeleton animation="wave" />
+                        ) : name && artist !== "" ? (
+                          `${name} - ${artist}`
+                        ) : (
+                          name
+                        )}
+                      </TableCell>
+                      <TableCell align="right">
+                        {date &&
+                          ` (${new Date(date).toLocaleDateString("en-us", {
+                            year: "numeric"
+                          })})`}
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </MediaSearchList>
+              ))}
+            </TableBody>
+          </Table>
         </Box>
-        <Box my={2} />
-        <TextField
-          inputRef={InputRef}
-          fullWidth
-          autoFocus
-          variant="outlined"
-          id="input-with-icon-textfield"
-          label={`Search for ${type}`}
-          onChange={e =>
-            dispatch({ type: "searchInput", payload: e.target.value })
-          }
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <IconSearch />
-              </InputAdornment>
-            )
-          }}
-        />
-        <Collapse in={expanded} timeout="auto">
-          <Box className={classes.mediaResults}>
-            <Table>
-              <TableBody>
-                {mediaResult.map((e: any, i: number) => (
-                  <MediaSearchList key={type + i} type={type} item={e}>
-                    {({ name, artist, date }) => (
-                      <TableRow hover onClick={() => handleSelect(e)}>
-                        <TableCell>
-                          {isSearching ? (
-                            <Skeleton animation="wave" />
-                          ) : name && artist !== "" ? (
-                            `${name} - ${artist}`
-                          ) : (
-                            name
-                          )}
-                        </TableCell>
-                        <TableCell align="right">
-                          {date &&
-                            ` (${new Date(date).toLocaleDateString("en-us", {
-                              year: "numeric"
-                            })})`}
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </MediaSearchList>
-                ))}
-              </TableBody>
-            </Table>
-          </Box>
-        </Collapse>
-      </CardContent>
-    </>
+      </Collapse>
+    </Box>
   );
 
   function handleSelect(e: any) {

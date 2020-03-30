@@ -15,10 +15,15 @@ import MediaList from "./MediaList";
 import Navigation from "./Navigation";
 import Profile from "./Profile";
 import Setup from "./Setup";
+import Sidebar from "./Sidebar";
 
 const useStyles = makeStyles(_ => ({
   container: {
     minHeight: "95vh"
+  },
+  containerGrid: {
+    display: "grid",
+    gridTemplateColumns: "15rem 1fr 15rem"
   }
 }));
 
@@ -66,8 +71,8 @@ function Main() {
         {...rest}
         render={({ location }) =>
           user ? (
-            <Container maxWidth="md">
-              <Navigation />
+            <Container className={classes.containerGrid} maxWidth="lg">
+              <Sidebar />
               <Box
                 className={classes.container}
                 borderColor="grey.300"
@@ -77,6 +82,7 @@ function Main() {
               >
                 {children}
               </Box>
+              <Sidebar />
             </Container>
           ) : (
             <Redirect
