@@ -232,7 +232,9 @@ function MediaList() {
                         type,
                         overview
                       } = byID[diaryDates[month][day].id];
-                      const { star, seen } = diaryDates[month][day];
+                      const { star, seen, season, episode } = diaryDates[month][
+                        day
+                      ];
                       const localPoster = createPosterURL({
                         type,
                         poster,
@@ -306,6 +308,34 @@ function MediaList() {
                                   {artist}
                                 </Typography>
                               </Box>
+                              {(typeof season !== "undefined" ||
+                                typeof episode !== "undefined") && (
+                                <Box display="flex" mb={1}>
+                                  {typeof season !== "undefined" && (
+                                    <>
+                                      <Typography
+                                        variant="subtitle1"
+                                        color="textSecondary"
+                                      >
+                                        Season {season}
+                                      </Typography>
+                                      <Box mx={1}>
+                                        <Typography color="textSecondary">
+                                          ·
+                                        </Typography>
+                                      </Box>
+                                    </>
+                                  )}
+                                  {typeof episode !== "undefined" && (
+                                    <Typography
+                                      variant="subtitle1"
+                                      color="textSecondary"
+                                    >
+                                      Episode {episode}
+                                    </Typography>
+                                  )}
+                                </Box>
+                              )}
                               <Box
                                 mt="auto"
                                 display="flex"

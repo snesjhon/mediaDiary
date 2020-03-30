@@ -35,6 +35,13 @@ export interface DataByDate extends MediaTypes {
 
   // User's rating
   star: number;
+
+  // Each entry is being referenced to an individual dataID, that already has the season, but it's
+  // also easier to reference it here as well.
+  season?: number | undefined;
+
+  // This is the logical place to keep the episode since we can also extend to "episodes"
+  episode?: number | undefined;
 }
 
 interface DataSet {
