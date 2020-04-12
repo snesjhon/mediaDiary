@@ -23,7 +23,7 @@ const useStyles = makeStyles(_ => ({
   },
   containerGrid: {
     display: "grid",
-    gridTemplateColumns: "15rem 1fr 15rem"
+    gridTemplateColumns: "13rem 1fr 13rem"
   }
 }));
 
@@ -78,7 +78,6 @@ function Main() {
                 borderColor="grey.300"
                 border={1}
                 borderTop={0}
-                px={2}
               >
                 {children}
               </Box>

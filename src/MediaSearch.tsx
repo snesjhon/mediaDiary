@@ -26,7 +26,8 @@ import { MBDKEY } from "./config/constants";
 import { useStoreActions } from "./config/store";
 import { MediaSelected, MediaTyper, MediaTypes } from "./config/storeMedia";
 import useDebounce from "./hooks/useDebounce";
-import { IconFilm, IconMusic, IconSearch, IconTV, IconX } from "./icons";
+import { IconFilm, IconMusic, IconSearch, IconTV, IconX, IconPlus } from "./icons";
+import { InputBase } from "@material-ui/core";
 
 interface MediaSearchListProps extends MediaTypes {
   item: any;
@@ -55,7 +56,7 @@ const MediaSearchList = ({ type, item, children }: MediaSearchListProps) => {
   return children({
     name: name,
     artist: artist,
-    date: date
+    date: date,
   });
 };
 
@@ -79,32 +80,32 @@ const MediaAddReducer = (state: StateType, action: ActionType) => {
         ...state,
         isSearching: false,
         expanded: true,
-        mediaResult: action.payload
+        mediaResult: action.payload,
       };
     }
     case "isSearching": {
       return {
         ...state,
-        isSearching: true
+        isSearching: true,
       };
     }
     case "searchInput": {
       return {
         ...state,
-        searchInput: action.payload
+        searchInput: action.payload,
       };
     }
     case "noResults": {
       return {
         ...state,
         isSearching: false,
-        expanded: false
+        expanded: false,
       };
     }
     case "setType": {
       return {
         ...state,
-        type: action.payload
+        type: action.payload,
       };
     }
     default:
@@ -112,14 +113,69 @@ const MediaAddReducer = (state: StateType, action: ActionType) => {
   }
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   card: {
-    width: theme.breakpoints.values.sm
+    width: theme.breakpoints.values.sm,
+  },
+  mediaNavigation: {
+    position: "sticky",
+    top: 0,
+    backgroundColor: "white",
+    zIndex: 9
   },
   mediaResults: {
     overflow: "scroll",
-    maxHeight: "32vh"
+    maxHeight: "32vh",
+  },
+  mediaSearch: {
+    display: "grid",
+    gridTemplateColumns: "4rem 1fr repeat(3, 3rem)",
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    backgroundColor: "#0000000a",
+    borderBottom: `1px solid ${theme.palette.grey[300]}`
+  },
+  mediaSearchInput: {
+    padding: 0
   }
+  // search: {
+  //   position: "relative",
+  //   // borderRadius: theme.shape.borderRadius,
+  //   backgroundColor: theme.palette.background.default,
+  //   "&:hover": {
+  //     backgroundColor: "yellow",
+  //   },
+  //   borderBottom: "1px solid lightgray",
+  //   // paddingBottom: theme.spacing(2),
+  //   marginLeft: 0,
+  //   width: "100%",
+  //   // [theme.breakpoints.up("sm")]: {
+  //   //   marginLeft: theme.spacing(3),
+  //   //   width: "auto",
+  //   // },
+  // },
+  // searchIcon: {
+  //   padding: theme.spacing(0, 2),
+  //   height: "100%",
+  //   position: "absolute",
+  //   pointerEvents: "none",
+  //   display: "flex",
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  // },
+  // inputRoot: {
+  //   color: "inherit",
+  // },
+  // inputInput: {
+  //   padding: theme.spacing(2),
+  //   // vertical padding + font size from searchIcon
+  //   paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+  //   transition: theme.transitions.create("width"),
+  //   width: "100%",
+  //   // [theme.breakpoints.up("md")]: {
+  //   //   width: "20ch",
+  //   // },
+  // },
 }));
 
 interface MediaLogProps {
@@ -130,16 +186,16 @@ interface MediaLogProps {
 function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
   const InputRef = useRef<HTMLInputElement>(null);
   const classes = useStyles();
-  const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
+  const mediaSelect = useStoreActions((actions) => actions.media.mediaSelect);
   const [
     { expanded, searchInput, mediaResult, isSearching, type },
-    dispatch
+    dispatch,
   ] = useReducer(MediaAddReducer, {
     expanded: false,
     searchInput: "",
     mediaResult: [],
     isSearching: false,
-    type: "film"
+    type: "film",
   });
 
   const bouncedSearch = useDebounce(searchInput, 500);
@@ -167,49 +223,31 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
   // }, [type]);
 
   return (
-    <Box>
-      <TextField
-        inputRef={InputRef}
-        size="small"
-        fullWidth
-        // autoFocus
-        // variant="outlined"
-        // id="input-with-icon-textfield"
-        label={`Add Your Media`}
-        onChange={e =>
-          dispatch({ type: "searchInput", payload: e.target.value })
-        }
-        // InputProps={{
-        //   startAdornment: (
-        //     <InputAdornment position="start">
-        //       <IconSearch />
-        //     </InputAdornment>
-        //   )
-        // }}
-      />
-      {/* <Box display="flex" alignItems="center">
-          <Box ml={2} mr={1}>
-            <Typography variant="h5">/</Typography>
-          </Box>
-          <IconButton
-            onClick={() => dispatch({ type: "setType", payload: "film" })}
-            color={type === "film" ? "primary" : undefined}
-          >
-            <IconFilm />
-          </IconButton>
-          <IconButton
-            onClick={() => dispatch({ type: "setType", payload: "tv" })}
-            color={type === "tv" ? "primary" : undefined}
-          >
-            <IconTV />
-          </IconButton>
-          <IconButton
-            onClick={() => dispatch({ type: "setType", payload: "album" })}
-            color={type === "album" ? "primary" : undefined}
-          >
-            <IconMusic />
-          </IconButton>
-        </Box> */}
+    <Box className={classes.mediaNavigation}>
+      <Box className={classes.mediaSearch}>
+        <IconButton disableFocusRipple={true}>
+        <IconPlus />
+        </IconButton>
+        <InputBase
+          placeholder="Add Movie"
+          classes={{
+            input: classes.mediaSearchInput
+          }}
+          // classes={{
+          //   root: classes.inputRoot,
+          //   input: classes.inputInput,
+          // }}
+        />
+        <IconButton>
+          <IconFilm />
+        </IconButton>
+        <IconButton>
+          <IconTV />
+        </IconButton>
+        <IconButton>
+          <IconMusic />
+        </IconButton>
+      </Box>
       <Collapse in={expanded} timeout="auto">
         <Box className={classes.mediaResults}>
           <Table>
@@ -230,7 +268,7 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
                       <TableCell align="right">
                         {date &&
                           ` (${new Date(date).toLocaleDateString("en-us", {
-                            year: "numeric"
+                            year: "numeric",
                           })})`}
                       </TableCell>
                     </TableRow>
@@ -298,10 +336,73 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
       overview,
       watched,
       artist,
-      type
+      type,
     };
     return mediaReturn;
   }
 }
 
 export default MediaSearch;
+
+//  {/* <TextField
+//         inputRef={InputRef}
+//         // size="small"
+//         size="medium"
+//         fullWidth
+//         placeholder="Add Your Media"
+//         variant="filled"
+//         // margin="normal"
+//         // autoFocus
+//         // variant="outlined"
+//         // id="input-with-icon-textfield"
+//         // label={`Movies`}
+//         onChange={(e) =>
+//           dispatch({ type: "searchInput", payload: e.target.value })
+//         }
+//         InputProps={{
+//           startAdornment: (
+//             <InputAdornment variant="outlined" position="start">
+//               <IconSearch />
+//             </InputAdornment>
+//           ),
+//           endAdornment: (
+//             <>
+//             <InputAdornment position="end">
+// <IconButton>
+// <IconSearch />
+// </IconButton>
+//               <IconButton>
+//               <IconSearch />
+//               </IconButton>
+//               <IconButton>
+//               <IconSearch />
+//               </IconButton>
+
+//             </InputAdornment>
+//             </>
+//           ),
+//         }}
+//       /> */}
+//       {/* <Box display="flex" alignItems="center">
+//           <Box ml={2} mr={1}>
+//             <Typography variant="h5">/</Typography>
+//           </Box>
+//           <IconButton
+//             onClick={() => dispatch({ type: "setType", payload: "film" })}
+//             color={type === "film" ? "primary" : undefined}
+//           >
+//             <IconFilm />
+//           </IconButton>
+//           <IconButton
+//             onClick={() => dispatch({ type: "setType", payload: "tv" })}
+//             color={type === "tv" ? "primary" : undefined}
+//           >
+//             <IconTV />
+//           </IconButton>
+//           <IconButton
+//             onClick={() => dispatch({ type: "setType", payload: "album" })}
+//             color={type === "album" ? "primary" : undefined}
+//           >
+//             <IconMusic />
+//           </IconButton>
+//         </Box> */}

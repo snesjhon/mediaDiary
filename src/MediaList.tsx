@@ -15,7 +15,7 @@ import {
   IconPlus,
   IconRepeat,
   IconStar,
-  IconTV
+  IconTV,
 } from "./icons";
 import MediaDialog, { viewType } from "./MediaDialog";
 import { createPosterURL } from "./utilities/helpers";
@@ -24,7 +24,7 @@ import CircularProgress from "@material-ui/core/CircularProgress/CircularProgres
 import { IconButton } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   tableHeadings: {
     gridTemplateColumns: "8.5rem 1fr",
     gridGap: "1rem",
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: theme.spacing(2),
     backgroundColor: theme.palette.background.default,
     paddingTop: "1rem",
-    zIndex: 9
+    zIndex: 9,
     // "& > *": {
     //   textTransform: "uppercase",
     //   color: theme.palette.grey[500]
@@ -47,45 +47,45 @@ const useStyles = makeStyles(theme => ({
     gridTemplateColumns: "3rem 6rem 0.9fr 1fr",
     gridGap: "2rem",
     alignItems: "center",
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   tableHeadingIcons: {
     display: "flex",
     "& > div": {
       display: "flex",
-      alignItems: "center"
+      alignItems: "center",
     },
     "& > div:hover": {
       cursor: "pointer",
-      color: theme.palette.primary.main
-    }
+      color: theme.palette.primary.main,
+    },
   },
   mediaContainer: {
     gridGap: "1rem",
-    display: "grid"
+    display: "grid",
   },
   mediaListContainer: {
     display: "grid",
-    gridGap: "1.5rem"
+    gridGap: "1.5rem",
   },
   mediaList: {
     gridTemplateColumns: "3rem 6rem 1fr",
     gridGap: "2rem",
     "&:hover": {
       backgroundColor: theme.palette.grey[200],
-      transition: `all ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeInOut} 0ms`
-    }
+      transition: `all ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeInOut} 0ms`,
+    },
   },
   mediaListItem: {
     alignItems: "center",
     gridTemplateColumns: "3rem 6rem 1fr 1fr",
-    gridGap: "2rem"
+    gridGap: "2rem",
   },
   mediaListTitle: {
     "&:hover": {
       color: theme.palette.primary.main,
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   },
   mediaImage: {
     display: "block",
@@ -96,19 +96,19 @@ const useStyles = makeStyles(theme => ({
       border: `1px solid ${theme.palette.primary.main}`,
       outline: `2px solid ${theme.palette.primary.main}`,
       borderRadius: 0,
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   },
   mediaFab: {
     position: "sticky",
     bottom: "4vh",
     marginLeft: "1rem",
-    marginBottom: "-1.5rem"
+    marginBottom: "-1.5rem",
   },
   mediaResults: {
     overflow: "scroll",
-    maxHeight: "32vh"
-  }
+    maxHeight: "32vh",
+  },
 }));
 
 export interface MediaListView {
@@ -121,15 +121,15 @@ export interface MediaListView {
 
 function MediaList() {
   const classes = useStyles();
-  const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
-  const byID = useStoreState(state => state.data.byID);
-  const byDate = useStoreState(state => state.data.byDate);
-  const dataGet = useStoreActions(actions => actions.data.dataGet);
+  const mediaSelect = useStoreActions((actions) => actions.media.mediaSelect);
+  const byID = useStoreState((state) => state.data.byID);
+  const byDate = useStoreState((state) => state.data.byDate);
+  const dataGet = useStoreActions((actions) => actions.data.dataGet);
 
   const [listView, setListView] = useState<MediaListView>({
     open: false,
     type: "search",
-    mediaID: ""
+    mediaID: "",
   });
   const [filterBy, setFilterBy] = useState("");
 
@@ -139,7 +139,7 @@ function MediaList() {
 
   if (Object.keys(byID).length > 0 && Object.keys(byDate).length > 0) {
     const diaryDates = Object.keys(byDate)
-      .filter(e => (filterBy === "" ? e : byDate[e].type === filterBy))
+      .filter((e) => (filterBy === "" ? e : byDate[e].type === filterBy))
       .reduce<{
         [key: string]: {
           [key: string]: DataByDate;
@@ -147,7 +147,7 @@ function MediaList() {
       }>((a, c) => {
         const dateString = byDate[c].date.toDate().toLocaleDateString("en-us", {
           month: "short",
-          year: "numeric"
+          year: "numeric",
         });
         a[`01-${dateString}`] = Object.assign(
           { ...a[`01-${dateString}`] },
@@ -169,20 +169,8 @@ function MediaList() {
 
     return (
       <>
-        <Box className={classes.tableHeadings}>
-          <Box display="flex" alignItems="center">
-            <IconButton>
-              <IconFilm />
-            </IconButton>
-            <IconButton>
-              <IconTV />
-            </IconButton>
-            <IconButton>
-              <IconMusic />
-            </IconButton>
-          </Box>
-          <MediaSearch setViewType={() => {}} dialogClose={dialogClose} />
-        </Box>
+        <MediaSearch setViewType={() => {}} dialogClose={dialogClose} />
+        <Box p={2}>
         {Object.keys(diaryDates)
           .sort((a, b) => (new Date(a) > new Date(b) ? -1 : 1))
           .map((month, monthIndex) => {
@@ -191,16 +179,16 @@ function MediaList() {
                 className={classes.mediaContainer}
                 key={monthIndex}
                 style={{
-                  gridTemplateColumns: "5rem 1fr"
+                  gridTemplateColumns: "5rem 1fr",
                 }}
               >
                 <Box mt={1}>
                   <Typography
                     variant="h4"
-                    style={{ position: "sticky", top: "4rem" }}
+                    style={{ position: "sticky", top: "5.6rem" }}
                   >
                     {new Date(month).toLocaleDateString("en-us", {
-                      month: "short"
+                      month: "short",
                     })}
                   </Typography>
                 </Box>
@@ -218,7 +206,7 @@ function MediaList() {
                         published,
                         artist,
                         type,
-                        overview
+                        overview,
                       } = byID[diaryDates[month][day].id];
                       const { star, seen, season, episode } = diaryDates[month][
                         day
@@ -226,7 +214,7 @@ function MediaList() {
                       const localPoster = createPosterURL({
                         type,
                         poster,
-                        size: 200
+                        size: 200,
                       });
                       return (
                         <Box key={monthIndex + dayIndex}>
@@ -240,7 +228,7 @@ function MediaList() {
                                 {new Date(
                                   diaryDates[month][day].date.toDate()
                                 ).toLocaleDateString("en-us", {
-                                  day: "numeric"
+                                  day: "numeric",
                                 })}
                               </Box>
                             </Typography>
@@ -252,7 +240,7 @@ function MediaList() {
                                   setListView({
                                     open: true,
                                     type: "edit",
-                                    mediaID: day
+                                    mediaID: day,
                                   })
                                 }
                               />
@@ -266,7 +254,7 @@ function MediaList() {
                                   setListView({
                                     open: true,
                                     type: "edit",
-                                    mediaID: day
+                                    mediaID: day,
                                   })
                                 }
                               >
@@ -280,7 +268,7 @@ function MediaList() {
                                   {new Date(published).toLocaleDateString(
                                     "en-US",
                                     {
-                                      year: "numeric"
+                                      year: "numeric",
                                     }
                                   )}
                                 </Typography>
@@ -361,7 +349,7 @@ function MediaList() {
                                         open: true,
                                         type: "edit",
                                         mediaID: day,
-                                        showEdit: true
+                                        showEdit: true,
                                       })
                                     }
                                   >
@@ -375,7 +363,7 @@ function MediaList() {
                                           open: true,
                                           type: "edit",
                                           mediaID: day,
-                                          showOverview: true
+                                          showOverview: true,
                                         })
                                       }
                                     >
@@ -408,13 +396,14 @@ function MediaList() {
               </Box>
             );
           })}
-        <Fab
+          </Box>
+        {/* <Fab
           className={classes.mediaFab}
           color="primary"
           onClick={() => setListView({ open: true, type: "search" })}
         >
           <IconPlus />
-        </Fab>
+        </Fab> */}
         {listView.open && (
           <MediaDialog listView={listView} dialogClose={dialogClose} />
         )}
