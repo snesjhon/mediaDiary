@@ -12,3 +12,4 @@ export { default as IconText } from "./IconText";
 export { default as IconHome } from "./IconHome";
 export { default as IconChart } from "./IconChart";
 export { default as IconSettings } from "./IconSettings";
+export { default as IconLogo} from "./IconLogo";

@@ -16,6 +16,7 @@ import Navigation from "./Navigation";
 import Profile from "./Profile";
 import Setup from "./Setup";
 import Sidebar from "./Sidebar";
+import Taskbar from "./Taskbar";
 
 const useStyles = makeStyles(_ => ({
   container: {
@@ -23,7 +24,7 @@ const useStyles = makeStyles(_ => ({
   },
   containerGrid: {
     display: "grid",
-    gridTemplateColumns: "13rem 1fr 13rem"
+    gridTemplateColumns: "13rem 1fr 16rem"
   }
 }));
 
@@ -81,7 +82,7 @@ function Main() {
               >
                 {children}
               </Box>
-              <Sidebar />
+              <Taskbar />
             </Container>
           ) : (
             <Redirect

@@ -5,28 +5,29 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Divider
+  Divider,
 } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
-import { IconX, IconHome, IconChart, IconSettings } from "./icons";
+import { IconX, IconHome, IconChart, IconSettings, IconLogo } from "./icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
+import Typography from "@material-ui/core/Typography";
 import { useStoreActions, useStoreState } from "./config/store";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   sibebar: {
     position: "sticky",
-    top: "0"
+    top: "0",
   },
   avatar: {
     width: theme.spacing(4),
-    height: theme.spacing(4)
-  }
+    height: theme.spacing(4),
+  },
 }));
 
 function Sidebar() {
   const classes = useStyles();
-  const user = useStoreState(state => state.global.user);
+  const user = useStoreState((state) => state.global.user);
   return (
     <Box>
       <List
@@ -35,7 +36,17 @@ function Sidebar() {
         aria-label="main mailbox folders"
       >
         <ListItem>
-          <ListItemText primary="MediaDiary" />
+          <IconLogo />
+          <Box
+          pl={1}
+            component="span"
+            color="#592ABC"
+            fontSize="h6.fontSize"
+            fontWeight="600"
+          >
+
+            mediaDiary
+          </Box>
         </ListItem>
         <ListItem button component={Link} to="/">
           <ListItemIcon>
@@ -43,7 +54,7 @@ function Sidebar() {
           </ListItemIcon>
           <ListItemText
             primary="Home"
-            primaryTypographyProps={{ variant: "h5" }}
+            primaryTypographyProps={{ variant: "h6" }}
           />
         </ListItem>
         <ListItem button>
@@ -52,7 +63,7 @@ function Sidebar() {
           </ListItemIcon>
           <ListItemText
             primary="Stats"
-            primaryTypographyProps={{ variant: "h5" }}
+            primaryTypographyProps={{ variant: "h6" }}
           />
         </ListItem>
         <ListItem button>
@@ -61,7 +72,7 @@ function Sidebar() {
           </ListItemIcon>
           <ListItemText
             primary="Settings"
-            primaryTypographyProps={{ variant: "h5" }}
+            primaryTypographyProps={{ variant: "h6" }}
           />
         </ListItem>
         <ListItem button component={Link} to="/profile">
@@ -74,7 +85,7 @@ function Sidebar() {
           </ListItemIcon>
           <ListItemText
             primary="Profile"
-            primaryTypographyProps={{ variant: "h5" }}
+            primaryTypographyProps={{ variant: "h6" }}
           />
         </ListItem>
       </List>
