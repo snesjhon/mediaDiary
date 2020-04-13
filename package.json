@@ -2,7 +2,6 @@
   "name": "media-diary",
   "version": "1.0.0",
   "description": "Media Diary",
-  "main": "index.js",
   "scripts": {
     "start": "parcel serve ./public/index.html",
     "build": "parcel build ./public/index.html"
