@@ -166,8 +166,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#00000080",
-    opacity: props => props ? 1 : 0,
-    transition: "opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms"
+    opacity: (props) => (props ? 1 : 0),
+    transition: "opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
   },
   // search: {
   //   position: "relative",
@@ -227,7 +227,7 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
     isSearching: false,
     type: "film",
   });
-  
+
   const classes = useStyles(expanded);
   const bouncedSearch = useDebounce(searchInput, 500);
 
@@ -247,6 +247,7 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
     }
   }, [bouncedSearch, type]);
 
+  // TODO: implement the "visibility" of backdrop when user is in focus
   // useEffect(() => {
   //   if (InputRef.current) {
   //     InputRef.current.focus();
@@ -255,11 +256,11 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
 
   return (
     <>
-      <Box className={classes.backDrop} />
+      {expanded && <Box className={classes.backDrop} />}
       <Box className={classes.mediaNavigation}>
         <Box className={classes.mediaNavigationGrid}>
           <Box className={classes.mediaSearch}>
-            <IconButton disableFocusRipple={true}>
+            <IconButton disableFocusRipple={true} size="small">
               <IconPlus />
             </IconButton>
             <InputBase
@@ -272,13 +273,13 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
                 dispatch({ type: "searchInput", payload: e.target.value })
               }
             />
-            <IconButton>
+            <IconButton size="small">
               <IconFilm />
             </IconButton>
-            <IconButton>
+            <IconButton size="small">
               <IconTV />
             </IconButton>
-            <IconButton>
+            <IconButton size="small">
               <IconMusic />
             </IconButton>
           </Box>

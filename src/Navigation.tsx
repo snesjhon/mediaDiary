@@ -8,41 +8,58 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
+import IconLogo from "./icons/IconLogo";
+import IconMenu from "./icons/IconMenu";
+import IconSettings from "./icons/IconSettings";
 import * as React from "react";
 import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { useStoreActions, useStoreState } from "./config/store";
+import IconButton from "@material-ui/core/IconButton/IconButton";
+import { MediaListProp } from "./Main";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
+    position: "sticky",
+    top: 0,
+    backgroundColor: "white",
+    zIndex: 9,
+  },
+  title: {
+    flexGrow: 1,
+    display: "flex",
+    alignItems: "center",
   },
   divider: {
     color: theme.palette.grey["300"],
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
   },
   navColors: {
-    backgroundColor: theme.palette.background.default
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    // backgroundColor: theme.palette.background.default,
+    backgroundColor: "#F0F0F0",
   },
   linkColor: {
     color: theme.palette.primary.main,
-    fontWeight: theme.typography.fontWeightBold
+    fontWeight: theme.typography.fontWeightBold,
   },
   year: {
-    color: theme.palette.secondary.main
+    color: theme.palette.secondary.main,
   },
   avatar: {
     width: theme.spacing(4),
-    height: theme.spacing(4)
-  }
+    height: theme.spacing(4),
+  },
 }));
 
-function Navigation() {
-  const year = useStoreState(state =>
+function Navigation({ openDrawer, setOpenDrawer }: MediaListProp) {
+  const year = useStoreState((state) =>
     state.global.preferences.year !== null ? state.global.preferences.year : ""
   );
-  const userLogout = useStoreActions(actions => actions.global.userLogout);
-  const user = useStoreState(state => state.global.user);
+  const userLogout = useStoreActions((actions) => actions.global.userLogout);
+  const user = useStoreState((state) => state.global.user);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -61,64 +78,28 @@ function Navigation() {
         position="static"
         variant="outlined"
       >
-        <Box px={2}>
-          <Toolbar variant="dense" disableGutters={true}>
-            <Link
-              className={classes.linkColor}
-              variant="h6"
-              component={RouterLink}
-              to="/"
-            >
-              MediaDiary
-            </Link>
-            <Box display="flex" pl={1} flexGrow={1}>
-              <Typography className={classes.divider} variant="h6">
-                /
-              </Typography>
-              <Typography className={classes.year} variant="h6">
-                {" "}
-                {year}
-              </Typography>
+        <Toolbar variant="dense" disableGutters={true}>
+          <IconButton size="small" onClick={() => setOpenDrawer(!openDrawer)}>
+            <IconMenu />
+          </IconButton>
+          <Box className={classes.title}>
+            <Box pl={2}>
+              <IconLogo width={20} />
             </Box>
-
-            <Button
-              aria-controls="user-menu"
-              aria-haspopup="true"
-              onClick={handleClick}
+            <Box
+              pl={1}
+              // component="span"
+              color="#592ABC"
+              fontSize="body1.fontSize"
+              fontWeight="600"
             >
-              <Avatar
-                className={classes.avatar}
-                alt={(user !== null && user.displayName) || ""}
-                src={(user !== null && user.photoURL + "=s50-c") || ""}
-              />
-            </Button>
-            <Menu
-              id="user-menu"
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              getContentAnchorEl={null}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "center"
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "center"
-              }}
-            >
-              <MenuItem
-                component={RouterLink}
-                to="/profile"
-                onClick={() => handleClose()}
-              >
-                Profile
-              </MenuItem>
-              <MenuItem onClick={() => userLogout()}>Logout</MenuItem>
-            </Menu>
-          </Toolbar>
-        </Box>
+              mediaDiary
+            </Box>
+          </Box>
+          <IconButton size="small">
+            <IconSettings />
+          </IconButton>
+        </Toolbar>
       </AppBar>
     </Box>
   );

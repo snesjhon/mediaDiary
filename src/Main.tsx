@@ -2,12 +2,12 @@ import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import * as React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Redirect,
   Route,
-  Switch
+  Switch,
 } from "react-router-dom";
 import About from "./About";
 import { useStoreState } from "./config/store";
@@ -18,19 +18,27 @@ import Setup from "./Setup";
 import Sidebar from "./Sidebar";
 import Taskbar from "./Taskbar";
 
-const useStyles = makeStyles(_ => ({
+const useStyles = makeStyles((_) => ({
   container: {
-    minHeight: "95vh"
+    minHeight: "95vh",
   },
   containerGrid: {
-    display: "grid",
-    gridTemplateColumns: "13rem 1fr 16rem"
-  }
+    // width: "100%",
+    // padding: 0,
+    // display: "grid",
+    // gridTemplateColumns: "13rem 1fr 16rem"
+  },
 }));
 
+export interface MediaListProp {
+  openDrawer: boolean;
+  setOpenDrawer: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 function Main() {
-  const user = useStoreState(state => state.global.user);
-  const preferences = useStoreState(state => state.global.preferences);
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const user = useStoreState((state) => state.global.user);
+  const preferences = useStoreState((state) => state.global.preferences);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", preferences.theme);
@@ -44,7 +52,7 @@ function Main() {
           <HomeRoute />
         </Route>
         <PrivateRoute exact path="/:id(\d+)">
-          <MediaList />
+          <MediaList setOpenDrawer={setOpenDrawer} openDrawer={openDrawer} />
         </PrivateRoute>
         <PrivateRoute exact path="/setup">
           <Setup />
@@ -65,6 +73,10 @@ function Main() {
       return <About />;
     }
   }
+  //  {/* <Taskbar /> */}
+  //           {/* </Container> */}
+  // // <Container className={classes.containerGrid} maxWidth={false}>
+  //             {/* <Sidebar /> */}
 
   function PrivateRoute({ children, ...rest }: any) {
     return (
@@ -72,23 +84,23 @@ function Main() {
         {...rest}
         render={({ location }) =>
           user ? (
-            <Container className={classes.containerGrid} maxWidth="lg">
-              <Sidebar />
-              <Box
-                className={classes.container}
-                borderColor="grey.300"
-                border={1}
-                borderTop={0}
-              >
-                {children}
-              </Box>
-              <Taskbar />
-            </Container>
+            <Box
+              className={classes.container}
+              // borderColor="grey.300"
+              // border={1}
+              // borderTop={0}
+            >
+              <Navigation
+                setOpenDrawer={setOpenDrawer}
+                openDrawer={openDrawer}
+              />
+              {children}
+            </Box>
           ) : (
             <Redirect
               to={{
                 pathname: "/",
-                state: { from: location }
+                state: { from: location },
               }}
             />
           )

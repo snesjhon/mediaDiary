@@ -21,8 +21,16 @@ import MediaDialog, { viewType } from "./MediaDialog";
 import { createPosterURL } from "./utilities/helpers";
 import MediaSearch from "./MediaSearch";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
-import { IconButton } from "@material-ui/core";
+import {
+  IconButton,
+  Grid,
+  Hidden,
+  Drawer,
+  SwipeableDrawer,
+} from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
+import Sidebar from "./Sidebar";
+import { MediaListProp } from "./Main";
 
 const useStyles = makeStyles((theme) => ({
   tableHeadings: {
@@ -61,16 +69,17 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   mediaContainer: {
-    gridGap: "1rem",
     display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    // gridGap: "1rem",
   },
   mediaListContainer: {
     display: "grid",
-    gridGap: "1.5rem",
+    // gridGap: "1.5rem",
   },
   mediaList: {
-    gridTemplateColumns: "3rem 6rem 1fr",
-    gridGap: "2rem",
+    // gridTemplateColumns: "3rem 6rem 1fr",
+    // gridGap: "2rem",
     "&:hover": {
       backgroundColor: theme.palette.grey[200],
       transition: `all ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeInOut} 0ms`,
@@ -82,6 +91,7 @@ const useStyles = makeStyles((theme) => ({
     gridGap: "2rem",
   },
   mediaListTitle: {
+    // fontSize: theme.typography.h6.fontSize,
     "&:hover": {
       color: theme.palette.primary.main,
       cursor: "pointer",
@@ -125,7 +135,12 @@ interface MediaDiaryList {
   };
 }
 
-function MediaList() {
+// interface MediaListProp {
+//   openDrawer: boolean;
+//   setOpenDrawer: React.Dispatch<React.SetStateAction<boolean>>;
+// }
+
+function MediaList({ openDrawer, setOpenDrawer }: MediaListProp) {
   const classes = useStyles();
   const mediaSelect = useStoreActions((actions) => actions.media.mediaSelect);
   const byID = useStoreState((state) => state.data.byID);
@@ -163,73 +178,127 @@ function MediaList() {
 
   return (
     <>
-      <MediaSearch setViewType={() => {}} dialogClose={dialogClose} />
-      <Box p={2} mt={8}>
-        {Object.keys(byID).length > 0 &&
-        Object.keys(byDate).length > 0 &&
-        Object.keys(diaryDates).length > 0 ? (
-          Object.keys(diaryDates)
-            .sort((a, b) => (new Date(a) > new Date(b) ? -1 : 1))
-            .map((month, monthIndex) => {
-              return (
-                <Box
-                  className={classes.mediaContainer}
-                  key={monthIndex}
-                  style={{
-                    gridTemplateColumns: "5rem 1fr",
-                  }}
+      <Hidden smUp>
+        <SwipeableDrawer
+          anchor="left"
+          variant="temporary"
+          open={openDrawer}
+          onClose={() => setOpenDrawer(false)}
+          onOpen={() => setOpenDrawer(true)}
+          disableDiscovery={true}
+          // classes={{
+          //   paper: classes.drawerPaper,
+          // }}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+        >
+          <Sidebar />
+        </SwipeableDrawer>
+      </Hidden>
+      {/* <MediaSearch setViewType={() => {}} dialogClose={dialogClose} /> */}
+      {/* <Hidden xsDown>
+        <Drawer
+          // classes={{
+          //   paper: classes.drawerPaper,
+          // }}
+          variant="permanent"
+          open
+        >
+          <Sidebar />
+        </Drawer>
+      </Hidden> */}
+      {Object.keys(byID).length > 0 &&
+      Object.keys(byDate).length > 0 &&
+      Object.keys(diaryDates).length > 0 ? (
+        Object.keys(diaryDates)
+          .sort((a, b) => (new Date(a) > new Date(b) ? -1 : 1))
+          .map((month, monthIndex) => {
+            return (
+              <Grid
+                // className={classes.mediaContainer}
+                container
+                key={monthIndex}
+                // spacing={1}
+                // style={{
+                //   gridTemplateColumns: "5rem 1fr",
+                // }}
+              >
+                <Grid
+                  item
+                  xs={2}
+                  // mt={1} p={2}
                 >
-                  <Box mt={1}>
-                    <Typography
-                      variant="h4"
-                      style={{ position: "sticky", top: "5.6rem" }}
-                    >
-                      {new Date(month).toLocaleDateString("en-us", {
-                        month: "short",
-                      })}
-                    </Typography>
-                  </Box>
-                  <Box className={classes.mediaListContainer}>
-                    {Object.keys(diaryDates[month])
-                      .sort(
-                        (a, b) =>
-                          diaryDates[month][b].date.seconds -
-                          diaryDates[month][a].date.seconds
-                      )
-                      .map((day, dayIndex) => {
-                        const {
-                          title,
-                          poster,
-                          published,
-                          artist,
-                          type,
-                          overview,
-                        } = byID[diaryDates[month][day].id];
-                        const { star, seen, season, episode } = diaryDates[
-                          month
-                        ][day];
-                        const localPoster = createPosterURL({
-                          type,
-                          poster,
-                          size: 200,
-                        });
-                        return (
-                          <Box key={monthIndex + dayIndex}>
-                            <Box
-                              display="grid"
-                              className={classes.mediaList}
-                              py={1}
+                  <Typography
+                    variant="h5"
+                    style={{
+                      position: "sticky",
+                      top: "4.1rem",
+                      textAlign: "center",
+                    }}
+                  >
+                    {new Date(month).toLocaleDateString("en-us", {
+                      month: "short",
+                    })}
+                  </Typography>
+                </Grid>
+                <Grid
+                  item
+                  xs={10}
+                  // className={classes.mediaListContainer}
+                >
+                  {Object.keys(diaryDates[month])
+                    .sort(
+                      (a, b) =>
+                        diaryDates[month][b].date.seconds -
+                        diaryDates[month][a].date.seconds
+                    )
+                    .map((day, dayIndex) => {
+                      const {
+                        title,
+                        poster,
+                        published,
+                        artist,
+                        type,
+                        overview,
+                      } = byID[diaryDates[month][day].id];
+                      const { star, seen, season, episode } = diaryDates[month][
+                        day
+                      ];
+                      const localPoster = createPosterURL({
+                        type,
+                        poster,
+                        size: 200,
+                      });
+                      return (
+                        <React.Fragment key={monthIndex + dayIndex}>
+                          <Grid
+                            container
+                            // spacing={2}
+                          >
+                            {/* <Box
+                          // display="grid"
+                          // className={classes.mediaList}
+                          // py={2}
+                          > */}
+                            <Grid
+                              item
+                              xs={1}
+                              // textAlign="center"
+                              // mt={1}
                             >
-                              <Typography variant="h6" component="h6">
-                                <Box textAlign="center" mt={1}>
+                              <Box pt={2}>
+                                <Typography variant="h6">
                                   {new Date(
                                     diaryDates[month][day].date.toDate()
                                   ).toLocaleDateString("en-us", {
                                     day: "numeric",
                                   })}
-                                </Box>
-                              </Typography>
-                              <Box>
+                                </Typography>
+                              </Box>
+                            </Grid>
+                            <Grid item xs={3}>
+                              <Box px={1} py={2}>
                                 <img
                                   className={classes.mediaImage}
                                   src={localPoster}
@@ -242,11 +311,21 @@ function MediaList() {
                                   }
                                 />
                               </Box>
-                              <Box display="flex" flexDirection="column">
+                            </Grid>
+                            <Grid
+                              // container
+                              // spacing={1}
+                              item
+                              xs={7}
+                              // display="flex"
+                              // flexDirection="column"
+                              // px={2}
+                            >
+                              <Box py={2} pl={1} pr={0}>
                                 <Typography
                                   className={classes.mediaListTitle}
-                                  variant="h5"
-                                  component="h5"
+                                  // variant="h6"
+                                  // component="h6"
                                   onClick={() =>
                                     setListView({
                                       open: true,
@@ -257,9 +336,10 @@ function MediaList() {
                                 >
                                   {title}
                                 </Typography>
-                                <Box display="flex" my={1}>
+                                <Box display="flex" my={1} alignItems="center">
                                   <Typography
-                                    variant="subtitle1"
+                                    // variant="subtitle1"
+                                    variant="subtitle2"
                                     color="textSecondary"
                                   >
                                     {new Date(published).toLocaleDateString(
@@ -275,7 +355,7 @@ function MediaList() {
                                     </Typography>
                                   </Box>
                                   <Typography
-                                    variant="subtitle1"
+                                    variant="subtitle2"
                                     color="textSecondary"
                                   >
                                     {artist}
@@ -287,7 +367,7 @@ function MediaList() {
                                     {typeof season !== "undefined" && (
                                       <>
                                         <Typography
-                                          variant="subtitle1"
+                                          variant="subtitle2"
                                           color="textSecondary"
                                         >
                                           Season {season}
@@ -301,7 +381,7 @@ function MediaList() {
                                     )}
                                     {typeof episode !== "undefined" && (
                                       <Typography
-                                        variant="subtitle1"
+                                        variant="subtitle2"
                                         color="textSecondary"
                                       >
                                         Episode {episode}
@@ -339,7 +419,7 @@ function MediaList() {
                                         />
                                       }
                                     />
-                                    <Button
+                                    {/* <Button
                                       size="small"
                                       onClick={() =>
                                         setListView({
@@ -351,52 +431,69 @@ function MediaList() {
                                       }
                                     >
                                       Edit
+                                    </Button> */}
+                                    {/* {overview !== "" && (
+                                    <Button
+                                      size="small"
+                                      onClick={() =>
+                                        setListView({
+                                          open: true,
+                                          type: "edit",
+                                          mediaID: day,
+                                          showOverview: true,
+                                        })
+                                      }
+                                    >
+                                      Overview
                                     </Button>
-                                    {overview !== "" && (
-                                      <Button
-                                        size="small"
-                                        onClick={() =>
-                                          setListView({
-                                            open: true,
-                                            type: "edit",
-                                            mediaID: day,
-                                            showOverview: true,
-                                          })
-                                        }
-                                      >
-                                        Overview
-                                      </Button>
-                                    )}
+                                  )} */}
                                   </Box>
-                                  <Box display="flex" pr={2}>
-                                    <Box pr={2}>{seen && <IconRepeat />}</Box>
+                                  <Box display="flex">
+                                    <Box pr={2}>
+                                      {seen && (
+                                        <IconRepeat width={15} height={15} />
+                                      )}
+                                    </Box>
                                     {type === "film" && (
-                                      <IconFilm stroke="rgba(0, 0, 0, 0.54)" />
+                                      <IconFilm
+                                        width={15}
+                                        height={15}
+                                        stroke="rgba(0, 0, 0, 0.54)"
+                                      />
                                     )}
                                     {type === "tv" && (
-                                      <IconTV stroke="rgba(0, 0, 0, 0.54)" />
+                                      <IconTV
+                                        width={15}
+                                        height={15}
+                                        stroke="rgba(0, 0, 0, 0.54)"
+                                      />
                                     )}
                                     {type === "album" && (
-                                      <IconMusic stroke="rgba(0, 0, 0, 0.54)" />
+                                      <IconMusic
+                                        width={15}
+                                        height={15}
+                                        stroke="rgba(0, 0, 0, 0.54)"
+                                      />
                                     )}
                                   </Box>
                                 </Box>
                               </Box>
-                            </Box>
-                            <Box pt={3}>
-                              <Divider />
-                            </Box>
-                          </Box>
-                        );
-                      })}
-                  </Box>
-                </Box>
-              );
-            })
-        ) : (
-          <CircularProgress />
-        )}
-      </Box>
+                            </Grid>
+                            {/* </Box> */}
+                            {/* <Box pt={3}>
+                          </Box> */}
+                          </Grid>
+                          <Divider />
+                        </React.Fragment>
+                      );
+                    })}
+                </Grid>
+              </Grid>
+            );
+          })
+      ) : (
+        <CircularProgress />
+      )}
       {listView.open && (
         <MediaDialog listView={listView} dialogClose={dialogClose} />
       )}

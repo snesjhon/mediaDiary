@@ -8,7 +8,11 @@
  */
 
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import {
+  createMuiTheme,
+  ThemeProvider,
+  responsiveFontSizes,
+} from "@material-ui/core/styles";
 import { StoreProvider } from "easy-peasy";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
@@ -16,7 +20,8 @@ import { store } from "./config/store";
 import theme from "./config/theme";
 import Main from "./Main";
 
-const themeObj = createMuiTheme(theme);
+let themeObj = createMuiTheme(theme);
+themeObj = responsiveFontSizes(themeObj);
 
 ReactDOM.render(
   <StoreProvider store={store}>
