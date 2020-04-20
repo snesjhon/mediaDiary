@@ -16,7 +16,7 @@ const theme = {
   },
   typography: {
     fontSize: 14,
-    fontFamily: "SF Pro Text",
+    fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif",
     fontWeightRegular: 400,
   },
   breakpoints: {
