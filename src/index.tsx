@@ -8,58 +8,24 @@
  */
 
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import {
+  createMuiTheme,
+  ThemeProvider,
+  responsiveFontSizes,
+} from "@material-ui/core/styles";
 import { StoreProvider } from "easy-peasy";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { store } from "./config/store";
+import theme from "./config/theme";
 import Main from "./Main";
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      light: "#85D7FF",
-      main: "#03b021",
-      dark: "#009EEB"
-    },
-    secondary: {
-      light: "#29EB7F",
-      main: "#ff8001",
-      dark: "#13CE66"
-    },
-    text: {
-      primary: "#445567"
-    }
-  },
-  typography: {
-    fontFamily: [
-      "-apple-system",
-      "BlinkMacSystemFont",
-      '"Segoe UI"',
-      "Roboto",
-      '"Helvetica Neue"',
-      "Arial",
-      "sans-serif",
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"'
-    ].join(","),
-    fontWeightRegular: 400
-  },
-  breakpoints: {
-    values: {
-      xs: 0,
-      sm: 600,
-      md: 800,
-      lg: 1280,
-      xl: 1920
-    }
-  }
-});
+let themeObj = createMuiTheme(theme);
+themeObj = responsiveFontSizes(themeObj);
 
 ReactDOM.render(
   <StoreProvider store={store}>
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={themeObj}>
       <CssBaseline />
       <Main />
     </ThemeProvider>

@@ -15,73 +15,87 @@ import {
   IconPlus,
   IconRepeat,
   IconStar,
-  IconTV
+  IconTV,
 } from "./icons";
 import MediaDialog, { viewType } from "./MediaDialog";
 import { createPosterURL } from "./utilities/helpers";
+import MediaSearch from "./MediaSearch";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
+import {
+  IconButton,
+  Grid,
+  Hidden,
+  Drawer,
+  SwipeableDrawer,
+} from "@material-ui/core";
+import Avatar from "@material-ui/core/Avatar";
+import Sidebar from "./Sidebar";
+import { MediaListProp } from "./Main";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   tableHeadings: {
-    gridTemplateColumns: "5rem 1fr",
+    gridTemplateColumns: "8.5rem 1fr",
     gridGap: "1rem",
     display: "grid",
     alignItems: "center",
     position: "sticky",
     top: "0",
-    borderBottom: `1px solid ${theme.palette.grey[300]}`,
+    borderBottom: `5px solid ${theme.palette.grey[300]}`,
     marginBottom: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
     backgroundColor: theme.palette.background.default,
     paddingTop: "1rem",
     zIndex: 9,
-    "& > *": {
-      textTransform: "uppercase",
-      color: theme.palette.grey[500]
-    }
+    // "& > *": {
+    //   textTransform: "uppercase",
+    //   color: theme.palette.grey[500]
+    // }
   },
   tableHeadingList: {
     gridTemplateColumns: "3rem 6rem 0.9fr 1fr",
     gridGap: "2rem",
     alignItems: "center",
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   tableHeadingIcons: {
     display: "flex",
     "& > div": {
       display: "flex",
-      alignItems: "center"
+      alignItems: "center",
     },
     "& > div:hover": {
       cursor: "pointer",
-      color: theme.palette.primary.main
-    }
+      color: theme.palette.primary.main,
+    },
   },
   mediaContainer: {
-    gridGap: "1rem",
-    display: "grid"
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    // gridGap: "1rem",
   },
   mediaListContainer: {
     display: "grid",
-    gridGap: "1.5rem"
+    // gridGap: "1.5rem",
   },
   mediaList: {
-    gridTemplateColumns: "3rem 6rem 1fr",
-    gridGap: "2rem",
+    // gridTemplateColumns: "3rem 6rem 1fr",
+    // gridGap: "2rem",
     "&:hover": {
       backgroundColor: theme.palette.grey[200],
-      transition: `all ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeInOut} 0ms`
-    }
+      transition: `all ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeInOut} 0ms`,
+    },
   },
   mediaListItem: {
     alignItems: "center",
     gridTemplateColumns: "3rem 6rem 1fr 1fr",
-    gridGap: "2rem"
+    gridGap: "2rem",
   },
   mediaListTitle: {
+    // fontSize: theme.typography.h6.fontSize,
     "&:hover": {
       color: theme.palette.primary.main,
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   },
   mediaImage: {
     display: "block",
@@ -92,19 +106,19 @@ const useStyles = makeStyles(theme => ({
       border: `1px solid ${theme.palette.primary.main}`,
       outline: `2px solid ${theme.palette.primary.main}`,
       borderRadius: 0,
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   },
   mediaFab: {
     position: "sticky",
     bottom: "4vh",
     marginLeft: "1rem",
-    marginBottom: "-1.5rem"
+    marginBottom: "-1.5rem",
   },
   mediaResults: {
     overflow: "scroll",
-    maxHeight: "32vh"
-  }
+    maxHeight: "32vh",
+  },
 }));
 
 export interface MediaListView {
@@ -115,17 +129,28 @@ export interface MediaListView {
   showEdit?: boolean;
 }
 
-function MediaList() {
+interface MediaDiaryList {
+  [key: string]: {
+    [key: string]: DataByDate;
+  };
+}
+
+// interface MediaListProp {
+//   openDrawer: boolean;
+//   setOpenDrawer: React.Dispatch<React.SetStateAction<boolean>>;
+// }
+
+function MediaList({ openDrawer, setOpenDrawer }: MediaListProp) {
   const classes = useStyles();
-  const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
-  const byID = useStoreState(state => state.data.byID);
-  const byDate = useStoreState(state => state.data.byDate);
-  const dataGet = useStoreActions(actions => actions.data.dataGet);
+  const mediaSelect = useStoreActions((actions) => actions.media.mediaSelect);
+  const byID = useStoreState((state) => state.data.byID);
+  const byDate = useStoreState((state) => state.data.byDate);
+  const dataGet = useStoreActions((actions) => actions.data.dataGet);
 
   const [listView, setListView] = useState<MediaListView>({
     open: false,
     type: "search",
-    mediaID: ""
+    mediaID: "",
   });
   const [filterBy, setFilterBy] = useState("");
 
@@ -133,17 +158,15 @@ function MediaList() {
     dataGet();
   }, [dataGet]);
 
+  let diaryDates: MediaDiaryList = {};
+
   if (Object.keys(byID).length > 0 && Object.keys(byDate).length > 0) {
-    const diaryDates = Object.keys(byDate)
-      .filter(e => (filterBy === "" ? e : byDate[e].type === filterBy))
-      .reduce<{
-        [key: string]: {
-          [key: string]: DataByDate;
-        };
-      }>((a, c) => {
+    diaryDates = Object.keys(byDate)
+      .filter((e) => (filterBy === "" ? e : byDate[e].type === filterBy))
+      .reduce<MediaDiaryList>((a, c) => {
         const dateString = byDate[c].date.toDate().toLocaleDateString("en-us", {
           month: "short",
-          year: "numeric"
+          year: "numeric",
         });
         a[`01-${dateString}`] = Object.assign(
           { ...a[`01-${dateString}`] },
@@ -151,72 +174,79 @@ function MediaList() {
         );
         return a;
       }, {});
+  }
 
-    const dataCounts = Object.keys(byID).reduce<{
-      [key: string]: number;
-    }>((a, c) => {
-      if (typeof a[byID[c]["type"]] !== "undefined") {
-        a[byID[c]["type"]] = ++a[byID[c]["type"]];
-      } else {
-        a[byID[c]["type"]] = 1;
-      }
-      return a;
-    }, {});
-
-    return (
-      <>
-        <Box className={classes.tableHeadings}>
-          <Box mb={1}>Month</Box>
-          <Box display="grid" className={classes.tableHeadingList}>
-            <Box textAlign="center">Day</Box>
-            <Box>Poster</Box>
-            <Box>Title</Box>
-            <Box className={classes.tableHeadingIcons}>
-              {filterBy !== "" && (
-                <Button size="small" onClick={() => setFilterBy("")}>
-                  X
-                </Button>
-              )}
-              {Object.keys(dataCounts).map((e: string, i: number) => (
-                <Box key={e} onClick={() => setFilterBy(e)}>
-                  <Typography component="div">
-                    <Box mr={1}>{dataCounts[e]}</Box>
-                  </Typography>
-                  {e === "tv" && <IconTV />}
-                  {e === "film" && <IconFilm />}
-                  {e === "album" && <IconMusic />}
-                  {(i === 0 || i === 1) && (
-                    <Typography component="div">
-                      <Box px={2}>/</Box>
-                    </Typography>
-                  )}
-                </Box>
-              ))}
-            </Box>
-          </Box>
-        </Box>
-        {Object.keys(diaryDates)
+  return (
+    <>
+      <Hidden smUp>
+        <SwipeableDrawer
+          anchor="left"
+          variant="temporary"
+          open={openDrawer}
+          onClose={() => setOpenDrawer(false)}
+          onOpen={() => setOpenDrawer(true)}
+          disableDiscovery={true}
+          // classes={{
+          //   paper: classes.drawerPaper,
+          // }}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+        >
+          <Sidebar />
+        </SwipeableDrawer>
+      </Hidden>
+      {/* <MediaSearch setViewType={() => {}} dialogClose={dialogClose} /> */}
+      {/* <Hidden xsDown>
+        <Drawer
+          // classes={{
+          //   paper: classes.drawerPaper,
+          // }}
+          variant="permanent"
+          open
+        >
+          <Sidebar />
+        </Drawer>
+      </Hidden> */}
+      {Object.keys(byID).length > 0 &&
+      Object.keys(byDate).length > 0 &&
+      Object.keys(diaryDates).length > 0 ? (
+        Object.keys(diaryDates)
           .sort((a, b) => (new Date(a) > new Date(b) ? -1 : 1))
           .map((month, monthIndex) => {
             return (
-              <Box
-                className={classes.mediaContainer}
+              <Grid
+                // className={classes.mediaContainer}
+                container
                 key={monthIndex}
-                style={{
-                  gridTemplateColumns: "5rem 1fr"
-                }}
+                // spacing={1}
+                // style={{
+                //   gridTemplateColumns: "5rem 1fr",
+                // }}
               >
-                <Box mt={1}>
+                <Grid
+                  item
+                  xs={2}
+                  // mt={1} p={2}
+                >
                   <Typography
-                    variant="h4"
-                    style={{ position: "sticky", top: "4rem" }}
+                    variant="h5"
+                    style={{
+                      position: "sticky",
+                      top: "4.1rem",
+                      textAlign: "center",
+                    }}
                   >
                     {new Date(month).toLocaleDateString("en-us", {
-                      month: "short"
+                      month: "short",
                     })}
                   </Typography>
-                </Box>
-                <Box className={classes.mediaListContainer}>
+                </Grid>
+                <Grid
+                  item
+                  xs={10}
+                  // className={classes.mediaListContainer}
+                >
                   {Object.keys(diaryDates[month])
                     .sort(
                       (a, b) =>
@@ -230,7 +260,7 @@ function MediaList() {
                         published,
                         artist,
                         type,
-                        overview
+                        overview,
                       } = byID[diaryDates[month][day].id];
                       const { star, seen, season, episode } = diaryDates[month][
                         day
@@ -238,148 +268,171 @@ function MediaList() {
                       const localPoster = createPosterURL({
                         type,
                         poster,
-                        size: 200
+                        size: 200,
                       });
                       return (
-                        <Box key={monthIndex + dayIndex}>
-                          <Box
-                            display="grid"
-                            className={classes.mediaList}
-                            py={1}
+                        <React.Fragment key={monthIndex + dayIndex}>
+                          <Grid
+                            container
+                            // spacing={2}
                           >
-                            <Typography variant="h6" component="h6">
-                              <Box textAlign="center" mt={1}>
-                                {new Date(
-                                  diaryDates[month][day].date.toDate()
-                                ).toLocaleDateString("en-us", {
-                                  day: "numeric"
-                                })}
-                              </Box>
-                            </Typography>
-                            <Box>
-                              <img
-                                className={classes.mediaImage}
-                                src={localPoster}
-                                onClick={() =>
-                                  setListView({
-                                    open: true,
-                                    type: "edit",
-                                    mediaID: day
-                                  })
-                                }
-                              />
-                            </Box>
-                            <Box display="flex" flexDirection="column">
-                              <Typography
-                                className={classes.mediaListTitle}
-                                variant="h5"
-                                component="h5"
-                                onClick={() =>
-                                  setListView({
-                                    open: true,
-                                    type: "edit",
-                                    mediaID: day
-                                  })
-                                }
-                              >
-                                {title}
-                              </Typography>
-                              <Box display="flex" my={1}>
-                                <Typography
-                                  variant="subtitle1"
-                                  color="textSecondary"
-                                >
-                                  {new Date(published).toLocaleDateString(
-                                    "en-US",
-                                    {
-                                      year: "numeric"
-                                    }
-                                  )}
+                            {/* <Box
+                          // display="grid"
+                          // className={classes.mediaList}
+                          // py={2}
+                          > */}
+                            <Grid
+                              item
+                              xs={1}
+                              // textAlign="center"
+                              // mt={1}
+                            >
+                              <Box pt={2}>
+                                <Typography variant="h6">
+                                  {new Date(
+                                    diaryDates[month][day].date.toDate()
+                                  ).toLocaleDateString("en-us", {
+                                    day: "numeric",
+                                  })}
                                 </Typography>
-                                <Box mx={1}>
-                                  <Typography color="textSecondary">
-                                    ·
+                              </Box>
+                            </Grid>
+                            <Grid item xs={3}>
+                              <Box px={1} py={2}>
+                                <img
+                                  className={classes.mediaImage}
+                                  src={localPoster}
+                                  onClick={() =>
+                                    setListView({
+                                      open: true,
+                                      type: "edit",
+                                      mediaID: day,
+                                    })
+                                  }
+                                />
+                              </Box>
+                            </Grid>
+                            <Grid
+                              // container
+                              // spacing={1}
+                              item
+                              xs={7}
+                              // display="flex"
+                              // flexDirection="column"
+                              // px={2}
+                            >
+                              <Box py={2} pl={1} pr={0}>
+                                <Typography
+                                  className={classes.mediaListTitle}
+                                  // variant="h6"
+                                  // component="h6"
+                                  onClick={() =>
+                                    setListView({
+                                      open: true,
+                                      type: "edit",
+                                      mediaID: day,
+                                    })
+                                  }
+                                >
+                                  {title}
+                                </Typography>
+                                <Box display="flex" my={1} alignItems="center">
+                                  <Typography
+                                    // variant="subtitle1"
+                                    variant="subtitle2"
+                                    color="textSecondary"
+                                  >
+                                    {new Date(published).toLocaleDateString(
+                                      "en-US",
+                                      {
+                                        year: "numeric",
+                                      }
+                                    )}
+                                  </Typography>
+                                  <Box mx={1}>
+                                    <Typography color="textSecondary">
+                                      ·
+                                    </Typography>
+                                  </Box>
+                                  <Typography
+                                    variant="subtitle2"
+                                    color="textSecondary"
+                                  >
+                                    {artist}
                                   </Typography>
                                 </Box>
-                                <Typography
-                                  variant="subtitle1"
-                                  color="textSecondary"
-                                >
-                                  {artist}
-                                </Typography>
-                              </Box>
-                              {(typeof season !== "undefined" ||
-                                typeof episode !== "undefined") && (
-                                <Box display="flex" mb={1}>
-                                  {typeof season !== "undefined" && (
-                                    <>
+                                {(typeof season !== "undefined" ||
+                                  typeof episode !== "undefined") && (
+                                  <Box display="flex" mb={1}>
+                                    {typeof season !== "undefined" && (
+                                      <>
+                                        <Typography
+                                          variant="subtitle2"
+                                          color="textSecondary"
+                                        >
+                                          Season {season}
+                                        </Typography>
+                                        <Box mx={1}>
+                                          <Typography color="textSecondary">
+                                            ·
+                                          </Typography>
+                                        </Box>
+                                      </>
+                                    )}
+                                    {typeof episode !== "undefined" && (
                                       <Typography
-                                        variant="subtitle1"
+                                        variant="subtitle2"
                                         color="textSecondary"
                                       >
-                                        Season {season}
+                                        Episode {episode}
                                       </Typography>
-                                      <Box mx={1}>
-                                        <Typography color="textSecondary">
-                                          ·
-                                        </Typography>
-                                      </Box>
-                                    </>
-                                  )}
-                                  {typeof episode !== "undefined" && (
-                                    <Typography
-                                      variant="subtitle1"
-                                      color="textSecondary"
+                                    )}
+                                  </Box>
+                                )}
+                                <Box
+                                  mt="auto"
+                                  display="flex"
+                                  justifyContent="space-between"
+                                  alignItems="center"
+                                >
+                                  <Box display="flex" alignItems="center">
+                                    <Rating
+                                      name="half-rating"
+                                      value={star}
+                                      precision={0.5}
+                                      size="small"
+                                      readOnly
+                                      emptyIcon={
+                                        <IconStar
+                                          width={15}
+                                          height={15}
+                                          empty
+                                          fill="#03b021"
+                                        />
+                                      }
+                                      icon={
+                                        <IconStar
+                                          width={15}
+                                          height={15}
+                                          fill="#03b021"
+                                          stroke="#03b021"
+                                        />
+                                      }
+                                    />
+                                    {/* <Button
+                                      size="small"
+                                      onClick={() =>
+                                        setListView({
+                                          open: true,
+                                          type: "edit",
+                                          mediaID: day,
+                                          showEdit: true,
+                                        })
+                                      }
                                     >
-                                      Episode {episode}
-                                    </Typography>
-                                  )}
-                                </Box>
-                              )}
-                              <Box
-                                mt="auto"
-                                display="flex"
-                                justifyContent="space-between"
-                                alignItems="center"
-                              >
-                                <Box display="flex" alignItems="center">
-                                  <Rating
-                                    name="half-rating"
-                                    value={star}
-                                    precision={0.5}
-                                    size="small"
-                                    readOnly
-                                    emptyIcon={
-                                      <IconStar
-                                        width={15}
-                                        height={15}
-                                        empty
-                                        fill="#03b021"
-                                      />
-                                    }
-                                    icon={
-                                      <IconStar
-                                        width={15}
-                                        height={15}
-                                        fill="#03b021"
-                                        stroke="#03b021"
-                                      />
-                                    }
-                                  />
-                                  <Button
-                                    size="small"
-                                    onClick={() =>
-                                      setListView({
-                                        open: true,
-                                        type: "edit",
-                                        mediaID: day,
-                                        showEdit: true
-                                      })
-                                    }
-                                  >
-                                    Edit
-                                  </Button>
-                                  {overview !== "" && (
+                                      Edit
+                                    </Button> */}
+                                    {/* {overview !== "" && (
                                     <Button
                                       size="small"
                                       onClick={() =>
@@ -387,54 +440,68 @@ function MediaList() {
                                           open: true,
                                           type: "edit",
                                           mediaID: day,
-                                          showOverview: true
+                                          showOverview: true,
                                         })
                                       }
                                     >
                                       Overview
                                     </Button>
-                                  )}
-                                </Box>
-                                <Box display="flex" pr={2}>
-                                  <Box pr={2}>{seen && <IconRepeat />}</Box>
-                                  {type === "film" && (
-                                    <IconFilm stroke="rgba(0, 0, 0, 0.54)" />
-                                  )}
-                                  {type === "tv" && (
-                                    <IconTV stroke="rgba(0, 0, 0, 0.54)" />
-                                  )}
-                                  {type === "album" && (
-                                    <IconMusic stroke="rgba(0, 0, 0, 0.54)" />
-                                  )}
+                                  )} */}
+                                  </Box>
+                                  <Box display="flex">
+                                    <Box pr={2}>
+                                      {seen && (
+                                        <IconRepeat width={15} height={15} />
+                                      )}
+                                    </Box>
+                                    {type === "film" && (
+                                      <IconFilm
+                                        width={15}
+                                        height={15}
+                                        stroke="rgba(0, 0, 0, 0.54)"
+                                      />
+                                    )}
+                                    {type === "tv" && (
+                                      <IconTV
+                                        width={15}
+                                        height={15}
+                                        stroke="rgba(0, 0, 0, 0.54)"
+                                      />
+                                    )}
+                                    {type === "album" && (
+                                      <IconMusic
+                                        width={15}
+                                        height={15}
+                                        stroke="rgba(0, 0, 0, 0.54)"
+                                      />
+                                    )}
+                                  </Box>
                                 </Box>
                               </Box>
-                            </Box>
-                          </Box>
-                          <Box pt={3}>
-                            <Divider />
-                          </Box>
-                        </Box>
+                            </Grid>
+                            {/* </Box> */}
+                            {/* <Box pt={3}>
+                          </Box> */}
+                          </Grid>
+                          <Divider />
+                        </React.Fragment>
                       );
                     })}
-                </Box>
-              </Box>
+                </Grid>
+              </Grid>
             );
-          })}
-        <Fab
-          className={classes.mediaFab}
-          color="primary"
-          onClick={() => setListView({ open: true, type: "search" })}
-        >
-          <IconPlus />
-        </Fab>
-        {listView.open && (
-          <MediaDialog listView={listView} dialogClose={dialogClose} />
-        )}
-      </>
-    );
-  } else {
-    return <CircularProgress />;
-  }
+          })
+      ) : (
+        <CircularProgress />
+      )}
+      {listView.open && (
+        <MediaDialog listView={listView} dialogClose={dialogClose} />
+      )}
+    </>
+  );
+  // } else {
+  //   return <CircularProgress />;
+  // }
 
   function dialogClose() {
     mediaSelect();
@@ -443,3 +510,49 @@ function MediaList() {
 }
 
 export default MediaList;
+//  {/* <Fab
+//           className={classes.mediaFab}
+//           color="primary"
+//           onClick={() => setListView({ open: true, type: "search" })}
+//         >
+//           <IconPlus />
+//         </Fab> */}
+// <Box mb={1}>Month</Box>
+//           <Box display="grid" className={classes.tableHeadingList}>
+//             <Box textAlign="center">Day</Box>
+//             <Box>Poster</Box>
+//             <Box>Title</Box>
+//             <Box className={classes.tableHeadingIcons}>
+//               {filterBy !== "" && (
+//                 <Button size="small" onClick={() => setFilterBy("")}>
+//                   X
+//                 </Button>
+//               )}
+//               {Object.keys(dataCounts).map((e: string, i: number) => (
+//                 <Box key={e} onClick={() => setFilterBy(e)}>
+//                   <Typography component="div">
+//                     <Box mr={1}>{dataCounts[e]}</Box>
+//                   </Typography>
+//                   {e === "tv" && <IconTV />}
+//                   {e === "film" && <IconFilm />}
+//                   {e === "album" && <IconMusic />}
+//                   {(i === 0 || i === 1) && (
+//                     <Typography component="div">
+//                       <Box px={2}>/</Box>
+//                     </Typography>
+//                   )}
+//                 </Box>
+//               ))}
+//             </Box>
+//           </Box>
+
+// const dataCounts = Object.keys(byID).reduce<{
+//   [key: string]: number;
+// }>((a, c) => {
+//   if (typeof a[byID[c]["type"]] !== "undefined") {
+//     a[byID[c]["type"]] = ++a[byID[c]["type"]];
+//   } else {
+//     a[byID[c]["type"]] = 1;
+//   }
+//   return a;
+// }, {});
