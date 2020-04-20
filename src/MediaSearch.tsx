@@ -166,7 +166,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#00000080",
-    opacity: (props) => (props ? 1 : 0),
+    // opacity: (props) => (props ? 1 : 0),
+    opacity: 1,
     transition: "opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
   },
   // search: {
@@ -247,16 +248,15 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
     }
   }, [bouncedSearch, type]);
 
-  // TODO: implement the "visibility" of backdrop when user is in focus
-  // useEffect(() => {
-  //   if (InputRef.current) {
-  //     InputRef.current.focus();
-  //   }
-  // }, [type]);
+  useEffect(() => {
+    if (InputRef.current) {
+      InputRef.current.focus();
+    }
+  }, [type]);
 
   return (
     <>
-      {expanded && <Box className={classes.backDrop} />}
+      <Box className={classes.backDrop} />
       <Box className={classes.mediaNavigation}>
         <Box className={classes.mediaNavigationGrid}>
           <Box className={classes.mediaSearch}>
@@ -264,7 +264,9 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
               <IconPlus />
             </IconButton>
             <InputBase
+              inputRef={InputRef}
               type="search"
+              autoFocus={true}
               placeholder="Add Movie"
               classes={{
                 input: classes.mediaSearchInput,
@@ -273,13 +275,25 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
                 dispatch({ type: "searchInput", payload: e.target.value })
               }
             />
-            <IconButton size="small">
+            <IconButton
+              size="small"
+              onClick={() => dispatch({ type: "setType", payload: "film" })}
+              color={type === "film" ? "primary" : undefined}
+            >
               <IconFilm />
             </IconButton>
-            <IconButton size="small">
+            <IconButton
+              size="small"
+              onClick={() => dispatch({ type: "setType", payload: "tv" })}
+              color={type === "tv" ? "primary" : undefined}
+            >
               <IconTV />
             </IconButton>
-            <IconButton size="small">
+            <IconButton
+              size="small"
+              onClick={() => dispatch({ type: "setType", payload: "album" })}
+              color={type === "album" ? "primary" : undefined}
+            >
               <IconMusic />
             </IconButton>
           </Box>
@@ -425,20 +439,20 @@ export default MediaSearch;
 //             <Typography variant="h5">/</Typography>
 //           </Box>
 //           <IconButton
-//             onClick={() => dispatch({ type: "setType", payload: "film" })}
-//             color={type === "film" ? "primary" : undefined}
+// onClick={() => dispatch({ type: "setType", payload: "film" })}
+// color={type === "film" ? "primary" : undefined}
 //           >
 //             <IconFilm />
 //           </IconButton>
 //           <IconButton
-//             onClick={() => dispatch({ type: "setType", payload: "tv" })}
-//             color={type === "tv" ? "primary" : undefined}
+// onClick={() => dispatch({ type: "setType", payload: "tv" })}
+// color={type === "tv" ? "primary" : undefined}
 //           >
 //             <IconTV />
 //           </IconButton>
 //           <IconButton
-//             onClick={() => dispatch({ type: "setType", payload: "album" })}
-//             color={type === "album" ? "primary" : undefined}
+// onClick={() => dispatch({ type: "setType", payload: "album" })}
+// color={type === "album" ? "primary" : undefined}
 //           >
 //             <IconMusic />
 //           </IconButton>
