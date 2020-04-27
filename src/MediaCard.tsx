@@ -11,7 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import Rating from "@material-ui/lab/Rating/Rating";
 import {
   KeyboardDatePicker,
-  MuiPickersUtilsProvider
+  MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 import * as firebase from "firebase/app";
 import * as React from "react";
@@ -22,22 +22,22 @@ import MediaCardInfo from "./MediaCardInfo";
 import { MediaListView } from "./MediaList";
 import { createPosterURL } from "./utilities/helpers";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   metadata: {
     display: "grid",
     gridTemplateColumns: "1fr 0.5fr 0.3fr",
     alignItems: "center",
-    gridGap: "1.5rem"
+    gridGap: "1.5rem",
   },
   actions: {
     display: "flex",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
   itemActive: {
     boxShadow: `0 0 0 2px ${theme.palette.primary.main}`,
-    backgroundColor: "rgba(0, 0, 0, 0.04)"
-  }
+    backgroundColor: "rgba(0, 0, 0, 0.04)",
+  },
 }));
 
 interface StateType {
@@ -63,31 +63,31 @@ const MediaEditReducer = (state: StateType, action: ActionType) => {
     case "expanded": {
       return {
         ...state,
-        expanded: action.payload
+        expanded: action.payload,
       };
     }
     case "editing": {
       return {
         ...state,
-        editing: action.payload
+        editing: action.payload,
       };
     }
     case "setLocalDate": {
       return {
         ...state,
-        localDate: action.payload
+        localDate: action.payload,
       };
     }
     case "setLocalSeen": {
       return {
         ...state,
-        localSeen: action.payload
+        localSeen: action.payload,
       };
     }
     case "setLocalStar": {
       return {
         ...state,
-        localStar: action.payload
+        localStar: action.payload,
       };
     }
     default:
@@ -100,8 +100,8 @@ interface MediaCardProps {
 }
 
 function MediaCard({ listView, dialogClose }: MediaCardProps) {
-  const byDate = useStoreState(state => state.data.byDate);
-  const byID = useStoreState(state => state.data.byID);
+  const byDate = useStoreState((state) => state.data.byDate);
+  const byID = useStoreState((state) => state.data.byID);
 
   const { mediaID, showOverview, showEdit } = listView;
   const { id, seen, star, date, type } = byDate[
@@ -111,18 +111,18 @@ function MediaCard({ listView, dialogClose }: MediaCardProps) {
 
   const [
     { expanded, editing, localDate, localSeen, localStar },
-    dispatch
+    dispatch,
   ] = useReducer(MediaEditReducer, {
     expanded: showOverview,
     editing: showEdit,
     localDate: date,
     localStar: star,
-    localSeen: seen
+    localSeen: seen,
   });
 
   const localPoster = createPosterURL({
     type,
-    poster
+    poster,
   });
 
   return (
@@ -168,11 +168,11 @@ function MediaInfo({
   listView,
   dialogClose,
   dispatch,
-  expanded
+  expanded,
 }: MediaInfoProps) {
-  const byDate = useStoreState(state => state.data.byDate);
-  const byID = useStoreState(state => state.data.byID);
-  const dataDelete = useStoreActions(actions => actions.data.dataDelete);
+  const byDate = useStoreState((state) => state.data.byDate);
+  const byID = useStoreState((state) => state.data.byID);
+  const dataDelete = useStoreActions((actions) => actions.data.dataDelete);
 
   const { mediaID } = listView;
   const { id, seen, star, date } = byDate[
@@ -186,7 +186,7 @@ function MediaInfo({
         <Typography variant="h6">
           {new Date(date.toDate()).toLocaleDateString("en-us", {
             month: "short",
-            day: "numeric"
+            day: "numeric",
           })}
         </Typography>
         <Rating
@@ -219,7 +219,7 @@ function MediaInfo({
             if (typeof mediaID !== "undefined") {
               return dataDelete({
                 mediaID,
-                cb: () => dialogClose()
+                cb: () => dialogClose(),
               });
             }
           }}
@@ -247,10 +247,10 @@ function MediaEdit({
   localSeen,
   localStar,
   dispatch,
-  dialogClose
+  dialogClose,
 }: MediaEditProps) {
-  const mediaUpdate = useStoreActions(actions => actions.data.dataUpdate);
-  const dataDelete = useStoreActions(actions => actions.data.dataDelete);
+  const mediaUpdate = useStoreActions((actions) => actions.data.dataUpdate);
+  const dataDelete = useStoreActions((actions) => actions.data.dataDelete);
   const { mediaID } = listView;
   const classes = useStyles();
   return (
@@ -264,16 +264,16 @@ function MediaEdit({
             format="MM/DD/YYYY"
             value={localDate.toDate()}
             autoOk={true}
-            onChange={e => {
+            onChange={(e) => {
               return e !== null
                 ? dispatch({
                     type: "setLocalDate",
-                    payload: firebase.firestore.Timestamp.fromDate(e.toDate())
+                    payload: firebase.firestore.Timestamp.fromDate(e.toDate()),
                   })
                 : null;
             }}
             KeyboardButtonProps={{
-              "aria-label": "change date"
+              "aria-label": "change date",
             }}
           />
         </MuiPickersUtilsProvider>
@@ -313,7 +313,7 @@ function MediaEdit({
             if (typeof mediaID !== "undefined") {
               return dataDelete({
                 mediaID,
-                cb: () => dialogClose()
+                cb: () => dialogClose(),
               });
             }
           }}
@@ -334,7 +334,7 @@ function MediaEdit({
         modifiedDate: localDate,
         modifiedSeen: localSeen,
         modifiedStar: localStar,
-        cb: () => dialogClose()
+        cb: () => dialogClose(),
       });
     }
   }

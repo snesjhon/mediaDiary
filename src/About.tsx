@@ -15,8 +15,8 @@ import { useEffect, useState } from "react";
 import { useStoreActions, useStoreState } from "./config/store";
 
 const About = () => {
-  const userGet = useStoreActions(actions => actions.global.userGet);
-  const user = useStoreState(state => state.global.user);
+  const userGet = useStoreActions((actions) => actions.global.userGet);
+  const user = useStoreState((state) => state.global.user);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {

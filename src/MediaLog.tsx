@@ -11,7 +11,8 @@ import Typography from "@material-ui/core/Typography";
 import Rating from "@material-ui/lab/Rating/Rating";
 import {
   KeyboardDatePicker,
-  MuiPickersUtilsProvider
+  MuiPickersUtilsProvider,
+  DatePicker,
 } from "@material-ui/pickers";
 import * as React from "react";
 import { useEffect, useReducer } from "react";
@@ -31,12 +32,20 @@ const useStyles = makeStyles(() => ({
     display: "grid",
     gridTemplateColumns: "1fr 0.5fr 0.3fr",
     alignItems: "center",
-    gridGap: "1.5rem"
+    gridGap: "1.5rem",
   },
   actions: {
     display: "flex",
-    justifyContent: "space-between"
-  }
+    justifyContent: "space-between",
+  },
+  underline: {
+    "&&&:before": {
+      borderBottom: "none",
+    },
+    "&&:after": {
+      borderBottom: "none",
+    },
+  },
 }));
 
 type MediaLogState = {
@@ -66,14 +75,14 @@ const MediaLogReducer = (state: MediaLogState, action: MediaLogAction) => {
     case "setData": {
       return {
         ...state,
-        [actionKey]: action.payload
+        [actionKey]: action.payload,
       };
     }
     case "setFetchData": {
       return {
         ...state,
         loading: false,
-        [actionKey]: action.payload
+        [actionKey]: action.payload,
       };
     }
     case "setSeasons": {
@@ -83,7 +92,7 @@ const MediaLogReducer = (state: MediaLogState, action: MediaLogAction) => {
         localArtist: action.payload.localArtist,
         localPoster: action.payload.localPoster,
         season: action.payload.season,
-        seasons: action.payload.seasons
+        seasons: action.payload.seasons,
       };
     }
     case "setSeason": {
@@ -91,7 +100,7 @@ const MediaLogReducer = (state: MediaLogState, action: MediaLogAction) => {
         ...state,
         season: action.payload.season,
         episode: 1,
-        localPoster: action.payload.localPoster
+        localPoster: action.payload.localPoster,
       };
     }
     default:
@@ -99,25 +108,28 @@ const MediaLogReducer = (state: MediaLogState, action: MediaLogAction) => {
   }
 };
 
-interface MediaLogProps {
-  dialogClose: () => void;
-}
+// interface MediaLogProps {
+//   dialogClose: () => void;
+// }
 
-const MediaLog = ({ dialogClose }: MediaLogProps) => {
+const MediaLog = () => {
   const classes = useStyles();
-  const mediaSelect = useStoreActions(actions => actions.media.mediaSelect);
-  const mediaPutFilm = useStoreActions(actions => actions.media.mediaPutFilm);
-  const mediaPutTV = useStoreActions(actions => actions.media.mediaPutTV);
-  const mediaPutAlbum = useStoreActions(actions => actions.media.mediaPutAlbum);
+  const mediaSelect = useStoreActions((actions) => actions.media.mediaSelect);
+  const mediaPutFilm = useStoreActions((actions) => actions.media.mediaPutFilm);
+  const mediaPutTV = useStoreActions((actions) => actions.media.mediaPutTV);
+  const mediaPutAlbum = useStoreActions(
+    (actions) => actions.media.mediaPutAlbum
+  );
   const {
     id,
     artist,
     overview,
     poster,
+    backdrop,
     published,
     title,
-    type
-  } = useStoreState(state => state.media.mediaSelected);
+    type,
+  } = useStoreState((state) => state.media.mediaSelected);
 
   const [
     {
@@ -129,9 +141,9 @@ const MediaLog = ({ dialogClose }: MediaLogProps) => {
       episode,
       seasons,
       localPoster,
-      loading
+      loading,
     },
-    dispatch
+    dispatch,
   ] = useReducer(MediaLogReducer, {
     date: new Date(),
     seen: false,
@@ -141,7 +153,7 @@ const MediaLog = ({ dialogClose }: MediaLogProps) => {
     seasons: {},
     localArtist: artist,
     localPoster: poster,
-    loading: type === "tv" ? true : false
+    loading: type === "tv" ? true : false,
   });
 
   useEffect(() => {
@@ -149,8 +161,8 @@ const MediaLog = ({ dialogClose }: MediaLogProps) => {
       fetch(
         `https://api.themoviedb.org/3/tv/${id}?api_key=${MBDKEY}&language=en-US`
       )
-        .then(r => r.json())
-        .then(info =>
+        .then((r) => r.json())
+        .then((info) =>
           dispatch({
             type: "setSeasons",
             payload: {
@@ -159,20 +171,20 @@ const MediaLog = ({ dialogClose }: MediaLogProps) => {
                 info.created_by.map((e: any) => e.name).join(", "),
               season: info.seasons[0],
               seasons: info.seasons,
-              localPoster: info.seasons[0].poster_path
-            }
+              localPoster: info.seasons[0].poster_path,
+            },
           })
         );
     } else if (type === "film") {
       fetch(
         `${MDBURL}/movie/${encodeURIComponent(id)}/credits?api_key=${MBDKEY}`
       )
-        .then(r => r.json())
-        .then(credits => {
+        .then((r) => r.json())
+        .then((credits) => {
           return dispatch({
             type: "setFetchData",
             key: "localArtist",
-            payload: credits.crew.find((e: any) => e.job === "Director").name
+            payload: credits.crew.find((e: any) => e.job === "Director").name,
           });
         });
     }
@@ -183,14 +195,11 @@ const MediaLog = ({ dialogClose }: MediaLogProps) => {
   if (loading) {
     return <div>loading</div>;
   } else {
-    // let poster = localPoster;
-    // if (type === "film" || type === "tv") {
-    //   poster = `https://image.tmdb.org/t/p/w400/${poster}`;
-    // } else if (type === "album") {
-    //   poster = localPoster.replace("100x100", "1000x1000");
-    // }
-    // debugger;
+    let posterBackdrop;
     const poster = createPosterURL({ type, poster: localPoster });
+    if (typeof backdrop !== "undefined") {
+      posterBackdrop = createPosterURL({ type, poster: backdrop });
+    }
     return (
       <>
         <MediaCardInfo
@@ -198,33 +207,52 @@ const MediaLog = ({ dialogClose }: MediaLogProps) => {
           title={title}
           published={published}
           artist={localArtist}
-          dialogClose={dialogClose}
+          dialogClose={() => {}}
           poster={poster}
+          backdrop={typeof posterBackdrop !== "undefined" ? posterBackdrop : ""}
         />
-        <CardContent>
-          <Box className={classes.metadata}>
+        <Box mx={4}>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography variant="h6">Date</Typography>
             <MuiPickersUtilsProvider utils={DayjsUtils}>
-              <KeyboardDatePicker
+              <DatePicker
                 disableToolbar
                 disableFuture
                 variant="inline"
                 format="MM/DD/YYYY"
                 value={date}
                 autoOk={true}
-                onChange={e =>
+                onChange={(e) =>
                   e !== null
                     ? dispatch({
                         type: "setData",
                         key: "date",
-                        payload: e.toDate()
+                        payload: e.toDate(),
                       })
                     : null
                 }
-                KeyboardButtonProps={{
-                  "aria-label": "change date"
+                InputProps={{
+                  disableUnderline: true,
+                }}
+                inputProps={{
+                  style: { textAlign: "right", cursor: "pointer" },
                 }}
               />
             </MuiPickersUtilsProvider>
+          </Box>
+          <Box py={2}>
+            <Divider />
+          </Box>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Typography variant="h5">Rate</Typography>
             <Rating
               value={star}
               name="rated"
@@ -233,12 +261,15 @@ const MediaLog = ({ dialogClose }: MediaLogProps) => {
                 dispatch({
                   type: "setData",
                   key: "star",
-                  payload: newValue
+                  payload: newValue,
                 })
               }
               emptyIcon={<IconStar empty fill="#03b021" />}
               icon={<IconStar fill="#03b021" stroke="#03b021" />}
             />
+          </Box>
+
+          <Box className={classes.metadata}>
             <Box>
               <Tooltip title="Seen Before?" placement="top">
                 <IconButton
@@ -246,7 +277,7 @@ const MediaLog = ({ dialogClose }: MediaLogProps) => {
                     dispatch({
                       type: "setData",
                       key: "seen",
-                      payload: !seen
+                      payload: !seen,
                     })
                   }
                 >
@@ -261,13 +292,12 @@ const MediaLog = ({ dialogClose }: MediaLogProps) => {
                 labelId="mediaSeason"
                 value={season.season_number}
                 onChange={(e: any) => {
-                  debugger;
                   return dispatch({
                     type: "setSeason",
                     payload: {
                       season: seasons[e.target.value],
-                      localPoster: seasons[e.target.value].poster_path
-                    }
+                      localPoster: seasons[e.target.value].poster_path,
+                    },
                   });
                 }}
               >
@@ -287,7 +317,7 @@ const MediaLog = ({ dialogClose }: MediaLogProps) => {
                   dispatch({
                     type: "setData",
                     key: "episode",
-                    payload: e.target.value
+                    payload: e.target.value,
                   })
                 }
               >
@@ -302,14 +332,7 @@ const MediaLog = ({ dialogClose }: MediaLogProps) => {
               </Select>
             </Box>
           )}
-        </CardContent>
-        <Divider />
-        <CardActions className={classes.actions}>
-          <IconButton size="small" onClick={() => mediaSelect()}>
-            <IconChevronLeft />
-          </IconButton>
-          <Button onClick={mediaSet}>Save</Button>
-        </CardActions>
+        </Box>
       </>
     );
   }
@@ -325,7 +348,7 @@ const MediaLog = ({ dialogClose }: MediaLogProps) => {
       seen,
       star,
       date,
-      artist: localArtist
+      artist: localArtist,
     };
     if (type === "film") {
       // const filmObj = {
@@ -342,7 +365,7 @@ const MediaLog = ({ dialogClose }: MediaLogProps) => {
         episode: episode,
         overview: season.overview,
         published: season.air_date,
-        poster: localPoster
+        poster: localPoster,
       };
 
       mediaPutTV(tvObj);
@@ -353,7 +376,7 @@ const MediaLog = ({ dialogClose }: MediaLogProps) => {
       // };
       mediaPutAlbum(mediaObj);
     }
-    dialogClose();
+    // ()();
   }
 };
 
@@ -406,3 +429,10 @@ export default MediaLog;
 // localArtist: action.payload.localArtist,
 // info: action.payload.info,
 // infoSeason: action.payload.season
+
+// <CardActions className={classes.actions}>
+// <IconButton size="small" onClick={() => mediaSelect()}>
+//   <IconChevronLeft />
+// </IconButton>
+// <Button onClick={mediaSet}>Save</Button>
+// </CardActions>

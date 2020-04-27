@@ -17,6 +17,7 @@ import Profile from "./Profile";
 import Setup from "./Setup";
 import Sidebar from "./Sidebar";
 import Taskbar from "./Taskbar";
+import Media from "./Media";
 
 const useStyles = makeStyles((_) => ({
   container: {
@@ -36,7 +37,6 @@ export interface MediaListProp {
 }
 
 function Main() {
-  const [openDrawer, setOpenDrawer] = useState(false);
   const user = useStoreState((state) => state.global.user);
   const preferences = useStoreState((state) => state.global.preferences);
 
@@ -52,7 +52,7 @@ function Main() {
           <HomeRoute />
         </Route>
         <PrivateRoute exact path="/:id(\d+)">
-          <MediaList setOpenDrawer={setOpenDrawer} openDrawer={openDrawer} />
+          <Media />
         </PrivateRoute>
         <PrivateRoute exact path="/setup">
           <Setup />
@@ -73,10 +73,6 @@ function Main() {
       return <About />;
     }
   }
-  //  {/* <Taskbar /> */}
-  //           {/* </Container> */}
-  // // <Container className={classes.containerGrid} maxWidth={false}>
-  //             {/* <Sidebar /> */}
 
   function PrivateRoute({ children, ...rest }: any) {
     return (
@@ -84,18 +80,7 @@ function Main() {
         {...rest}
         render={({ location }) =>
           user ? (
-            <Box
-              className={classes.container}
-              // borderColor="grey.300"
-              // border={1}
-              // borderTop={0}
-            >
-              <Navigation
-                setOpenDrawer={setOpenDrawer}
-                openDrawer={openDrawer}
-              />
-              {children}
-            </Box>
+            <Box className={classes.container}>{children}</Box>
           ) : (
             <Redirect
               to={{

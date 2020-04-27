@@ -11,6 +11,7 @@ export interface MediaInfo {
   published: Date | "";
   artist: string;
   overview?: string;
+  backdrop?: string;
   season?: number | undefined;
   episode?: number | undefined;
 }
@@ -48,7 +49,7 @@ const mediaInit: MediaSelected = {
   artist: "",
   watched: undefined,
   type: "",
-  season: undefined
+  season: undefined,
 };
 
 export const media: Media = {
@@ -78,9 +79,9 @@ export const media: Media = {
       overview:
         typeof info.album.wiki !== "undefined"
           ? info.album.wiki.summary.split("<a href")[0]
-          : ""
+          : "",
     };
     actions.mediaSelect();
     getStoreActions().data.dataPut(albumObj);
-  })
+  }),
 };

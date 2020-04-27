@@ -7,34 +7,24 @@
  * Resources
  * - https://medium.com/@martin_hotell/react-refs-with-typescript-a32d56c4d315
  */
+import { InputBase, Toolbar } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
-import CardContent from "@material-ui/core/CardContent";
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
 import Skeleton from "@material-ui/lab/Skeleton";
 import * as React from "react";
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect, useReducer, useRef, Dispatch } from "react";
 import { MBDKEY } from "./config/constants";
 import { useStoreActions } from "./config/store";
 import { MediaSelected, MediaTyper, MediaTypes } from "./config/storeMedia";
 import useDebounce from "./hooks/useDebounce";
-import {
-  IconFilm,
-  IconMusic,
-  IconSearch,
-  IconTV,
-  IconX,
-  IconPlus,
-} from "./icons";
-import { InputBase } from "@material-ui/core";
+import { IconFilm, IconMenu, IconMusic, IconTV } from "./icons";
+import { MediaActionType } from "./Media";
 
 interface MediaSearchListProps extends MediaTypes {
   item: any;
@@ -121,101 +111,31 @@ const MediaAddReducer = (state: StateType, action: ActionType) => {
 };
 
 const useStyles = makeStyles((theme) => ({
-  card: {
-    width: theme.breakpoints.values.sm,
-  },
-  mediaNavigation: {
-    position: "sticky",
-    top: 0,
-    backgroundColor: "white",
-    zIndex: 9,
-  },
   mediaResults: {
     overflow: "scroll",
     maxHeight: "32vh",
     zIndex: theme.zIndex.drawer,
-    backgroundColor: "#FAFAFA",
-  },
-  mediaNavigationGrid: {
-    position: "absolute",
-    width: "100%",
-    zIndex: theme.zIndex.drawer,
-    // position: "relative"
-    // display: "grid",
-    // gridTemplateRows: "1fr 1fr",
-  },
-  mediaSearch: {
-    display: "grid",
-    gridTemplateColumns: "4rem 1fr repeat(3, 3rem)",
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-    backgroundColor: "#F0F0F0",
-    borderBottom: `1px solid ${theme.palette.grey[300]}`,
   },
   mediaSearchInput: {
     padding: 0,
   },
-  backDrop: {
-    top: "0",
-    left: "0",
-    right: "0",
-    bottom: "0",
+  searchBar: {
+    paddingLeft: theme.spacing(2),
+    flexGrow: 1,
     display: "flex",
-    zIndex: 2,
-    position: "fixed",
     alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#00000080",
-    // opacity: (props) => (props ? 1 : 0),
-    opacity: 1,
-    transition: "opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
   },
-  // search: {
-  //   position: "relative",
-  //   // borderRadius: theme.shape.borderRadius,
-  //   backgroundColor: theme.palette.background.default,
-  //   "&:hover": {
-  //     backgroundColor: "yellow",
-  //   },
-  //   borderBottom: "1px solid lightgray",
-  //   // paddingBottom: theme.spacing(2),
-  //   marginLeft: 0,
-  //   width: "100%",
-  //   // [theme.breakpoints.up("sm")]: {
-  //   //   marginLeft: theme.spacing(3),
-  //   //   width: "auto",
-  //   // },
-  // },
-  // searchIcon: {
-  //   padding: theme.spacing(0, 2),
-  //   height: "100%",
-  //   position: "absolute",
-  //   pointerEvents: "none",
-  //   display: "flex",
-  //   alignItems: "center",
-  //   justifyContent: "center",
-  // },
-  // inputRoot: {
-  //   color: "inherit",
-  // },
-  // inputInput: {
-  //   padding: theme.spacing(2),
-  //   // vertical padding + font size from searchIcon
-  //   paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-  //   transition: theme.transitions.create("width"),
-  //   width: "100%",
-  //   // [theme.breakpoints.up("md")]: {
-  //   //   width: "20ch",
-  //   // },
-  // },
+  toolbarPad: {
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+  },
 }));
 
-interface MediaLogProps {
-  setViewType: React.Dispatch<React.SetStateAction<string>>;
-  dialogClose: () => void;
-}
+type MediaLogProps = {
+  dispatchMedia: Dispatch<MediaActionType>;
+};
 
-function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
+function Search({ dispatchMedia }: MediaLogProps) {
   const InputRef = useRef<HTMLInputElement>(null);
   const mediaSelect = useStoreActions((actions) => actions.media.mediaSelect);
   const [
@@ -256,86 +176,87 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
 
   return (
     <>
-      <Box className={classes.backDrop} />
-      <Box className={classes.mediaNavigation}>
-        <Box className={classes.mediaNavigationGrid}>
-          <Box className={classes.mediaSearch}>
-            <IconButton disableFocusRipple={true} size="small">
-              <IconPlus />
-            </IconButton>
-            <InputBase
-              inputRef={InputRef}
-              type="search"
-              autoFocus={true}
-              placeholder="Add Movie"
-              classes={{
-                input: classes.mediaSearchInput,
-              }}
-              onChange={(e) =>
-                dispatch({ type: "searchInput", payload: e.target.value })
-              }
-            />
-            <IconButton
-              size="small"
-              onClick={() => dispatch({ type: "setType", payload: "film" })}
-              color={type === "film" ? "primary" : undefined}
-            >
-              <IconFilm />
-            </IconButton>
-            <IconButton
-              size="small"
-              onClick={() => dispatch({ type: "setType", payload: "tv" })}
-              color={type === "tv" ? "primary" : undefined}
-            >
-              <IconTV />
-            </IconButton>
-            <IconButton
-              size="small"
-              onClick={() => dispatch({ type: "setType", payload: "album" })}
-              color={type === "album" ? "primary" : undefined}
-            >
-              <IconMusic />
-            </IconButton>
-          </Box>
-          <Collapse in={expanded} timeout="auto">
-            <Box className={classes.mediaResults}>
-              <Table>
-                <TableBody>
-                  {mediaResult.map((e: any, i: number) => (
-                    <MediaSearchList key={type + i} type={type} item={e}>
-                      {({ name, artist, date }) => (
-                        <TableRow hover onClick={() => handleSelect(e)}>
-                          <TableCell>
-                            {isSearching ? (
-                              <Skeleton animation="wave" />
-                            ) : name && artist !== "" ? (
-                              `${name} - ${artist}`
-                            ) : (
-                              name
-                            )}
-                          </TableCell>
-                          <TableCell align="right">
-                            {date &&
-                              ` (${new Date(date).toLocaleDateString("en-us", {
-                                year: "numeric",
-                              })})`}
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </MediaSearchList>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
+      <Toolbar
+        className={classes.toolbarPad}
+        variant="dense"
+        disableGutters={true}
+      >
+        <IconButton disableFocusRipple={true} size="small">
+          <IconMenu />
+        </IconButton>
+        <Box className={classes.searchBar}>
+          <InputBase
+            inputRef={InputRef}
+            type="search"
+            autoFocus={true}
+            placeholder="Add Movie"
+            classes={{
+              input: classes.mediaSearchInput,
+            }}
+            onChange={(e) =>
+              dispatch({ type: "searchInput", payload: e.target.value })
+            }
+          />
         </Box>
-      </Box>
+        <IconButton
+          size="small"
+          onClick={() => dispatch({ type: "setType", payload: "film" })}
+          color={type === "film" ? "primary" : undefined}
+        >
+          <IconFilm />
+        </IconButton>
+        <IconButton
+          size="small"
+          onClick={() => dispatch({ type: "setType", payload: "tv" })}
+          color={type === "tv" ? "primary" : undefined}
+        >
+          <IconTV />
+        </IconButton>
+        <IconButton
+          size="small"
+          onClick={() => dispatch({ type: "setType", payload: "album" })}
+          color={type === "album" ? "primary" : undefined}
+        >
+          <IconMusic />
+        </IconButton>
+      </Toolbar>
+      <Collapse in={expanded} timeout="auto">
+        <Box className={classes.mediaResults}>
+          <Table>
+            <TableBody>
+              {mediaResult.map((e: any, i: number) => (
+                <MediaSearchList key={type + i} type={type} item={e}>
+                  {({ name, artist, date }) => (
+                    <TableRow hover onClick={() => handleSelect(e)}>
+                      <TableCell>
+                        {isSearching ? (
+                          <Skeleton animation="wave" />
+                        ) : name && artist !== "" ? (
+                          `${name} - ${artist}`
+                        ) : (
+                          name
+                        )}
+                      </TableCell>
+                      <TableCell align="right">
+                        {date &&
+                          ` (${new Date(date).toLocaleDateString("en-us", {
+                            year: "numeric",
+                          })})`}
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </MediaSearchList>
+              ))}
+            </TableBody>
+          </Table>
+        </Box>
+      </Collapse>
     </>
   );
 
   function handleSelect(e: any) {
     mediaSelect(mediaNormalize(e));
-    return setViewType("log");
+    return dispatchMedia({ type: "toggleLog", payload: true });
   }
 
   // Will return promise with appropriate film information
@@ -353,10 +274,11 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
   }
 
   function mediaNormalize(item: any) {
-    let id, poster, title, published, overview, watched, artist;
+    let id, poster, title, published, overview, watched, artist, backdrop;
     if (type === "film") {
       id = item.id.toString();
       poster = item.poster_path;
+      backdrop = item.backdrop_path;
       title = item.title;
       published = item.release_date;
       overview = item.overview;
@@ -365,6 +287,7 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
     } else if (type === "tv") {
       id = item.id.toString();
       poster = item.poster_path;
+      backdrop = item.poster_path;
       title = item.name;
       published = item.first_air_date;
       overview = item.overview;
@@ -388,12 +311,13 @@ function MediaSearch({ dialogClose, setViewType }: MediaLogProps) {
       watched,
       artist,
       type,
+      backdrop,
     };
     return mediaReturn;
   }
 }
 
-export default MediaSearch;
+export default Search;
 
 //  {/* <TextField
 //         inputRef={InputRef}
@@ -457,3 +381,72 @@ export default MediaSearch;
 //             <IconMusic />
 //           </IconButton>
 //         </Box> */}
+
+// search: {
+//   position: "relative",
+//   // borderRadius: theme.shape.borderRadius,
+//   backgroundColor: theme.palette.background.default,
+//   "&:hover": {
+//     backgroundColor: "yellow",
+//   },
+//   borderBottom: "1px solid lightgray",
+//   // paddingBottom: theme.spacing(2),
+//   marginLeft: 0,
+//   width: "100%",
+//   // [theme.breakpoints.up("sm")]: {
+//   //   marginLeft: theme.spacing(3),
+//   //   width: "auto",
+//   // },
+// },
+// searchIcon: {
+//   padding: theme.spacing(0, 2),
+//   height: "100%",
+//   position: "absolute",
+//   pointerEvents: "none",
+//   display: "flex",
+//   alignItems: "center",
+//   justifyContent: "center",
+// },
+// inputRoot: {
+//   color: "inherit",
+// },
+// inputInput: {
+//   padding: theme.spacing(2),
+//   // vertical padding + font size from searchIcon
+//   paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+//   transition: theme.transitions.create("width"),
+//   width: "100%",
+//   // [theme.breakpoints.up("md")]: {
+//   //   width: "20ch",
+//   // },
+// },
+
+// {/* <Box className={classes.backDrop} /> */}
+// {/* <Box className={classes.mediaNavigation}> */}
+// {/* <Box className={classes.mediaNavigationGrid}> */}
+// // {/* <Box className={classes.mediaSearch}> */}
+
+//       {/* </Box> */}
+// {/* </Box> */}
+
+// card: {
+//   width: theme.breakpoints.values.sm,
+// },
+// mediaNavigation: {
+//   position: "sticky",
+//   top: 0,
+//   backgroundColor: "white",
+//   zIndex: 9,
+// },
+// mediaNavigationGrid: {
+//   width: "100%",
+//   zIndex: theme.zIndex.drawer,
+// },
+// mediaSearch: {
+//   display: "grid",
+//   gridTemplateColumns: "4rem 1fr repeat(3, 3rem)",
+//   paddingTop: theme.spacing(1),
+//   paddingBottom: theme.spacing(1),
+//   backgroundColor: "#F0F0F0",
+//   borderBottom: `1px solid ${theme.palette.grey[300]}`,
+// },
