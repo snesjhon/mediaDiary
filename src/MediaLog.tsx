@@ -27,27 +27,6 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import { createPosterURL } from "./utilities/helpers";
 
-const useStyles = makeStyles(() => ({
-  metadata: {
-    display: "grid",
-    gridTemplateColumns: "1fr 0.5fr 0.3fr",
-    alignItems: "center",
-    gridGap: "1.5rem",
-  },
-  actions: {
-    display: "flex",
-    justifyContent: "space-between",
-  },
-  underline: {
-    "&&&:before": {
-      borderBottom: "none",
-    },
-    "&&:after": {
-      borderBottom: "none",
-    },
-  },
-}));
-
 type MediaLogState = {
   date: Date;
   seen: boolean;
@@ -108,12 +87,8 @@ const MediaLogReducer = (state: MediaLogState, action: MediaLogAction) => {
   }
 };
 
-// interface MediaLogProps {
-//   dialogClose: () => void;
-// }
-
 const MediaLog = () => {
-  const classes = useStyles();
+  // const classes = useStyles();
   const mediaSelect = useStoreActions((actions) => actions.media.mediaSelect);
   const mediaPutFilm = useStoreActions((actions) => actions.media.mediaPutFilm);
   const mediaPutTV = useStoreActions((actions) => actions.media.mediaPutTV);
@@ -190,8 +165,6 @@ const MediaLog = () => {
     }
   }, [type, id]);
 
-  // console.log(seasons, season);
-
   if (loading) {
     return <div>loading</div>;
   } else {
@@ -212,6 +185,69 @@ const MediaLog = () => {
           backdrop={typeof posterBackdrop !== "undefined" ? posterBackdrop : ""}
         />
         <Box mx={4}>
+          {Object.keys(season).length > 0 && (
+            <>
+              <Box display="flex" justifyContent="space-between">
+                <Typography variant="h6">Season</Typography>
+                <Select
+                  labelId="mediaSeason"
+                  disableUnderline={true}
+                  value={season.season_number}
+                  onChange={(e: any) => {
+                    return dispatch({
+                      type: "setSeason",
+                      payload: {
+                        season: seasons[e.target.value],
+                        localPoster: seasons[e.target.value].poster_path,
+                      },
+                    });
+                  }}
+                >
+                  {seasons.map((seasonInfo: any) => (
+                    <MenuItem
+                      key={seasonInfo.season_number}
+                      value={seasonInfo.season_number}
+                    >
+                      Season {seasonInfo.season_number}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Box>
+              <Box py={2}>
+                <Divider />
+              </Box>
+              <Box display="flex" justifyContent="space-between">
+                <Typography variant="h6">Episode</Typography>
+                <Select
+                  labelId="mediaEpisode"
+                  value={episode}
+                  disableUnderline={true}
+                  onChange={(e: any) =>
+                    dispatch({
+                      type: "setData",
+                      key: "episode",
+                      payload: e.target.value,
+                    })
+                  }
+                >
+                  {Array.from(
+                    { length: season.episode_count },
+                    (_, episodeNumber: number) => (
+                      <MenuItem
+                        key={episodeNumber + 1}
+                        value={episodeNumber + 1}
+                      >
+                        Episode {episodeNumber + 1}
+                      </MenuItem>
+                    )
+                  )}
+                </Select>
+              </Box>
+              <Box py={2}>
+                <Divider />
+              </Box>
+            </>
+          )}
           <Box
             display="flex"
             justifyContent="space-between"
@@ -268,70 +304,41 @@ const MediaLog = () => {
               icon={<IconStar fill="#03b021" stroke="#03b021" />}
             />
           </Box>
-
-          <Box className={classes.metadata}>
-            <Box>
-              <Tooltip title="Seen Before?" placement="top">
-                <IconButton
-                  onClick={() =>
-                    dispatch({
-                      type: "setData",
-                      key: "seen",
-                      payload: !seen,
-                    })
-                  }
-                >
-                  <IconRepeat stroke={seen ? "blue" : undefined} />
-                </IconButton>
-              </Tooltip>
-            </Box>
+          <Box py={2}>
+            <Divider />
           </Box>
-          {Object.keys(season).length > 0 && (
-            <Box display="flex" justifyContent="space-between">
-              <Select
-                labelId="mediaSeason"
-                value={season.season_number}
-                onChange={(e: any) => {
-                  return dispatch({
-                    type: "setSeason",
-                    payload: {
-                      season: seasons[e.target.value],
-                      localPoster: seasons[e.target.value].poster_path,
-                    },
-                  });
-                }}
-              >
-                {seasons.map((seasonInfo: any) => (
-                  <MenuItem
-                    key={seasonInfo.season_number}
-                    value={seasonInfo.season_number}
-                  >
-                    Season {seasonInfo.season_number}
-                  </MenuItem>
-                ))}
-              </Select>
-              <Select
-                labelId="mediaEpisode"
-                value={episode}
-                onChange={(e: any) =>
-                  dispatch({
-                    type: "setData",
-                    key: "episode",
-                    payload: e.target.value,
-                  })
-                }
-              >
-                {Array.from(
-                  { length: season.episode_count },
-                  (_, episodeNumber: number) => (
-                    <MenuItem key={episodeNumber + 1} value={episodeNumber + 1}>
-                      Episode {episodeNumber + 1}
-                    </MenuItem>
-                  )
-                )}
-              </Select>
-            </Box>
-          )}
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Typography variant="h6">Seen Before?</Typography>
+            <IconButton
+              size="small"
+              onClick={() =>
+                dispatch({
+                  type: "setData",
+                  key: "seen",
+                  payload: !seen,
+                })
+              }
+            >
+              <IconRepeat stroke={seen ? "blue" : undefined} />
+            </IconButton>
+          </Box>
+          <Box py={2}>
+            <Divider />
+          </Box>
+          <Box display="flex" justifyContent="flex-end" py={2}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={mediaSet}
+              disableElevation
+            >
+              <Typography variant="body2">Save</Typography>
+            </Button>
+          </Box>
         </Box>
       </>
     );
@@ -351,9 +358,6 @@ const MediaLog = () => {
       artist: localArtist,
     };
     if (type === "film") {
-      // const filmObj = {
-      //   ...mediaObj,
-      // };
       mediaPutFilm(mediaObj);
     } else if (type === "tv") {
       const tvObj = {
@@ -370,13 +374,8 @@ const MediaLog = () => {
 
       mediaPutTV(tvObj);
     } else {
-      // const albumObj = {
-      //   ...mediaObj,
-      //   artist: localArtist
-      // };
       mediaPutAlbum(mediaObj);
     }
-    // ()();
   }
 };
 
@@ -436,3 +435,24 @@ export default MediaLog;
 // </IconButton>
 // <Button onClick={mediaSet}>Save</Button>
 // </CardActions>
+
+// const useStyles = makeStyles(() => ({
+//   metadata: {
+//     display: "grid",
+//     gridTemplateColumns: "1fr 0.5fr 0.3fr",
+//     alignItems: "center",
+//     gridGap: "1.5rem",
+//   },
+//   actions: {
+//     display: "flex",
+//     justifyContent: "space-between",
+//   },
+//   underline: {
+//     "&&&:before": {
+//       borderBottom: "none",
+//     },
+//     "&&:after": {
+//       borderBottom: "none",
+//     },
+//   },
+// }));

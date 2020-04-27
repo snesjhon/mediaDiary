@@ -17,9 +17,9 @@ import {
   IconStar,
   IconTV,
 } from "./icons";
-import MediaDialog, { viewType } from "./MediaDialog";
+// import MediaDialog, { viewType } from "./MediaDialog";
 import { createPosterURL } from "./utilities/helpers";
-import MediaSearch from "./MediaSearch";
+// import MediaSearch from "./MediaSearch";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import {
   IconButton,
@@ -127,6 +127,15 @@ interface MediaDiaryList {
   };
 }
 
+export type viewType = "edit" | "search" | "log" | "overview";
+export interface MediaListView {
+  open: boolean;
+  type: viewType;
+  mediaID?: string;
+  showOverview?: boolean;
+  showEdit?: boolean;
+}
+
 function MediaList() {
   const classes = useStyles();
   const mediaSelect = useStoreActions((actions) => actions.media.mediaSelect);
@@ -139,6 +148,7 @@ function MediaList() {
   //   type: "search",
   //   mediaID: "",
   // });
+
   const [filterBy, setFilterBy] = useState("");
 
   useEffect(() => {
@@ -229,13 +239,13 @@ function MediaList() {
                               <img
                                 className={classes.mediaImage}
                                 src={localPoster}
-                                onClick={() =>
-                                  setListView({
-                                    open: true,
-                                    type: "edit",
-                                    mediaID: day,
-                                  })
-                                }
+                                // onClick={() =>
+                                //   setListView({
+                                //     open: true,
+                                //     type: "edit",
+                                //     mediaID: day,
+                                //   })
+                                // }
                               />
                             </Box>
                           </Grid>
@@ -250,13 +260,13 @@ function MediaList() {
                             <Box pt={2} pl={1} pr={0}>
                               <Typography
                                 className={classes.mediaListTitle}
-                                onClick={() =>
-                                  setListView({
-                                    open: true,
-                                    type: "edit",
-                                    mediaID: day,
-                                  })
-                                }
+                                // onClick={() =>
+                                //   setListView({
+                                //     open: true,
+                                //     type: "edit",
+                                //     mediaID: day,
+                                //   })
+                                // }
                               >
                                 {title}
                               </Typography>
@@ -390,7 +400,7 @@ function MediaList() {
         className={classes.mediaFab}
         color="primary"
         size="small"
-        onClick={() => setListView({ open: true, type: "search" })}
+        // onClick={() => setListView({ open: true, type: "search" })}
       >
         <IconPlus />
       </Fab>
