@@ -31,6 +31,7 @@ import {
 import Avatar from "@material-ui/core/Avatar";
 import Sidebar from "./Sidebar";
 import { MediaListProp } from "./Main";
+import { MediaActionType } from "./Media";
 
 const useStyles = makeStyles((theme) => ({
   tableHeadings: {
@@ -136,7 +137,11 @@ export interface MediaListView {
   showEdit?: boolean;
 }
 
-function MediaList() {
+function MediaList({
+  dispatchMedia,
+}: {
+  dispatchMedia: React.Dispatch<MediaActionType>;
+}) {
   const classes = useStyles();
   const mediaSelect = useStoreActions((actions) => actions.media.mediaSelect);
   const byID = useStoreState((state) => state.data.byID);
@@ -400,6 +405,7 @@ function MediaList() {
         className={classes.mediaFab}
         color="primary"
         size="small"
+        onClick={() => dispatchMedia({ type: "toggleSearch", payload: true })}
         // onClick={() => setListView({ open: true, type: "search" })}
       >
         <IconPlus />
@@ -408,20 +414,18 @@ function MediaList() {
   ) : (
     <CircularProgress />
   );
-
-  {
-    /* // {listView.open && (
-  //   <MediaDialog listView={listView} dialogClose={dialogClose} />
-  // )} */
-  }
-  // function dialogClose() {
-  //   mediaSelect();
-  //   return setListView({ open: false, type: "search" });
-  // }
 }
 
 export default MediaList;
-
+{
+  /* // {listView.open && (
+//   <MediaDialog listView={listView} dialogClose={dialogClose} />
+// )} */
+}
+// function dialogClose() {
+//   mediaSelect();
+//   return setListView({ open: false, type: "search" });
+// }
 // <Box mb={1}>Month</Box>
 //           <Box display="grid" className={classes.tableHeadingList}>
 //             <Box textAlign="center">Day</Box>

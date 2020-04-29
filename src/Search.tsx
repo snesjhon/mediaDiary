@@ -18,7 +18,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import Skeleton from "@material-ui/lab/Skeleton";
 import * as React from "react";
-import { useEffect, useReducer, useRef, Dispatch } from "react";
+import { useEffect, useReducer, useRef, Dispatch, useCallback } from "react";
 import { MBDKEY } from "./config/constants";
 import { useStoreActions } from "./config/store";
 import { MediaSelected, MediaTyper, MediaTypes } from "./config/storeMedia";
@@ -129,6 +129,12 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
   },
+  collapse: {
+    position: "absolute",
+    top: theme.spacing(5),
+    width: "100%",
+    backgroundColor: "white",
+  },
 }));
 
 type MediaLogProps = {
@@ -151,6 +157,19 @@ function Search({ dispatchMedia }: MediaLogProps) {
 
   const classes = useStyles(expanded);
   const bouncedSearch = useDebounce(searchInput, 500);
+
+  // mediaSelect(obj).then(
+  //   () => console.log("lkjlkj")
+  //   // dispatchMedia({ type: "toggleLog", payload: true })
+  // ),
+  const logMedia = useCallback(
+    (obj) =>
+      mediaSelect({
+        mediaSelected: obj,
+        cb: () => dispatchMedia({ type: "toggleLog", payload: true }),
+      }),
+    [mediaSelect, dispatchMedia]
+  );
 
   useEffect(() => {
     if (bouncedSearch) {
@@ -220,7 +239,7 @@ function Search({ dispatchMedia }: MediaLogProps) {
           <IconMusic />
         </IconButton>
       </Toolbar>
-      <Collapse in={expanded} timeout="auto">
+      <Collapse className={classes.collapse} in={expanded} timeout="auto">
         <Box className={classes.mediaResults}>
           <Table>
             <TableBody>
@@ -255,8 +274,8 @@ function Search({ dispatchMedia }: MediaLogProps) {
   );
 
   function handleSelect(e: any) {
-    mediaSelect(mediaNormalize(e));
-    return dispatchMedia({ type: "toggleLog", payload: true });
+    return logMedia(mediaNormalize(e));
+    // return dispatchMedia({ type: "toggleLog", payload: true });
   }
 
   // Will return promise with appropriate film information

@@ -15,7 +15,7 @@ import {
   DatePicker,
 } from "@material-ui/pickers";
 import * as React from "react";
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useCallback } from "react";
 import { MBDKEY, MDBURL } from "./config/constants";
 import { useStoreActions, useStoreState } from "./config/store";
 import { IconChevronLeft, IconRepeat, IconStar } from "./icons";
@@ -26,6 +26,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import { createPosterURL } from "./utilities/helpers";
+import { MediaActionType } from "./Media";
 
 type MediaLogState = {
   date: Date;
@@ -87,14 +88,42 @@ const MediaLogReducer = (state: MediaLogState, action: MediaLogAction) => {
   }
 };
 
-const MediaLog = () => {
+// const MediaLog = () => {
+function MediaLog({
+  dispatchMedia,
+}: {
+  dispatchMedia: React.Dispatch<MediaActionType>;
+}) {
   // const classes = useStyles();
-  const mediaSelect = useStoreActions((actions) => actions.media.mediaSelect);
+  // const mediaSelect = useStoreActions((actions) => actions.media.mediaSelect);
   const mediaPutFilm = useStoreActions((actions) => actions.media.mediaPutFilm);
   const mediaPutTV = useStoreActions((actions) => actions.media.mediaPutTV);
   const mediaPutAlbum = useStoreActions(
     (actions) => actions.media.mediaPutAlbum
   );
+
+  const saveAlbum = useCallback(
+    (obj) =>
+      mediaPutAlbum(obj).then(() =>
+        dispatchMedia({ type: "toggleSearch", payload: false })
+      ),
+    [mediaPutAlbum, dispatchMedia]
+  );
+  const saveTV = useCallback(
+    (obj) =>
+      mediaPutTV(obj).then(() =>
+        dispatchMedia({ type: "toggleSearch", payload: false })
+      ),
+    [mediaPutTV, dispatchMedia]
+  );
+  const saveFilm = useCallback(
+    (obj) =>
+      mediaPutFilm(obj).then(() =>
+        dispatchMedia({ type: "toggleSearch", payload: false })
+      ),
+    [mediaPutFilm, dispatchMedia]
+  );
+
   const {
     id,
     artist,
@@ -180,7 +209,9 @@ const MediaLog = () => {
           title={title}
           published={published}
           artist={localArtist}
-          dialogClose={() => {}}
+          dialogClose={() =>
+            dispatchMedia({ type: "toggleSearch", payload: false })
+          }
           poster={poster}
           backdrop={typeof posterBackdrop !== "undefined" ? posterBackdrop : ""}
         />
@@ -358,7 +389,7 @@ const MediaLog = () => {
       artist: localArtist,
     };
     if (type === "film") {
-      mediaPutFilm(mediaObj);
+      saveFilm(mediaObj);
     } else if (type === "tv") {
       const tvObj = {
         ...mediaObj,
@@ -372,12 +403,12 @@ const MediaLog = () => {
         poster: localPoster,
       };
 
-      mediaPutTV(tvObj);
+      saveTV(tvObj);
     } else {
-      mediaPutAlbum(mediaObj);
+      saveAlbum(mediaObj);
     }
   }
-};
+}
 
 export default MediaLog;
 

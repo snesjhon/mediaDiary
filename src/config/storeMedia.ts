@@ -34,7 +34,10 @@ export interface MediaTypes {
 
 export interface Media {
   mediaSelected: MediaSelected;
-  mediaSelect: Action<Media, MediaSelected | void>;
+  mediaSelect: Action<
+    Media,
+    { mediaSelected: MediaSelected | void; cb: () => void }
+  >;
   mediaPutFilm: Thunk<Media, MediaAdd, void, StoreModel>;
   mediaPutTV: Thunk<Media, MediaAdd, void, StoreModel>;
   mediaPutAlbum: Thunk<Media, MediaAdd, void, StoreModel>;
@@ -55,14 +58,19 @@ const mediaInit: MediaSelected = {
 export const media: Media = {
   mediaSelected: mediaInit,
   mediaSelect: action((state, payload) => {
-    state.mediaSelected = payload ? payload : mediaInit;
+    state.mediaSelected = payload.mediaSelected
+      ? payload.mediaSelected
+      : mediaInit;
+    return payload.cb();
   }),
   mediaPutFilm: thunk(async (actions, payload, { getStoreActions }) => {
-    actions.mediaSelect();
-    getStoreActions().data.dataPut(payload);
+    return getStoreActions()
+      .data.dataPut(payload)
+      .then(() => {
+        return getStoreActions().data.dataGet();
+      });
   }),
   mediaPutTV: thunk(async (actions, payload, { getStoreActions }) => {
-    actions.mediaSelect();
     getStoreActions().data.dataPut(payload);
   }),
   mediaPutAlbum: thunk(async (actions, payload, { getStoreActions }) => {
@@ -81,7 +89,6 @@ export const media: Media = {
           ? info.album.wiki.summary.split("<a href")[0]
           : "",
     };
-    actions.mediaSelect();
     getStoreActions().data.dataPut(albumObj);
   }),
 };

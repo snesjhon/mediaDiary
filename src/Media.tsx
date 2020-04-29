@@ -13,6 +13,7 @@ import {
 import Sidebar from "./Sidebar";
 import Search from "./Search";
 import MediaLog from "./MediaLog";
+import MediaList from "./MediaList";
 import { IconChevronLeft } from "./icons";
 
 type StateType = {
@@ -69,6 +70,7 @@ const useStyles = makeStyles((theme) => ({
   },
   navColors: {
     backgroundColor: "#F0F0F0",
+    // position: "absolute",
   },
   backDrop: {
     top: "0",
@@ -85,6 +87,8 @@ const useStyles = makeStyles((theme) => ({
     transition: "opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
   },
   toolbarPad: {
+    display: "flex",
+    justifyContent: "space-between",
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
   },
@@ -105,7 +109,7 @@ function Media() {
       <Box className={classes.root}>
         <AppBar
           className={classes.navColors}
-          position="static"
+          position="sticky"
           variant="outlined"
         >
           {!openSearch && !openLog && (
@@ -122,6 +126,14 @@ function Media() {
                 size="small"
                 onClick={() =>
                   dispatch({ type: "toggleSearch", payload: true })
+                }
+              >
+                <IconChevronLeft />
+              </IconButton>
+              <IconButton
+                size="small"
+                onClick={() =>
+                  dispatch({ type: "toggleSearch", payload: false })
                 }
               >
                 <IconChevronLeft />
@@ -149,16 +161,17 @@ function Media() {
         className={classes.backDrop}
         onClick={() => dispatch({ type: "toggleSearch", payload: false })}
       />
-      {openLog && <MediaLog />}
-      <button
-        onClick={() => dispatch({ type: "toggleSearch", payload: !openSearch })}
-      >
-        asd
-      </button>
+      {openLog && <MediaLog dispatchMedia={dispatch} />}
+      {!openLog && <MediaList dispatchMedia={dispatch} />}
     </>
   );
 }
 export default Media;
+// <button
+//   onClick={() => dispatch({ type: "toggleSearch", payload: !openSearch })}
+// >
+//   asd
+// </button>
 
 // import MediaSearch from "./MediaSearch";
 

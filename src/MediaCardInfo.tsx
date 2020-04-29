@@ -62,7 +62,6 @@ function MediaCardInfo({
   backdrop,
 }: MediaInfoInterface) {
   const classes = useStyles();
-  debugger;
   return (
     <>
       <Box
