@@ -1,15 +1,14 @@
 {
-  "name": "media-diary",
+  "name": "mediadiary",
   "version": "1.0.0",
-  "description": "Media Diary",
-  "main": "index.js",
+  "description": "mediaDiary",
   "scripts": {
-    "start": "webpack-dev-server --config ./config/webpack.dev.js --open",
-    "build": "webpack --config ./config/webpack.prod.js"
+    "start": "webpack-dev-server --config ./build/webpack.dev.js --open",
+    "build": "webpack --config ./build/webpack.prod.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/snesjhon/media-diary.git"
+    "url": "git+https://github.com/RedOakUI/mediaDiary.git"
   },
   "keywords": [
     "react"
@@ -17,10 +16,9 @@
   "author": "snesjhon",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/snesjhon/media-diary/issues"
+    "url": "https://github.com/RedOakUI/mediaDiary/issues"
   },
-  "homepage": "https://github.com/snesjhon/media-diary#readme",
-  "default": "dist/index.html",
+  "homepage": "https://github.com/RedOakUI/mediaDiary#readme",
   "targets": {
     "default": {
       "publicUrl": "./"
@@ -34,12 +32,8 @@
     "@types/react-dom": "~16.9.5",
     "@types/react-router": "~5.1.4",
     "@types/react-router-dom": "~5.1.3",
-    "babel-eslint": "~10.0.3",
     "babel-loader": "~8.0.6",
     "dotenv-webpack": "~1.7.0",
-    "eslint": "~6.5.1",
-    "eslint-plugin-react": "~7.16.0",
-    "eslint-plugin-react-hooks": "~2.1.2",
     "html-webpack-plugin": "~3.2.0",
     "ts-loader": "~6.2.1",
     "typescript": "~3.8.3",

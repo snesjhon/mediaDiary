@@ -1,9 +1,9 @@
-import { MBDIMGURL } from "../config/constants";
+import { MBDIMGURL } from "./constants";
 
 export function createPosterURL({
   type,
   poster,
-  size = 500
+  size = 500,
 }: {
   type: string;
   poster: string;

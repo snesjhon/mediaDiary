@@ -1,8 +1,7 @@
 import { Action, action, Thunk, thunk } from "easy-peasy";
-import { LASTFMKEY } from "./constants";
+import { LASTFMKEY } from "../config/constants";
 import { StoreModel } from "./store";
-
-export type MediaTyper = "film" | "tv" | "album" | "";
+import { MediaTypes } from "../app/Media";
 
 export interface MediaInfo {
   id: string;
@@ -20,16 +19,12 @@ export interface MediaAdd extends MediaInfo {
   date: Date;
   seen: boolean;
   star: number;
-  type: MediaTyper;
+  type: MediaTypes;
 }
 
 export interface MediaSelected extends MediaInfo {
   watched: string | undefined;
-  type: MediaTyper;
-}
-
-export interface MediaTypes {
-  type: MediaTyper;
+  type: MediaTypes;
 }
 
 export interface Media {

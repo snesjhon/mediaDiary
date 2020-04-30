@@ -16,7 +16,7 @@ import {
 import { StoreProvider } from "easy-peasy";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { store } from "./config/store";
+import { store } from "./store/store";
 import theme from "./config/theme";
 import Main from "./Main";
 

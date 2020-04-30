@@ -1,102 +1,36 @@
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import Divider from "@material-ui/core/Divider";
 import Fab from "@material-ui/core/Fab";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import Typography from "@material-ui/core/Typography";
-import Rating from "@material-ui/lab/Rating";
 import * as React from "react";
-import { useEffect, useState } from "react";
-import { useStoreActions, useStoreState } from "./config/store";
-import { DataByDate } from "./config/storeData";
-import {
-  IconFilm,
-  IconMusic,
-  IconPlus,
-  IconRepeat,
-  IconStar,
-  IconTV,
-} from "./icons";
-// import MediaDialog, { viewType } from "./MediaDialog";
-import { createPosterURL } from "./utilities/helpers";
-// import MediaSearch from "./MediaSearch";
-import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
-import {
-  IconButton,
-  Grid,
-  Hidden,
-  Drawer,
-  SwipeableDrawer,
-} from "@material-ui/core";
-import Avatar from "@material-ui/core/Avatar";
-import Sidebar from "./Sidebar";
-import { MediaListProp } from "./Main";
-import { MediaActionType } from "./Media";
+import IconPlus from "../icons/IconPlus";
+import { MDDispatchCtx } from "./MediaDiary";
+import { useState, useEffect } from "react";
+import { useStoreState, useStoreActions } from "../store/store";
+import Grid from "@material-ui/core/Grid/Grid";
+import Typography from "@material-ui/core/Typography";
+import { createPosterURL } from "../config/helpers";
+import Box from "@material-ui/core/Box";
+import IconStar from "../icons/IconStar";
+import Rating from "@material-ui/lab/Rating";
+import IconRepeat from "../icons/IconRepeat";
+import IconFilm from "../icons/IconFilm";
+import Divider from "@material-ui/core/Divider";
+import IconMusic from "../icons/IconMusic";
+import IconTV from "../icons/IconTV";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { DataByDate } from "../store/storeData";
+
+interface ListState {
+  [key: string]: {
+    [key: string]: DataByDate;
+  };
+}
 
 const useStyles = makeStyles((theme) => ({
-  tableHeadings: {
-    gridTemplateColumns: "8.5rem 1fr",
-    gridGap: "1rem",
-    display: "grid",
-    alignItems: "center",
+  mediaFab: {
     position: "sticky",
-    top: "0",
-    borderBottom: `5px solid ${theme.palette.grey[300]}`,
-    marginBottom: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-    backgroundColor: theme.palette.background.default,
-    paddingTop: "1rem",
-    zIndex: 9,
-    // "& > *": {
-    //   textTransform: "uppercase",
-    //   color: theme.palette.grey[500]
-    // }
-  },
-  tableHeadingList: {
-    gridTemplateColumns: "3rem 6rem 0.9fr 1fr",
-    gridGap: "2rem",
-    alignItems: "center",
-    marginBottom: theme.spacing(1),
-  },
-  tableHeadingIcons: {
-    display: "flex",
-    "& > div": {
-      display: "flex",
-      alignItems: "center",
-    },
-    "& > div:hover": {
-      cursor: "pointer",
-      color: theme.palette.primary.main,
-    },
-  },
-  mediaContainer: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    // gridGap: "1rem",
-  },
-  mediaListContainer: {
-    display: "grid",
-    // gridGap: "1.5rem",
-  },
-  mediaList: {
-    // gridTemplateColumns: "3rem 6rem 1fr",
-    // gridGap: "2rem",
-    "&:hover": {
-      backgroundColor: theme.palette.grey[200],
-      transition: `all ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeInOut} 0ms`,
-    },
-  },
-  mediaListItem: {
-    alignItems: "center",
-    gridTemplateColumns: "3rem 6rem 1fr 1fr",
-    gridGap: "2rem",
-  },
-  mediaListTitle: {
-    // fontSize: theme.typography.h6.fontSize,
-    "&:hover": {
-      color: theme.palette.primary.main,
-      cursor: "pointer",
-    },
+    bottom: "4vh",
+    marginLeft: "1rem",
+    marginBottom: "-1.5rem",
   },
   mediaImage: {
     display: "block",
@@ -110,62 +44,39 @@ const useStyles = makeStyles((theme) => ({
       cursor: "pointer",
     },
   },
-  mediaFab: {
-    position: "sticky",
-    bottom: "4vh",
-    marginLeft: "1rem",
-    marginBottom: "-1.5rem",
-  },
-  mediaResults: {
-    overflow: "scroll",
-    maxHeight: "32vh",
+  mediaListTitle: {
+    "&:hover": {
+      color: theme.palette.primary.main,
+      cursor: "pointer",
+    },
   },
 }));
 
-interface MediaDiaryList {
-  [key: string]: {
-    [key: string]: DataByDate;
-  };
-}
-
-export type viewType = "edit" | "search" | "log" | "overview";
-export interface MediaListView {
-  open: boolean;
-  type: viewType;
-  mediaID?: string;
-  showOverview?: boolean;
-  showEdit?: boolean;
-}
-
-function MediaList({
-  dispatchMedia,
+function List({
+  setShowSearch,
 }: {
-  dispatchMedia: React.Dispatch<MediaActionType>;
+  setShowSearch: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const classes = useStyles();
-  const mediaSelect = useStoreActions((actions) => actions.media.mediaSelect);
   const byID = useStoreState((state) => state.data.byID);
   const byDate = useStoreState((state) => state.data.byDate);
   const dataGet = useStoreActions((actions) => actions.data.dataGet);
 
-  // const [listView, setListView] = useState<MediaListView>({
-  //   open: false,
-  //   type: "search",
-  //   mediaID: "",
-  // });
-
+  const dispatchMD = React.useContext(MDDispatchCtx);
   const [filterBy, setFilterBy] = useState("");
 
+  const classes = useStyles();
+  // I'm not sure if we should be getting everyttime. I know there was a reason
+  // why I didn't go this way, but maybe a good thing to return to.
   useEffect(() => {
     dataGet();
   }, [dataGet]);
 
-  let diaryDates: MediaDiaryList = {};
+  let diaryDates: ListState = {};
 
   if (Object.keys(byID).length > 0 && Object.keys(byDate).length > 0) {
     diaryDates = Object.keys(byDate)
       .filter((e) => (filterBy === "" ? e : byDate[e].type === filterBy))
-      .reduce<MediaDiaryList>((a, c) => {
+      .reduce<ListState>((a, c) => {
         const dateString = byDate[c].date.toDate().toLocaleDateString("en-us", {
           month: "short",
           year: "numeric",
@@ -244,13 +155,15 @@ function MediaList({
                               <img
                                 className={classes.mediaImage}
                                 src={localPoster}
-                                // onClick={() =>
-                                //   setListView({
-                                //     open: true,
-                                //     type: "edit",
-                                //     mediaID: day,
-                                //   })
-                                // }
+                                onClick={() =>
+                                  dispatchMD({
+                                    type: "view",
+                                    payload: {
+                                      view: "diary",
+                                      metadata: day,
+                                    },
+                                  })
+                                }
                               />
                             </Box>
                           </Grid>
@@ -405,8 +318,8 @@ function MediaList({
         className={classes.mediaFab}
         color="primary"
         size="small"
-        onClick={() => dispatchMedia({ type: "toggleSearch", payload: true })}
-        // onClick={() => setListView({ open: true, type: "search" })}
+        onClick={() => setShowSearch(true)}
+        // onClick={() => dispatchMD({ type: "view", payload: { view: "diary" } })}
       >
         <IconPlus />
       </Fab>
@@ -416,81 +329,4 @@ function MediaList({
   );
 }
 
-export default MediaList;
-{
-  /* // {listView.open && (
-//   <MediaDialog listView={listView} dialogClose={dialogClose} />
-// )} */
-}
-// function dialogClose() {
-//   mediaSelect();
-//   return setListView({ open: false, type: "search" });
-// }
-// <Box mb={1}>Month</Box>
-//           <Box display="grid" className={classes.tableHeadingList}>
-//             <Box textAlign="center">Day</Box>
-//             <Box>Poster</Box>
-//             <Box>Title</Box>
-//             <Box className={classes.tableHeadingIcons}>
-//               {filterBy !== "" && (
-//                 <Button size="small" onClick={() => setFilterBy("")}>
-//                   X
-//                 </Button>
-//               )}
-//               {Object.keys(dataCounts).map((e: string, i: number) => (
-//                 <Box key={e} onClick={() => setFilterBy(e)}>
-//                   <Typography component="div">
-//                     <Box mr={1}>{dataCounts[e]}</Box>
-//                   </Typography>
-//                   {e === "tv" && <IconTV />}
-//                   {e === "film" && <IconFilm />}
-//                   {e === "album" && <IconMusic />}
-//                   {(i === 0 || i === 1) && (
-//                     <Typography component="div">
-//                       <Box px={2}>/</Box>
-//                     </Typography>
-//                   )}
-//                 </Box>
-//               ))}
-//             </Box>
-//           </Box>
-
-// const dataCounts = Object.keys(byID).reduce<{
-//   [key: string]: number;
-// }>((a, c) => {
-//   if (typeof a[byID[c]["type"]] !== "undefined") {
-//     a[byID[c]["type"]] = ++a[byID[c]["type"]];
-//   } else {
-//     a[byID[c]["type"]] = 1;
-//   }
-//   return a;
-// }, {});
-
-//  {/* <Button
-//                                       size="small"
-//                                       onClick={() =>
-//                                         setListView({
-//                                           open: true,
-//                                           type: "edit",
-//                                           mediaID: day,
-//                                           showEdit: true,
-//                                         })
-//                                       }
-//                                     >
-//                                       Edit
-//                                     </Button> */}
-//                                     {/* {overview !== "" && (
-//                                     <Button
-//                                       size="small"
-//                                       onClick={() =>
-//                                         setListView({
-//                                           open: true,
-//                                           type: "edit",
-//                                           mediaID: day,
-//                                           showOverview: true,
-//                                         })
-//                                       }
-//                                     >
-//                                       Overview
-//                                     </Button>
-//                                   )} */}
+export default List;

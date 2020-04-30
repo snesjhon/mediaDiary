@@ -1,7 +1,7 @@
 import { Action, action, Thunk, thunk } from "easy-peasy";
 import * as firebase from "firebase/app";
 import "firebase/auth";
-import { fb, db } from "./db";
+import { fb, db } from "../config/db";
 import { StoreModel } from "./store";
 
 export type UserTheme = "light" | "dark";
@@ -29,9 +29,9 @@ export const global: Global = {
   preferences: {
     theme: "light",
     year: null,
-    years: []
+    years: [],
   },
-  userGet: thunk(async actions => {
+  userGet: thunk(async (actions) => {
     const provider = new firebase.auth.GoogleAuthProvider();
     const result = await fb.auth().signInWithPopup(provider);
     try {
@@ -61,8 +61,8 @@ export const global: Global = {
           preferences: {
             theme: data.theme,
             year: data.year,
-            years: data.years
-          }
+            years: data.years,
+          },
         });
       }
     } else {
@@ -73,16 +73,16 @@ export const global: Global = {
         preferences: {
           theme: "light",
           year: null,
-          years: []
-        }
+          years: [],
+        },
       });
     }
   }),
   userPutPreferences: thunk(async (actions, payload) => {
     const dbPreference = db.collection("user").doc("preferences");
     return db
-      .runTransaction(transaction => {
-        return transaction.get(dbPreference).then(userPreference => {
+      .runTransaction((transaction) => {
+        return transaction.get(dbPreference).then((userPreference) => {
           if (!userPreference.exists) {
             transaction.set(dbPreference, payload);
           }
@@ -96,16 +96,16 @@ export const global: Global = {
   userLogout: thunk(async (actions, payload, { getStoreActions }) => {
     fb.auth()
       .signOut()
-      .then(function() {
+      .then(function () {
         actions.userSet(null);
         actions.userSetPreferences({
           theme: "light",
           year: null,
-          years: []
+          years: [],
         });
         getStoreActions().data.dataSet({ byID: {}, byDate: {} });
         sessionStorage.clear();
       })
-      .catch(function(error) {});
-  })
+      .catch(function (error) {});
+  }),
 };
