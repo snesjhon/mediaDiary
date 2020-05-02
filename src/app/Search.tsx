@@ -18,13 +18,21 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import Skeleton from "@material-ui/lab/Skeleton";
 import * as React from "react";
-import { useEffect, useReducer, useRef, Dispatch, useCallback } from "react";
+import {
+  useEffect,
+  useReducer,
+  useRef,
+  Dispatch,
+  useCallback,
+  useContext,
+} from "react";
 import { MBDKEY } from "../config/constants";
 import { useStoreActions } from "../store/store";
 import { MediaSelected } from "../store/storeMedia";
 import useDebounce from "../util/useDebounce";
 import { IconFilm, IconMenu, IconMusic, IconTV } from "../icons";
 import { MediaTypes } from "./Media";
+import { MDDispatchCtx } from "./MediaDiary";
 
 interface SearchState {
   expanded: boolean;
@@ -152,6 +160,7 @@ function Search({
 
   const classes = useStyles(expanded);
   const bouncedSearch = useDebounce(searchInput, 500);
+  const mediaDispatch = useContext(MDDispatchCtx);
 
   // mediaSelect(obj).then(
   //   () => console.log("lkjlkj")
@@ -244,7 +253,18 @@ function Search({
                     <MediaSearchList key={type + i} type={type} item={e}>
                       {({ name, artist, date }) => (
                         // <TableRow hover onClick={() => handleSelect(e)}>
-                        <TableRow hover onClick={() => {}}>
+                        <TableRow
+                          hover
+                          onClick={() =>
+                            mediaDispatch({
+                              type: "select",
+                              payload: {
+                                view: "diary",
+                                selected: mediaNormalize(e),
+                              },
+                            })
+                          }
+                        >
                           <TableCell>
                             {isSearching ? (
                               <Skeleton animation="wave" />

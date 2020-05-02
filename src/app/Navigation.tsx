@@ -6,10 +6,20 @@ import * as React from "react";
 import IconLogo from "../icons/IconLogo";
 import IconMenu from "../icons/IconMenu";
 import IconSettings from "../icons/IconSettings";
-import { Hidden, SwipeableDrawer } from "@material-ui/core";
+import { Hidden, SwipeableDrawer, AppBar } from "@material-ui/core";
 import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
+  nav: {
+    flexGrow: 1,
+    position: "sticky",
+    top: 0,
+    backgroundColor: "white",
+    zIndex: 9,
+  },
+  appbar: {
+    backgroundColor: "#F0F0F0",
+  },
   title: {
     flexGrow: 1,
     display: "flex",
@@ -44,54 +54,56 @@ function Navigation({}: // dispatchMedia,
   const [drawer, setDrawer] = useState(false);
 
   return (
-    <>
-      <Toolbar
-        className={classes.toolbarPad}
-        variant="dense"
-        disableGutters={true}
-      >
-        <IconButton
-          size="small"
-          onClick={() =>
-            // dispatchMedia({ type: "drawer", payload: !openDrawer })
-            setDrawer(!drawer)
-          }
+    <Box className={classes.nav}>
+      <AppBar className={classes.appbar} position="sticky" variant="outlined">
+        <Toolbar
+          className={classes.toolbarPad}
+          variant="dense"
+          disableGutters={true}
         >
-          <IconMenu />
-        </IconButton>
-        <Box className={classes.title}>
-          <Box pl={2}>
-            <IconLogo width={20} />
-          </Box>
-          <Box
-            pl={1}
-            color="#592ABC"
-            fontSize="body1.fontSize"
-            fontWeight="600"
+          <IconButton
+            size="small"
+            onClick={() =>
+              // dispatchMedia({ type: "drawer", payload: !openDrawer })
+              setDrawer(!drawer)
+            }
           >
-            mediaDiary
+            <IconMenu />
+          </IconButton>
+          <Box className={classes.title}>
+            <Box pl={2}>
+              <IconLogo width={20} />
+            </Box>
+            <Box
+              pl={1}
+              color="#592ABC"
+              fontSize="body1.fontSize"
+              fontWeight="600"
+            >
+              mediaDiary
+            </Box>
           </Box>
-        </Box>
-        <IconButton size="small">
-          <IconSettings />
-        </IconButton>
-      </Toolbar>
-      <Hidden smUp>
-        <SwipeableDrawer
-          anchor="left"
-          variant="temporary"
-          open={drawer}
-          onClose={() => setDrawer(false)}
-          onOpen={() => setDrawer(true)}
-          disableDiscovery={true}
-          ModalProps={{
-            keepMounted: true,
-          }}
-        >
-          <div>asd</div>
-        </SwipeableDrawer>
-      </Hidden>
-    </>
+          <IconButton size="small">
+            <IconSettings />
+          </IconButton>
+        </Toolbar>
+        <Hidden smUp>
+          <SwipeableDrawer
+            anchor="left"
+            variant="temporary"
+            open={drawer}
+            onClose={() => setDrawer(false)}
+            onOpen={() => setDrawer(true)}
+            disableDiscovery={true}
+            ModalProps={{
+              keepMounted: true,
+            }}
+          >
+            <div>asd</div>
+          </SwipeableDrawer>
+        </Hidden>
+      </AppBar>
+    </Box>
   );
 }
 

@@ -186,6 +186,8 @@ export const data: Data = {
       });
 
       Promise.all([prByID, prByDate]).then(() => {
+        //TODO: There might be a race condition? Because one that is coming and then note retrieving correctly
+
         return actions.dataGet();
       });
     } else {

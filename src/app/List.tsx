@@ -155,15 +155,15 @@ function List({
                               <img
                                 className={classes.mediaImage}
                                 src={localPoster}
-                                onClick={() =>
-                                  dispatchMD({
-                                    type: "view",
-                                    payload: {
-                                      view: "diary",
-                                      metadata: day,
-                                    },
-                                  })
-                                }
+                                // onClick={() =>
+                                //   // dispatchMD({
+                                //   //   type: "view",
+                                //   //   payload: {
+                                //   //     view: "diary",
+                                //   //     selected: day,
+                                //   //   },
+                                //   // })
+                                // }
                               />
                             </Box>
                           </Grid>
