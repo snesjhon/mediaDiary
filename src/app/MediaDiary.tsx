@@ -10,39 +10,23 @@ import { useReducer, createContext, Dispatch } from "react";
 import Media from "./Media";
 import Diary from "./Diary";
 import { MediaSelected } from "../store/storeMedia";
+import { DataByDate } from "../store/storeData";
 
-const initSelected: MediaSelected = {
-  id: "",
-  poster: "",
-  title: "",
-  published: "",
-  overview: "",
-  watched: "",
-  artist: "",
-  type: "film",
-  backdrop: "",
-};
 interface MediaDiaryState {
   view: "media" | "diary";
+  viewType?: "search" | "day" | "";
   selected?: MediaSelected;
+  day?: DataByDate;
 }
 
 const initState: MediaDiaryState = {
   view: "media",
-  selected: initSelected,
 };
 
-export type MediaDiaryActions =
-  | {
-      type: "view";
-      payload: {
-        view: MediaDiaryState["view"];
-      };
-    }
-  | {
-      type: "select";
-      payload: MediaDiaryState;
-    };
+export type MediaDiaryActions = {
+  type: "view";
+  payload: MediaDiaryState;
+};
 
 const mediaDiaryReducer = (
   state: MediaDiaryState,
@@ -53,13 +37,18 @@ const mediaDiaryReducer = (
       return {
         ...state,
         view: actions.payload.view,
-      };
-    }
-    case "select": {
-      return {
-        ...state,
-        view: actions.payload.view,
-        selected: actions.payload.selected,
+        selected:
+          typeof actions.payload.selected !== "undefined"
+            ? actions.payload.selected
+            : undefined,
+        viewType:
+          typeof actions.payload.viewType !== "undefined"
+            ? actions.payload.viewType
+            : undefined,
+        day:
+          typeof actions.payload.day !== "undefined"
+            ? actions.payload.day
+            : undefined,
       };
     }
     default:

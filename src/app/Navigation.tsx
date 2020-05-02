@@ -46,10 +46,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Navigation({}: // dispatchMedia,
-{
-  // dispatchMedia: React.Dispatch<MediaActions>;
-}) {
+function Navigation() {
   const classes = useStyles();
   const [drawer, setDrawer] = useState(false);
 

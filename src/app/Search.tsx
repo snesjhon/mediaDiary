@@ -140,12 +140,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Search({
-  setShowSearch,
-}: {
-  setShowSearch: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+function Search() {
   const InputRef = useRef<HTMLInputElement>(null);
+  const dispatchMD = useContext(MDDispatchCtx);
   // const mediaSelect = useStoreActions((actions) => actions.media.mediaSelect);
   const [
     { expanded, searchInput, mediaResult, isSearching, type },
@@ -161,19 +158,6 @@ function Search({
   const classes = useStyles(expanded);
   const bouncedSearch = useDebounce(searchInput, 500);
   const mediaDispatch = useContext(MDDispatchCtx);
-
-  // mediaSelect(obj).then(
-  //   () => console.log("lkjlkj")
-  //   // dispatchMedia({ type: "toggleLog", payload: true })
-  // ),
-  // const logMedia = useCallback(
-  //   (obj) =>
-  //     mediaSelect({
-  //       mediaSelected: obj,
-  //       cb: () => dispatchMedia({ type: "toggleLog", payload: true }),
-  //     }),
-  //   [mediaSelect, dispatchMedia]
-  // );
 
   useEffect(() => {
     if (bouncedSearch) {
@@ -257,7 +241,7 @@ function Search({
                           hover
                           onClick={() =>
                             mediaDispatch({
-                              type: "select",
+                              type: "view",
                               payload: {
                                 view: "diary",
                                 selected: mediaNormalize(e),
@@ -290,7 +274,17 @@ function Search({
           </Collapse>
         </AppBar>
       </Box>
-      <Box className={classes.backDrop} onClick={() => setShowSearch(false)} />
+      <Box
+        className={classes.backDrop}
+        onClick={() =>
+          dispatchMD({
+            type: "view",
+            payload: {
+              view: "media",
+            },
+          })
+        }
+      />
     </>
   );
 
@@ -390,3 +384,16 @@ const MediaSearchList = ({ type, item, children }: MediaSearchListProps) => {
 };
 
 export default Search;
+
+// mediaSelect(obj).then(
+//   () => console.log("lkjlkj")
+//   // dispatchMedia({ type: "toggleLog", payload: true })
+// ),
+// const logMedia = useCallback(
+//   (obj) =>
+//     mediaSelect({
+//       mediaSelected: obj,
+//       cb: () => dispatchMedia({ type: "toggleLog", payload: true }),
+//     }),
+//   [mediaSelect, dispatchMedia]
+// );
