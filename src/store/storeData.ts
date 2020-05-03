@@ -1,8 +1,9 @@
 import { Thunk, thunk, action, Action } from "easy-peasy";
-import { db } from "./db";
-import { MediaInfo, MediaTypes } from "./storeMedia";
+import { db } from "../config/db";
+import { MediaInfo } from "./storeMedia";
 import { StoreModel } from "./store";
 import * as firebase from "firebase/app";
+import { MediaTypes } from "./storeTypes";
 
 interface DataPut extends MediaInfo, MediaTypes {
   date: Date | "";
@@ -84,17 +85,11 @@ export const data: Data = {
   dataGet: thunk(async (actions, _, { getStoreState }) => {
     const year = getStoreState().global.preferences.year;
     if (year !== null) {
-      const byID = await db
-        .collection(year.toString())
-        .doc("byID")
-        .get();
-      const byDate = await db
-        .collection(year.toString())
-        .doc("byDate")
-        .get();
+      const byID = await db.collection(year.toString()).doc("byID").get();
+      const byDate = await db.collection(year.toString()).doc("byDate").get();
       actions.dataSet({
         byID: byID.data() || {},
-        byDate: byDate.data() || {}
+        byDate: byDate.data() || {},
       });
     } else {
       console.log("we have no year");
@@ -113,35 +108,35 @@ export const data: Data = {
       seen,
       date,
       season,
-      episode
+      episode,
     } = payload;
     const year = getStoreState().global.preferences.year;
     if (year !== null) {
       const dbByID = db.collection(year.toString()).doc("byID");
       const dbByDate = db.collection(year.toString()).doc("byDate");
 
-      const prByID = db.runTransaction(transaction => {
+      const prByID = db.runTransaction((transaction) => {
         let dataByID = {
           poster,
           title,
           published,
           overview,
           artist,
-          type
+          type,
         };
         if (season) {
           dataByID = {
             ...dataByID,
-            ...(season && { season: season })
+            ...(season && { season: season }),
           };
         }
-        return transaction.get(dbByID).then(movieCollection => {
+        return transaction.get(dbByID).then((movieCollection) => {
           if (!movieCollection.exists) {
             transaction.set(dbByID, {
               [`${type}_${id}`]: {
                 ...dataByID,
-                count: 1
-              }
+                count: 1,
+              },
             });
           }
 
@@ -159,14 +154,14 @@ export const data: Data = {
           transaction.update(dbByID, {
             [`${type}_${id}`]: {
               ...dataByID,
-              count: typeof currentCount !== "undefined" ? currentCount + 1 : 1
-            }
+              count: typeof currentCount !== "undefined" ? currentCount + 1 : 1,
+            },
           });
           return Promise.resolve();
         });
       });
 
-      const prByDate = db.runTransaction(transaction => {
+      const prByDate = db.runTransaction((transaction) => {
         const dateAdded = new Date();
         let dataByDate = {
           [dateAdded.getTime()]: {
@@ -177,11 +172,11 @@ export const data: Data = {
             seen,
             star,
             ...(season && { season }),
-            ...(episode && { episode })
-          }
+            ...(episode && { episode }),
+          },
         };
 
-        return transaction.get(dbByDate).then(movieDates => {
+        return transaction.get(dbByDate).then((movieDates) => {
           if (!movieDates.exists) {
             transaction.set(dbByDate, dataByDate);
           }
@@ -191,6 +186,8 @@ export const data: Data = {
       });
 
       Promise.all([prByID, prByDate]).then(() => {
+        //TODO: There might be a race condition? Because one that is coming and then note retrieving correctly
+
         return actions.dataGet();
       });
     } else {
@@ -205,8 +202,8 @@ export const data: Data = {
       const dbByID = db.collection(year.toString()).doc("byID");
       const dbByDate = db.collection(year.toString()).doc("byDate");
 
-      const prByID = db.runTransaction(transaction => {
-        return transaction.get(dbByID).then(movieCollection => {
+      const prByID = db.runTransaction((transaction) => {
+        return transaction.get(dbByID).then((movieCollection) => {
           const currentDoc = movieCollection.data();
 
           if (
@@ -216,14 +213,14 @@ export const data: Data = {
             const currentItem = currentDoc[itemByID];
             if (currentItem.count === 1) {
               transaction.update(dbByID, {
-                [itemByID]: firebase.firestore.FieldValue.delete()
+                [itemByID]: firebase.firestore.FieldValue.delete(),
               });
             } else {
               transaction.update(dbByID, {
                 [itemByID]: {
                   ...currentItem,
-                  count: currentItem.count - 1
-                }
+                  count: currentItem.count - 1,
+                },
               });
             }
           }
@@ -231,10 +228,10 @@ export const data: Data = {
         });
       });
 
-      const prByDate = db.runTransaction(transaction => {
+      const prByDate = db.runTransaction((transaction) => {
         return transaction.get(dbByDate).then(() => {
           transaction.update(dbByDate, {
-            [payload.mediaID]: firebase.firestore.FieldValue.delete()
+            [payload.mediaID]: firebase.firestore.FieldValue.delete(),
           });
           return Promise.resolve();
         });
@@ -252,10 +249,10 @@ export const data: Data = {
     const year = getStoreState().global.preferences.year;
     if (year !== null) {
       const dbByDate = db.collection(year.toString()).doc("byDate");
-      db.runTransaction(transaction => {
+      db.runTransaction((transaction) => {
         return transaction
           .get(dbByDate)
-          .then(byDate => {
+          .then((byDate) => {
             // have to get the ID first.
             const currentDoc = byDate.data();
             debugger;
@@ -270,8 +267,8 @@ export const data: Data = {
                   ...currentItem,
                   date: payload.modifiedDate,
                   seen: payload.modifiedSeen,
-                  star: payload.modifiedStar
-                }
+                  star: payload.modifiedStar,
+                },
               });
             } else {
               console.log("update failed because no id found");
@@ -288,5 +285,5 @@ export const data: Data = {
     } else {
       console.log("update didnt work");
     }
-  })
+  }),
 };

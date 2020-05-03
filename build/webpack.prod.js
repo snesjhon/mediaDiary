@@ -19,7 +19,7 @@ module.exports = merge(common, {
     filename: "[name].[chunkhash].js",
     publicPath: "/",
     sourceMapFilename: "[name].js.map",
-    path: path.resolve(__dirname + "/../", "build")
+    path: path.resolve(__dirname + "/../", "dist"),
   },
   stats: {
     assets: false,
@@ -31,6 +31,6 @@ module.exports = merge(common, {
     hash: false,
     modules: false,
     timings: false,
-    version: false
-  }
+    version: false,
+  },
 });

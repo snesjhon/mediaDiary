@@ -1,8 +1,7 @@
 import { Action, action, Thunk, thunk } from "easy-peasy";
-import { LASTFMKEY } from "./constants";
+import { LASTFMKEY } from "../config/constants";
 import { StoreModel } from "./store";
-
-export type MediaTyper = "film" | "tv" | "album" | "";
+import { MediaTypes } from "../app/Media";
 
 export interface MediaInfo {
   id: string;
@@ -11,6 +10,7 @@ export interface MediaInfo {
   published: Date | "";
   artist: string;
   overview?: string;
+  backdrop?: string;
   season?: number | undefined;
   episode?: number | undefined;
 }
@@ -19,21 +19,20 @@ export interface MediaAdd extends MediaInfo {
   date: Date;
   seen: boolean;
   star: number;
-  type: MediaTyper;
+  type: MediaTypes;
 }
 
 export interface MediaSelected extends MediaInfo {
   watched: string | undefined;
-  type: MediaTyper;
-}
-
-export interface MediaTypes {
-  type: MediaTyper;
+  type: MediaTypes;
 }
 
 export interface Media {
   mediaSelected: MediaSelected;
-  mediaSelect: Action<Media, MediaSelected | void>;
+  mediaSelect: Action<
+    Media,
+    { mediaSelected: MediaSelected | void; cb: () => void }
+  >;
   mediaPutFilm: Thunk<Media, MediaAdd, void, StoreModel>;
   mediaPutTV: Thunk<Media, MediaAdd, void, StoreModel>;
   mediaPutAlbum: Thunk<Media, MediaAdd, void, StoreModel>;
@@ -48,20 +47,25 @@ const mediaInit: MediaSelected = {
   artist: "",
   watched: undefined,
   type: "",
-  season: undefined
+  season: undefined,
 };
 
 export const media: Media = {
   mediaSelected: mediaInit,
   mediaSelect: action((state, payload) => {
-    state.mediaSelected = payload ? payload : mediaInit;
+    state.mediaSelected = payload.mediaSelected
+      ? payload.mediaSelected
+      : mediaInit;
+    return payload.cb();
   }),
   mediaPutFilm: thunk(async (actions, payload, { getStoreActions }) => {
-    actions.mediaSelect();
-    getStoreActions().data.dataPut(payload);
+    return getStoreActions()
+      .data.dataPut(payload)
+      .then(() => {
+        return getStoreActions().data.dataGet();
+      });
   }),
   mediaPutTV: thunk(async (actions, payload, { getStoreActions }) => {
-    actions.mediaSelect();
     getStoreActions().data.dataPut(payload);
   }),
   mediaPutAlbum: thunk(async (actions, payload, { getStoreActions }) => {
@@ -78,9 +82,8 @@ export const media: Media = {
       overview:
         typeof info.album.wiki !== "undefined"
           ? info.album.wiki.summary.split("<a href")[0]
-          : ""
+          : "",
     };
-    actions.mediaSelect();
     getStoreActions().data.dataPut(albumObj);
-  })
+  }),
 };

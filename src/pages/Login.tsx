@@ -12,11 +12,11 @@ import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { useStoreActions, useStoreState } from "./config/store";
+import { useStoreActions, useStoreState } from "../store/store";
 
-const About = () => {
-  const userGet = useStoreActions(actions => actions.global.userGet);
-  const user = useStoreState(state => state.global.user);
+const Login = () => {
+  const userGet = useStoreActions((actions) => actions.global.userGet);
+  const user = useStoreState((state) => state.global.user);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -50,4 +50,4 @@ const About = () => {
   }
 };
 
-export default About;
+export default Login;

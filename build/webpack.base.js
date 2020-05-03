@@ -10,7 +10,7 @@ const Dotenv = require("dotenv-webpack");
 
 module.exports = {
   entry: {
-    app: path.resolve(__dirname + "/../", "src/index.tsx")
+    app: path.resolve(__dirname + "/../", "src/index.tsx"),
   },
   optimization: {
     splitChunks: {
@@ -18,34 +18,34 @@ module.exports = {
         vendors: {
           test: /[\\/]node_modules[\\/]/,
           name: "vendor",
-          chunks: "all"
-        }
-      }
-    }
+          chunks: "all",
+        },
+      },
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({
       title: "INSERT TITLE",
       template: path.resolve(__dirname + "/index.html"),
-      inject: true
+      inject: true,
     }),
-    new Dotenv({ systemvars: true })
+    new Dotenv({ systemvars: true }),
   ],
   resolve: {
-    extensions: [".ts", ".tsx", ".js"]
+    extensions: [".ts", ".tsx", ".js"],
   },
   module: {
     rules: [
       {
         test: /\.js$/,
         loader: "babel-loader",
-        exclude: /node_modules/
+        exclude: /node_modules/,
       },
       {
         test: /\.(tsx|ts)$/,
         loader: "ts-loader",
-        exclude: /node_modules/
-      }
-    ]
-  }
+        exclude: /node_modules/,
+      },
+    ],
+  },
 };
