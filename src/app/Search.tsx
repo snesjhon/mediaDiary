@@ -384,16 +384,3 @@ const MediaSearchList = ({ type, item, children }: MediaSearchListProps) => {
 };
 
 export default Search;
-
-// mediaSelect(obj).then(
-//   () => console.log("lkjlkj")
-//   // dispatchMedia({ type: "toggleLog", payload: true })
-// ),
-// const logMedia = useCallback(
-//   (obj) =>
-//     mediaSelect({
-//       mediaSelected: obj,
-//       cb: () => dispatchMedia({ type: "toggleLog", payload: true }),
-//     }),
-//   [mediaSelect, dispatchMedia]
-// );
