@@ -12,11 +12,15 @@ import Diary from "./Diary";
 import { MediaSelected } from "../store/storeMedia";
 import { DataByDate } from "../store/storeData";
 
+interface Day extends DataByDate {
+  mediaID: string;
+}
+
 interface MediaDiaryState {
   view: "media" | "diary";
   viewType?: "search" | "day" | "";
   selected?: MediaSelected;
-  day?: DataByDate;
+  day?: Day;
 }
 
 const initState: MediaDiaryState = {

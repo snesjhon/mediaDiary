@@ -8,7 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import * as React from "react";
 import { useContext } from "react";
 import { createPosterURL } from "../config/helpers";
-import { IconChevronLeft } from "../icons";
+import { IconChevronLeft, IconX } from "../icons";
 import Day from "./Day";
 import Log from "./Log";
 import { MDDispatchCtx, MDStateCtx } from "./MediaDiary";
@@ -91,20 +91,24 @@ function Diary() {
             variant="dense"
             disableGutters={true}
           >
-            <IconButton
-              size="small"
-              onClick={() =>
-                dispatchMedia({
-                  type: "view",
-                  payload: {
-                    view: "media",
-                    viewType: "search",
-                  },
-                })
-              }
-            >
-              <IconChevronLeft />
-            </IconButton>
+            {viewType !== "day" ? (
+              <IconButton
+                size="small"
+                onClick={() =>
+                  dispatchMedia({
+                    type: "view",
+                    payload: {
+                      view: "media",
+                      viewType: "search",
+                    },
+                  })
+                }
+              >
+                <IconChevronLeft />
+              </IconButton>
+            ) : (
+              <div />
+            )}
             <IconButton
               size="small"
               onClick={() =>
@@ -117,7 +121,7 @@ function Diary() {
                 })
               }
             >
-              <IconChevronLeft />
+              <IconX />
             </IconButton>
           </Toolbar>
         </AppBar>
@@ -174,7 +178,9 @@ function Diary() {
       <Box mx={4} py={2}>
         <Divider />
       </Box>
-      {viewType === "day" ? <Day /> : <Log />}
+      <Box px={4} pb={4}>
+        {viewType === "day" ? <Day /> : <Log />}
+      </Box>
     </>
   );
 }

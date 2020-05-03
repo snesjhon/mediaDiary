@@ -108,6 +108,7 @@ function Media() {
                       style={{
                         position: "sticky",
                         top: "4.1rem",
+                        marginTop: "1rem",
                         textAlign: "center",
                       }}
                     >
@@ -165,19 +166,13 @@ function Media() {
                                         payload: {
                                           view: "diary",
                                           viewType: "day",
-                                          day: diaryDates[month][day],
+                                          day: {
+                                            ...diaryDates[month][day],
+                                            mediaID: day,
+                                          },
                                         },
                                       })
                                     }
-                                    // onClick={() =>
-                                    //   // dispatchMD({
-                                    //   //   type: "view",
-                                    //   //   payload: {
-                                    //   //     view: "diary",
-                                    //   //     selected: day,
-                                    //   //   },
-                                    //   // })
-                                    // }
                                   />
                                 </Box>
                               </Grid>
@@ -192,13 +187,19 @@ function Media() {
                                 <Box pt={2} pl={1} pr={0}>
                                   <Typography
                                     className={classes.mediaListTitle}
-                                    // onClick={() =>
-                                    //   setListView({
-                                    //     open: true,
-                                    //     type: "edit",
-                                    //     mediaID: day,
-                                    //   })
-                                    // }
+                                    onClick={() =>
+                                      dispatchMD({
+                                        type: "view",
+                                        payload: {
+                                          view: "diary",
+                                          viewType: "day",
+                                          day: {
+                                            ...diaryDates[month][day],
+                                            mediaID: day,
+                                          },
+                                        },
+                                      })
+                                    }
                                   >
                                     {title}
                                   </Typography>
