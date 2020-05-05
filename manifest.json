@@ -4,7 +4,7 @@
   "name": "mediaDiary",
   "scope": "/",
   "display": "fullscreen",
-  "start_url": "https://mediadiary.netlify.app/",
+  "start_url": "/",
   "short_name": "mediaDiary",
   "theme_color": "transparent",
   "description": "",
