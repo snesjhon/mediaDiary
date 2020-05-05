@@ -10,6 +10,7 @@
 
 const path = require("path");
 const merge = require("webpack-merge");
+const CopyPlugin = require("copy-webpack-plugin");
 const common = require("./webpack.base.js");
 
 module.exports = merge(common, {
@@ -21,6 +22,7 @@ module.exports = merge(common, {
     sourceMapFilename: "[name].js.map",
     path: path.resolve(__dirname + "/../", "dist"),
   },
+  plugins: [new CopyPlugin(["manifest.json"], { from: "../", to: "./dist" })],
   stats: {
     assets: false,
     children: false,
