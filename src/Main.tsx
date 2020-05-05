@@ -8,9 +8,10 @@ import {
   Route,
   Switch,
 } from "react-router-dom";
-import { useStoreState } from "./store/store";
 import MediaDiary from "./app/MediaDiary";
+import Home from "./pages/Home";
 import Login from "./pages/Login";
+import { useStoreState } from "./store/store";
 
 const useStyles = makeStyles((_) => ({
   container: {
@@ -31,7 +32,10 @@ function Main() {
     <Router>
       <Switch>
         <Route exact path="/">
-          <HomeRoute />
+          <Home />
+        </Route>
+        <Route exact path="/login">
+          <Login user={user} preferences={preferences} />
         </Route>
         <PrivateRoute exact path="/:id(\d+)">
           <MediaDiary />
@@ -45,16 +49,6 @@ function Main() {
       </Switch>
     </Router>
   );
-
-  function HomeRoute() {
-    if (user && preferences.year !== null) {
-      return <Redirect to={`/${preferences.year}`} />;
-    } else if (user && preferences.year === null) {
-      return <Redirect to="/setup" />;
-    } else {
-      return <Login />;
-    }
-  }
 
   function PrivateRoute({ children, ...rest }: any) {
     return (

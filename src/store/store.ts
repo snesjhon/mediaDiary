@@ -14,9 +14,9 @@ const storeModel = persist(
   {
     global,
     data,
-    media
+    media,
   },
-  { whitelist: ["global", "media"] }
+  { whitelist: ["global", "media"], storage: "localStorage" }
 );
 
 const typedHooks = createTypedHooks<StoreModel>();
