@@ -3,6 +3,7 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 import { fb, db } from "../config/db";
 import { StoreModel } from "./store";
+// import {useHistory} from "react-router";
 
 export type UserTheme = "light" | "dark";
 export type User = firebase.User | null;
@@ -14,8 +15,10 @@ export type UserPreferences = {
 
 export interface Global {
   user: User;
+  // loading: boolean;
   preferences: UserPreferences;
-  userGet: Thunk<Global>;
+  // setLoading: Action<Global, boolean>;
+  // userGet: Action<Global>;
   userSet: Action<Global, User>;
   userSetPreferences: Action<Global, UserPreferences>;
   userSetConfig: Action<Global, { user: User; preferences: UserPreferences }>;
@@ -26,20 +29,40 @@ export interface Global {
 
 export const global: Global = {
   user: null,
+  // loading: false,
   preferences: {
     theme: "light",
     year: null,
     years: [],
   },
-  userGet: thunk(async (actions) => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    const result = await fb.auth().signInWithPopup(provider);
-    try {
-      actions.userGetPreferences(result.user);
-    } catch {
-      return console.log("handle no user");
-    }
-  }),
+  // setLoading: action((state, payload) => {
+  //   state.loading = payload;
+  // }),
+  // userGet: thunk(async (actions) => {
+  // const provider = new firebase.auth.GoogleAuthProvider();
+  // firebase.auth().signInWithRedirect(provider);
+  //   // actions.setLoading(true);
+  //   // const result = await fb.auth().signInWithPopup(provider);
+  // }),
+  // userGet: action((state) => {
+  //   state.loading = true;
+  //   const provider = new firebase.auth.GoogleAuthProvider();
+  //   firebase.auth().signInWithRedirect(provider);
+  //   // .then((result) => {
+  //   //   state.loading = true;
+  //   // });
+
+  //   // firebase
+  //   //   .auth()
+  //   //   .getRedirectResult()
+  //   //   .then((result) => {
+  //   //     try {
+  //   //       userGetPreferences(result.user);
+  //   //     } catch {
+  //   //       return console.log("handle no user");
+  //   //     }
+  //   //   });
+  // }),
   userSet: action((state, payload) => {
     state.user = payload;
   }),
