@@ -31,7 +31,7 @@ interface ListState {
 
 const useStyles = makeStyles((theme) => ({
   mediaFab: {
-    position: "sticky",
+    position: "fixed",
     bottom: "4vh",
     marginLeft: "1rem",
     marginBottom: "-1.5rem",
