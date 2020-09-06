@@ -1,9 +1,3 @@
-/**
- * WEBPACK COMMON
- * ---
- * Webpack takes an entry and outputs a transpiled javascript. We can also have a devServer configuration.
- * Having a common file means that we're able to diverge two webpack environments without duplicating code.
- */
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
