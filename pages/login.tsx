@@ -1,3 +1,11 @@
+/**
+ * LOGIN
+ * --
+ * TODO:
+ * - Looks like there's a condition where the login isSending is a false positive,
+ *   because there's multiple cookies.
+ */
+
 // https://vriad.com/essays/nextjs-firebase-authentication
 import { useEffect } from "react";
 import * as firebase from "firebase/app";
@@ -23,6 +31,8 @@ Login.getInitialProps = async (ctx: any) => {
 function Login({ isSending }: Props) {
   const router = useRouter();
 
+  console.log(isSending);
+
   useEffect(() => {
     if (isSending) {
       Cookies.remove("authPending");
@@ -39,14 +49,18 @@ function Login({ isSending }: Props) {
   }, []);
 
   return isSending ? (
-    <Container>
-      <div>asdasdas</div>
-    </Container>
+    <Spinner
+      thickness="4px"
+      speed="0.65s"
+      emptyColor="gray.200"
+      color="blue.500"
+      size="xl"
+    />
   ) : (
-    <Container>
+    <>
       <Heading>Login</Heading>
       <Button onClick={loginWithGoogle}>loginWithGoogle</Button>
-    </Container>
+    </>
   );
 
   function loginWithGoogle() {
