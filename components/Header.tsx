@@ -7,10 +7,11 @@ import {
   Icon,
   IconButton,
   Heading,
+  Button,
   Box,
   Text,
 } from "@chakra-ui/core";
-import { HamburgerIcon } from "@chakra-ui/icons";
+import { HamburgerIcon, AddIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
 import LogoIcon from "./Icons/LogoIcon";
 
@@ -54,15 +55,10 @@ function Header() {
           </HStack>
         </Flex>
 
-        <Flex maxW="720px" align="center" color="gray.400">
-          <HStack spacing="5">
-            <Link isExternal aria-label="GitHub" href="/">
-              asd
-            </Link>
-            <Link isExternal aria-label="Discord" href="/">
-              asd
-            </Link>
-          </HStack>
+        <Flex maxW="720px" align="center">
+          <Button size="sm" rightIcon={<AddIcon boxSize={2}/>} colorScheme="purple">
+            Add Media
+          </Button>
         </Flex>
       </Flex>
     </Box>

@@ -1,7 +1,9 @@
 import { Container, Box, Heading, Button, Text } from "@chakra-ui/core";
 import { useRouter } from "next/router";
-import useUser from "../hooks/useUser";
+import useUser from "../utils/useUser";
 import Header from "../components/Header";
+import { useCollection } from "@nandorojo/swr-firestore";
+import MediaDiary from "../components/MediaDiary";
 
 function App() {
   const { user, logout } = useUser();
@@ -16,11 +18,7 @@ function App() {
               External Login
             </Button>
           ) : (
-            <>
-              <Header />
-              <Text>You're Logged in</Text>
-              <Button onClick={logout}>Logout</Button>
-            </>
+            <MediaDiary />
           )}
         </Box>
       </Container>

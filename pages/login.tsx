@@ -31,8 +31,6 @@ Login.getInitialProps = async (ctx: any) => {
 function Login({ isSending }: Props) {
   const router = useRouter();
 
-  console.log(isSending);
-
   useEffect(() => {
     if (isSending) {
       Cookies.remove("authPending");

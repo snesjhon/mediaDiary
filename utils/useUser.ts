@@ -6,8 +6,8 @@ import {
   getUserFromCookie,
   setUserCookie,
   removeUserCookie,
-} from "../utils/getUserFromCookie";
-import { ContextState, ContextDispatch } from "../utils/store";
+} from "./getUserFromCookie";
+import { ContextState, ContextDispatch } from "./store";
 
 function useUser() {
   const { user } = useContext(ContextState);
