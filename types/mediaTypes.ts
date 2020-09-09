@@ -9,6 +9,7 @@ export interface MediaInfoAdd extends MediaBaseInfo {
   artist: string;
   title: string;
   poster: string;
+  genre: string;
   overview?: string;
 }
 

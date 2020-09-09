@@ -8,6 +8,7 @@ import {
   Text,
   Divider,
   Button,
+  Heading,
 } from "@chakra-ui/core";
 import { fuego } from "@nandorojo/swr-firestore";
 import useUser from "../utils/useUser";
@@ -21,25 +22,35 @@ function Log() {
   const { selected } = useContext(ContextState);
   const { user } = useUser();
   const router = useRouter();
-  // console.log(selected);
   return (
     <Layout>
       <Header />
-      <Center mb={3}>
-        <Image src={selected?.poster} w="10rem" borderRadius="5px" />
-      </Center>
       <Flex alignItems="center" justifyContent="center" flexDir="column">
-        <Text fontSize="xl" fontWeight="bold">
+        <Heading fontWeight="normal" fontSize="xl">
+          {selected?.artist}
+        </Heading>
+        <Heading fontWeight="bold" fontStyle="italic" fontSize="2xl">
           {selected?.title}
-        </Text>
-        <Text fontSize="md">
-          {selected?.artist}{" "}
-          {typeof selected?.releasedDate !== "undefined" &&
-            `(${new Date(selected.releasedDate).toLocaleDateString("en-us", {
-              year: "numeric",
-            })})`}
-        </Text>
+        </Heading>
       </Flex>
+      <Center mt={3} mb={1}>
+        <Image
+          src={selected?.poster}
+          w="10rem"
+          borderRadius="5px"
+          border="1px solid"
+          borderColor="gray.300"
+        />
+      </Center>
+      <Center>
+        <Text fontSize="sm" color="gray.400">
+          {selected?.genre} •{" "}
+          {typeof selected?.releasedDate !== "undefined" &&
+            `${new Date(selected.releasedDate).toLocaleDateString("en-us", {
+              year: "numeric",
+            })}`}
+        </Text>
+      </Center>
       <Divider my={4} />
       <Button onClick={addData} isLoading={isLoading}>
         Add Data
@@ -86,13 +97,22 @@ function Log() {
 
   function createInfo(): { [key: string]: MediaInfoAdd } | false {
     if (typeof selected !== "undefined") {
-      const { type, artist, title, poster, overview, releasedDate } = selected;
+      const {
+        type,
+        artist,
+        title,
+        poster,
+        overview,
+        releasedDate,
+        genre,
+      } = selected;
       return {
         [`${selected?.type}_${selected?.id}`]: {
           type,
           artist,
           title,
           poster,
+          genre,
           releasedDate,
           ...(overview && { overview: overview }),
         },

@@ -1,10 +1,13 @@
-import React, { useState, useContext } from "react";
-import { Heading, Input, Text, Flex, Box } from "@chakra-ui/core";
+import { Box, Flex, Heading, Input, Text } from "@chakra-ui/core";
+import { useRouter } from "next/router";
+import React, { useContext, useState } from "react";
 import useSWR from "swr";
-import useDebounce from "../utils/useDebounce";
-import { ContextDispatch } from "../utils/store";
-import type { MediaSelected, MediaTypes } from "../types/mediaTypes";
+import Header from "./Header";
 import LogoFilm from "./Icons/LogoFilm";
+import Layout from "./Layout";
+import type { MediaSelected, MediaTypes } from "../types/mediaTypes";
+import { ContextDispatch } from "../utils/store";
+import useDebounce from "../utils/useDebounce";
 
 const fetcher = (input: RequestInfo) => fetch(input).then((res) => res.json());
 
@@ -27,6 +30,7 @@ function MediaSearchList({ type, item, children }: MediaSearchListProps) {
 function Search() {
   const [search, setSearch] = useState("");
   const dispatch = useContext(ContextDispatch);
+  const router = useRouter();
 
   const bouncedSearch = useDebounce(search, 500);
   const { data, isValidating, error } = useSWR(
@@ -42,8 +46,7 @@ function Search() {
   );
 
   return (
-    <>
-      <Heading>Search for Media</Heading>
+    <Box pb={6}>
       <Input
         placeholder="search"
         onChange={(e) => setSearch(e.target.value)}
@@ -54,7 +57,10 @@ function Search() {
       {data?.resultCount === 0 && <div>nothing found</div>}
       {data &&
         data.results.map((e: any, i: string) => {
-          let currentType: MediaTypes = e.collectionType || e.kind;
+          let currentType = e.collectionType || e.kind;
+          if (currentType === "feature-movie") currentType = "movie";
+          else if (currentType === "Album") currentType = "album";
+          else if (currentType === "TV Season") currentType = "tv";
           return (
             <MediaSearchList
               key={`${e.collectionId}_${i}`}
@@ -63,21 +69,22 @@ function Search() {
             >
               {({ artist, date, name }) => (
                 <Flex
+                  fontSize="sm"
                   alignItems="center"
                   borderBottom="1px"
                   borderBottomColor="gray.200"
                   py={3}
-                  px={2}
                   _hover={{
                     bg: "purple.50",
                     cursor: "pointer",
                   }}
-                  onClick={() =>
+                  onClick={() => {
                     dispatch({
                       type: "select",
                       payload: mediaNormalize(e, currentType),
-                    })
-                  }
+                    });
+                    router.push("/log");
+                  }}
                 >
                   <Box w="6%" display="flex">
                     {currentType === "movie" && <LogoFilm />}
@@ -98,10 +105,11 @@ function Search() {
             </MediaSearchList>
           );
         })}
-    </>
+    </Box>
   );
 
   function mediaNormalize(item: any, type: MediaTypes): MediaSelected {
+    console.log(item);
     return {
       id: type === "movie" ? item.trackId : item.collectionId,
       poster: item.artworkUrl100.replace("100x100", "500x500"),
@@ -109,6 +117,7 @@ function Search() {
       releasedDate: item.releaseDate,
       overview: item.longDescription,
       artist: item.artistName,
+      genre: item.primaryGenreName,
       type,
     };
   }

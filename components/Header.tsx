@@ -64,7 +64,9 @@ function Header() {
               size="sm"
               rightIcon={<AddIcon boxSize={2} />}
               colorScheme="purple"
-              onClick={() => router.push("/search")}
+              onClick={() =>
+                router.push("/?search=true", "/search", { shallow: true })
+              }
             >
               Add Media
             </Button>
