@@ -1,13 +1,13 @@
 import React, { PropsWithChildren } from "react";
-import { Box } from "@chakra-ui/core";
-import Header from "./Header";
+import { Box, Container } from "@chakra-ui/core";
 
 function Layout({ children }: PropsWithChildren<{}>) {
   return (
-    <Box>
-      <Header />
-      {children}
-    </Box>
+    <Container maxWidth={{ base: "xl", md: "lg" }}>
+      <Box pt={3} mt={16} mx="auto">
+        {children}
+      </Box>
+    </Container>
   );
 }
 

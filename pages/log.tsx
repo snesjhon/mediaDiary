@@ -12,14 +12,19 @@ import {
 import { fuego } from "@nandorojo/swr-firestore";
 import useUser from "../utils/useUser";
 import { MediaDiaryAdd, MediaInfoAdd } from "../types/mediaTypes";
+import Layout from "../components/Layout";
+import Header from "../components/Header";
+import { useRouter } from "next/router";
 
 function Log() {
   const [isLoading, setIsLoading] = useState(false);
   const { selected } = useContext(ContextState);
   const { user } = useUser();
-  console.log(selected);
+  const router = useRouter();
+  // console.log(selected);
   return (
-    <Box>
+    <Layout>
+      <Header />
       <Center mb={3}>
         <Image src={selected?.poster} w="10rem" borderRadius="5px" />
       </Center>
@@ -39,7 +44,7 @@ function Log() {
       <Button onClick={addData} isLoading={isLoading}>
         Add Data
       </Button>
-    </Box>
+    </Layout>
   );
 
   function addData() {
@@ -53,7 +58,10 @@ function Log() {
     if (addInfo) {
       batch.update(fuego.db.collection(user.email).doc("media"), addInfo);
     }
-    batch.commit().then(() => setIsLoading(false));
+    batch.commit().then(() => {
+      setIsLoading(false);
+      return router.push("/");
+    });
   }
 
   function createDiary(): { [key: string]: MediaDiaryAdd } | false {

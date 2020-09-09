@@ -1,13 +1,13 @@
-import React, { useState, useContext } from "react";
-import { Heading, Input, Text, Flex, Box, Container } from "@chakra-ui/core";
+import { Box, Flex, Heading, Input, Text } from "@chakra-ui/core";
+import { useRouter } from "next/router";
+import React, { useContext, useState } from "react";
 import useSWR from "swr";
-import useDebounce from "../utils/useDebounce";
-import { ContextDispatch } from "../utils/store";
-import type { MediaSelected, MediaTypes } from "../types/mediaTypes";
+import Header from "../components/Header";
 import LogoFilm from "../components/Icons/LogoFilm";
 import Layout from "../components/Layout";
-import { useRouter } from "next/router";
-// import LogoFilm from "./Icons/LogoFilm";
+import type { MediaSelected, MediaTypes } from "../types/mediaTypes";
+import { ContextDispatch } from "../utils/store";
+import useDebounce from "../utils/useDebounce";
 
 const fetcher = (input: RequestInfo) => fetch(input).then((res) => res.json());
 
@@ -46,71 +46,68 @@ function Search() {
   );
 
   return (
-    <Container maxWidth={{ base: "xl", md: "lg" }}>
-      <Box pt={3} mt={16} mx="auto">
-        <Layout>
-          <Heading>Search for Media</Heading>
-          <Input
-            placeholder="search"
-            onChange={(e) => setSearch(e.target.value)}
-            value={search}
-            type="search"
-          />
-          {!data && isValidating && <div>loading</div>}
-          {data?.resultCount === 0 && <div>nothing found</div>}
-          {data &&
-            data.results.map((e: any, i: string) => {
-              let currentType = e.collectionType || e.kind;
-              if (currentType === "feature-movie") currentType = "movie";
-              else if (currentType === "Album") currentType = "album";
-              else if (currentType === "TV Season") currentType = "tv";
-              return (
-                <MediaSearchList
-                  key={`${e.collectionId}_${i}`}
-                  type={currentType}
-                  item={e}
+    <Layout>
+      <Header />
+      <Heading>Search for Media</Heading>
+      <Input
+        placeholder="search"
+        onChange={(e) => setSearch(e.target.value)}
+        value={search}
+        type="search"
+      />
+      {!data && isValidating && <div>loading</div>}
+      {data?.resultCount === 0 && <div>nothing found</div>}
+      {data &&
+        data.results.map((e: any, i: string) => {
+          let currentType = e.collectionType || e.kind;
+          if (currentType === "feature-movie") currentType = "movie";
+          else if (currentType === "Album") currentType = "album";
+          else if (currentType === "TV Season") currentType = "tv";
+          return (
+            <MediaSearchList
+              key={`${e.collectionId}_${i}`}
+              type={currentType}
+              item={e}
+            >
+              {({ artist, date, name }) => (
+                <Flex
+                  alignItems="center"
+                  borderBottom="1px"
+                  borderBottomColor="gray.200"
+                  py={3}
+                  px={2}
+                  _hover={{
+                    bg: "purple.50",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    dispatch({
+                      type: "select",
+                      payload: mediaNormalize(e, currentType),
+                    });
+                    router.push("/log");
+                  }}
                 >
-                  {({ artist, date, name }) => (
-                    <Flex
-                      alignItems="center"
-                      borderBottom="1px"
-                      borderBottomColor="gray.200"
-                      py={3}
-                      px={2}
-                      _hover={{
-                        bg: "purple.50",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => {
-                        dispatch({
-                          type: "select",
-                          payload: mediaNormalize(e, currentType),
-                        });
-                        router.push("/");
-                      }}
-                    >
-                      <Box w="6%" display="flex">
-                        {currentType === "movie" && <LogoFilm />}
-                        {currentType === "album" && <LogoFilm />}
-                        {currentType === "tv" && <LogoFilm />}
-                      </Box>
-                      <Box w="54%">
-                        <Text>{name}</Text>
-                      </Box>
-                      <Box w="30%">
-                        <Text>{artist}</Text>
-                      </Box>
-                      <Box w="10%">
-                        <Text>{date}</Text>
-                      </Box>
-                    </Flex>
-                  )}
-                </MediaSearchList>
-              );
-            })}
-        </Layout>
-      </Box>
-    </Container>
+                  <Box w="6%" display="flex">
+                    {currentType === "movie" && <LogoFilm />}
+                    {currentType === "album" && <LogoFilm />}
+                    {currentType === "tv" && <LogoFilm />}
+                  </Box>
+                  <Box w="54%">
+                    <Text>{name}</Text>
+                  </Box>
+                  <Box w="30%">
+                    <Text>{artist}</Text>
+                  </Box>
+                  <Box w="10%">
+                    <Text>{date}</Text>
+                  </Box>
+                </Flex>
+              )}
+            </MediaSearchList>
+          );
+        })}
+    </Layout>
   );
 
   function mediaNormalize(item: any, type: MediaTypes): MediaSelected {

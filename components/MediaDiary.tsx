@@ -19,12 +19,6 @@ function Media() {
     listen: true,
   });
 
-  // const { data: mediaData } = useDocument<MediaDiaryState>(
-  //   `${user.email}/media`
-  // );
-
-  // console.log(mediaData.);
-
   if (data) {
     // swr-firebase adds these (useful but unnecessary) keys, so remove them and assign a key
     const {
@@ -75,12 +69,8 @@ function Media() {
                     <Heading
                       size="lg"
                       color="gray.600"
-                      style={{
-                        position: "sticky",
-                        top: "4.1rem",
-                        marginTop: "1rem",
-                        textAlign: "center",
-                      }}
+                      position="sticky"
+                      top="4.1rem"
                     >
                       {new Date(month).toLocaleDateString("en-us", {
                         month: "short",
