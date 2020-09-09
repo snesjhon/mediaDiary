@@ -1,9 +1,11 @@
 import { createContext } from "react";
+import { MediaSelected } from "../types/mediaTypes";
+import { useRouter } from "next/router";
 
 export interface MDState {
   user: any;
   view: "main" | "search" | "log";
-  selected?: any;
+  selected?: MediaSelected;
 }
 
 type Actions =
@@ -13,10 +15,7 @@ type Actions =
     }
   | {
       type: "select";
-      payload: {
-        view: MDState["view"];
-        selected: any;
-      };
+      payload: MediaSelected;
     }
   | {
       type: "state";
@@ -26,22 +25,30 @@ type Actions =
       };
     };
 
-export const Reducer = (state: MDState, actions: Actions) => {
+export function Reducer(state: MDState, actions: Actions): MDState {
   switch (actions.type) {
-    case "state":
+    case "state": {
       return {
         ...state,
         [actions.payload.key]: actions.payload.value,
       };
+    }
+    case "select": {
+      return {
+        ...state,
+        selected: actions.payload,
+      };
+    }
     default:
       return state;
   }
-};
+}
 
 export const ContextState = createContext<MDState>({
   user: null,
   view: "main",
 });
+
 export const ContextDispatch = createContext<(props: Actions) => void>(
   () => {}
 );

@@ -1,25 +1,52 @@
-export type MediaTypes = "feature-movie" | "Album" | "TV Season";
+export type MediaTypes = "movie" | "album" | "tv";
 
-export interface MediaInfo {
-  id: string;
-  poster: string;
-  title: string;
-  published: Date | "";
+export interface MediaBaseInfo {
+  releasedDate: Date | "";
+  type: MediaTypes;
+}
+
+export interface MediaInfoAdd extends MediaBaseInfo {
   artist: string;
+  title: string;
+  poster: string;
   overview?: string;
-  backdrop?: string;
-  season?: number | undefined;
+}
+
+export interface MediaInfoState {
+  [key: string]: MediaInfoAdd;
+}
+
+export interface MediaDiaryAdd extends MediaBaseInfo {
+  diaryDate: firebase.firestore.Timestamp;
+  addedDate: firebase.firestore.Timestamp;
+  id: string;
   episode?: number | undefined;
-}
-
-export interface MediaAdd extends MediaInfo {
-  date: Date;
-  seen: boolean;
+  season?: number | undefined;
+  seenBefore: boolean;
   star: number;
-  type: MediaTypes;
 }
 
-export interface MediaSelected extends MediaInfo {
-  watched: string | undefined;
-  type: MediaTypes;
+export interface MediaDiaryState {
+  [key: string]: MediaDiaryAdd;
 }
+
+export interface MediaSelected extends MediaInfoAdd {
+  id: MediaDiaryAdd["id"];
+}
+// title: MediaDateAdd["title"];
+// poster: MediaDateAdd["poster"];
+// overview?: MediaDateAdd["overview"];
+
+// id: string;
+// artist:
+// releaseDate:
+
+// type:
+// releasedDate: Date | "";
+// type: MediaTypes;
+
+// poster: string;
+// title: string;
+// overview?: string;
+// season?: number | undefined;
+// episode?: number | undefined;

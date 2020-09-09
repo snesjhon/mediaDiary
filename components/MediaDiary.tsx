@@ -1,57 +1,168 @@
-import React, { useContext } from "react";
-import Header from "./Header";
-import { Button, Text } from "@chakra-ui/core";
-import { ContextState, ContextDispatch, MDState } from "../utils/store";
+import React from "react";
+import useUser from "../utils/useUser";
 import { useCollection, useDocument } from "@nandorojo/swr-firestore";
-import { fuego } from "@nandorojo/swr-firestore";
-import Layout from "./Layout";
-import Search from "./Search";
+import {
+  MediaDiaryState,
+  MediaDiaryAdd,
+  MediaInfoAdd,
+  MediaInfoState,
+} from "../types/mediaTypes";
+import { SimpleGrid, Box, Grid, Heading, Image, Text } from "@chakra-ui/core";
 
-function MediaDiary() {
-  const { user, view } = useContext(ContextState);
-  const dispatch = useContext(ContextDispatch);
-
-  return (
-    <Layout>
-      <Text>You're Logged in</Text>
-      <Button onClick={() => changeView("main")}>View main</Button>
-      <Button onClick={() => changeView("search")}>View Search</Button>
-      <Button onClick={() => changeView("log")}>View log</Button>
-      {view === "search" && <Search />}
-    </Layout>
-  );
-
-  function changeView(view: MDState["view"]) {
-    return dispatch({
-      type: "state",
-      payload: {
-        key: "view",
-        value: view,
-      },
-    });
-  }
-
-  // const { data, set, isValidating } = useDocument(`${user.email}/media`);
-  // const { data } = useCollection(user.email, { listen: true });
-  // const { data: data2, set: set2, isValidating: diaryValidate } = useDocument(
-  //   `${user.email}/diary`
-  // );
-
-  // console.log(data, data2, isValidating, diaryValidate);
-  // console.log(data);
-  // function addData() {
-  //   const batch = fuego.db.batch();
-  //   batch.set(fuego.db.collection(user.email).doc("media"), {
-  //     title: "jhon4" + new Date(),
-  //   });
-  //   batch.set(fuego.db.collection(user.email).doc("diary"), {
-  //     title: "jhon5" + new Date(),
-  //   });
-
-  //   batch.commit().then(() => {
-  //     console.log("happened");
-  //   });
-  // }
+interface ListState {
+  [key: string]: MediaDiaryState;
 }
 
-export default MediaDiary;
+function Media() {
+  const { user } = useUser();
+  const { data } = useCollection(user.email, {
+    listen: true,
+  });
+
+  // const { data: mediaData } = useDocument<MediaDiaryState>(
+  //   `${user.email}/media`
+  // );
+
+  // console.log(mediaData.);
+
+  if (data) {
+    // swr-firebase adds these (useful but unnecessary) keys, so remove them and assign a key
+    const {
+      id: diaryId,
+      hasPendingWrites,
+      exists,
+      ...diaryItems
+    }: any = data[0];
+    const {
+      id: mediaId,
+      hasPendingWrites: mediaWrites,
+      exists: mediaExists,
+      ...mediaItems
+    }: any = data[1];
+    const diaryState: MediaDiaryState = diaryItems;
+    const mediaState: MediaInfoState = mediaItems;
+
+    if (
+      Object.keys(diaryState).length > 0 &&
+      Object.keys(mediaState).length > 0
+    ) {
+      let diaryDates: ListState = Object.keys(diaryState)
+        // .filter((e) => (filterBy === "" ? e : byDate[e].type === filterBy))
+        .reduce<ListState>((a, c) => {
+          const dateString = diaryState[c].diaryDate
+            .toDate()
+            .toLocaleDateString("en-us", {
+              month: "short",
+              year: "numeric",
+            });
+          a[`01-${dateString}`] = Object.assign(
+            { ...a[`01-${dateString}`] },
+            { [c]: diaryState[c] }
+          );
+          return a;
+        }, {});
+      return (
+        <>
+          {Object.keys(diaryDates)
+            .sort((a, b) => (new Date(a) > new Date(b) ? -1 : 1))
+            .map((month, monthIndex) => {
+              return (
+                <Grid
+                  templateColumns={{ base: "0.15fr 0.85fr", md: "0.1fr 0.9fr" }}
+                  key={monthIndex}
+                >
+                  <Box>
+                    <Heading
+                      size="lg"
+                      color="gray.600"
+                      style={{
+                        position: "sticky",
+                        top: "4.1rem",
+                        marginTop: "1rem",
+                        textAlign: "center",
+                      }}
+                    >
+                      {new Date(month).toLocaleDateString("en-us", {
+                        month: "short",
+                      })}
+                    </Heading>
+                  </Box>
+                  <Box>
+                    {Object.keys(diaryDates[month])
+                      .sort(
+                        (a, b) =>
+                          diaryDates[month][b].diaryDate.seconds -
+                          diaryDates[month][a].diaryDate.seconds
+                      )
+                      .map((day, dayIndex) => {
+                        // console.log(mediaState, diaryDates[month][day].id);
+                        const {
+                          title,
+                          poster,
+                          releasedDate,
+                          artist,
+                          type,
+                        } = mediaState[diaryDates[month][day].id];
+                        const {
+                          star,
+                          seenBefore,
+                          season,
+                          episode,
+                        } = diaryDates[month][day];
+                        return (
+                          <Grid
+                            gridTemplateColumns="0.05fr 0.2fr 0.75fr"
+                            gridGap="1rem"
+                            borderBottom="1px solid"
+                            borderColor="gray.200"
+                            mb={3}
+                            pb={3}
+                            key={monthIndex + dayIndex}
+                          >
+                            <Box>
+                              <Text fontSize="xl" color="gray.500">
+                                {new Date(
+                                  diaryDates[month][day].diaryDate.toDate()
+                                ).toLocaleDateString("en-us", {
+                                  day: "numeric",
+                                })}
+                              </Text>
+                            </Box>
+                            <Box>
+                              <Image
+                                src={poster}
+                                borderRadius="5px"
+                                border="1px solid"
+                                borderColor="gray.300"
+                              />
+                            </Box>
+                            <Box>
+                              <Text color="gray.600">{title}</Text>
+                              <Text fontSize="sm" color="gray.500">
+                                {new Date(releasedDate).toLocaleDateString(
+                                  "en-US",
+                                  {
+                                    year: "numeric",
+                                  }
+                                )}
+                                <Text as="span" px={2}>
+                                  ·
+                                </Text>
+                                {artist}
+                              </Text>
+                            </Box>
+                          </Grid>
+                        );
+                      })}
+                  </Box>
+                </Grid>
+              );
+            })}
+        </>
+      );
+    }
+  }
+  return <div>nothing to show</div>;
+}
+
+export default Media;
