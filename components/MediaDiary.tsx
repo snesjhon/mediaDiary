@@ -75,7 +75,7 @@ function Media() {
               return (
                 <Grid
                   templateColumns={{
-                    base: "0.125fr 0.85fr",
+                    base: "3rem 1fr",
                     md: "0.1fr 0.9fr",
                   }}
                   key={monthIndex}
@@ -116,7 +116,7 @@ function Media() {
                         } = diaryDates[month][day];
                         return (
                           <Grid
-                            gridTemplateColumns="1.5rem 0.2fr 1fr"
+                            gridTemplateColumns="1.5rem 4rem 1fr"
                             gridGap="1rem"
                             borderBottom="1px solid"
                             borderColor="gray.200"

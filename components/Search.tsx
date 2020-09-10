@@ -125,7 +125,6 @@ function Search() {
   );
 
   function mediaNormalize(item: any, type: MediaTypes): MediaSelected {
-    console.log(item);
     return {
       id: type === "movie" ? item.trackId : item.collectionId,
       poster: item.artworkUrl100.replace("100x100", "500x500"),

@@ -20,7 +20,6 @@ import Log from "../components/Log";
 function App() {
   const { user, logout } = useUser();
   const router = useRouter();
-  console.log(!!router.query.search);
   return (
     <Layout>
       {!user ? (
@@ -34,9 +33,9 @@ function App() {
               isOpen={true}
               onClose={() => router.push("/")}
               scrollBehavior="inside"
-              size="xs"
+              size="sm"
             >
-              <ModalOverlay>
+              <ModalOverlay px={4}>
                 <ModalContent maxHeight="90vh">
                   <ModalCloseButton />
                   <ModalHeader pb={2}>Search for Media</ModalHeader>
