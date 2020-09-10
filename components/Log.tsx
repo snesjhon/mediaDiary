@@ -80,10 +80,11 @@ function Log() {
       onClose={() => router.push("/")}
       scrollBehavior="inside"
       size="xs"
+      trapFocus={false}
     >
       <ModalOverlay>
-        <ModalContent maxHeight="90vh">
-          <ModalCloseButton />
+        <ModalContent maxHeight="70vh">
+          {/* <ModalCloseButton />
           <ModalHeader
             fontWeight="normal"
             fontSize="md"
@@ -91,7 +92,7 @@ function Log() {
             pb={0}
           >
             I Watched ...
-          </ModalHeader>
+          </ModalHeader> */}
           <ModalBody>
             <Flex
               alignItems="center"
@@ -140,6 +141,7 @@ function Log() {
                     })
                   }
                   withPortal
+                  autoFocus={false}
                 />
               </Box>
             </Flex>

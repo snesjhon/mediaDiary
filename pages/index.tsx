@@ -28,24 +28,7 @@ function App() {
         <>
           <Header />
           <MediaDiary />
-          {!!router.query.search && (
-            <Modal
-              isOpen={true}
-              onClose={() => router.push("/")}
-              scrollBehavior="inside"
-              size="sm"
-            >
-              <ModalOverlay px={4}>
-                <ModalContent maxHeight="90vh">
-                  <ModalCloseButton />
-                  <ModalHeader pb={2}>Search for Media</ModalHeader>
-                  <ModalBody pt={1}>
-                    <Search />
-                  </ModalBody>
-                </ModalContent>
-              </ModalOverlay>
-            </Modal>
-          )}
+          {!!router.query.search && <Search />}
           {!!router.query.log && <Log />}
         </>
       )}
