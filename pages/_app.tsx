@@ -5,6 +5,7 @@ import { Fuego, FuegoProvider } from "@nandorojo/swr-firestore";
 import type { AppProps } from "next/app";
 import { useReducer } from "react";
 import { ContextDispatch, ContextState, Reducer } from "../utils/store";
+import "react-datepicker/dist/react-datepicker.css";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,

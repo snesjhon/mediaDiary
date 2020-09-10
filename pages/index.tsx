@@ -6,6 +6,7 @@ import {
   ModalBody,
   ModalContent,
   ModalHeader,
+  Spacer,
 } from "@chakra-ui/core";
 import { useRouter } from "next/router";
 import Header from "../components/Header";
@@ -13,7 +14,8 @@ import Layout from "../components/Layout";
 import MediaDiary from "../components/MediaDiary";
 import useUser from "../utils/useUser";
 import Link from "next/link";
-import Search from "../components/search";
+import Search from "../components/Search";
+import Log from "../components/Log";
 
 function App() {
   const { user, logout } = useUser();
@@ -32,19 +34,20 @@ function App() {
               isOpen={true}
               onClose={() => router.push("/")}
               scrollBehavior="inside"
-              size="sm"
+              size="xs"
             >
               <ModalOverlay>
                 <ModalContent maxHeight="90vh">
                   <ModalCloseButton />
-                  <ModalHeader>Search for Media</ModalHeader>
-                  <ModalBody>
+                  <ModalHeader pb={2}>Search for Media</ModalHeader>
+                  <ModalBody pt={1}>
                     <Search />
                   </ModalBody>
                 </ModalContent>
               </ModalOverlay>
             </Modal>
           )}
+          {!!router.query.log && <Log />}
         </>
       )}
     </Layout>

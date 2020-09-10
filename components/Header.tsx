@@ -32,7 +32,7 @@ function Header() {
       width="full"
     >
       <Container maxWidth={{ base: "xl", md: "lg" }}>
-        <Flex w="100%" h="100%" py={3} align="center" justify="space-between">
+        <Flex w="100%" h="100%" py={2} align="center" justify="space-between">
           <Flex align="center">
             <IconButton
               aria-label="Menu"

@@ -7,7 +7,19 @@ import {
   MediaInfoAdd,
   MediaInfoState,
 } from "../types/mediaTypes";
-import { SimpleGrid, Box, Grid, Heading, Image, Text } from "@chakra-ui/core";
+import {
+  SimpleGrid,
+  Box,
+  Grid,
+  Heading,
+  Image,
+  Text,
+  Flex,
+} from "@chakra-ui/core";
+import Rating from "react-rating";
+import { StarIcon } from "@chakra-ui/icons";
+import StarEmptyIcon from "./Icons/StartEmptyIcon";
+import LogoFilm from "./Icons/LogoFilm";
 
 interface ListState {
   [key: string]: MediaDiaryState;
@@ -62,20 +74,24 @@ function Media() {
             .map((month, monthIndex) => {
               return (
                 <Grid
-                  templateColumns={{ base: "0.15fr 0.85fr", md: "0.1fr 0.9fr" }}
+                  templateColumns={{
+                    base: "0.125fr 0.85fr",
+                    md: "0.1fr 0.9fr",
+                  }}
                   key={monthIndex}
                 >
                   <Box>
-                    <Heading
-                      size="lg"
+                    <Text
+                      fontSize={{ base: "lg", md: "xl" }}
                       color="gray.600"
+                      fontWeight="bold"
                       position="sticky"
                       top="4.1rem"
                     >
                       {new Date(month).toLocaleDateString("en-us", {
                         month: "short",
                       })}
-                    </Heading>
+                    </Text>
                   </Box>
                   <Box>
                     {Object.keys(diaryDates[month])
@@ -85,7 +101,6 @@ function Media() {
                           diaryDates[month][a].diaryDate.seconds
                       )
                       .map((day, dayIndex) => {
-                        // console.log(mediaState, diaryDates[month][day].id);
                         const {
                           title,
                           poster,
@@ -94,23 +109,30 @@ function Media() {
                           type,
                         } = mediaState[diaryDates[month][day].id];
                         const {
-                          star,
-                          seenBefore,
+                          rating,
+                          loggedBefore,
                           season,
                           episode,
                         } = diaryDates[month][day];
                         return (
                           <Grid
-                            gridTemplateColumns="0.05fr 0.2fr 0.75fr"
+                            gridTemplateColumns="1.5rem 0.2fr 1fr"
                             gridGap="1rem"
                             borderBottom="1px solid"
                             borderColor="gray.200"
                             mb={3}
                             pb={3}
                             key={monthIndex + dayIndex}
+                            _hover={{
+                              bg: "purple.50",
+                              cursor: "pointer",
+                            }}
                           >
                             <Box>
-                              <Text fontSize="xl" color="gray.500">
+                              <Text
+                                fontSize={{ base: "lg", md: "xl" }}
+                                color="gray.500"
+                              >
                                 {new Date(
                                   diaryDates[month][day].diaryDate.toDate()
                                 ).toLocaleDateString("en-us", {
@@ -126,7 +148,7 @@ function Media() {
                                 borderColor="gray.300"
                               />
                             </Box>
-                            <Box>
+                            <Flex flexDirection="column">
                               <Text color="gray.600">{title}</Text>
                               <Text fontSize="sm" color="gray.500">
                                 {new Date(releasedDate).toLocaleDateString(
@@ -140,7 +162,37 @@ function Media() {
                                 </Text>
                                 {artist}
                               </Text>
-                            </Box>
+                              <Flex
+                                mt="auto"
+                                alignItems="center"
+                                justifyContent="space-between"
+                              >
+                                <Rating
+                                  fractions={2}
+                                  readonly
+                                  initialRating={rating}
+                                  fullSymbol={
+                                    <StarIcon
+                                      h="12px"
+                                      w="12px"
+                                      color="purple.400"
+                                    />
+                                  }
+                                  emptySymbol={
+                                    <StarEmptyIcon
+                                      h="12px"
+                                      w="12px"
+                                      stroke="purple.400"
+                                    />
+                                  }
+                                />
+                                {type === "movie" && (
+                                  <LogoFilm w="13px" h="13px" />
+                                )}
+                                {type === "album" && <LogoFilm />}
+                                {type === "tv" && <LogoFilm />}
+                              </Flex>
+                            </Flex>
                           </Grid>
                         );
                       })}

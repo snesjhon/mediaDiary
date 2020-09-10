@@ -23,8 +23,8 @@ export interface MediaDiaryAdd extends MediaBaseInfo {
   id: string;
   episode?: number | undefined;
   season?: number | undefined;
-  seenBefore: boolean;
-  star: number;
+  loggedBefore: boolean;
+  rating: number;
 }
 
 export interface MediaDiaryState {

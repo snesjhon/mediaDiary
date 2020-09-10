@@ -1,4 +1,12 @@
-import { Box, Flex, Heading, Input, Text } from "@chakra-ui/core";
+import {
+  Box,
+  Flex,
+  Heading,
+  Input,
+  Text,
+  Spinner,
+  Center,
+} from "@chakra-ui/core";
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
 import useSWR from "swr";
@@ -47,13 +55,24 @@ function Search() {
 
   return (
     <Box pb={6}>
-      <Input
-        placeholder="search"
-        onChange={(e) => setSearch(e.target.value)}
-        value={search}
-        type="search"
-      />
-      {!data && isValidating && <div>loading</div>}
+      <Box position="sticky" top={0}>
+        <Input
+          placeholder="search"
+          onChange={(e) => setSearch(e.target.value)}
+          value={search}
+          type="search"
+        />
+      </Box>
+      {!data && isValidating && (
+        <Center h="20vh">
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.500"
+          />
+        </Center>
+      )}
       {data?.resultCount === 0 && <div>nothing found</div>}
       {data &&
         data.results.map((e: any, i: string) => {
@@ -73,7 +92,7 @@ function Search() {
                   alignItems="center"
                   borderBottom="1px"
                   borderBottomColor="gray.200"
-                  py={3}
+                  py={2}
                   _hover={{
                     bg: "purple.50",
                     cursor: "pointer",
@@ -83,22 +102,19 @@ function Search() {
                       type: "select",
                       payload: mediaNormalize(e, currentType),
                     });
-                    router.push("/log");
+                    router.push("/?log=true", "/log", { shallow: true });
                   }}
                 >
-                  <Box w="6%" display="flex">
+                  <Box w="10%" display="flex">
                     {currentType === "movie" && <LogoFilm />}
                     {currentType === "album" && <LogoFilm />}
                     {currentType === "tv" && <LogoFilm />}
                   </Box>
-                  <Box w="54%">
+                  <Box w="90%">
                     <Text>{name}</Text>
-                  </Box>
-                  <Box w="30%">
-                    <Text>{artist}</Text>
-                  </Box>
-                  <Box w="10%">
-                    <Text>{date}</Text>
+                    <Text fontSize="xs" fontStyle="italic" color="gray.500">
+                      {artist} • {date}
+                    </Text>
                   </Box>
                 </Flex>
               )}
