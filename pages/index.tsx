@@ -1,21 +1,11 @@
-import {
-  Button,
-  Modal,
-  ModalOverlay,
-  ModalCloseButton,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
-  Spacer,
-} from "@chakra-ui/core";
+import { Button } from "@chakra-ui/core";
 import { useRouter } from "next/router";
 import Header from "../components/Header";
 import Layout from "../components/Layout";
-import MediaDiary from "../components/MediaDiary";
-import useUser from "../utils/useUser";
-import Link from "next/link";
-import Search from "../components/Search";
 import Log from "../components/Log";
+import MediaDiary from "../components/MediaDiary";
+import Search from "../components/Search";
+import useUser from "../utils/useUser";
 
 function App() {
   const { user, logout } = useUser();

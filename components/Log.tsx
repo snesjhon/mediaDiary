@@ -1,4 +1,4 @@
-import React, { useContext, useState, useReducer } from "react";
+import React, { useContext, useReducer } from "react";
 import { ContextState } from "../config/store";
 import {
   Box,
@@ -25,6 +25,7 @@ import { useRouter } from "next/router";
 import Rating from "react-rating";
 import { StarIcon } from "@chakra-ui/icons";
 import StarEmptyIcon from "./Icons/StartEmptyIcon";
+import dayjs from "dayjs";
 
 interface State {
   isLoading: boolean;
@@ -72,7 +73,6 @@ function Log() {
   const { selected } = useContext(ContextState);
   const { user } = useUser();
   const router = useRouter();
-  const newDate = new Date();
 
   return (
     <Modal
@@ -127,8 +127,17 @@ function Log() {
                 <Input
                   type="date"
                   required
-                  value={diaryDate.toJSON().slice(0, 10)}
-                  max={newDate.toJSON().slice(0, 10)}
+                  value={dayjs(diaryDate).format("YYYY-MM-DD")}
+                  max={dayjs().format("YYYY-MM-DD")}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "state",
+                      payload: {
+                        key: "diaryDate",
+                        value: dayjs(e.target.value).toDate(),
+                      },
+                    })
+                  }
                 />
               </Box>
             </Flex>
