@@ -4,8 +4,8 @@ import "firebase/auth";
 import { Fuego, FuegoProvider } from "@nandorojo/swr-firestore";
 import type { AppProps } from "next/app";
 import { useReducer } from "react";
-import { ContextDispatch, ContextState, Reducer } from "../utils/store";
-import "react-datepicker/dist/react-datepicker.css";
+import { ContextDispatch, ContextState, Reducer } from "../config/store";
+import Head from "next/head";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
@@ -24,15 +24,23 @@ function MyApp({ Component, pageProps }: AppProps) {
     view: "main",
   });
   return (
-    <FuegoProvider fuego={fuego}>
-      <ContextState.Provider value={state}>
-        <ContextDispatch.Provider value={dispatch}>
-          <ChakraProvider resetCSS>
-            <Component {...pageProps} />
-          </ChakraProvider>
-        </ContextDispatch.Provider>
-      </ContextState.Provider>
-    </FuegoProvider>
+    <>
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0"
+        />
+      </Head>
+      <FuegoProvider fuego={fuego}>
+        <ContextState.Provider value={state}>
+          <ContextDispatch.Provider value={dispatch}>
+            <ChakraProvider resetCSS>
+              <Component {...pageProps} />
+            </ChakraProvider>
+          </ContextDispatch.Provider>
+        </ContextState.Provider>
+      </FuegoProvider>
+    </>
   );
 }
 

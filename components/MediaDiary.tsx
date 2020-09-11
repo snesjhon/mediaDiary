@@ -6,7 +6,7 @@ import {
   MediaDiaryAdd,
   MediaInfoAdd,
   MediaInfoState,
-} from "../types/mediaTypes";
+} from "../config/mediaTypes";
 import {
   SimpleGrid,
   Box,

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useReducer } from "react";
-import { ContextState } from "../utils/store";
+import { ContextState } from "../config/store";
 import {
   Box,
   Center,
@@ -13,16 +13,15 @@ import {
   ModalOverlay,
   ModalContent,
   ModalCloseButton,
-  ModalHeader,
   ModalBody,
   ModalFooter,
   Checkbox,
+  Input,
 } from "@chakra-ui/core";
 import { fuego } from "@nandorojo/swr-firestore";
 import useUser from "../utils/useUser";
-import { MediaDiaryAdd, MediaInfoAdd } from "../types/mediaTypes";
+import { MediaDiaryAdd, MediaInfoAdd } from "../config/mediaTypes";
 import { useRouter } from "next/router";
-import DatePicker from "react-datepicker";
 import Rating from "react-rating";
 import { StarIcon } from "@chakra-ui/icons";
 import StarEmptyIcon from "./Icons/StartEmptyIcon";
@@ -73,6 +72,7 @@ function Log() {
   const { selected } = useContext(ContextState);
   const { user } = useUser();
   const router = useRouter();
+  const newDate = new Date();
 
   return (
     <Modal
@@ -83,41 +83,33 @@ function Log() {
       trapFocus={false}
     >
       <ModalOverlay>
-        <ModalContent maxHeight="70vh">
-          {/* <ModalCloseButton />
-          <ModalHeader
-            fontWeight="normal"
-            fontSize="md"
-            color="gray.400"
-            pb={0}
-          >
-            I Watched ...
-          </ModalHeader> */}
-          <ModalBody>
+        <ModalContent maxHeight="80vh">
+          <ModalCloseButton />
+          <ModalBody pt={6}>
             <Flex
               alignItems="center"
               justifyContent="center"
               flexDir="column"
               textAlign="center"
             >
-              <Heading fontWeight="normal" fontSize="xl">
+              <Heading fontWeight="normal" fontSize="md">
                 {selected?.artist}
               </Heading>
-              <Heading fontWeight="bold" fontStyle="italic" fontSize="2xl">
+              <Heading fontWeight="bold" fontStyle="italic" fontSize="lg">
                 {selected?.title}
               </Heading>
             </Flex>
             <Center mt={3} mb={1}>
               <Image
                 src={selected?.poster}
-                w="10rem"
+                w="8rem"
                 borderRadius="5px"
                 border="1px solid"
                 borderColor="gray.300"
               />
             </Center>
             <Center>
-              <Text fontSize="sm" color="gray.400">
+              <Text fontSize="xs" color="gray.400">
                 {selected?.genre} •{" "}
                 {typeof selected?.releasedDate !== "undefined" &&
                   `${new Date(selected.releasedDate).toLocaleDateString(
@@ -132,16 +124,11 @@ function Log() {
             <Flex alignItems="center" justifyContent="space-between">
               <Text>Date</Text>
               <Box>
-                <DatePicker
-                  selected={diaryDate}
-                  onChange={(newDate) =>
-                    dispatch({
-                      type: "state",
-                      payload: { key: "diaryDate", value: newDate },
-                    })
-                  }
-                  withPortal
-                  autoFocus={false}
+                <Input
+                  type="date"
+                  required
+                  value={diaryDate.toJSON().slice(0, 10)}
+                  max={newDate.toJSON().slice(0, 10)}
                 />
               </Box>
             </Flex>
@@ -182,18 +169,17 @@ function Log() {
                 }
               />
             </Flex>
-
-            <ModalFooter px={0} pt={6} pb={2}>
-              <Button
-                onClick={addData}
-                isLoading={isLoading}
-                colorScheme="blue"
-                size="sm"
-              >
-                Save
-              </Button>
-            </ModalFooter>
           </ModalBody>
+          <ModalFooter py={2}>
+            <Button
+              onClick={addData}
+              isLoading={isLoading}
+              colorScheme="blue"
+              size="sm"
+            >
+              Save
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </ModalOverlay>
     </Modal>

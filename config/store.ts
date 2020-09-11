@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { MediaSelected } from "../types/mediaTypes";
+import { MediaSelected } from "./mediaTypes";
 import { useRouter } from "next/router";
 
 export interface MDState {

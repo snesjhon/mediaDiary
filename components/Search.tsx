@@ -19,8 +19,8 @@ import useSWR from "swr";
 import Header from "./Header";
 import LogoFilm from "./Icons/LogoFilm";
 import Layout from "./Layout";
-import type { MediaSelected, MediaTypes } from "../types/mediaTypes";
-import { ContextDispatch } from "../utils/store";
+import type { MediaSelected, MediaTypes } from "../config/mediaTypes";
+import { ContextDispatch } from "../config/store";
 import useDebounce from "../utils/useDebounce";
 
 const fetcher = (input: RequestInfo) => fetch(input).then((res) => res.json());

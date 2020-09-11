@@ -7,7 +7,7 @@ import {
   setUserCookie,
   removeUserCookie,
 } from "./getUserFromCookie";
-import { ContextState, ContextDispatch } from "./store";
+import { ContextState, ContextDispatch } from "../config/store";
 
 function useUser() {
   const { user } = useContext(ContextState);
