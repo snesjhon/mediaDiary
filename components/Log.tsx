@@ -26,6 +26,7 @@ import Rating from "react-rating";
 import { StarIcon } from "@chakra-ui/icons";
 import StarEmptyIcon from "./Icons/StartEmptyIcon";
 import dayjs from "dayjs";
+import Info from "./Info";
 
 interface State {
   isLoading: boolean;
@@ -79,47 +80,14 @@ function Log() {
       isOpen={true}
       onClose={() => router.push("/")}
       scrollBehavior="inside"
-      size="xs"
+      size="sm"
       trapFocus={false}
     >
       <ModalOverlay>
         <ModalContent maxHeight="80vh">
           <ModalCloseButton />
           <ModalBody pt={6}>
-            <Flex
-              alignItems="center"
-              justifyContent="center"
-              flexDir="column"
-              textAlign="center"
-            >
-              <Heading fontWeight="normal" fontSize="md">
-                {selected?.artist}
-              </Heading>
-              <Heading fontWeight="bold" fontStyle="italic" fontSize="lg">
-                {selected?.title}
-              </Heading>
-            </Flex>
-            <Center mt={3} mb={1}>
-              <Image
-                src={selected?.poster}
-                w="8rem"
-                borderRadius="5px"
-                border="1px solid"
-                borderColor="gray.300"
-              />
-            </Center>
-            <Center>
-              <Text fontSize="xs" color="gray.400">
-                {selected?.genre} •{" "}
-                {typeof selected?.releasedDate !== "undefined" &&
-                  `${new Date(selected.releasedDate).toLocaleDateString(
-                    "en-us",
-                    {
-                      year: "numeric",
-                    }
-                  )}`}
-              </Text>
-            </Center>
+            <Info item={selected as MediaInfoAdd} />
             <Divider mt={4} mb={2} />
             <Flex alignItems="center" justifyContent="space-between">
               <Text>Date</Text>

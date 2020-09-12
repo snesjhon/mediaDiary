@@ -1,3 +1,5 @@
+// https://sergiodxa.com/articles/redirects-in-next-the-good-way
+
 import { ChakraProvider } from "@chakra-ui/core";
 import "firebase/firestore";
 import "firebase/auth";

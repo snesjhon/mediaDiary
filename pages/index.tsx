@@ -6,6 +6,7 @@ import Log from "../components/Log";
 import MediaDiary from "../components/MediaDiary";
 import Search from "../components/Search";
 import useUser from "../utils/useUser";
+import Edit from "../components/Edit";
 
 function App() {
   const { user, logout } = useUser();
@@ -20,6 +21,7 @@ function App() {
           <MediaDiary />
           {!!router.query.search && <Search />}
           {!!router.query.log && <Log />}
+          {!!router.query.view && router.query.view === "edit" && <Edit />}
         </>
       )}
     </Layout>

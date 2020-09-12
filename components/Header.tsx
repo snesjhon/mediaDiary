@@ -1,21 +1,17 @@
-import React from "react";
 import {
-  Flex,
-  chakra,
-  HStack,
-  Link,
-  Icon,
-  IconButton,
-  Heading,
-  Button,
   Box,
-  Text,
+  Button,
   Container,
+  Flex,
+  HStack,
+  IconButton,
+  Text,
 } from "@chakra-ui/core";
-import { HamburgerIcon, AddIcon } from "@chakra-ui/icons";
-import NextLink from "next/link";
-import LogoIcon from "./Icons/LogoIcon";
+import { AddIcon, HamburgerIcon } from "@chakra-ui/icons";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import React from "react";
+import LogoIcon from "./Icons/LogoIcon";
 
 function Header() {
   const router = useRouter();
@@ -42,11 +38,11 @@ function Header() {
               variant="outline"
             />
             <LogoIcon boxSize={5} mr={1} />
-            <NextLink href="/" passHref>
+            <Link href="/" passHref>
               <Text fontSize="md" color="purple.700" fontWeight="medium">
                 mediaDiary
               </Text>
-            </NextLink>
+            </Link>
             <HStack
               as="nav"
               spacing="4"

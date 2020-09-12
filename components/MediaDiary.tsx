@@ -1,31 +1,22 @@
-import React from "react";
-import useUser from "../utils/useUser";
-import { useCollection, useDocument } from "@nandorojo/swr-firestore";
-import {
-  MediaDiaryState,
-  MediaDiaryAdd,
-  MediaInfoAdd,
-  MediaInfoState,
-} from "../config/mediaTypes";
-import {
-  SimpleGrid,
-  Box,
-  Grid,
-  Heading,
-  Image,
-  Text,
-  Flex,
-} from "@chakra-ui/core";
-import Rating from "react-rating";
+import { Box, Flex, Grid, Image, Text } from "@chakra-ui/core";
 import { StarIcon } from "@chakra-ui/icons";
-import StarEmptyIcon from "./Icons/StartEmptyIcon";
+import { useCollection } from "@nandorojo/swr-firestore";
+import { useRouter } from "next/router";
+import React, { useContext } from "react";
+import Rating from "react-rating";
+import { MediaDiaryState, MediaInfoState } from "../config/mediaTypes";
+import { ContextDispatch } from "../config/store";
+import useUser from "../utils/useUser";
 import LogoFilm from "./Icons/LogoFilm";
+import StarEmptyIcon from "./Icons/StartEmptyIcon";
 
 interface ListState {
   [key: string]: MediaDiaryState;
 }
 
-function Media() {
+function MediaDiary() {
+  const dispatch = useContext(ContextDispatch);
+  const router = useRouter();
   const { user } = useUser();
   const { data } = useCollection(user.email, {
     listen: true,
@@ -127,6 +118,18 @@ function Media() {
                               bg: "purple.50",
                               cursor: "pointer",
                             }}
+                            onClick={() => {
+                              dispatch({
+                                type: "edit",
+                                payload: {
+                                  item: diaryDates[month][day],
+                                  info: mediaState[diaryDates[month][day].id],
+                                },
+                              });
+                              router.push("/?view=edit", "/edit", {
+                                shallow: true,
+                              });
+                            }}
                           >
                             <Box>
                               <Text
@@ -207,4 +210,4 @@ function Media() {
   return <div>nothing to show</div>;
 }
 
-export default Media;
+export default MediaDiary;

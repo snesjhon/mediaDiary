@@ -1,11 +1,15 @@
 import { createContext } from "react";
-import { MediaSelected } from "./mediaTypes";
+import { MediaDiaryAdd, MediaInfoAdd, MediaSelected } from "./mediaTypes";
 import { useRouter } from "next/router";
 
 export interface MDState {
   user: any;
   view: "main" | "search" | "log";
   selected?: MediaSelected;
+  edit?: {
+    item: MediaDiaryAdd;
+    info: MediaInfoAdd;
+  };
 }
 
 type Actions =
@@ -15,7 +19,11 @@ type Actions =
     }
   | {
       type: "select";
-      payload: MediaSelected;
+      payload: MDState["selected"];
+    }
+  | {
+      type: "edit";
+      payload: MDState["edit"];
     }
   | {
       type: "state";
@@ -37,6 +45,12 @@ export function Reducer(state: MDState, actions: Actions): MDState {
       return {
         ...state,
         selected: actions.payload,
+      };
+    }
+    case "edit": {
+      return {
+        ...state,
+        edit: actions.payload,
       };
     }
     default:

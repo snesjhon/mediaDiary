@@ -1,27 +1,24 @@
 import {
   Box,
-  Flex,
-  Heading,
-  Input,
-  Text,
-  Spinner,
   Center,
+  Flex,
+  Input,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalCloseButton,
-  ModalHeader,
   ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Spinner,
+  Text,
 } from "@chakra-ui/core";
 import { useRouter } from "next/router";
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import useSWR from "swr";
-import Header from "./Header";
-import LogoFilm from "./Icons/LogoFilm";
-import Layout from "./Layout";
 import type { MediaSelected, MediaTypes } from "../config/mediaTypes";
 import { ContextDispatch } from "../config/store";
 import useDebounce from "../utils/useDebounce";
+import LogoFilm from "./Icons/LogoFilm";
 
 const fetcher = (input: RequestInfo) => fetch(input).then((res) => res.json());
 
@@ -69,7 +66,7 @@ function Search() {
       initialFocusRef={SearchRef}
     >
       <ModalOverlay px={4}>
-        <ModalContent maxHeight="70vh">
+        <ModalContent maxHeight="50vh">
           <ModalCloseButton />
           <ModalHeader pb={2}>Search for Media</ModalHeader>
           <ModalBody pt={0} pb={6}>
