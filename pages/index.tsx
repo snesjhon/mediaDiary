@@ -7,6 +7,9 @@ import MediaDiary from "../components/MediaDiary";
 import Search from "../components/Search";
 import useUser from "../utils/useUser";
 import Edit from "../components/Edit";
+import LayoutModal from "../components/LayoutModal";
+import React from "react";
+import Day from "../components/Day";
 
 function App() {
   const { user, logout } = useUser();
@@ -21,7 +24,12 @@ function App() {
           <MediaDiary />
           {!!router.query.search && <Search />}
           {!!router.query.log && <Log />}
-          {!!router.query.view && router.query.view === "edit" && <Edit />}
+          {!!router.query.view && router.query.view === "edit" && <Log />}
+          {!!router.query.day && (
+            <LayoutModal>
+              <Day item={router.query.day.toString()} />
+            </LayoutModal>
+          )}
         </>
       )}
     </Layout>

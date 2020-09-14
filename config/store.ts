@@ -7,6 +7,7 @@ export interface MDState {
   view: "main" | "search" | "log";
   selected?: MediaSelected;
   edit?: {
+    itemId: string;
     item: MediaDiaryAdd;
     info: MediaInfoAdd;
   };
@@ -45,12 +46,14 @@ export function Reducer(state: MDState, actions: Actions): MDState {
       return {
         ...state,
         selected: actions.payload,
+        edit: undefined,
       };
     }
     case "edit": {
       return {
         ...state,
         edit: actions.payload,
+        selected: undefined,
       };
     }
     default:

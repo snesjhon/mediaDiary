@@ -6,6 +6,7 @@ import React, { useContext } from "react";
 import Rating from "react-rating";
 import { MediaDiaryState, MediaInfoState } from "../config/mediaTypes";
 import { ContextDispatch } from "../config/store";
+import { createMediaState } from "../utils/helpers";
 import useUser from "../utils/useUser";
 import LogoFilm from "./Icons/LogoFilm";
 import StarEmptyIcon from "./Icons/StartEmptyIcon";
@@ -23,22 +24,7 @@ function MediaDiary() {
   });
 
   if (data) {
-    // swr-firebase adds these (useful but unnecessary) keys, so remove them and assign a key
-    const {
-      id: diaryId,
-      hasPendingWrites,
-      exists,
-      ...diaryItems
-    }: any = data[0];
-    const {
-      id: mediaId,
-      hasPendingWrites: mediaWrites,
-      exists: mediaExists,
-      ...mediaItems
-    }: any = data[1];
-    const diaryState: MediaDiaryState = diaryItems;
-    const mediaState: MediaInfoState = mediaItems;
-
+    const { diaryState, mediaState } = createMediaState(data);
     if (
       Object.keys(diaryState).length > 0 &&
       Object.keys(mediaState).length > 0
@@ -119,16 +105,21 @@ function MediaDiary() {
                               cursor: "pointer",
                             }}
                             onClick={() => {
-                              dispatch({
-                                type: "edit",
-                                payload: {
-                                  item: diaryDates[month][day],
-                                  info: mediaState[diaryDates[month][day].id],
-                                },
-                              });
-                              router.push("/?view=edit", "/edit", {
-                                shallow: true,
-                              });
+                              // dispatch({
+                              //   type: "edit",
+                              //   payload: {
+                              //     item: diaryDates[month][day],
+                              //     info: mediaState[diaryDates[month][day].id],
+                              //   },
+                              // });
+                              // return router.push(`/diary/${day}`);
+                              // router.push("/?view=edit", "/edit", {
+                              //   shallow: true,
+                              // });
+                              return router.push(
+                                `?day=${day}`,
+                                `/diary/${day}`
+                              );
                             }}
                           >
                             <Box>

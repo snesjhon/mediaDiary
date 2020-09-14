@@ -29,6 +29,7 @@ function Info({ item }: Props) {
           borderRadius="5px"
           border="1px solid"
           borderColor="gray.300"
+          loading="eager"
         />
       </Center>
       <Center>
