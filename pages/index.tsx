@@ -1,15 +1,14 @@
 import { Button } from "@chakra-ui/core";
 import { useRouter } from "next/router";
+import React from "react";
+import Day from "../components/Day";
 import Header from "../components/Header";
 import Layout from "../components/Layout";
+import LayoutModal from "../components/LayoutModal";
 import Log from "../components/Log";
 import MediaDiary from "../components/MediaDiary";
 import Search from "../components/Search";
 import useUser from "../utils/useUser";
-import Edit from "../components/Edit";
-import LayoutModal from "../components/LayoutModal";
-import React from "react";
-import Day from "../components/Day";
 
 function App() {
   const { user, logout } = useUser();

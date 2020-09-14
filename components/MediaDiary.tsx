@@ -2,10 +2,9 @@ import { Box, Flex, Grid, Image, Text } from "@chakra-ui/core";
 import { StarIcon } from "@chakra-ui/icons";
 import { useCollection } from "@nandorojo/swr-firestore";
 import { useRouter } from "next/router";
-import React, { useContext } from "react";
+import React from "react";
 import Rating from "react-rating";
-import { MediaDiaryState, MediaInfoState } from "../config/mediaTypes";
-import { ContextDispatch } from "../config/store";
+import { MediaDiaryState } from "../config/mediaTypes";
 import { createMediaState } from "../utils/helpers";
 import useUser from "../utils/useUser";
 import LogoFilm from "./Icons/LogoFilm";
@@ -16,7 +15,6 @@ interface ListState {
 }
 
 function MediaDiary() {
-  const dispatch = useContext(ContextDispatch);
   const router = useRouter();
   const { user } = useUser();
   const { data } = useCollection(user.email, {
@@ -104,23 +102,9 @@ function MediaDiary() {
                               bg: "purple.50",
                               cursor: "pointer",
                             }}
-                            onClick={() => {
-                              // dispatch({
-                              //   type: "edit",
-                              //   payload: {
-                              //     item: diaryDates[month][day],
-                              //     info: mediaState[diaryDates[month][day].id],
-                              //   },
-                              // });
-                              // return router.push(`/diary/${day}`);
-                              // router.push("/?view=edit", "/edit", {
-                              //   shallow: true,
-                              // });
-                              return router.push(
-                                `?day=${day}`,
-                                `/diary/${day}`
-                              );
-                            }}
+                            onClick={() =>
+                              router.push(`?day=${day}`, `/diary/${day}`)
+                            }
                           >
                             <Box>
                               <Text

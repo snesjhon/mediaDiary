@@ -7,13 +7,13 @@
  */
 
 // https://vriad.com/essays/nextjs-firebase-authentication
-import { useEffect } from "react";
+import { Button, Heading, Spinner } from "@chakra-ui/core";
 import * as firebase from "firebase/app";
 import "firebase/auth";
-import { setUserCookie } from "../utils/getUserFromCookie";
-import { Container, Heading, Button, Spinner } from "@chakra-ui/core";
-import { useRouter } from "next/router";
 import Cookies from "js-cookie";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { setUserCookie } from "../utils/getUserFromCookie";
 
 interface Props {
   isSending: boolean;

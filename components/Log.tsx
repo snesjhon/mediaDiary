@@ -1,28 +1,28 @@
-import React, { useContext, useReducer } from "react";
-import { ContextState } from "../config/store";
 import {
   Box,
-  Flex,
-  Text,
-  Divider,
   Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
   Checkbox,
+  Divider,
+  Flex,
   Input,
+  ModalFooter,
+  Text,
 } from "@chakra-ui/core";
-import { fuego } from "@nandorojo/swr-firestore";
-import useUser from "../utils/useUser";
-import { MediaDiaryAdd, MediaInfoAdd } from "../config/mediaTypes";
-import { useRouter } from "next/router";
-import Rating from "react-rating";
 import { StarIcon } from "@chakra-ui/icons";
-import StarEmptyIcon from "./Icons/StartEmptyIcon";
+import { fuego, useDocument } from "@nandorojo/swr-firestore";
 import dayjs from "dayjs";
+import { firestore } from "firebase/app";
+import { useRouter } from "next/router";
+import React, { useContext, useReducer } from "react";
+import Rating from "react-rating";
+import {
+  MediaDiaryAdd,
+  MediaInfoAdd,
+  MediaInfoState,
+} from "../config/mediaTypes";
+import { ContextState } from "../config/store";
+import useUser from "../utils/useUser";
+import StarEmptyIcon from "./Icons/StartEmptyIcon";
 import Info from "./Info";
 import LayoutModal from "./LayoutModal";
 
@@ -58,7 +58,12 @@ function Reducer(state: State, actions: Actions): State {
 
 function Log() {
   const { selected, edit } = useContext(ContextState);
-  // const hasEdit = typeof edit !== "undefined";
+  const { user } = useUser();
+  const router = useRouter();
+  const { data: mediaData } = useDocument<MediaInfoState>(
+    `${user.email}/media`
+  );
+
   let initData = {
     diaryDate: new Date(),
     loggedBefore: false,
@@ -81,8 +86,6 @@ function Log() {
     { diaryDate, loggedBefore, rating, season, episode, seasons, isLoading },
     dispatch,
   ] = useReducer(Reducer, initData);
-  const { user } = useUser();
-  const router = useRouter();
 
   return (
     <LayoutModal>
@@ -147,11 +150,22 @@ function Log() {
         />
       </Flex>
       <ModalFooter px={0} pt={2} pb={1} mt={2}>
+        {typeof edit !== "undefined" && (
+          <Button
+            onClick={deleteData}
+            isLoading={isLoading}
+            colorScheme="red"
+            size="sm"
+          >
+            Delete
+          </Button>
+        )}
         <Button
           onClick={typeof edit !== "undefined" ? editData : addData}
           isLoading={isLoading}
           colorScheme="blue"
           size="sm"
+          variant="outline"
         >
           Save
         </Button>
@@ -187,13 +201,13 @@ function Log() {
 
   function createEdit(): { [key: string]: MediaDiaryAdd } | false {
     if (typeof edit !== "undefined") {
-      const { id, type, releasedDate, addedDate } = edit.item;
+      const { id, type, releasedDate, addedDate, loggedBefore } = edit.item;
       return {
         [edit.itemId]: {
           id,
           diaryDate: (diaryDate as unknown) as firebase.firestore.Timestamp,
           addedDate,
-          loggedBefore: false,
+          loggedBefore,
           rating,
           type,
           releasedDate,
@@ -201,6 +215,52 @@ function Log() {
       };
     } else {
       return false;
+    }
+  }
+
+  function deleteData() {
+    if (typeof edit !== "undefined") {
+      dispatch({
+        type: "state",
+        payload: {
+          key: "isLoading",
+          value: true,
+        },
+      });
+
+      const batch = fuego.db.batch();
+      if (
+        typeof mediaData !== "undefined" &&
+        mediaData !== null &&
+        typeof mediaData?.[edit.item.id] !== "undefined"
+      ) {
+        if (mediaData?.[edit.item.id].count === 1) {
+          batch.update(fuego.db.collection(user.email).doc("media"), {
+            [edit.item.id]: firestore.FieldValue.delete(),
+          });
+        } else {
+          batch.update(fuego.db.collection(user.email).doc("media"), {
+            [`${edit.item.id}.count`]: mediaData?.[edit.item.id].count - 1,
+          });
+        }
+      }
+
+      batch.update(fuego.db.collection(user.email).doc("diary"), {
+        [edit.itemId]: firestore.FieldValue.delete(),
+      });
+
+      return batch.commit().then(() => {
+        dispatch({
+          type: "state",
+          payload: {
+            key: "isLoading",
+            value: false,
+          },
+        });
+        return router.push("/");
+      });
+    } else {
+      console.log("error with delete");
     }
   }
 
@@ -242,7 +302,7 @@ function Log() {
           id: `${type}_${id}`,
           diaryDate: (diaryDate as unknown) as firebase.firestore.Timestamp,
           addedDate: (dateAdded as unknown) as firebase.firestore.Timestamp,
-          loggedBefore: false,
+          loggedBefore,
           rating,
           type,
           releasedDate,
@@ -255,26 +315,32 @@ function Log() {
 
   function createInfo(): { [key: string]: MediaInfoAdd } | false {
     if (typeof selected !== "undefined") {
-      const {
-        type,
-        artist,
-        title,
-        poster,
-        overview,
-        releasedDate,
-        genre,
-      } = selected;
-      return {
-        [`${selected?.type}_${selected?.id}`]: {
-          type,
-          artist,
-          title,
-          poster,
-          genre,
-          releasedDate,
-          ...(overview && { overview: overview }),
-        },
-      };
+      const itemId = `${selected.type}_${selected.id}`;
+      if (
+        typeof mediaData !== "undefined" &&
+        mediaData !== null &&
+        typeof mediaData?.[itemId] !== "undefined"
+      ) {
+        return {
+          [itemId]: {
+            ...mediaData[itemId],
+            count: mediaData[itemId].count + 1,
+          },
+        };
+      } else {
+        return {
+          [itemId]: {
+            type: selected.type,
+            artist: selected.artist,
+            title: selected.title,
+            poster: selected.poster,
+            genre: selected.genre,
+            releasedDate: selected.releasedDate,
+            count: 1,
+            ...(selected.overview && { overview: selected.overview }),
+          },
+        };
+      }
     } else {
       return false;
     }

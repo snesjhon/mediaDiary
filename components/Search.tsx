@@ -159,6 +159,7 @@ function Search() {
       artist: item.artistName,
       genre: item.primaryGenreName,
       type,
+      count: 0, // not important
     };
   }
 }

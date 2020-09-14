@@ -1,10 +1,8 @@
 import { createContext } from "react";
 import { MediaDiaryAdd, MediaInfoAdd, MediaSelected } from "./mediaTypes";
-import { useRouter } from "next/router";
 
 export interface MDState {
   user: any;
-  view: "main" | "search" | "log";
   selected?: MediaSelected;
   edit?: {
     itemId: string;
@@ -63,7 +61,6 @@ export function Reducer(state: MDState, actions: Actions): MDState {
 
 export const ContextState = createContext<MDState>({
   user: null,
-  view: "main",
 });
 
 export const ContextDispatch = createContext<(props: Actions) => void>(

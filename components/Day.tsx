@@ -1,18 +1,17 @@
 import {
-  HStack,
-  IconButton,
+  Collapse,
   Divider,
   Flex,
+  HStack,
+  IconButton,
   Stat,
-  StatNumber,
   StatHelpText,
-  Collapse,
+  StatNumber,
   Text,
   useDisclosure,
 } from "@chakra-ui/core";
-import { EmailIcon, EditIcon, StarIcon } from "@chakra-ui/icons";
+import { EditIcon, EmailIcon, StarIcon } from "@chakra-ui/icons";
 import { useCollection } from "@nandorojo/swr-firestore";
-import { info } from "console";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
@@ -108,61 +107,7 @@ function Day({ item }: { item: string }) {
       );
     }
   }
-  return (
-    <>
-      <div>asd2</div>
-      {/* <Info item={info} />
-      <HStack spacing={2} justify="center" mt={2}>
-        {overview && (
-          <>
-            <IconButton
-              variant="outline"
-              colorScheme="blue"
-              aria-label="Show Overview"
-              size="sm"
-              icon={<EmailIcon />}
-              onClick={onToggle}
-              isRound
-            />
-          </>
-        )}
-        <IconButton
-          icon={<EditIcon />}
-          aria-label="edit"
-          variant="outline"
-          size="sm"
-          colorScheme="green"
-          isRound
-        />
-      </HStack>
-      <Divider mt={3} mb={2} />
-      <Flex justifyContent="space-between">
-        <Stat>
-          <StatNumber>
-            {dayjs(diaryDate.toDate()).format("MMM D, YYYY")}
-          </StatNumber>
-          <StatHelpText>Date</StatHelpText>
-        </Stat>
-        <Stat>
-          <StatNumber>
-            <Rating
-              fractions={2}
-              readonly
-              initialRating={rating}
-              fullSymbol={<StarIcon color="purple.400" />}
-              emptySymbol={<StarEmptyIcon stroke="purple.400" />}
-            />
-          </StatNumber>
-          <StatHelpText textAlign="right">Rating</StatHelpText>
-        </Stat>
-      </Flex>
-      <Collapse isOpen={isOpen}>
-        <Text fontSize="sm" mb={4}>
-          {overview}
-        </Text>
-      </Collapse> */}
-    </>
-  );
+  return <div>Nothing to show</div>;
 }
 
 export default Day;

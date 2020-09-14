@@ -10,6 +10,7 @@ export interface MediaInfoAdd extends MediaBaseInfo {
   title: string;
   poster: string;
   genre: string;
+  count: number;
   overview?: string;
 }
 
@@ -34,20 +35,3 @@ export interface MediaDiaryState {
 export interface MediaSelected extends MediaInfoAdd {
   id: MediaDiaryAdd["id"];
 }
-// title: MediaDateAdd["title"];
-// poster: MediaDateAdd["poster"];
-// overview?: MediaDateAdd["overview"];
-
-// id: string;
-// artist:
-// releaseDate:
-
-// type:
-// releasedDate: Date | "";
-// type: MediaTypes;
-
-// poster: string;
-// title: string;
-// overview?: string;
-// season?: number | undefined;
-// episode?: number | undefined;
