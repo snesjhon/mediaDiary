@@ -2,6 +2,7 @@ import {
   Box,
   Center,
   Flex,
+  Icon,
   Input,
   Modal,
   ModalBody,
@@ -18,7 +19,9 @@ import useSWR from "swr";
 import type { MediaSelected, MediaTypes } from "../config/mediaTypes";
 import { ContextDispatch } from "../config/store";
 import useDebounce from "../utils/useDebounce";
-import LogoFilm from "./Icons/LogoFilm";
+import AlbumIcon from "./Icons/AlbumIcon";
+import FilmIcon from "./Icons/FilmIcon";
+import TvIcon from "./Icons/TvIcon";
 
 const fetcher = (input: RequestInfo) => fetch(input).then((res) => res.json());
 
@@ -40,22 +43,49 @@ function MediaSearchList({ type, item, children }: MediaSearchListProps) {
 
 function Search() {
   const [search, setSearch] = useState("");
+  const [currMovie, setCurrMovie] = useState(3);
+  const [currTv, setCurrTv] = useState(3);
+  const [currAlbum, setCurrAlbum] = useState(3);
   const dispatch = useContext(ContextDispatch);
   const router = useRouter();
   const SearchRef = useRef<HTMLInputElement>(null);
 
   const bouncedSearch = useDebounce(search, 500);
-  const { data, isValidating, error } = useSWR(
+  const {
+    data: itunesData,
+    isValidating: itunesValidating,
+    error: itunesError,
+  } = useSWR(
     bouncedSearch === ""
       ? null
       : `https://itunes.apple.com/search?term=${encodeURIComponent(
           bouncedSearch
-        )}&entity=movie,album,tvSeason`,
+        )}&entity=album&limit=20`,
     fetcher,
     {
       revalidateOnFocus: false,
     }
   );
+
+  const {
+    data: mdbData,
+    isValidating: mdbValidating,
+    error: mdbError,
+  } = useSWR(
+    bouncedSearch === ""
+      ? null
+      : `https://api.themoviedb.org/3/search/multi?api_key=${
+          process.env.NEXT_PUBLIC_MDBKEY
+        }&query=${encodeURIComponent(
+          bouncedSearch
+        )}&include_adult=false&page=1,2,3`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
+  );
+
+  // console.log(itunesData);
 
   return (
     <Modal
@@ -79,7 +109,7 @@ function Search() {
                 ref={SearchRef}
               />
             </Box>
-            {!data && isValidating && (
+            {(!itunesData || !mdbData) && (itunesValidating || mdbValidating) && (
               <Center h="20vh">
                 <Spinner
                   thickness="4px"
@@ -89,78 +119,153 @@ function Search() {
                 />
               </Center>
             )}
-            {data?.resultCount === 0 && <div>nothing found</div>}
-            {data &&
-              data.results.map((e: any, i: string) => {
-                let currentType = e.collectionType || e.kind;
-                if (currentType === "feature-movie") currentType = "movie";
-                else if (currentType === "Album") currentType = "album";
-                else if (currentType === "TV Season") currentType = "tv";
-                return (
-                  <MediaSearchList
-                    key={`${e.collectionId}_${i}`}
-                    type={currentType}
-                    item={e}
-                  >
-                    {({ artist, date, name }) => (
-                      <Flex
-                        fontSize="sm"
-                        alignItems="center"
-                        borderBottom="1px"
-                        borderBottomColor="gray.200"
-                        py={2}
-                        _hover={{
-                          bg: "purple.50",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => {
-                          dispatch({
-                            type: "select",
-                            payload: mediaNormalize(e, currentType),
-                          });
-                          router.push("/?log=true", "/log", {
-                            shallow: true,
-                          });
-                        }}
-                      >
-                        <Box w="10%" display="flex">
-                          {currentType === "movie" && <LogoFilm />}
-                          {currentType === "album" && <LogoFilm />}
-                          {currentType === "tv" && <LogoFilm />}
-                        </Box>
-                        <Box w="90%">
-                          <Text>{name}</Text>
-                          <Text
-                            fontSize="xs"
-                            fontStyle="italic"
-                            color="gray.500"
-                          >
-                            {artist} • {date}
-                          </Text>
-                        </Box>
-                      </Flex>
-                    )}
-                  </MediaSearchList>
-                );
-              })}
+            {itunesData && mdbData && createData(itunesData, mdbData)}
           </ModalBody>
         </ModalContent>
       </ModalOverlay>
     </Modal>
   );
 
-  function mediaNormalize(item: any, type: MediaTypes): MediaSelected {
-    return {
-      id: type === "movie" ? item.trackId : item.collectionId,
-      poster: item.artworkUrl100.replace("100x100", "500x500"),
-      title: type === "movie" ? item.trackName : item.collectionName,
-      releasedDate: item.releaseDate,
-      overview: item.longDescription,
-      artist: item.artistName,
-      genre: item.primaryGenreName,
-      type,
-      count: 0, // not important
-    };
+  function createData(itunesData: any, mdbData: any) {
+    const albumData = itunesData.results.map((e: any) => mediaNormalize(e));
+    const filteredData: MediaSelected[] = mdbData.results
+      .map((e: any) => mediaNormalize(e))
+      .filter((e: any) => e.type !== "person");
+    const { movieData, tvData } = filteredData.reduce<{
+      movieData: MediaSelected[];
+      tvData: MediaSelected[];
+    }>(
+      (a, c: MediaSelected) => {
+        if (c.type === "movie") {
+          a["movieData"].push(c);
+        } else if (c.type === "tv") {
+          a["tvData"].push(c);
+        }
+        return a;
+      },
+      { movieData: [], tvData: [] }
+    );
+
+    return (
+      <>
+        <CreateList
+          data={movieData}
+          title="Movie"
+          DataIcon={FilmIcon}
+          seeNumber={currMovie}
+          seeAction={setCurrMovie}
+        />
+        <CreateList
+          data={tvData}
+          title="TV"
+          DataIcon={TvIcon}
+          seeNumber={currTv}
+          seeAction={setCurrTv}
+        />
+        <CreateList
+          data={albumData}
+          title="Album"
+          DataIcon={AlbumIcon}
+          seeNumber={currAlbum}
+          seeAction={setCurrAlbum}
+        />
+      </>
+    );
+  }
+
+  function CreateList({
+    data,
+    title,
+    DataIcon,
+    seeNumber,
+    seeAction,
+  }: {
+    data: MediaSelected[];
+    title: string;
+    DataIcon: typeof Icon;
+    seeNumber: number;
+    seeAction: typeof setCurrMovie;
+  }) {
+    return data.length > 0 ? (
+      <Box mt={4}>
+        <Flex alignItems="center">
+          <DataIcon color="purple.500" />
+          <Text ml={2} fontWeight="bold">
+            {title}
+          </Text>
+        </Flex>
+        {data.slice(0, seeNumber).map((e: MediaSelected) => displayResult(e))}
+        {data.length > seeNumber && (
+          <Text
+            mt={3}
+            fontSize="sm"
+            color="gray.500"
+            onClick={() => seeAction(seeNumber + 3)}
+          >
+            See More...
+          </Text>
+        )}
+      </Box>
+    ) : null;
+  }
+
+  function displayResult(item: MediaSelected) {
+    return (
+      <Box
+        key={item.id}
+        fontSize="sm"
+        borderBottom="1px"
+        borderBottomColor="gray.200"
+        py={2}
+        _hover={{
+          bg: "purple.50",
+          cursor: "pointer",
+        }}
+        onClick={() => {
+          dispatch({
+            type: "select",
+            payload: item,
+          });
+          router.push("/?log=true", "/log", {
+            shallow: true,
+          });
+        }}
+      >
+        <Text>{item.title}</Text>
+      </Box>
+    );
+  }
+
+  function mediaNormalize(item: any): MediaSelected {
+    const type: MediaTypes =
+      typeof item?.media_type !== "undefined" ? item.media_type : "album";
+
+    if (type === "album") {
+      return {
+        id: item.collectionId,
+        poster: item.artworkUrl100.replace("100x100", "500x500"),
+        title: item.collectionName,
+        releasedDate: item.releaseDate,
+        overview: item.longDescription,
+        artist: item.artistName,
+        genre: item.primaryGenreName,
+        type,
+      };
+    } else {
+      return {
+        id: item.id.toString(),
+        poster: `https://image.tmdb.org/t/p/w500/${item.poster_path}`,
+        title: type === "movie" ? item.title : item.original_name,
+        releasedDate:
+          type === "movie" ? item.release_date : item.first_air_date,
+        overview: item.overview,
+        artist:
+          type === "movie"
+            ? typeof item.director !== "undefined" && item.director
+            : typeof item.creator !== "undefined" && item.creator,
+        type,
+      };
+    }
   }
 }
 

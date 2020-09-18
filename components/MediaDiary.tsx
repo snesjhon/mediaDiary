@@ -7,7 +7,7 @@ import Rating from "react-rating";
 import { MediaDiaryState } from "../config/mediaTypes";
 import { createMediaState } from "../utils/helpers";
 import useUser from "../utils/useUser";
-import LogoFilm from "./Icons/LogoFilm";
+import LogoFilm from "./Icons/FilmIcon";
 import StarEmptyIcon from "./Icons/StartEmptyIcon";
 
 interface ListState {

@@ -7,42 +7,65 @@ import {
   Input,
   ModalFooter,
   Text,
+  Select,
+  Spinner,
 } from "@chakra-ui/core";
 import { StarIcon } from "@chakra-ui/icons";
 import { fuego, useDocument } from "@nandorojo/swr-firestore";
 import dayjs from "dayjs";
-import { firestore } from "firebase/app";
 import { useRouter } from "next/router";
-import React, { useContext, useReducer } from "react";
+import React, { useContext, useEffect, useReducer } from "react";
 import Rating from "react-rating";
+import useSWR from "swr";
 import {
   MediaDiaryAdd,
   MediaInfoAdd,
   MediaInfoState,
 } from "../config/mediaTypes";
 import { ContextState } from "../config/store";
+import { fetcher } from "../utils/helpers";
 import useUser from "../utils/useUser";
 import StarEmptyIcon from "./Icons/StartEmptyIcon";
 import Info from "./Info";
 import LayoutModal from "./LayoutModal";
 
 interface State {
+  isSaving: boolean;
   isLoading: boolean;
   diaryDate: Date;
   loggedBefore: boolean;
   rating: number;
-  season: any;
-  episode: number;
+  localArtist: string;
+  localPoster: string;
+  episode?: number;
+  season?: any;
   seasons?: any;
 }
 
-type Actions = {
-  type: "state";
-  payload: {
-    key: keyof State;
-    value: any;
-  };
-};
+type Actions =
+  | {
+      type: "state";
+      payload: {
+        key: keyof State;
+        value: any;
+      };
+    }
+  | {
+      type: "seasons";
+      payload: {
+        localArtist: string;
+        localPoster?: string;
+        season: any;
+        seasons: any;
+      };
+    }
+  | {
+      type: "season";
+      payload: {
+        localPoster: string;
+        season: any;
+      };
+    };
 
 function Reducer(state: State, actions: Actions): State {
   switch (actions.type) {
@@ -51,224 +74,218 @@ function Reducer(state: State, actions: Actions): State {
         ...state,
         [actions.payload.key]: actions.payload.value,
       };
+    case "seasons": {
+      return {
+        ...state,
+        localArtist: actions.payload.localArtist,
+        season: actions.payload.season,
+        seasons: actions.payload.seasons,
+        ...(typeof actions.payload.localPoster !== "undefined" && {
+          localPoster: actions.payload.localPoster,
+        }),
+        isLoading: false,
+      };
+    }
+    case "season": {
+      return {
+        ...state,
+        season: actions.payload.season,
+        episode: 1,
+        localPoster: actions.payload.localPoster,
+      };
+    }
     default:
       return state;
   }
 }
 
 function Log() {
-  const { selected, edit } = useContext(ContextState);
+  const { selected } = useContext(ContextState);
   const { user } = useUser();
   const router = useRouter();
   const { data: mediaData } = useDocument<MediaInfoState>(
     `${user.email}/media`
   );
 
-  let initData = {
+  const { data, error } = useSWR(
+    selected?.type === "tv"
+      ? `https://api.themoviedb.org/3/tv/${selected.id}?api_key=${process.env.NEXT_PUBLIC_MDBKEY}`
+      : selected?.type === "movie"
+      ? `https://api.themoviedb.org/3/movie/${encodeURIComponent(
+          selected.id
+        )}/credits?api_key=${process.env.NEXT_PUBLIC_MDBKEY}`
+      : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
+  );
+
+  const [
+    {
+      diaryDate,
+      loggedBefore,
+      rating,
+      season,
+      episode,
+      localArtist,
+      localPoster,
+      seasons,
+      isSaving,
+      isLoading,
+    },
+    dispatch,
+  ] = useReducer(Reducer, {
     diaryDate: new Date(),
     loggedBefore: false,
     rating: 0,
-    season: {},
-    episode: 1,
-    seasons: {},
-    isLoading: false,
-  };
-  if (typeof edit !== "undefined") {
-    const { diaryDate, loggedBefore, rating } = edit.item;
-    initData = {
-      ...initData,
-      diaryDate: diaryDate.toDate(),
-      loggedBefore,
-      rating,
-    };
-  }
-  const [
-    { diaryDate, loggedBefore, rating, season, episode, seasons, isLoading },
-    dispatch,
-  ] = useReducer(Reducer, initData);
+    isSaving: false,
+    isLoading: !data && !error,
+    localArtist: typeof selected !== "undefined" ? selected.artist : "",
+    localPoster: typeof selected !== "undefined" ? selected.poster : "",
+  });
+
+  useEffect(() => {
+    if (typeof data !== "undefined") {
+      dispatch({
+        type: "seasons",
+        payload: {
+          localArtist:
+            data.created_by.length > 0 &&
+            data.created_by.map((e: any) => e.name).join(", "),
+          season: data.seasons[0],
+          seasons: data.seasons,
+          localPoster:
+            data.seasons[0].poster_path !== null
+              ? `https://image.tmdb.org/t/p/w500/${data.seasons[0].poster_path}`
+              : localPoster,
+        },
+      });
+    }
+  }, [data]);
+
+  console.log(season);
 
   return (
     <LayoutModal>
-      {typeof selected !== "undefined" && <Info item={selected} />}
-      {typeof edit !== "undefined" && <Info item={edit.info} />}
-      <Divider mt={4} mb={2} />
-      <Flex alignItems="center" justifyContent="space-between">
-        <Text>Date</Text>
-        <Box>
-          <Input
-            type="date"
-            required
-            value={dayjs(diaryDate).format("YYYY-MM-DD")}
-            max={dayjs().format("YYYY-MM-DD")}
-            onChange={(e) =>
-              dispatch({
-                type: "state",
-                payload: {
-                  key: "diaryDate",
-                  value: dayjs(e.target.value).toDate(),
-                },
-              })
-            }
-          />
-        </Box>
-      </Flex>
-      <Divider my={2} />
-      <Flex alignItems="center" justifyContent="space-between">
-        <Text>Rate</Text>
-        <Box mt="-4px">
-          <Rating
-            fractions={2}
-            initialRating={rating}
-            fullSymbol={<StarIcon h="20px" w="20px" color="purple.500" />}
-            emptySymbol={
-              <StarEmptyIcon h="20px" w="20px" stroke="purple.500" />
-            }
-            onChange={(value) =>
-              dispatch({
-                type: "state",
-                payload: {
-                  key: "rating",
-                  value,
-                },
-              })
-            }
-          />
-        </Box>
-      </Flex>
-      <Divider my={2} />
-      <Flex alignItems="center" justifyContent="space-between">
-        <Text>Heard Before?</Text>
-        <Checkbox
-          colorScheme="purple"
-          isChecked={loggedBefore}
-          onChange={() =>
-            dispatch({
-              type: "state",
-              payload: { key: "loggedBefore", value: !loggedBefore },
-            })
-          }
-        />
-      </Flex>
-      <ModalFooter px={0} pt={2} pb={1} mt={2}>
-        {typeof edit !== "undefined" && (
-          <Button
-            onClick={deleteData}
-            isLoading={isLoading}
-            colorScheme="red"
-            size="sm"
-          >
-            Delete
-          </Button>
-        )}
-        <Button
-          onClick={typeof edit !== "undefined" ? editData : addData}
-          isLoading={isLoading}
-          colorScheme="blue"
-          size="sm"
-          variant="outline"
-        >
-          Save
-        </Button>
-      </ModalFooter>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <>
+          {typeof selected !== "undefined" && (
+            <Info
+              item={{ ...selected, poster: localPoster, artist: localArtist }}
+            />
+          )}
+          <Divider mt={4} mb={2} />
+          <Flex alignItems="center" justifyContent="space-between">
+            <Text>Date</Text>
+            <Box>
+              <Input
+                type="date"
+                required
+                value={dayjs(diaryDate).format("YYYY-MM-DD")}
+                max={dayjs().format("YYYY-MM-DD")}
+                onChange={(e) =>
+                  dispatch({
+                    type: "state",
+                    payload: {
+                      key: "diaryDate",
+                      value: dayjs(e.target.value).toDate(),
+                    },
+                  })
+                }
+              />
+            </Box>
+          </Flex>
+          <Divider my={2} />
+          <Flex alignItems="center" justifyContent="space-between">
+            <Text>Rate</Text>
+            <Box mt="-4px">
+              <Rating
+                fractions={2}
+                initialRating={rating}
+                fullSymbol={<StarIcon h="20px" w="20px" color="purple.500" />}
+                emptySymbol={
+                  <StarEmptyIcon h="20px" w="20px" stroke="purple.500" />
+                }
+                onChange={(value) =>
+                  dispatch({
+                    type: "state",
+                    payload: {
+                      key: "rating",
+                      value,
+                    },
+                  })
+                }
+              />
+            </Box>
+          </Flex>
+          {typeof seasons !== "undefined" && seasons.length > 0 && (
+            <>
+              <Divider my={2} />
+              <Flex alignItems="center" justifyContent="space-between">
+                <Text>Season</Text>
+                <Select
+                  placeholder="Select option"
+                  value={season.season_number}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "season",
+                      payload: {
+                        season: seasons[e.target.value],
+                        localPoster:
+                          seasons[e.target.value].poster_path !== null
+                            ? `https://image.tmdb.org/t/p/w500/${
+                                seasons[e.target.value].poster_path
+                              }`
+                            : localPoster,
+                      },
+                    })
+                  }
+                >
+                  {seasons.map((e: any) => (
+                    <option value={e.season_number}>{e.season_number}</option>
+                  ))}
+                </Select>
+              </Flex>
+            </>
+          )}
+          <Divider my={2} />
+          <Flex alignItems="center" justifyContent="space-between">
+            <Text>Heard Before?</Text>
+            <Checkbox
+              colorScheme="purple"
+              isChecked={loggedBefore}
+              onChange={() =>
+                dispatch({
+                  type: "state",
+                  payload: { key: "loggedBefore", value: !loggedBefore },
+                })
+              }
+            />
+          </Flex>
+          <ModalFooter px={0} pt={2} pb={1} mt={2}>
+            <Button
+              onClick={addData}
+              isLoading={isSaving}
+              colorScheme="blue"
+              size="sm"
+              variant="outline"
+            >
+              Save
+            </Button>
+          </ModalFooter>
+        </>
+      )}
     </LayoutModal>
   );
-
-  function editData() {
-    dispatch({
-      type: "state",
-      payload: {
-        key: "isLoading",
-        value: true,
-      },
-    });
-    const diaryRef = fuego.db.collection(user.email).doc("diary");
-    const diaryEdit = createEdit();
-    if (diaryEdit) {
-      return diaryRef.update(diaryEdit).then(() => {
-        dispatch({
-          type: "state",
-          payload: {
-            key: "isLoading",
-            value: false,
-          },
-        });
-        return router.push("/");
-      });
-    } else {
-      console.log("error");
-    }
-  }
-
-  function createEdit(): { [key: string]: MediaDiaryAdd } | false {
-    if (typeof edit !== "undefined") {
-      const { id, type, releasedDate, addedDate, loggedBefore } = edit.item;
-      return {
-        [edit.itemId]: {
-          id,
-          diaryDate: (diaryDate as unknown) as firebase.firestore.Timestamp,
-          addedDate,
-          loggedBefore,
-          rating,
-          type,
-          releasedDate,
-        },
-      };
-    } else {
-      return false;
-    }
-  }
-
-  function deleteData() {
-    if (typeof edit !== "undefined") {
-      dispatch({
-        type: "state",
-        payload: {
-          key: "isLoading",
-          value: true,
-        },
-      });
-
-      const batch = fuego.db.batch();
-      if (
-        typeof mediaData !== "undefined" &&
-        mediaData !== null &&
-        typeof mediaData?.[edit.item.id] !== "undefined"
-      ) {
-        if (mediaData?.[edit.item.id].count === 1) {
-          batch.update(fuego.db.collection(user.email).doc("media"), {
-            [edit.item.id]: firestore.FieldValue.delete(),
-          });
-        } else {
-          batch.update(fuego.db.collection(user.email).doc("media"), {
-            [`${edit.item.id}.count`]: mediaData?.[edit.item.id].count - 1,
-          });
-        }
-      }
-
-      batch.update(fuego.db.collection(user.email).doc("diary"), {
-        [edit.itemId]: firestore.FieldValue.delete(),
-      });
-
-      return batch.commit().then(() => {
-        dispatch({
-          type: "state",
-          payload: {
-            key: "isLoading",
-            value: false,
-          },
-        });
-        return router.push("/");
-      });
-    } else {
-      console.log("error with delete");
-    }
-  }
 
   function addData() {
     dispatch({
       type: "state",
       payload: {
-        key: "isLoading",
+        key: "isSaving",
         value: true,
       },
     });
@@ -285,7 +302,7 @@ function Log() {
       dispatch({
         type: "state",
         payload: {
-          key: "isLoading",
+          key: "isSaving",
           value: false,
         },
       });
@@ -334,7 +351,7 @@ function Log() {
             artist: selected.artist,
             title: selected.title,
             poster: selected.poster,
-            genre: selected.genre,
+            genre: typeof selected?.genre !== "undefined" ? selected.genre : "",
             releasedDate: selected.releasedDate,
             count: 1,
             ...(selected.overview && { overview: selected.overview }),

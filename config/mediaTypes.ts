@@ -32,6 +32,13 @@ export interface MediaDiaryState {
   [key: string]: MediaDiaryAdd;
 }
 
-export interface MediaSelected extends MediaInfoAdd {
-  id: MediaDiaryAdd["id"];
+export interface MediaSelected {
+  id: string;
+  artist: string;
+  title: string;
+  poster: string;
+  releasedDate: Date | "";
+  type: MediaTypes;
+  overview?: string;
+  genre?: string;
 }

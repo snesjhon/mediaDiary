@@ -1,11 +1,7 @@
 import { MediaDiaryState, MediaInfoState } from "../config/mediaTypes";
 
 export function fetcher(url: string, token: string) {
-  return fetch(url, {
-    method: "GET",
-    headers: new Headers({ "Content-Type": "application/json", token }),
-    credentials: "same-origin",
-  }).then((res) => res.json());
+  return fetch(url).then((res) => res.json());
 }
 
 export function createMediaState(

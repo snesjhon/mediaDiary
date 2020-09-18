@@ -1,9 +1,9 @@
 import { Center, Flex, Heading, Image, Text } from "@chakra-ui/core";
 import React from "react";
-import { MediaInfoAdd } from "../config/mediaTypes";
+import { MediaInfoAdd, MediaSelected } from "../config/mediaTypes";
 
 interface Props {
-  item: MediaInfoAdd;
+  item: MediaInfoAdd | MediaSelected;
 }
 
 function Info({ item }: Props) {
@@ -34,7 +34,7 @@ function Info({ item }: Props) {
       </Center>
       <Center>
         <Text fontSize="xs" color="gray.400">
-          {item.genre} •{" "}
+          {item.genre && <>• {item.genre}</>}
           {typeof item.releasedDate !== "undefined" &&
             `${new Date(item.releasedDate).toLocaleDateString("en-us", {
               year: "numeric",

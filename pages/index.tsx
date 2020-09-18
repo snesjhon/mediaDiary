@@ -2,6 +2,7 @@ import { Button } from "@chakra-ui/core";
 import { useRouter } from "next/router";
 import React from "react";
 import Day from "../components/Day";
+import Edit from "../components/Edit";
 import Header from "../components/Header";
 import Layout from "../components/Layout";
 import LayoutModal from "../components/LayoutModal";
@@ -23,7 +24,7 @@ function App() {
           <MediaDiary />
           {!!router.query.search && <Search />}
           {!!router.query.log && <Log />}
-          {!!router.query.view && router.query.view === "edit" && <Log />}
+          {!!router.query.view && router.query.view === "edit" && <Edit />}
           {!!router.query.day && (
             <LayoutModal>
               <Day item={router.query.day.toString()} />
