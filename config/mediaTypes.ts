@@ -11,6 +11,7 @@ export interface MediaInfoAdd extends MediaBaseInfo {
   poster: string;
   genre: string;
   count: number;
+  season?: any;
   overview?: string;
 }
 
@@ -19,26 +20,18 @@ export interface MediaInfoState {
 }
 
 export interface MediaDiaryAdd extends MediaBaseInfo {
+  id: string;
   diaryDate: firebase.firestore.Timestamp;
   addedDate: firebase.firestore.Timestamp;
-  id: string;
-  episode?: number | undefined;
-  season?: number | undefined;
   loggedBefore: boolean;
   rating: number;
+  episodes?: number[];
 }
 
 export interface MediaDiaryState {
   [key: string]: MediaDiaryAdd;
 }
 
-export interface MediaSelected {
-  id: string;
-  artist: string;
-  title: string;
-  poster: string;
-  releasedDate: Date | "";
-  type: MediaTypes;
-  overview?: string;
-  genre?: string;
+export interface MediaSelected extends MediaInfoAdd {
+  id: MediaDiaryAdd["id"];
 }

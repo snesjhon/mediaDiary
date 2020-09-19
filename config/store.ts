@@ -7,7 +7,7 @@ export interface MDState {
   edit?: {
     itemId: string;
     item: MediaDiaryAdd;
-    info: MediaInfoAdd;
+    info: MediaSelected;
   };
 }
 

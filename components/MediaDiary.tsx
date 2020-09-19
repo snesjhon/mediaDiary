@@ -83,12 +83,9 @@ function MediaDiary() {
                           artist,
                           type,
                         } = mediaState[diaryDates[month][day].id];
-                        const {
-                          rating,
-                          loggedBefore,
-                          season,
-                          episode,
-                        } = diaryDates[month][day];
+                        const { rating, loggedBefore, episodes } = diaryDates[
+                          month
+                        ][day];
                         return (
                           <Grid
                             gridTemplateColumns="1.5rem 4rem 1fr"

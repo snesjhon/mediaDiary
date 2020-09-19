@@ -253,12 +253,13 @@ function Search() {
       };
     } else {
       return {
-        id: item.id.toString(),
+        id: item.id,
         poster: `https://image.tmdb.org/t/p/w500/${item.poster_path}`,
         title: type === "movie" ? item.title : item.original_name,
         releasedDate:
           type === "movie" ? item.release_date : item.first_air_date,
         overview: item.overview,
+        genre: "",
         artist:
           type === "movie"
             ? typeof item.director !== "undefined" && item.director

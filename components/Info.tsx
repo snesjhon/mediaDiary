@@ -34,7 +34,7 @@ function Info({ item }: Props) {
       </Center>
       <Center>
         <Text fontSize="xs" color="gray.400">
-          {item.genre && <>• {item.genre}</>}
+          {item.genre && <>{item.genre} • </>}
           {typeof item.releasedDate !== "undefined" &&
             `${new Date(item.releasedDate).toLocaleDateString("en-us", {
               year: "numeric",
