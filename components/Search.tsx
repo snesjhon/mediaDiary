@@ -18,7 +18,7 @@ import React, { useContext, useRef, useState } from "react";
 import useSWR from "swr";
 import type { MediaSelected, MediaTypes } from "../config/mediaTypes";
 import { ContextDispatch } from "../config/store";
-import { fetcher } from "../utils/helpers";
+import { fetcher, fetcherCreds } from "../utils/helpers";
 import useDebounce from "../utils/useDebounce";
 import AlbumIcon from "./Icons/AlbumIcon";
 import FilmIcon from "./Icons/FilmIcon";
@@ -44,7 +44,7 @@ function Search() {
       : `https://itunes.apple.com/search?term=${encodeURIComponent(
           bouncedSearch
         )}&entity=album&limit=20`,
-    fetcher,
+    fetcherCreds,
     {
       revalidateOnFocus: false,
     }
@@ -67,8 +67,6 @@ function Search() {
       revalidateOnFocus: false,
     }
   );
-
-  // console.log(itunesData);
 
   return (
     <Modal
@@ -215,6 +213,15 @@ function Search() {
         }}
       >
         <Text>{item.title}</Text>
+        {item.artist !== "" ? (
+          <Text fontSize="xs" fontStyle="italic" color="gray.500">
+            {item.artist}
+          </Text>
+        ) : item.releasedDate !== "" ? (
+          <Text fontSize="xs" fontStyle="italic" color="gray.500">
+            {item.releasedDate}
+          </Text>
+        ) : null}
       </Box>
     );
   }
@@ -237,16 +244,13 @@ function Search() {
     } else {
       return {
         id: item.id,
-        poster: `https://image.tmdb.org/t/p/w500/${item.poster_path}`,
+        poster: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
         title: type === "movie" ? item.title : item.original_name,
         releasedDate:
           type === "movie" ? item.release_date : item.first_air_date,
         overview: item.overview,
         genre: "",
-        artist:
-          type === "movie"
-            ? typeof item.director !== "undefined" && item.director
-            : typeof item.creator !== "undefined" && item.creator,
+        artist: "",
         type,
       };
     }

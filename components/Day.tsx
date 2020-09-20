@@ -21,6 +21,7 @@ import { createMediaState } from "../utils/helpers";
 import useUser from "../utils/useUser";
 import StarEmptyIcon from "./Icons/StartEmptyIcon";
 import Info from "./Info";
+
 function Day({ diaryId }: { diaryId: string }) {
   const { user } = useUser();
   const dispatch = useContext(ContextDispatch);

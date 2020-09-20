@@ -18,19 +18,33 @@ function Log() {
   const router = useRouter();
   const { data: mediaData } = useDocument<MediaState>(`${user.email}/media`);
 
-  const { data, error } = useSWR(
-    selected?.type === "tv"
-      ? `https://api.themoviedb.org/3/tv/${selected.id}?api_key=${process.env.NEXT_PUBLIC_MDBKEY}`
-      : selected?.type === "movie"
-      ? `https://api.themoviedb.org/3/movie/${encodeURIComponent(
-          selected.id
-        )}?api_key=${process.env.NEXT_PUBLIC_MDBKEY}&append_to_response=credits`
-      : null,
-    fetcher,
-    {
-      revalidateOnFocus: false,
+  // https://ws.audioscrobbler.com/2.0/?method=album.getinfo&artist=${encodeURIComponent(
+  //   payload.artist
+  // )}&album=${encodeURIComponent(
+  //   payload.title
+  // )}&format=json&api_key=${LASTFMKEY}
+
+  let dataUrl = null;
+
+  if (typeof selected !== "undefined") {
+    if (selected.type === "tv") {
+      dataUrl = `https://api.themoviedb.org/3/tv/${selected.id}?api_key=${process.env.NEXT_PUBLIC_MDBKEY}`;
+    } else if (selected.type === "movie") {
+      dataUrl = `https://api.themoviedb.org/3/movie/${encodeURIComponent(
+        selected.id
+      )}?api_key=${process.env.NEXT_PUBLIC_MDBKEY}&append_to_response=credits`;
+    } else if (selected.type === "album") {
+      dataUrl = `https://ws.audioscrobbler.com/2.0/?method=album.getinfo&artist=${encodeURIComponent(
+        selected.artist
+      )}&album=${encodeURIComponent(selected.title)}&format=json&api_key=${
+        process.env.NEXT_PUBLIC_LASTFMKEY
+      }`;
     }
-  );
+  }
+
+  const { data, error } = useSWR(dataUrl, fetcher, {
+    revalidateOnFocus: false,
+  });
 
   let initData: LogState = {
     diaryDate: new Date(),
@@ -71,6 +85,7 @@ function Log() {
       artist,
       poster,
       genre,
+      overview,
       externalSeason,
       externalSeasons,
       isSaving,
@@ -92,21 +107,29 @@ function Log() {
           type: "credits",
           payload: apiData as any,
         });
+      } else if (selected.type === "album") {
+        dispatch({
+          type: "overview",
+          payload: apiData as any,
+        });
       }
     }
   }, [data, selected]);
 
+  // When we select from Search, we have our original values, however if we change season
+  // then we have potentially different information that we need to load to <Info />
   let mediaInfo = selected;
-  if (typeof selected !== "undefined" && selected.type !== "album") {
+  if (typeof selected !== "undefined") {
     mediaInfo = {
       ...selected,
       poster,
       artist,
       genre,
+      overview,
     };
-    if (typeof externalSeasons !== "undefined") {
+    if (typeof externalSeasons !== "undefined" && selected.type !== "album") {
       mediaInfo = {
-        ...mediaInfo,
+        ...selected,
         id: `${selected.id}_${externalSeason.id}`,
         releasedDate: externalSeason.air_date,
         overview: externalSeason.overview,
@@ -274,6 +297,10 @@ function Log() {
           .name,
         genre: externalData.genres[0].name,
       };
+    } else if (mediaType === "album") {
+      return typeof externalData?.album?.wiki !== "undefined"
+        ? externalData.album.wiki.summary.split("<a href")[0]
+        : "";
     }
   }
 }

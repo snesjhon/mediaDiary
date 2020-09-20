@@ -17,6 +17,7 @@ export interface LogState extends LogProps {
   isLoading: boolean;
   artist: MediaAdd["artist"];
   genre: MediaAdd["genre"];
+  overview?: MediaAdd["overview"];
 }
 
 export type LogActions =
@@ -50,6 +51,10 @@ export type LogActions =
         artist: string;
         genre: string;
       };
+    }
+  | {
+      type: "overview";
+      payload: string;
     }
   | {
       type: "season";
@@ -115,6 +120,13 @@ export function LogReducer(state: LogState, actions: LogActions): LogState {
         ...state,
         artist: actions.payload.artist,
         genre: actions.payload.genre,
+        isLoading: false,
+      };
+    }
+    case "overview": {
+      return {
+        ...state,
+        overview: actions.payload,
         isLoading: false,
       };
     }
