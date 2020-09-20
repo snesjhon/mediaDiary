@@ -144,6 +144,8 @@ function Log() {
     };
   }
 
+  console.log({ mediaInfo });
+
   return (
     <LayoutModal>
       {isLoading ? (

@@ -120,6 +120,7 @@ function MediaDiary() {
                             <Box>
                               <Image
                                 src={poster}
+                                ignoreFallback
                                 borderRadius="5px"
                                 border="1px solid"
                                 borderColor="gray.300"
