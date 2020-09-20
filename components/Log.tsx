@@ -44,10 +44,7 @@ function Log() {
     loggedBefore: false,
     rating: 0,
     isSaving: false,
-    isLoading:
-      typeof selected !== "undefined" && selected.type !== "album"
-        ? !data && !error
-        : false,
+    isLoading: typeof selected !== "undefined" ? !data && !error : false,
     artist: "",
     poster: "",
     genre: "",
@@ -58,6 +55,7 @@ function Log() {
       artist: selected.artist,
       poster: selected.poster,
       genre: selected.genre,
+      overview: selected.overview,
     };
     // Data can be cached by swr, if so, load initData from cache
     if (typeof data !== "undefined") {
@@ -88,12 +86,9 @@ function Log() {
   ] = useReducer(LogReducer, initData);
 
   useEffect(() => {
-    if (
-      typeof data !== "undefined" &&
-      typeof selected !== "undefined" &&
-      isLoading
-    ) {
+    if (typeof data !== "undefined" && typeof selected !== "undefined") {
       const apiData = parseData(data, selected.type);
+      console.log("happens");
       if (selected.type === "tv") {
         dispatch({
           type: "seasons",
@@ -111,13 +106,12 @@ function Log() {
         });
       }
     }
-  }, [data, selected, isLoading]);
+  }, [data, selected]);
 
   // When we select from Search, we have our original values, however if we change season
   // then we have potentially different information that we need to load to <Info />
   let mediaInfo = selected;
   if (typeof selected !== "undefined") {
-    // debugger;
     mediaInfo = {
       ...selected,
       poster,
