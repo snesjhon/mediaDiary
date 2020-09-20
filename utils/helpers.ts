@@ -1,4 +1,4 @@
-import { MediaDiaryState, MediaInfoState } from "../config/mediaTypes";
+import { DiaryState, MediaState } from "../config/mediaTypes";
 
 export function fetcher(url: string, token: string) {
   return fetch(url).then((res) => res.json());
@@ -17,8 +17,8 @@ export function createMediaState(
     exists: mediaExists,
     ...mediaItems
   }: any = data[1];
-  const diaryState: MediaDiaryState = diaryItems;
-  const mediaState: MediaInfoState = mediaItems;
+  const diaryState: DiaryState = diaryItems;
+  const mediaState: MediaState = mediaItems;
   return {
     diaryState,
     mediaState,

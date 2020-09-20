@@ -3,12 +3,8 @@ import { fuego, useDocument } from "@nandorojo/swr-firestore";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useReducer } from "react";
 import useSWR from "swr";
-import { LogInit, LogReducer } from "../config/logStore";
-import {
-  MediaDiaryAdd,
-  MediaInfoAdd,
-  MediaInfoState,
-} from "../config/mediaTypes";
+import { LogProps, LogInit, LogReducer, LogState } from "../config/logStore";
+import { DiaryAdd, MediaAdd, MediaState } from "../config/mediaTypes";
 import { ContextState } from "../config/store";
 import { fetcher } from "../utils/helpers";
 import useUser from "../utils/useUser";
@@ -20,9 +16,7 @@ function Log() {
   const { selected } = useContext(ContextState);
   const { user } = useUser();
   const router = useRouter();
-  const { data: mediaData } = useDocument<MediaInfoState>(
-    `${user.email}/media`
-  );
+  const { data: mediaData } = useDocument<MediaState>(`${user.email}/media`);
 
   const { data, error } = useSWR(
     selected?.type === "tv"
@@ -38,81 +32,102 @@ function Log() {
     }
   );
 
+  let initData: LogState = {
+    diaryDate: new Date(),
+    loggedBefore: false,
+    rating: 0,
+    isSaving: false,
+    isLoading:
+      typeof selected !== "undefined" && selected.type !== "album"
+        ? !data && !error
+        : false,
+    artist: "",
+    poster: "",
+    genre: "",
+  };
+  if (typeof selected !== "undefined") {
+    initData = {
+      ...initData,
+      artist: selected.artist,
+      poster: selected.poster,
+      genre: selected.genre,
+    };
+    // Data can be cached by swr, if so, load initData from cache
+    if (typeof data !== "undefined") {
+      const cachedData = parseData(data, selected.type);
+      initData = {
+        ...initData,
+        ...cachedData,
+      };
+    }
+  }
+
   const [
     {
       diaryDate,
       loggedBefore,
       rating,
-      season,
-      episodes,
+      seenEpisodes,
       artist,
       poster,
       genre,
-      seasons,
+      externalSeason,
+      externalSeasons,
       isSaving,
       isLoading,
     },
     dispatch,
-  ] = useReducer(
-    LogReducer,
-    LogInit(
-      selected,
-      typeof selected !== "undefined" && selected.type !== "album"
-        ? !data && !error
-        : false
-    )
-  );
+  ] = useReducer(LogReducer, initData);
 
   useEffect(() => {
     if (typeof data !== "undefined" && typeof selected !== "undefined") {
+      const apiData = parseData(data, selected.type);
       if (selected.type === "tv") {
-        const filteredSeasons = data.seasons.sort((a: any, b: any) =>
-          b.season_number === 0 ? -1 : 1
-        );
         dispatch({
           type: "seasons",
-          payload: {
-            artist:
-              data.created_by.length > 0 &&
-              data.created_by.map((e: any) => e.name).join(", "),
-            season: filteredSeasons[0],
-            seasons: filteredSeasons,
-            poster:
-              filteredSeasons[0].poster_path !== null
-                ? `https://image.tmdb.org/t/p/w500${filteredSeasons[0].poster_path}`
-                : poster,
-            genre: data.genres[0].name,
-          },
+          payload: apiData as any,
         });
       } else if (selected.type === "movie") {
         dispatch({
           type: "credits",
-          payload: {
-            artist: data.credits.crew.find((e: any) => e.job === "Director")
-              .name,
-            genre: data.genres[0].name,
-          },
+          payload: apiData as any,
         });
       }
     }
   }, [data, selected]);
 
-  let itemInfo = selected;
+  let mediaInfo = selected;
   if (typeof selected !== "undefined" && selected.type !== "album") {
-    itemInfo = {
+    mediaInfo = {
       ...selected,
       poster,
       artist,
       genre,
     };
-    if (typeof seasons !== "undefined") {
-      itemInfo = {
-        ...itemInfo,
-        id: `${selected.id}_${season.id}`,
-        releasedDate: season.air_date,
-        overview: season.overview,
+    if (typeof externalSeasons !== "undefined") {
+      mediaInfo = {
+        ...mediaInfo,
+        id: `${selected.id}_${externalSeason.id}`,
+        releasedDate: externalSeason.air_date,
+        overview: externalSeason.overview,
       };
     }
+  }
+
+  let logFields: LogProps = {
+    diaryDate,
+    rating,
+    loggedBefore,
+    poster,
+  };
+  if (mediaInfo?.type === "tv" && typeof externalSeason !== "undefined") {
+    logFields = {
+      ...logFields,
+      seenEpisodes,
+      externalSeasons,
+      season: externalSeason.season_number,
+      episodes: externalSeason.episode_count,
+    };
   }
 
   return (
@@ -121,18 +136,11 @@ function Log() {
         <Spinner />
       ) : (
         <>
-          {typeof itemInfo !== "undefined" && <Info item={itemInfo} />}
+          {typeof mediaInfo !== "undefined" && <Info item={mediaInfo} />}
           <LogFields
             dispatch={dispatch}
-            item={{
-              diaryDate,
-              rating,
-              loggedBefore,
-              seasons,
-              poster,
-              season,
-              episodes,
-            }}
+            type={mediaInfo?.type}
+            item={logFields}
           />
           <ModalFooter px={0} pt={2} pb={1} mt={2}>
             <Button
@@ -160,12 +168,12 @@ function Log() {
     });
     const batch = fuego.db.batch();
     const addDiary = createDiary();
-    const addInfo = createInfo();
+    const addMedia = createMedia();
     if (addDiary) {
       batch.update(fuego.db.collection(user.email).doc("diary"), addDiary);
     }
-    if (addInfo) {
-      batch.update(fuego.db.collection(user.email).doc("media"), addInfo);
+    if (addMedia) {
+      batch.update(fuego.db.collection(user.email).doc("media"), addMedia);
     }
     batch.commit().then(() => {
       dispatch({
@@ -179,10 +187,10 @@ function Log() {
     });
   }
 
-  function createDiary(): { [key: string]: MediaDiaryAdd } | false {
-    if (typeof itemInfo !== "undefined") {
+  function createDiary(): { [key: string]: DiaryAdd } | false {
+    if (typeof mediaInfo !== "undefined") {
       const dateAdded = new Date();
-      const { id, type, releasedDate } = itemInfo;
+      const { id, type, releasedDate } = mediaInfo;
       return {
         [dateAdded.getTime()]: {
           id: `${type}_${id}`,
@@ -192,7 +200,9 @@ function Log() {
           rating,
           type,
           releasedDate,
-          ...(typeof episodes !== "undefined" && { episodes: episodes }),
+          ...(typeof seenEpisodes !== "undefined" && {
+            seenEpisodes: seenEpisodes,
+          }),
         },
       };
     } else {
@@ -200,10 +210,10 @@ function Log() {
     }
   }
 
-  function createInfo(): { [key: string]: MediaInfoAdd } | false {
-    if (typeof itemInfo !== "undefined") {
-      // if we have a season, we also want to ad that as an id
-      const itemId = `${itemInfo.type}_${itemInfo.id}`;
+  function createMedia(): { [key: string]: MediaAdd } | false {
+    if (typeof mediaInfo !== "undefined") {
+      // This id is what's going to be saved and referenced in firestore
+      const itemId = `${mediaInfo.type}_${mediaInfo.id}`;
       if (
         typeof mediaData !== "undefined" &&
         mediaData !== null &&
@@ -218,17 +228,21 @@ function Log() {
       } else {
         return {
           [itemId]: {
-            type: itemInfo.type,
-            artist: itemInfo.artist,
-            title: itemInfo.title,
-            poster: itemInfo.poster,
-            genre: typeof itemInfo?.genre !== "undefined" ? itemInfo.genre : "",
-            releasedDate: itemInfo.releasedDate,
+            type: mediaInfo.type,
+            artist: mediaInfo.artist,
+            title: mediaInfo.title,
+            poster: mediaInfo.poster,
+            genre:
+              typeof mediaInfo?.genre !== "undefined" ? mediaInfo.genre : "",
+            releasedDate: mediaInfo.releasedDate,
             count: 1,
-            ...(typeof itemInfo.overview !== "undefined" && {
-              overview: itemInfo.overview,
+            ...(typeof mediaInfo.overview !== "undefined" && {
+              overview: mediaInfo.overview,
             }),
-            ...(typeof season !== "undefined" && { season: season }),
+            ...(typeof externalSeason !== "undefined" && {
+              season: externalSeason.season_number,
+              episodes: externalSeason.episode_count,
+            }),
           },
         };
       }
@@ -236,6 +250,75 @@ function Log() {
       return false;
     }
   }
+
+  function parseData(externalData: any, mediaType: any) {
+    if (mediaType === "tv") {
+      const filteredSeasons = externalData.seasons.sort((a: any, b: any) =>
+        b.season_number === 0 ? -1 : 1
+      );
+      return {
+        artist:
+          externalData.created_by.length > 0 &&
+          externalData.created_by.map((e: any) => e.name).join(", "),
+        externalSeason: filteredSeasons[0],
+        externalSeasons: filteredSeasons,
+        poster:
+          filteredSeasons[0].poster_path !== null
+            ? `https://image.tmdb.org/t/p/w500${filteredSeasons[0].poster_path}`
+            : poster,
+        genre: externalData.genres[0].name,
+      };
+    } else if (mediaType === "movie") {
+      return {
+        artist: externalData.credits.crew.find((e: any) => e.job === "Director")
+          .name,
+        genre: externalData.genres[0].name,
+      };
+    }
+  }
 }
 
 export default Log;
+
+// const filteredSeasons = data.seasons.sort((a: any, b: any) =>
+//   b.season_number === 0 ? -1 : 1
+// );
+// debugger;
+// dispatch({
+//   type: "seasons",
+//   payload: {
+//     artist:
+//       data.created_by.length > 0 &&
+//       data.created_by.map((e: any) => e.name).join(", "),
+//     externalSeason: filteredSeasons[0],
+//     externalSeasons: filteredSeasons,
+//     poster:
+//       filteredSeasons[0].poster_path !== null
+//         ? `https://image.tmdb.org/t/p/w500${filteredSeasons[0].poster_path}`
+//         : poster,
+//     genre: data.genres[0].name,
+//   },
+// });
+
+// const filteredSeasons = data.seasons.sort((a: any, b: any) =>
+//   b.season_number === 0 ? -1 : 1
+// );
+// initData = {
+//   ...initData,
+//   artist:
+//     data.created_by.length > 0 &&
+//     data.created_by.map((e: any) => e.name).join(", "),
+//   externalSeason: filteredSeasons[0],
+//   externalSeasons: filteredSeasons,
+//   poster:
+//     filteredSeasons[0].poster_path !== null
+//       ? `https://image.tmdb.org/t/p/w500${filteredSeasons[0].poster_path}`
+//       : initData.poster,
+//   genre: data.genres[0].name,
+// };
+
+// payload: {
+//   artist: data.credits.crew.find((e: any) => e.job === "Director")
+//     .name,
+//   genre: data.genres[0].name,
+// },

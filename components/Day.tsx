@@ -21,7 +21,7 @@ import { createMediaState } from "../utils/helpers";
 import useUser from "../utils/useUser";
 import StarEmptyIcon from "./Icons/StartEmptyIcon";
 import Info from "./Info";
-function Day({ item }: { item: string }) {
+function Day({ diaryId }: { diaryId: string }) {
   const { user } = useUser();
   const dispatch = useContext(ContextDispatch);
   const { data } = useCollection(user.email);
@@ -33,11 +33,11 @@ function Day({ item }: { item: string }) {
     if (
       Object.keys(diaryState).length > 0 &&
       Object.keys(mediaState).length > 0 &&
-      !!item
+      !!diaryId
     ) {
-      const mediaInfo = mediaState[diaryState[item].id];
+      const mediaInfo = mediaState[diaryState[diaryId].id];
       const { overview } = mediaInfo;
-      const { rating, diaryDate } = diaryState[item];
+      const { rating, diaryDate } = diaryState[diaryId];
       return (
         <>
           <Info item={mediaInfo} />
@@ -66,9 +66,9 @@ function Day({ item }: { item: string }) {
                 dispatch({
                   type: "edit",
                   payload: {
-                    itemId: item,
-                    info: mediaInfo,
-                    item: diaryState[item],
+                    diaryId,
+                    diary: diaryState[diaryId],
+                    media: mediaInfo,
                   },
                 });
                 router.push("/?view=edit", "/edit", {

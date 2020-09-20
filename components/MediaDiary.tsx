@@ -4,14 +4,14 @@ import { useCollection } from "@nandorojo/swr-firestore";
 import { useRouter } from "next/router";
 import React from "react";
 import Rating from "react-rating";
-import { MediaDiaryState } from "../config/mediaTypes";
+import { DiaryState } from "../config/mediaTypes";
 import { createMediaState } from "../utils/helpers";
 import useUser from "../utils/useUser";
 import LogoFilm from "./Icons/FilmIcon";
 import StarEmptyIcon from "./Icons/StartEmptyIcon";
 
 interface ListState {
-  [key: string]: MediaDiaryState;
+  [key: string]: DiaryState;
 }
 
 function MediaDiary() {
@@ -83,9 +83,11 @@ function MediaDiary() {
                           artist,
                           type,
                         } = mediaState[diaryDates[month][day].id];
-                        const { rating, loggedBefore, episodes } = diaryDates[
-                          month
-                        ][day];
+                        const {
+                          rating,
+                          loggedBefore,
+                          seenEpisodes,
+                        } = diaryDates[month][day];
                         return (
                           <Grid
                             gridTemplateColumns="1.5rem 4rem 1fr"

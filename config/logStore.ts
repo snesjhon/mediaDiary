@@ -1,20 +1,22 @@
-import { MediaDiaryAdd, MediaInfoAdd } from "./mediaTypes";
+import { DiaryAdd, MediaAdd } from "./mediaTypes";
 
-export interface LogFields {
+export interface LogProps {
   diaryDate: Date;
-  seasons?: any[];
-  rating: MediaDiaryAdd["rating"];
-  loggedBefore: MediaDiaryAdd["loggedBefore"];
-  poster: MediaInfoAdd["poster"];
-  episodes?: MediaDiaryAdd["episodes"];
-  season?: MediaInfoAdd["season"];
+  rating: DiaryAdd["rating"];
+  loggedBefore: DiaryAdd["loggedBefore"];
+  poster: MediaAdd["poster"];
+  seenEpisodes?: DiaryAdd["seenEpisodes"];
+  episodes?: MediaAdd["episodes"];
+  season?: MediaAdd["season"];
+  externalSeasons?: any[];
+  externalSeason?: any;
 }
 
-export interface LogState extends LogFields {
+export interface LogState extends LogProps {
   isSaving: boolean;
   isLoading: boolean;
-  artist: MediaInfoAdd["artist"];
-  genre: MediaInfoAdd["genre"];
+  artist: MediaAdd["artist"];
+  genre: MediaAdd["genre"];
 }
 
 export type LogActions =
@@ -31,13 +33,16 @@ export type LogActions =
         artist: string;
         poster: string;
         genre: string;
-        season: any;
-        seasons: any;
+        externalSeason: any;
+        externalSeasons: any;
       };
     }
   | {
       type: "editSeasons";
-      payload: any;
+      payload: {
+        externalSeasons: any;
+        externalSeason: any;
+      };
     }
   | {
       type: "credits";
@@ -50,7 +55,7 @@ export type LogActions =
       type: "season";
       payload: {
         poster: string;
-        season: any;
+        externalSeason: any;
       };
     };
 
@@ -88,19 +93,20 @@ export function LogReducer(state: LogState, actions: LogActions): LogState {
         ...state,
         artist: actions.payload.artist,
         genre: actions.payload.genre,
-        season: actions.payload.season,
-        seasons: actions.payload.seasons,
+        externalSeason: actions.payload.externalSeason,
+        externalSeasons: actions.payload.externalSeasons,
         ...(typeof actions.payload.poster !== "undefined" && {
           poster: actions.payload.poster,
         }),
-        episodes: [],
+        seenEpisodes: [],
         isLoading: false,
       };
     }
     case "editSeasons": {
       return {
         ...state,
-        seasons: actions.payload,
+        externalSeasons: actions.payload.externalSeasons,
+        externalSeason: actions.payload.externalSeason,
         isLoading: false,
       };
     }
@@ -115,8 +121,8 @@ export function LogReducer(state: LogState, actions: LogActions): LogState {
     case "season": {
       return {
         ...state,
-        season: actions.payload.season,
-        episodes: [],
+        externalSeason: actions.payload.externalSeason,
+        seenEpisodes: [],
         poster: actions.payload.poster,
       };
     }

@@ -1,14 +1,10 @@
 import { createContext } from "react";
-import { MediaDiaryAdd, MediaInfoAdd, MediaSelected } from "./mediaTypes";
+import { MediaEdit, MediaSelected } from "./mediaTypes";
 
 export interface MDState {
   user: any;
   selected?: MediaSelected;
-  edit?: {
-    itemId: string;
-    item: MediaDiaryAdd;
-    info: MediaSelected;
-  };
+  edit?: MediaEdit;
 }
 
 type Actions =

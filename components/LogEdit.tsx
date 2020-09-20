@@ -1,122 +1,62 @@
 /**
  * We don't need to save `season` since we have the updated information when provides
+ *
+ *
+ * Do i need to provide an edit to the SEASONS? or just the edit of the CURRENT season?
  */
 
 import { Button, ModalFooter, Spinner } from "@chakra-ui/core";
 import { fuego, useDocument } from "@nandorojo/swr-firestore";
 import { firestore } from "firebase/app";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useReducer } from "react";
+import React, { useContext, useReducer } from "react";
 import { LogReducer } from "../config/logStore";
-import {
-  MediaDiaryAdd,
-  MediaInfoAdd,
-  MediaInfoState,
-} from "../config/mediaTypes";
+import { DiaryAdd, MediaState } from "../config/mediaTypes";
 import { ContextState } from "../config/store";
 import useUser from "../utils/useUser";
-import LogFields from "./LogFields";
 import Info from "./Info";
 import LayoutModal from "./LayoutModal";
-import useSWR from "swr";
-import { fetcher } from "../utils/helpers";
+import LogFields from "./LogFields";
 
 function Edit() {
   const { edit } = useContext(ContextState);
   const { user } = useUser();
   const router = useRouter();
-  const { data: mediaData } = useDocument<MediaInfoState>(
-    `${user.email}/media`
-  );
-
-  const { data, error } = useSWR(
-    edit?.item?.type === "tv"
-      ? `https://api.themoviedb.org/3/tv/${
-          edit?.item?.id.split("_")[1]
-        }?api_key=${process.env.NEXT_PUBLIC_MDBKEY}`
-      : null,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-    }
-  );
+  const { data: mediaData } = useDocument<MediaState>(`${user.email}/media`);
 
   let initData = {
     diaryDate: new Date(),
     loggedBefore: false,
     rating: 0,
-    isLoading:
-      typeof edit !== "undefined" && edit?.item?.type !== "album"
-        ? !data && !error
-        : false,
+    isLoading: false,
     isSaving: false,
     artist: "",
     genre: "",
     poster: "",
-    season: {},
-    episodes: [] as number[],
-    seasons: [],
   };
   if (typeof edit !== "undefined") {
     initData = {
       ...initData,
-      ...edit.item,
-      diaryDate: edit.item.diaryDate.toDate(),
-      artist: edit.info.artist,
-      genre: edit.info.genre,
-      poster: edit.info.poster,
+      ...edit.diary,
+      ...edit.media,
+      diaryDate: edit.diary.diaryDate.toDate(),
     };
-    if (typeof edit.info.season !== "undefined") {
-      initData = {
-        ...initData,
-        season: edit.info.season,
-      };
-    }
   }
 
   const [
     {
       diaryDate,
       loggedBefore,
+      isSaving,
       rating,
-      season,
       episodes,
-      seasons,
       poster,
       isLoading,
+      seenEpisodes,
+      season,
     },
     dispatch,
   ] = useReducer(LogReducer, initData);
-
-  useEffect(() => {
-    if (typeof data !== "undefined" && typeof edit !== "undefined") {
-      if (edit.item.type === "tv") {
-        const filteredSeasons = data.seasons.sort((a: any, b: any) =>
-          b.season_number === 0 ? -1 : 1
-        );
-        dispatch({
-          type: "editSeasons",
-          payload: filteredSeasons,
-        });
-      }
-    }
-  }, [data, edit]);
-
-  let itemInfo = edit?.info;
-  if (typeof edit?.info !== "undefined" && edit.info.type !== "album") {
-    itemInfo = {
-      ...edit.info,
-      poster,
-    };
-    if (typeof seasons !== "undefined") {
-      itemInfo = {
-        ...itemInfo,
-        id: `${edit.itemId}_${season.id}`,
-        releasedDate: season.air_date,
-        overview: season.overview,
-      };
-    }
-  }
 
   return (
     <LayoutModal>
@@ -124,9 +64,10 @@ function Edit() {
         <Spinner />
       ) : (
         <>
-          {typeof itemInfo !== "undefined" && <Info item={itemInfo} />}
+          {typeof edit?.media !== "undefined" && <Info item={edit.media} />}
           <LogFields
             dispatch={dispatch}
+            type={edit?.media.type}
             item={{
               diaryDate,
               loggedBefore,
@@ -134,13 +75,14 @@ function Edit() {
               rating,
               episodes,
               season,
-              seasons,
+              seenEpisodes,
             }}
+            isEdit
           />
           <ModalFooter px={0} pt={2} pb={1} mt={2}>
             <Button
               onClick={deleteData}
-              isLoading={isLoading}
+              isLoading={isSaving}
               colorScheme="red"
               size="sm"
             >
@@ -148,7 +90,7 @@ function Edit() {
             </Button>
             <Button
               onClick={editData}
-              isLoading={isLoading}
+              isLoading={isSaving}
               colorScheme="blue"
               size="sm"
               variant="outline"
@@ -160,7 +102,6 @@ function Edit() {
       )}
     </LayoutModal>
   );
-
   function editData() {
     dispatch({
       type: "state",
@@ -169,19 +110,10 @@ function Edit() {
         value: true,
       },
     });
-
+    const diaryRef = fuego.db.collection(user.email).doc("diary");
     const diaryEdit = createEdit();
     if (diaryEdit) {
-      const [diaryAdd, infoAdd] = diaryEdit;
-
-      const batch = fuego.db.batch();
-      batch.update(fuego.db.collection(user.email).doc("diary"), diaryAdd);
-
-      // We only edit media when we change posters for seasons
-      if (typeof edit !== "undefined" && edit.info.type === "tv") {
-        batch.update(fuego.db.collection(user.email).doc("media"), infoAdd);
-      }
-      return batch.commit().then(() => {
+      return diaryRef.update(diaryEdit).then(() => {
         dispatch({
           type: "state",
           payload: {
@@ -196,40 +128,21 @@ function Edit() {
     }
   }
 
-  function createEdit():
-    | [{ [key: string]: MediaDiaryAdd }, { [key: string]: MediaInfoAdd }]
-    | false {
+  function createEdit(): { [key: string]: DiaryAdd } | false {
     if (typeof edit !== "undefined") {
-      const { id, type, releasedDate, addedDate, loggedBefore } = edit.item;
-      return [
-        {
-          [edit.itemId]: {
-            id,
-            diaryDate: (diaryDate as unknown) as firebase.firestore.Timestamp,
-            addedDate,
-            loggedBefore,
-            rating,
-            type,
-            releasedDate,
-            ...(typeof episodes !== "undefined" && { episodes: episodes }),
-            // overview: 'blue',
-            // ...(typeof itemInfo?.overview !== "undefined" && {
-            //   overview: itemInfo.overview,
-            // }),
-            // ...(typeof season !== "undefined" && { season: season }),
-          },
+      const { id, type, releasedDate, addedDate } = edit.diary;
+      return {
+        [edit.diaryId]: {
+          id,
+          diaryDate: (diaryDate as unknown) as firebase.firestore.Timestamp,
+          addedDate,
+          loggedBefore,
+          rating,
+          type,
+          releasedDate,
+          seenEpisodes,
         },
-        {
-          [id]: {
-            ...edit.info,
-            poster,
-            ...(typeof itemInfo?.overview !== "undefined" && {
-              overview: itemInfo.overview,
-            }),
-            ...(typeof season !== "undefined" && { season: season }),
-          },
-        },
-      ];
+      };
     } else {
       return false;
     }
@@ -240,7 +153,7 @@ function Edit() {
       dispatch({
         type: "state",
         payload: {
-          key: "isLoading",
+          key: "isSaving",
           value: true,
         },
       });
@@ -249,28 +162,28 @@ function Edit() {
       if (
         typeof mediaData !== "undefined" &&
         mediaData !== null &&
-        typeof mediaData?.[edit.item.id] !== "undefined"
+        typeof mediaData?.[edit.diary.id] !== "undefined"
       ) {
-        if (mediaData?.[edit.item.id].count === 1) {
+        if (mediaData?.[edit.diary.id].count === 1) {
           batch.update(fuego.db.collection(user.email).doc("media"), {
-            [edit.item.id]: firestore.FieldValue.delete(),
+            [edit.diary.id]: firestore.FieldValue.delete(),
           });
         } else {
           batch.update(fuego.db.collection(user.email).doc("media"), {
-            [`${edit.item.id}.count`]: mediaData?.[edit.item.id].count - 1,
+            [`${edit.diary.id}.count`]: mediaData?.[edit.diary.id].count - 1,
           });
         }
       }
 
       batch.update(fuego.db.collection(user.email).doc("diary"), {
-        [edit.itemId]: firestore.FieldValue.delete(),
+        [edit.diaryId]: firestore.FieldValue.delete(),
       });
 
       return batch.commit().then(() => {
         dispatch({
           type: "state",
           payload: {
-            key: "isLoading",
+            key: "isSaving",
             value: false,
           },
         });

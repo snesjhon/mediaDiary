@@ -1,37 +1,45 @@
 export type MediaTypes = "movie" | "album" | "tv";
 
-export interface MediaBaseInfo {
+export interface MediaBase {
   releasedDate: Date | "";
   type: MediaTypes;
 }
 
-export interface MediaInfoAdd extends MediaBaseInfo {
+export interface MediaAdd extends MediaBase {
   artist: string;
   title: string;
   poster: string;
   genre: string;
   count: number;
-  season?: any;
+  season?: number;
+  episodes?: number;
   overview?: string;
 }
 
-export interface MediaInfoState {
-  [key: string]: MediaInfoAdd;
+export interface MediaState {
+  [key: string]: MediaAdd;
 }
 
-export interface MediaDiaryAdd extends MediaBaseInfo {
+export interface DiaryAdd extends MediaBase {
   id: string;
   diaryDate: firebase.firestore.Timestamp;
   addedDate: firebase.firestore.Timestamp;
   loggedBefore: boolean;
   rating: number;
-  episodes?: number[];
+  seenEpisodes?: number[];
 }
 
-export interface MediaDiaryState {
-  [key: string]: MediaDiaryAdd;
+export interface DiaryState {
+  [key: string]: DiaryAdd;
 }
 
-export interface MediaSelected extends MediaInfoAdd {
-  id: MediaDiaryAdd["id"];
+// Omit<TypographyProps, "variant">
+export interface MediaSelected extends Omit<MediaAdd, "count"> {
+  id: DiaryAdd["id"];
+}
+
+export interface MediaEdit {
+  diaryId: string;
+  diary: DiaryAdd;
+  media: MediaAdd;
 }

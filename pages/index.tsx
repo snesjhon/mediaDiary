@@ -27,7 +27,7 @@ function App() {
           {!!router.query.view && router.query.view === "edit" && <LogEdit />}
           {!!router.query.day && (
             <LayoutModal>
-              <Day item={router.query.day.toString()} />
+              <Day diaryId={router.query.day.toString()} />
             </LayoutModal>
           )}
         </>

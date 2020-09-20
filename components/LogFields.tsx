@@ -14,26 +14,35 @@ import { StarIcon } from "@chakra-ui/icons";
 import dayjs from "dayjs";
 import React, { Dispatch, useState } from "react";
 import Rating from "react-rating";
-import { LogActions, LogFields } from "../config/logStore";
+import { LogActions, LogProps } from "../config/logStore";
 import StarEmptyIcon from "./Icons/StartEmptyIcon";
 
-function Fields({
+function LogFields({
   dispatch,
   item,
+  isEdit,
+  type,
 }: {
   dispatch: Dispatch<LogActions>;
-  item: LogFields;
+  item: LogProps;
+  type: any;
+  isEdit?: boolean;
 }) {
   const {
     diaryDate,
     rating,
     loggedBefore,
     poster,
-    seasons,
+    externalSeasons,
     season,
     episodes,
+    seenEpisodes,
   } = item;
-  const [showEpisodes, setShowEpisodes] = useState(false);
+  const [showEpisodes, setShowEpisodes] = useState(
+    typeof seenEpisodes !== "undefined" && seenEpisodes.length > 0
+      ? true
+      : false
+  );
   return (
     <>
       <Divider mt={4} mb={2} />
@@ -96,7 +105,7 @@ function Fields({
         />
       </Flex>
       <Divider my={2} />
-      {typeof seasons !== "undefined" && seasons.length > 0 && (
+      {type === "tv" && (
         <>
           <Flex alignItems="center" justifyContent="space-between">
             <Text flex="1">Season</Text>
@@ -110,83 +119,88 @@ function Fields({
               + Episodes
             </Button>
             <Box w="30%">
-              <Select
-                size="sm"
-                value={season.season_number}
-                onChange={(valueChange) => {
-                  const seasonIndex = seasons.findIndex(
-                    (e: any) =>
-                      e.season_number === parseInt(valueChange.target.value)
-                  );
-                  return dispatch({
-                    type: "season",
-                    payload: {
-                      season: seasons[seasonIndex],
-                      poster:
-                        seasons[seasonIndex].poster_path !== null
-                          ? `https://image.tmdb.org/t/p/w500${seasons[seasonIndex].poster_path}`
-                          : poster,
-                    },
-                  });
-                }}
-              >
-                {seasons.map((e: any) => (
-                  <option
-                    key={`season_${e.season_number}`}
-                    value={e.season_number}
-                  >
-                    {e.season_number}
-                  </option>
-                ))}
-              </Select>
+              {isEdit && <div>{season}</div>}
+              {typeof externalSeasons !== "undefined" && (
+                <Select
+                  size="sm"
+                  value={season}
+                  onChange={(valueChange) => {
+                    const seasonIndex = externalSeasons.findIndex(
+                      (e: any) =>
+                        e.season_number === parseInt(valueChange.target.value)
+                    );
+                    return dispatch({
+                      type: "season",
+                      payload: {
+                        externalSeason: externalSeasons[seasonIndex],
+                        poster:
+                          externalSeasons[seasonIndex].poster_path !== null
+                            ? `https://image.tmdb.org/t/p/w500${externalSeasons[seasonIndex].poster_path}`
+                            : poster,
+                      },
+                    });
+                  }}
+                >
+                  {externalSeasons.map((e: any) => (
+                    <option
+                      key={`season_${e.season_number}`}
+                      value={e.season_number}
+                    >
+                      {e.season_number}
+                    </option>
+                  ))}
+                </Select>
+              )}
             </Box>
           </Flex>
-          <Divider my={2} />
-          <Collapse mt={4} isOpen={showEpisodes}>
-            <SimpleGrid
-              columns={Math.floor(season.episode_count / 3)}
-              spacingY={3}
-            >
-              {Array.from(
-                { length: season.episode_count },
-                (_, episodeNumber: number) => (
-                  <Checkbox
-                    key={`episode_${episodeNumber + 1}`}
-                    value={episodeNumber + 1}
-                    onChange={(e) => {
-                      if (typeof episodes !== "undefined") {
-                        const hasValue = episodes?.includes(
-                          parseInt(e.target.value)
-                        );
-                        const episodeArr = hasValue
-                          ? episodes?.filter(
-                              (filterValue: any) =>
-                                filterValue !== parseInt(e.target.value)
-                            )
-                          : [parseInt(e.target.value)].concat(episodes);
+          {typeof episodes !== "undefined" && (
+            <>
+              <Divider my={2} />
+              <Collapse mt={4} isOpen={showEpisodes}>
+                <SimpleGrid columns={Math.floor(episodes / 3)} spacingY={3}>
+                  {Array.from(
+                    { length: episodes },
+                    (_, episodeNumber: number) => (
+                      <Checkbox
+                        key={`episode_${episodeNumber + 1}`}
+                        value={episodeNumber + 1}
+                        isChecked={seenEpisodes?.includes(episodeNumber + 1)}
+                        onChange={(e) => {
+                          if (typeof seenEpisodes !== "undefined") {
+                            const hasValue = seenEpisodes?.includes(
+                              parseInt(e.target.value)
+                            );
+                            const episodeArr = hasValue
+                              ? seenEpisodes?.filter(
+                                  (filterValue: any) =>
+                                    filterValue !== parseInt(e.target.value)
+                                )
+                              : [parseInt(e.target.value)].concat(seenEpisodes);
 
-                        return dispatch({
-                          type: "state",
-                          payload: {
-                            key: "episodes",
-                            value: episodeArr,
-                          },
-                        });
-                      } else {
-                        return console.error("no episodes found");
-                      }
-                    }}
-                  >
-                    <Text fontSize="sm">{episodeNumber + 1}</Text>
-                  </Checkbox>
-                )
-              )}
-            </SimpleGrid>
-          </Collapse>
+                            return dispatch({
+                              type: "state",
+                              payload: {
+                                key: "seenEpisodes",
+                                value: episodeArr,
+                              },
+                            });
+                          } else {
+                            return console.error("no episodes found");
+                          }
+                        }}
+                      >
+                        <Text fontSize="sm">{episodeNumber + 1}</Text>
+                      </Checkbox>
+                    )
+                  )}
+                </SimpleGrid>
+              </Collapse>
+            </>
+          )}
         </>
       )}
     </>
   );
 }
 
-export default Fields;
+export default LogFields;
