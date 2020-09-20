@@ -1,10 +1,3 @@
-/**
- * We don't need to save `season` since we have the updated information when provides
- *
- *
- * Do i need to provide an edit to the SEASONS? or just the edit of the CURRENT season?
- */
-
 import { Button, ModalFooter, Spinner } from "@chakra-ui/core";
 import { fuego, useDocument } from "@nandorojo/swr-firestore";
 import { firestore } from "firebase/app";

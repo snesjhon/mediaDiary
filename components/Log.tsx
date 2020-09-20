@@ -3,7 +3,7 @@ import { fuego, useDocument } from "@nandorojo/swr-firestore";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useReducer } from "react";
 import useSWR from "swr";
-import { LogProps, LogInit, LogReducer, LogState } from "../config/logStore";
+import { LogProps, LogReducer, LogState } from "../config/logStore";
 import { DiaryAdd, MediaAdd, MediaState } from "../config/mediaTypes";
 import { ContextState } from "../config/store";
 import { fetcher } from "../utils/helpers";
@@ -279,46 +279,3 @@ function Log() {
 }
 
 export default Log;
-
-// const filteredSeasons = data.seasons.sort((a: any, b: any) =>
-//   b.season_number === 0 ? -1 : 1
-// );
-// debugger;
-// dispatch({
-//   type: "seasons",
-//   payload: {
-//     artist:
-//       data.created_by.length > 0 &&
-//       data.created_by.map((e: any) => e.name).join(", "),
-//     externalSeason: filteredSeasons[0],
-//     externalSeasons: filteredSeasons,
-//     poster:
-//       filteredSeasons[0].poster_path !== null
-//         ? `https://image.tmdb.org/t/p/w500${filteredSeasons[0].poster_path}`
-//         : poster,
-//     genre: data.genres[0].name,
-//   },
-// });
-
-// const filteredSeasons = data.seasons.sort((a: any, b: any) =>
-//   b.season_number === 0 ? -1 : 1
-// );
-// initData = {
-//   ...initData,
-//   artist:
-//     data.created_by.length > 0 &&
-//     data.created_by.map((e: any) => e.name).join(", "),
-//   externalSeason: filteredSeasons[0],
-//   externalSeasons: filteredSeasons,
-//   poster:
-//     filteredSeasons[0].poster_path !== null
-//       ? `https://image.tmdb.org/t/p/w500${filteredSeasons[0].poster_path}`
-//       : initData.poster,
-//   genre: data.genres[0].name,
-// };
-
-// payload: {
-//   artist: data.credits.crew.find((e: any) => e.job === "Director")
-//     .name,
-//   genre: data.genres[0].name,
-// },

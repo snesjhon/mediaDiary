@@ -18,28 +18,11 @@ import React, { useContext, useRef, useState } from "react";
 import useSWR from "swr";
 import type { MediaSelected, MediaTypes } from "../config/mediaTypes";
 import { ContextDispatch } from "../config/store";
+import { fetcher } from "../utils/helpers";
 import useDebounce from "../utils/useDebounce";
 import AlbumIcon from "./Icons/AlbumIcon";
 import FilmIcon from "./Icons/FilmIcon";
 import TvIcon from "./Icons/TvIcon";
-
-const fetcher = (input: RequestInfo) => fetch(input).then((res) => res.json());
-
-interface MediaSearchListProps {
-  item: any;
-  children(props: { name: string; artist: string; date: string }): JSX.Element;
-  type: MediaTypes;
-}
-
-function MediaSearchList({ type, item, children }: MediaSearchListProps) {
-  return children({
-    name: type === "movie" ? item.trackName : item.collectionName,
-    artist: item.artistName,
-    date: new Date(item.releaseDate).toLocaleDateString("en-us", {
-      year: "numeric",
-    }),
-  });
-}
 
 function Search() {
   const [search, setSearch] = useState("");

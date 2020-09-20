@@ -33,7 +33,6 @@ export interface DiaryState {
   [key: string]: DiaryAdd;
 }
 
-// Omit<TypographyProps, "variant">
 export interface MediaSelected extends Omit<MediaAdd, "count"> {
   id: DiaryAdd["id"];
 }
