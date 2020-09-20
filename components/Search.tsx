@@ -18,7 +18,7 @@ import React, { useContext, useRef, useState } from "react";
 import useSWR from "swr";
 import type { MediaSelected, MediaTypes } from "../config/mediaTypes";
 import { ContextDispatch } from "../config/store";
-import { fetcher, fetcherCreds } from "../utils/helpers";
+import { fetcher } from "../utils/helpers";
 import useDebounce from "../utils/useDebounce";
 import AlbumIcon from "./Icons/AlbumIcon";
 import FilmIcon from "./Icons/FilmIcon";
@@ -44,7 +44,7 @@ function Search() {
       : `https://itunes.apple.com/search?term=${encodeURIComponent(
           bouncedSearch
         )}&entity=album&limit=20`,
-    fetcherCreds,
+    fetcher,
     {
       revalidateOnFocus: false,
     }

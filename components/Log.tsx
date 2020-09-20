@@ -18,14 +18,7 @@ function Log() {
   const router = useRouter();
   const { data: mediaData } = useDocument<MediaState>(`${user.email}/media`);
 
-  // https://ws.audioscrobbler.com/2.0/?method=album.getinfo&artist=${encodeURIComponent(
-  //   payload.artist
-  // )}&album=${encodeURIComponent(
-  //   payload.title
-  // )}&format=json&api_key=${LASTFMKEY}
-
   let dataUrl = null;
-
   if (typeof selected !== "undefined") {
     if (selected.type === "tv") {
       dataUrl = `https://api.themoviedb.org/3/tv/${selected.id}?api_key=${process.env.NEXT_PUBLIC_MDBKEY}`;
@@ -95,7 +88,11 @@ function Log() {
   ] = useReducer(LogReducer, initData);
 
   useEffect(() => {
-    if (typeof data !== "undefined" && typeof selected !== "undefined") {
+    if (
+      typeof data !== "undefined" &&
+      typeof selected !== "undefined" &&
+      isLoading
+    ) {
       const apiData = parseData(data, selected.type);
       if (selected.type === "tv") {
         dispatch({
@@ -114,12 +111,13 @@ function Log() {
         });
       }
     }
-  }, [data, selected]);
+  }, [data, selected, isLoading]);
 
   // When we select from Search, we have our original values, however if we change season
   // then we have potentially different information that we need to load to <Info />
   let mediaInfo = selected;
   if (typeof selected !== "undefined") {
+    // debugger;
     mediaInfo = {
       ...selected,
       poster,
@@ -129,7 +127,7 @@ function Log() {
     };
     if (typeof externalSeasons !== "undefined" && selected.type !== "album") {
       mediaInfo = {
-        ...selected,
+        ...mediaInfo,
         id: `${selected.id}_${externalSeason.id}`,
         releasedDate: externalSeason.air_date,
         overview: externalSeason.overview,

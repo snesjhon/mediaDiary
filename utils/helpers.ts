@@ -1,15 +1,9 @@
 import { DiaryState, MediaState } from "../config/mediaTypes";
 
 export function fetcher(url: string) {
-  return fetch(url).then((res) => res.json());
-}
-
-export function fetcherCreds(url: string, token: string) {
-  return fetch(url, {
-    method: "GET",
-    headers: new Headers({ "Content-Type": "application/json", token }),
-    credentials: "same-origin",
-  }).then((res) => res.json());
+  const urlString =
+    process.env.NODE_ENV === "development" ? `${url}&isLocal=true` : url;
+  return fetch(urlString).then((res) => res.json());
 }
 
 export function createMediaState(

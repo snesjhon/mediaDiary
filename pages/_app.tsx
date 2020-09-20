@@ -1,13 +1,13 @@
 // https://sergiodxa.com/articles/redirects-in-next-the-good-way
 
 import { ChakraProvider } from "@chakra-ui/core";
-import "firebase/firestore";
-import "firebase/auth";
 import { Fuego, FuegoProvider } from "@nandorojo/swr-firestore";
+import "firebase/auth";
+import "firebase/firestore";
 import type { AppProps } from "next/app";
+import Head from "next/head";
 import { useReducer } from "react";
 import { ContextDispatch, ContextState, Reducer } from "../config/store";
-import Head from "next/head";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
@@ -24,6 +24,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [state, dispatch] = useReducer(Reducer, {
     user: null,
   });
+
   return (
     <>
       <Head>
