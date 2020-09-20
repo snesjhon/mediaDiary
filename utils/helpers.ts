@@ -1,7 +1,7 @@
 import { DiaryState, MediaState } from "../config/mediaTypes";
 
-export function fetcher(url: string, token: string) {
-  return fetch(url).then((res) => res.json());
+export function fetcher(url: string) {
+  return fetch(url, { credentials: "same-origin" }).then((res) => res.json());
 }
 
 export function createMediaState(
