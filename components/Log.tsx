@@ -88,7 +88,6 @@ function Log() {
   useEffect(() => {
     if (typeof data !== "undefined" && typeof selected !== "undefined") {
       const apiData = parseData(data, selected.type);
-      console.log("happens");
       if (selected.type === "tv") {
         dispatch({
           type: "seasons",

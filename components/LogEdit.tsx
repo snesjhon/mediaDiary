@@ -117,7 +117,7 @@ function Edit() {
         return router.push("/");
       });
     } else {
-      console.log("error");
+      console.log("error with diaryEdit");
     }
   }
 
