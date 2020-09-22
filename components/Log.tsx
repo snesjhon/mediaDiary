@@ -16,7 +16,9 @@ function Log() {
   const { selected } = useContext(ContextState);
   const { user } = useUser();
   const router = useRouter();
-  const { data: mediaData } = useDocument<MediaState>(`${user.email}/media`);
+  const { data: mediaData } = useDocument<MediaState>(
+    user !== null ? `${user.email}/media` : null
+  );
 
   let dataUrl = null;
   if (typeof selected !== "undefined") {
@@ -175,32 +177,36 @@ function Log() {
   );
 
   function addData() {
-    dispatch({
-      type: "state",
-      payload: {
-        key: "isSaving",
-        value: true,
-      },
-    });
-    const batch = fuego.db.batch();
-    const addDiary = createDiary();
-    const addMedia = createMedia();
-    if (addDiary) {
-      batch.update(fuego.db.collection(user.email).doc("diary"), addDiary);
-    }
-    if (addMedia) {
-      batch.update(fuego.db.collection(user.email).doc("media"), addMedia);
-    }
-    batch.commit().then(() => {
+    if (user !== null && user.email !== null) {
       dispatch({
         type: "state",
         payload: {
           key: "isSaving",
-          value: false,
+          value: true,
         },
       });
-      return router.push("/");
-    });
+      const batch = fuego.db.batch();
+      const addDiary = createDiary();
+      const addMedia = createMedia();
+      if (addDiary) {
+        batch.update(fuego.db.collection(user.email).doc("diary"), addDiary);
+      }
+      if (addMedia) {
+        batch.update(fuego.db.collection(user.email).doc("media"), addMedia);
+      }
+      batch.commit().then(() => {
+        dispatch({
+          type: "state",
+          payload: {
+            key: "isSaving",
+            value: false,
+          },
+        });
+        return router.push("/");
+      });
+    } else {
+      console.log("user missing");
+    }
   }
 
   function createDiary(): { [key: string]: DiaryAdd } | false {

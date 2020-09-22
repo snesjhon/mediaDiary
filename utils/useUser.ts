@@ -10,30 +10,33 @@ import {
 import { ContextState, ContextDispatch } from "../config/store";
 
 function useUser() {
-  const { user } = useContext(ContextState);
-  const dispatch = useContext(ContextDispatch);
+  // const { user } = useContext(ContextState);
+  // const dispatch = useContext(ContextDispatch);
+  const [user, setUser] = useState<firebase.User | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     const cancelAuthListener = firebase.auth().onIdTokenChanged((user) => {
       if (user) {
         setUserCookie(user);
-        dispatch({
-          type: "state",
-          payload: {
-            key: "user",
-            value: user,
-          },
-        });
+        setUser(user);
+        // dispatch({
+        //   type: "state",
+        //   payload: {
+        //     key: "user",
+        //     value: user,
+        //   },
+        // });
       } else {
         removeUserCookie();
-        dispatch({
-          type: "state",
-          payload: {
-            key: "user",
-            value: null,
-          },
-        });
+        setUser(null);
+        // dispatch({
+        //   type: "state",
+        //   payload: {
+        //     key: "user",
+        //     value: null,
+        //   },
+        // });
       }
     });
 
@@ -42,13 +45,14 @@ function useUser() {
       router.push("/");
       return;
     }
-    dispatch({
-      type: "state",
-      payload: {
-        key: "user",
-        value: userFromCookie,
-      },
-    });
+    setUser(userFromCookie);
+    // dispatch({
+    //   type: "state",
+    //   payload: {
+    //     key: "user",
+    //     value: userFromCookie,
+    //   },
+    // });
 
     return () => {
       cancelAuthListener();

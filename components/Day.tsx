@@ -25,7 +25,7 @@ import Info from "./Info";
 function Day({ diaryId }: { diaryId: string }) {
   const { user } = useUser();
   const dispatch = useContext(ContextDispatch);
-  const { data } = useCollection(user.email);
+  const { data } = useCollection(user !== null ? user.email : null);
   const { isOpen, onToggle } = useDisclosure();
   const router = useRouter();
   if (data) {

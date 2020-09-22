@@ -76,7 +76,7 @@ function Search() {
       size="sm"
       initialFocusRef={SearchRef}
     >
-      <ModalOverlay px={4}>
+      <ModalOverlay px={4} sx={{ zIndex: 2 }}>
         <ModalContent maxHeight="50vh">
           <ModalCloseButton />
           <ModalHeader pb={2}>Search for Media</ModalHeader>
