@@ -2,9 +2,9 @@
   "name": "media-diary",
   "version": "1.0.0",
   "scripts": {
-    "dev": "next",
+    "start": "next",
     "build": "next build",
-    "start": "next start",
+    "prod": "next start",
     "postbuild": "next-on-netlify",
     "validate": "node_modules/.bin/tsc --noEmit"
   },

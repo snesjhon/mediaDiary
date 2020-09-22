@@ -17,7 +17,7 @@ function LayoutModal({ children }: PropsWithChildren<{}>) {
       size="sm"
       trapFocus={false}
     >
-      <ModalOverlay px={4}>
+      <ModalOverlay px={4} sx={{ zIndex: 2 }}>
         <ModalContent>
           <ModalCloseButton />
           <ModalBody pt={6}>{children}</ModalBody>

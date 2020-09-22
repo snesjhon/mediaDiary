@@ -15,7 +15,9 @@ function Edit() {
   const { edit } = useContext(ContextState);
   const { user } = useUser();
   const router = useRouter();
-  const { data: mediaData } = useDocument<MediaState>(`${user.email}/media`);
+  const { data: mediaData } = useDocument<MediaState>(
+    user !== null ? `${user.email}/media` : null
+  );
 
   let initData = {
     diaryDate: new Date(),
@@ -96,28 +98,32 @@ function Edit() {
     </LayoutModal>
   );
   function editData() {
-    dispatch({
-      type: "state",
-      payload: {
-        key: "isLoading",
-        value: true,
-      },
-    });
-    const diaryRef = fuego.db.collection(user.email).doc("diary");
-    const diaryEdit = createEdit();
-    if (diaryEdit) {
-      return diaryRef.update(diaryEdit).then(() => {
-        dispatch({
-          type: "state",
-          payload: {
-            key: "isLoading",
-            value: false,
-          },
-        });
-        return router.push("/");
+    if (user !== null && user.email !== null) {
+      dispatch({
+        type: "state",
+        payload: {
+          key: "isLoading",
+          value: true,
+        },
       });
+      const diaryRef = fuego.db.collection(user.email).doc("diary");
+      const diaryEdit = createEdit();
+      if (diaryEdit) {
+        return diaryRef.update(diaryEdit).then(() => {
+          dispatch({
+            type: "state",
+            payload: {
+              key: "isLoading",
+              value: false,
+            },
+          });
+          return router.push("/");
+        });
+      } else {
+        console.log("error with diaryEdit");
+      }
     } else {
-      console.log("error with diaryEdit");
+      console.log("user missing");
     }
   }
 
@@ -133,7 +139,9 @@ function Edit() {
           rating,
           type,
           releasedDate,
-          seenEpisodes,
+          ...(typeof seenEpisodes !== "undefined" && {
+            seenEpisodes: seenEpisodes,
+          }),
         },
       };
     } else {
@@ -142,7 +150,7 @@ function Edit() {
   }
 
   function deleteData() {
-    if (typeof edit !== "undefined") {
+    if (typeof edit !== "undefined" && user !== null && user.email !== null) {
       dispatch({
         type: "state",
         payload: {
