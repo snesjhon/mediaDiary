@@ -7,8 +7,10 @@ import Rating from "react-rating";
 import { DiaryState } from "../config/mediaTypes";
 import { createMediaState } from "../utils/helpers";
 import useUser from "../utils/useUser";
-import LogoFilm from "./Icons/FilmIcon";
+import AlbumIcon from "./Icons/AlbumIcon";
+import FilmIcon from "./Icons/FilmIcon";
 import StarEmptyIcon from "./Icons/StartEmptyIcon";
+import TvIcon from "./Icons/TvIcon";
 
 interface ListState {
   [key: string]: DiaryState;
@@ -82,6 +84,7 @@ function MediaDiary() {
                           releasedDate,
                           artist,
                           type,
+                          season,
                         } = mediaState[diaryDates[month][day].id];
                         const {
                           rating,
@@ -127,7 +130,12 @@ function MediaDiary() {
                               />
                             </Box>
                             <Flex flexDirection="column">
-                              <Text color="gray.600">{title}</Text>
+                              <Text color="gray.600">
+                                {title}{" "}
+                                {type === "tv" && (
+                                  <Text as="span">(Season {season}) </Text>
+                                )}
+                              </Text>
                               <Text fontSize="sm" color="gray.500">
                                 {new Date(releasedDate).toLocaleDateString(
                                   "en-US",
@@ -145,30 +153,40 @@ function MediaDiary() {
                                 alignItems="center"
                                 justifyContent="space-between"
                               >
-                                <Rating
-                                  fractions={2}
-                                  readonly
-                                  initialRating={rating}
-                                  fullSymbol={
-                                    <StarIcon
-                                      h="12px"
-                                      w="12px"
-                                      color="purple.400"
-                                    />
-                                  }
-                                  emptySymbol={
-                                    <StarEmptyIcon
-                                      h="12px"
-                                      w="12px"
-                                      stroke="purple.400"
-                                    />
-                                  }
-                                />
-                                {type === "movie" && (
-                                  <LogoFilm w="13px" h="13px" />
-                                )}
-                                {type === "album" && <LogoFilm />}
-                                {type === "tv" && <LogoFilm />}
+                                <Box mt={type === "tv" ? "-3px" : undefined}>
+                                  <Rating
+                                    fractions={2}
+                                    readonly
+                                    initialRating={rating}
+                                    fullSymbol={
+                                      <StarIcon
+                                        h="12px"
+                                        w="12px"
+                                        color="purple.400"
+                                      />
+                                    }
+                                    emptySymbol={
+                                      <StarEmptyIcon
+                                        h="12px"
+                                        w="12px"
+                                        stroke="purple.400"
+                                      />
+                                    }
+                                  />
+                                </Box>
+                                <Flex alignItems="center">
+                                  {type === "tv" && (
+                                    <Text fontSize="sm" color="gray.500" mr={3}>
+                                      Ep.{" "}
+                                      {seenEpisodes
+                                        ?.sort((a, b) => (a < b ? -1 : 1))
+                                        .join(", ")}
+                                    </Text>
+                                  )}
+                                  {type === "movie" && <FilmIcon />}
+                                  {type === "album" && <AlbumIcon />}
+                                  {type === "tv" && <TvIcon />}
+                                </Flex>
                               </Flex>
                             </Flex>
                           </Grid>
@@ -186,3 +204,40 @@ function MediaDiary() {
 }
 
 export default MediaDiary;
+
+{
+  /* <Box mt={"-1px"}>
+                                    <Rating
+                                      fractions={2}
+                                      readonly
+                                      initialRating={rating}
+                                      fullSymbol={
+                                        <StarIcon
+                                          h="12px"
+                                          w="12px"
+                                          color="purple.400"
+                                        />
+                                      }
+                                      emptySymbol={
+                                        <StarEmptyIcon
+                                          h="12px"
+                                          w="12px"
+                                          stroke="purple.400"
+                                        />
+                                      }
+                                    />
+                                  </Box>
+                                  {type === "tv" && (
+                                    <>
+                                      <Text as="span" px={2}>
+                                        ·
+                                      </Text>
+                                      <Text fontSize="sm" color="gray.500">
+                                        S{season}:{" "}
+                                        {seenEpisodes
+                                          ?.sort((a, b) => (a < b ? -1 : 1))
+                                          .toString()}
+                                      </Text>
+                                    </>
+                                  )} */
+}

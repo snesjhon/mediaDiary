@@ -10,7 +10,13 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/core";
-import { EditIcon, EmailIcon, StarIcon } from "@chakra-ui/icons";
+import {
+  EditIcon,
+  EmailIcon,
+  InfoIcon,
+  InfoOutlineIcon,
+  StarIcon,
+} from "@chakra-ui/icons";
 import { useCollection } from "@nandorojo/swr-firestore";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
@@ -50,7 +56,7 @@ function Day({ diaryId }: { diaryId: string }) {
                   colorScheme="blue"
                   aria-label="Show Overview"
                   size="sm"
-                  icon={<EmailIcon />}
+                  icon={<InfoOutlineIcon />}
                   onClick={onToggle}
                   isRound
                 />

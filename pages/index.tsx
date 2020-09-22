@@ -14,7 +14,6 @@ import useUser from "../utils/useUser";
 function App() {
   const { user, logout } = useUser();
   const router = useRouter();
-  console.log("happens");
   return (
     <Layout>
       {!user ? (
