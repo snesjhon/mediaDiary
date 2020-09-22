@@ -12,7 +12,7 @@ import Search from "../components/Search";
 import useUser from "../utils/useUser";
 
 function App() {
-  const { user, logout } = useUser();
+  const { user } = useUser();
   const router = useRouter();
   return (
     <Layout>

@@ -63,7 +63,7 @@ function MediaDiary() {
                       color="gray.600"
                       fontWeight="bold"
                       position="sticky"
-                      top="4.1rem"
+                      top="4rem"
                     >
                       {new Date(month).toLocaleDateString("en-us", {
                         month: "short",
@@ -97,8 +97,8 @@ function MediaDiary() {
                             gridGap="1rem"
                             borderBottom="1px solid"
                             borderColor="gray.200"
-                            mb={3}
-                            pb={3}
+                            px={3}
+                            py={4}
                             key={monthIndex + dayIndex}
                             _hover={{
                               bg: "purple.50",

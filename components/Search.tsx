@@ -13,6 +13,7 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/core";
+import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import React, { useContext, useRef, useState } from "react";
 import useSWR from "swr";
@@ -219,7 +220,7 @@ function Search() {
           </Text>
         ) : item.releasedDate !== "" ? (
           <Text fontSize="xs" fontStyle="italic" color="gray.500">
-            {item.releasedDate}
+            {dayjs(item.releasedDate).format("YYYY")}
           </Text>
         ) : null}
       </Box>
