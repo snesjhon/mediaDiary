@@ -10,13 +10,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/core";
-import {
-  EditIcon,
-  EmailIcon,
-  InfoIcon,
-  InfoOutlineIcon,
-  StarIcon,
-} from "@chakra-ui/icons";
+import { EditIcon, InfoOutlineIcon, StarIcon } from "@chakra-ui/icons";
 import { useCollection } from "@nandorojo/swr-firestore";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
