@@ -1,17 +1,14 @@
-import { useState, useEffect, useContext } from "react";
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import {
   getUserFromCookie,
-  setUserCookie,
   removeUserCookie,
+  setUserCookie,
 } from "./getUserFromCookie";
-import { ContextState, ContextDispatch } from "../config/store";
 
 function useUser() {
-  // const { user } = useContext(ContextState);
-  // const dispatch = useContext(ContextDispatch);
   const [user, setUser] = useState<firebase.User | null>(null);
   const router = useRouter();
 
@@ -20,23 +17,9 @@ function useUser() {
       if (user) {
         setUserCookie(user);
         setUser(user);
-        // dispatch({
-        //   type: "state",
-        //   payload: {
-        //     key: "user",
-        //     value: user,
-        //   },
-        // });
       } else {
         removeUserCookie();
         setUser(null);
-        // dispatch({
-        //   type: "state",
-        //   payload: {
-        //     key: "user",
-        //     value: null,
-        //   },
-        // });
       }
     });
 
@@ -46,13 +29,6 @@ function useUser() {
       return;
     }
     setUser(userFromCookie);
-    // dispatch({
-    //   type: "state",
-    //   payload: {
-    //     key: "user",
-    //     value: userFromCookie,
-    //   },
-    // });
 
     return () => {
       cancelAuthListener();

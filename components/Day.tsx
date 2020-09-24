@@ -72,7 +72,7 @@ function Day({ diaryId }: { diaryId: string }) {
                     media: mediaInfo,
                   },
                 });
-                router.push("/?view=edit", "/edit", {
+                router.push("/home/?view=edit", "/edit", {
                   shallow: true,
                 });
               }}

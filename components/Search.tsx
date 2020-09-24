@@ -72,7 +72,7 @@ function Search() {
   return (
     <Modal
       isOpen={true}
-      onClose={() => router.push("/")}
+      onClose={() => router.push("/home")}
       scrollBehavior="inside"
       size="sm"
       initialFocusRef={SearchRef}
@@ -208,7 +208,7 @@ function Search() {
             type: "select",
             payload: item,
           });
-          router.push("/?log=true", "/log", {
+          router.push("/home/?log=true", "/log", {
             shallow: true,
           });
         }}
