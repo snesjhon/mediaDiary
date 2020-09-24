@@ -186,22 +186,38 @@ function Log() {
       const batch = fuego.db.batch();
       const addDiary = createDiary();
       const addMedia = createMedia();
-      if (addDiary) {
-        batch.update(fuego.db.collection(user.email).doc("diary"), addDiary);
-      }
-      if (addMedia) {
-        batch.update(fuego.db.collection(user.email).doc("media"), addMedia);
-      }
-      batch.commit().then(() => {
-        dispatch({
-          type: "state",
-          payload: {
-            key: "isSaving",
-            value: false,
-          },
+      if (addDiary && addMedia) {
+        const {
+          exists,
+          hasPendingWrites,
+          id,
+          ...allMediaData
+        }: any = mediaData;
+
+        if (
+          typeof allMediaData !== "undefined" &&
+          allMediaData !== null &&
+          Object.keys(allMediaData).length === 0
+        ) {
+          batch.set(fuego.db.collection(user.email).doc("diary"), addDiary);
+          batch.set(fuego.db.collection(user.email).doc("media"), addMedia);
+        } else {
+          batch.update(fuego.db.collection(user.email).doc("diary"), addDiary);
+          batch.update(fuego.db.collection(user.email).doc("media"), addMedia);
+        }
+
+        batch.commit().then(() => {
+          dispatch({
+            type: "state",
+            payload: {
+              key: "isSaving",
+              value: false,
+            },
+          });
+          console.log("happens?");
+          return router.push("/home");
         });
-        return router.push("/");
-      });
+      }
     } else {
       console.log("user missing");
     }

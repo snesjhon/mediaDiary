@@ -11,16 +11,27 @@ export function createMediaState(
     id: string;
   }[]
 ) {
-  // swr-firebase adds these (useful but unnecessary) keys, so remove them and assign a key
-  const { id: diaryId, hasPendingWrites, exists, ...diaryItems }: any = data[0];
-  const {
-    id: mediaId,
-    hasPendingWrites: mediaWrites,
-    exists: mediaExists,
-    ...mediaItems
-  }: any = data[1];
-  const diaryState: DiaryState = diaryItems;
-  const mediaState: MediaState = mediaItems;
+  let diaryState: DiaryState;
+  let mediaState: MediaState;
+  if (data.length > 0) {
+    const {
+      id: diaryId,
+      hasPendingWrites,
+      exists,
+      ...diaryItems
+    }: any = data[0];
+    const {
+      id: mediaId,
+      hasPendingWrites: mediaWrites,
+      exists: mediaExists,
+      ...mediaItems
+    }: any = data[1];
+    diaryState = diaryItems;
+    mediaState = mediaItems;
+  } else {
+    diaryState = {};
+    mediaState = {};
+  }
   return {
     diaryState,
     mediaState,

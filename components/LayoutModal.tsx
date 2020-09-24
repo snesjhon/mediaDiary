@@ -12,7 +12,7 @@ function LayoutModal({ children }: PropsWithChildren<{}>) {
   return (
     <Modal
       isOpen={true}
-      onClose={() => router.push("/")}
+      onClose={() => router.push("/home")}
       scrollBehavior="inside"
       size="sm"
       trapFocus={false}

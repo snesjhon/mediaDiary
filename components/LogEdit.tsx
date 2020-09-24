@@ -117,7 +117,7 @@ function Edit() {
               value: false,
             },
           });
-          return router.push("/");
+          return router.push("/home");
         });
       } else {
         console.log("error with diaryEdit");
@@ -188,7 +188,7 @@ function Edit() {
             value: false,
           },
         });
-        return router.push("/");
+        return router.push("/home");
       });
     } else {
       console.log("error with delete");
