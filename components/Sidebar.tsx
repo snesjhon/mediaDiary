@@ -59,7 +59,7 @@ function Sidebar({
                 <Flex alignItems="center">
                   <LogoIcon boxSize={5} mr={1} />
                   <Text color="purple.700" fontWeight="medium">
-                    mediaDiary
+                    Settings
                   </Text>
                 </Flex>
               </DrawerHeader>
@@ -80,6 +80,8 @@ function Sidebar({
                   )}
                 </Box>
                 <Divider my={4} />
+                <Text>Night mode and Light Mode</Text>
+                <Text>Delete your Account</Text>
                 <Flex justifyContent="space-between">
                   {Object.keys(dataCounts).map((e) => (
                     <Stat key={`stat_${e}`}>
