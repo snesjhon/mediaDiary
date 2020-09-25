@@ -1,37 +1,27 @@
 import {
   Box,
-  Button,
   Container,
   Flex,
   HStack,
   IconButton,
   Text,
   useDisclosure,
-  Drawer,
-  DrawerOverlay,
-  DrawerBody,
-  DrawerContent,
-  DrawerHeader,
-  Avatar,
-  Stat,
-  StatHelpText,
-  StatNumber,
-  DrawerCloseButton,
-  DrawerFooter,
-  Center,
-  Divider,
 } from "@chakra-ui/core";
-import { AddIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { AddIcon, HamburgerIcon, SearchIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import useUser from "../utils/useUser";
+import Filters from "./Filters";
 import LogoIcon from "./Icons/LogoIcon";
 import Sidebar from "./Sidebar";
 
 function Header() {
   const { isOpen, onClose, onOpen } = useDisclosure();
-  // const { user } = useUser();
+  const {
+    isOpen: menuIsOpen,
+    onClose: menuOnClose,
+    onOpen: menuOnOpen,
+  } = useDisclosure();
   const router = useRouter();
   return (
     <>
@@ -58,41 +48,45 @@ function Header() {
                 onClick={onOpen}
               />
               <LogoIcon boxSize={5} mr={1} />
-              <Link href="/" passHref>
-                <Text fontSize="md" color="purple.700" fontWeight="medium">
+              <Link href="/home">
+                <Text
+                  fontSize="md"
+                  color="purple.700"
+                  fontWeight="medium"
+                  cursor="pointer"
+                >
                   mediaDiary
                 </Text>
               </Link>
-              <HStack
-                as="nav"
-                spacing="4"
-                ml="24px"
-                display={{ base: "none", md: "flex" }}
-              >
-                <div>asd</div>
-                <div>asd</div>
-                <div>asd</div>
-              </HStack>
             </Flex>
-
             <Flex maxW="720px" align="center">
-              <Button
+              <HStack as="nav" spacing="2" mr={3}>
+                <IconButton
+                  aria-label="Menu"
+                  icon={<SearchIcon />}
+                  size="sm"
+                  variant="outline"
+                  onClick={menuOnOpen}
+                  isRound
+                />
+              </HStack>
+              <IconButton
+                aria-label="Add"
+                icon={<AddIcon />}
                 size="sm"
-                rightIcon={<AddIcon boxSize={2} />}
                 colorScheme="purple"
                 onClick={() =>
                   router.push("/home/?search=true", "/search", {
                     shallow: true,
                   })
                 }
-              >
-                Add Media
-              </Button>
+              />
             </Flex>
           </Flex>
         </Container>
       </Box>
       {isOpen && <Sidebar isOpen={isOpen} onClose={onClose} />}
+      {menuIsOpen && <Filters isOpen={menuIsOpen} onClose={menuOnClose} />}
     </>
   );
 }

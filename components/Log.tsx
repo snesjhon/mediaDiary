@@ -1,4 +1,4 @@
-import { Button, ModalFooter, Spinner } from "@chakra-ui/core";
+import { Button, Center, ModalFooter, Spinner } from "@chakra-ui/core";
 import { fuego, useDocument } from "@nandorojo/swr-firestore";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useReducer } from "react";
@@ -149,7 +149,9 @@ function Log() {
   return (
     <LayoutModal>
       {isLoading ? (
-        <Spinner />
+        <Center minH="40vh">
+          <Spinner />
+        </Center>
       ) : (
         <>
           {typeof mediaInfo !== "undefined" && <Info item={mediaInfo} />}

@@ -1,4 +1,4 @@
-import { Button, ModalFooter, Spinner } from "@chakra-ui/core";
+import { Button, Center, Flex, ModalFooter, Spinner } from "@chakra-ui/core";
 import { fuego, useDocument } from "@nandorojo/swr-firestore";
 import { firestore } from "firebase/app";
 import { useRouter } from "next/router";
@@ -56,7 +56,9 @@ function Edit() {
   return (
     <LayoutModal>
       {isLoading ? (
-        <Spinner />
+        <Center minH="40vh">
+          <Spinner />
+        </Center>
       ) : (
         <>
           {typeof edit?.media !== "undefined" && <Info item={edit.media} />}
@@ -74,11 +76,18 @@ function Edit() {
             }}
             isEdit
           />
-          <ModalFooter px={0} pt={2} pb={1} mt={2}>
+          <ModalFooter
+            px={0}
+            pt={2}
+            pb={1}
+            mt={2}
+            justifyContent="space-between"
+          >
             <Button
               onClick={deleteData}
               isLoading={isSaving}
               colorScheme="red"
+              variant="outline"
               size="sm"
             >
               Delete

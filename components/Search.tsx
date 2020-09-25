@@ -24,6 +24,7 @@ import useDebounce from "../utils/useDebounce";
 import AlbumIcon from "./Icons/AlbumIcon";
 import FilmIcon from "./Icons/FilmIcon";
 import TvIcon from "./Icons/TvIcon";
+import LogoIcon from "./Icons/LogoIcon";
 
 function Search() {
   const [search, setSearch] = useState("");
@@ -80,7 +81,14 @@ function Search() {
       <ModalOverlay px={4} sx={{ zIndex: 2 }}>
         <ModalContent maxHeight="50vh">
           <ModalCloseButton />
-          <ModalHeader pb={2}>Search for Media</ModalHeader>
+          <ModalHeader pb={2}>
+            <Flex alignItems="center">
+              <LogoIcon boxSize={5} mr={1} />
+              <Text color="purple.700" fontWeight="medium">
+                Search
+              </Text>
+            </Flex>
+          </ModalHeader>
           <ModalBody pt={0} pb={6}>
             <Box position="sticky" pt={1} top={0} bgColor="white">
               <Input

@@ -130,13 +130,8 @@ function MediaDiary() {
                               />
                             </Box>
                             <Flex flexDirection="column">
-                              <Text color="gray.600">
-                                {title}{" "}
-                                {type === "tv" && (
-                                  <Text as="span">(Season {season}) </Text>
-                                )}
-                              </Text>
-                              <Text fontSize="sm" color="gray.500">
+                              <Text color="gray.600">{title}</Text>
+                              <Text fontSize="sm" color="gray.500" pb={2}>
                                 {new Date(releasedDate).toLocaleDateString(
                                   "en-US",
                                   {
@@ -148,6 +143,30 @@ function MediaDiary() {
                                 </Text>
                                 {artist}
                               </Text>
+                              {type === "tv" && (
+                                <Flex
+                                  py={2}
+                                  fontSize="sm"
+                                  color="gray.500"
+                                  fontStyle="italic"
+                                >
+                                  <Text>
+                                    <Text as="span" fontWeight="semibold">
+                                      S:
+                                    </Text>
+                                    {season}{" "}
+                                  </Text>
+                                  <Text px={2}>·</Text>
+                                  <Text>
+                                    <Text as="span" fontWeight="semibold">
+                                      Ep.{" "}
+                                    </Text>
+                                    {seenEpisodes
+                                      ?.sort((a, b) => (a < b ? -1 : 1))
+                                      .join(", ")}
+                                  </Text>
+                                </Flex>
+                              )}
                               <Flex
                                 mt="auto"
                                 alignItems="center"
@@ -174,19 +193,9 @@ function MediaDiary() {
                                     }
                                   />
                                 </Box>
-                                <Flex alignItems="center">
-                                  {type === "tv" && (
-                                    <Text fontSize="sm" color="gray.500" mr={3}>
-                                      Ep.{" "}
-                                      {seenEpisodes
-                                        ?.sort((a, b) => (a < b ? -1 : 1))
-                                        .join(", ")}
-                                    </Text>
-                                  )}
-                                  {type === "movie" && <FilmIcon />}
-                                  {type === "album" && <AlbumIcon />}
-                                  {type === "tv" && <TvIcon />}
-                                </Flex>
+                                {type === "movie" && <FilmIcon />}
+                                {type === "album" && <AlbumIcon />}
+                                {type === "tv" && <TvIcon />}
                               </Flex>
                             </Flex>
                           </Grid>
