@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, Image, Text } from "@chakra-ui/core";
+import { Box, Flex, Grid, Image, Spinner, Text } from "@chakra-ui/core";
 import { StarIcon } from "@chakra-ui/icons";
 import { useCollection } from "@nandorojo/swr-firestore";
 import { useRouter } from "next/router";
@@ -9,6 +9,7 @@ import { createMediaState } from "../utils/helpers";
 import useUser from "../utils/useUser";
 import AlbumIcon from "./Icons/AlbumIcon";
 import FilmIcon from "./Icons/FilmIcon";
+import LogoIcon from "./Icons/LogoIcon";
 import StarEmptyIcon from "./Icons/StartEmptyIcon";
 import TvIcon from "./Icons/TvIcon";
 
@@ -209,7 +210,19 @@ function MediaDiary() {
       );
     }
   }
-  return <div>nothing to show</div>;
+  return (
+    <Flex height="90vh" justifyContent="center" alignItems="center">
+      <Grid alignItems="center" justifyItems="center">
+        <LogoIcon boxSize={8} sx={{ gridRow: 1, gridColumn: 1 }} />
+        <Spinner
+          size="xl"
+          color="purple.500"
+          thickness="3px"
+          sx={{ gridRow: 1, gridColumn: 1 }}
+        />
+      </Grid>
+    </Flex>
+  );
 }
 
 export default MediaDiary;
