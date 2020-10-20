@@ -31,9 +31,11 @@ function Sidebar({
   onClose: () => void;
 }) {
   const { user, logout } = useUser();
-  const { data } = useDocument(user !== null ? `${user.email}/diary` : null);
+  const { data } = useDocument(
+    user !== null && user ? `${user.email}/diary` : null
+  );
 
-  if (user !== null) {
+  if (user !== null && user) {
     const { email, displayName, photoURL } = user;
     if (data) {
       const { exists, hasPendingWrites, id, ...restData }: any = data;
