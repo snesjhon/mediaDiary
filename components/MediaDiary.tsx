@@ -20,7 +20,7 @@ interface ListState {
 function MediaDiary() {
   const router = useRouter();
   const { user } = useUser();
-  const { data } = useCollection(user === null ? null : user.email, {
+  const { data } = useCollection(user === null || !user ? null : user.email, {
     listen: true,
   });
 

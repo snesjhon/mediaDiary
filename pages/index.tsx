@@ -3,6 +3,7 @@ import {
   Button,
   Container,
   Flex,
+  Grid,
   Heading,
   HStack,
   Modal,
@@ -11,6 +12,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   Text,
   VStack,
 } from "@chakra-ui/core";
@@ -27,10 +29,35 @@ import useUser from "../utils/useUser";
 function App() {
   const { user } = useUser();
   const router = useRouter();
-
-  if (user) {
+  if (user === null) {
+    return (
+      <Flex height="90vh" justifyContent="center" alignItems="center">
+        <Grid alignItems="center" justifyItems="center">
+          <LogoIcon boxSize={8} sx={{ gridRow: 1, gridColumn: 1 }} />
+          <Spinner
+            size="xl"
+            color="purple.500"
+            thickness="3px"
+            sx={{ gridRow: 1, gridColumn: 1 }}
+          />
+        </Grid>
+      </Flex>
+    );
+  } else if (user) {
     router.push("/home");
-    return null;
+    return (
+      <Flex height="90vh" justifyContent="center" alignItems="center">
+        <Grid alignItems="center" justifyItems="center">
+          <LogoIcon boxSize={8} sx={{ gridRow: 1, gridColumn: 1 }} />
+          <Spinner
+            size="xl"
+            color="purple.500"
+            thickness="3px"
+            sx={{ gridRow: 1, gridColumn: 1 }}
+          />
+        </Grid>
+      </Flex>
+    );
   } else {
     return (
       <>
@@ -147,6 +174,7 @@ function App() {
       </>
     );
   }
+
   function loginWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.setCustomParameters({ prompt: "select_account" });

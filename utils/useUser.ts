@@ -9,7 +9,7 @@ import {
 } from "./getUserFromCookie";
 
 function useUser() {
-  const [user, setUser] = useState<firebase.User | null>(null);
+  const [user, setUser] = useState<firebase.User | null | false>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -19,7 +19,7 @@ function useUser() {
         setUser(user);
       } else {
         removeUserCookie();
-        setUser(null);
+        setUser(false);
       }
     });
 
