@@ -17,7 +17,7 @@ function Log() {
   const { user } = useUser();
   const router = useRouter();
   const { data: mediaData } = useDocument<MediaState>(
-    user !== null ? `${user.email}/media` : null
+    user !== null && user ? `${user.email}/media` : null
   );
 
   let dataUrl = null;
@@ -177,7 +177,7 @@ function Log() {
   );
 
   function addData() {
-    if (user !== null && user.email !== null) {
+    if (user !== null && user && user.email !== null) {
       dispatch({
         type: "state",
         payload: {
