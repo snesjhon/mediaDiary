@@ -3,7 +3,7 @@ import cookies from "js-cookie";
 export function getUserFromCookie() {
   const cookie = cookies.get("auth");
   if (!cookie) {
-    return;
+    return false;
   }
   return JSON.parse(cookie);
 }
