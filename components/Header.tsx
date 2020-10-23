@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import Filters from "./Filters";
+import FiltersIcon from "./Icons/FiltersIcon";
 import LogoIcon from "./Icons/LogoIcon";
 import Sidebar from "./Sidebar";
 
@@ -50,7 +51,7 @@ function Header() {
               <LogoIcon boxSize={5} mr={1} />
               <Link href="/home">
                 <Text
-                  fontSize="md"
+                  fontSize={{ base: "md", md: "xl" }}
                   color="purple.700"
                   fontWeight="medium"
                   cursor="pointer"
@@ -63,7 +64,7 @@ function Header() {
               <HStack as="nav" spacing="2" mr={3}>
                 <IconButton
                   aria-label="Menu"
-                  icon={<SearchIcon />}
+                  icon={<FiltersIcon />}
                   size="sm"
                   variant="outline"
                   onClick={menuOnOpen}
@@ -86,7 +87,7 @@ function Header() {
         </Container>
       </Box>
       {isOpen && <Sidebar isOpen={isOpen} onClose={onClose} />}
-      {menuIsOpen && <Filters isOpen={menuIsOpen} onClose={menuOnClose} />}
+      <Filters isOpen={menuIsOpen} onClose={menuOnClose} />
     </>
   );
 }
