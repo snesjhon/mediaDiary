@@ -1,17 +1,13 @@
 import { createContext } from "react";
-import { MediaEdit, MediaSelected } from "./mediaTypes";
+import { MediaEdit, MediaSelected, MediaTypes } from "./mediaTypes";
 
 export interface MDState {
-  user: any;
   selected?: MediaSelected;
   edit?: MediaEdit;
+  filterBy: MediaTypes[];
 }
 
 type Actions =
-  | {
-      type: "addUser";
-      payload: any;
-    }
   | {
       type: "select";
       payload: MDState["selected"];
@@ -19,6 +15,10 @@ type Actions =
   | {
       type: "edit";
       payload: MDState["edit"];
+    }
+  | {
+      type: "filter";
+      payload: MDState["filterBy"];
     }
   | {
       type: "state";
@@ -34,6 +34,12 @@ export function Reducer(state: MDState, actions: Actions): MDState {
       return {
         ...state,
         [actions.payload.key]: actions.payload.value,
+      };
+    }
+    case "filter": {
+      return {
+        ...state,
+        filterBy: actions.payload,
       };
     }
     case "select": {
@@ -56,7 +62,7 @@ export function Reducer(state: MDState, actions: Actions): MDState {
 }
 
 export const ContextState = createContext<MDState>({
-  user: null,
+  filterBy: ["album", "movie", "tv"],
 });
 
 export const ContextDispatch = createContext<(props: Actions) => void>(

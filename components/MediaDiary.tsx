@@ -2,9 +2,10 @@ import { Box, Flex, Grid, Image, Spinner, Text } from "@chakra-ui/core";
 import { StarIcon } from "@chakra-ui/icons";
 import { useCollection } from "@nandorojo/swr-firestore";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useContext } from "react";
 import Rating from "react-rating";
 import { DiaryState } from "../config/mediaTypes";
+import { ContextState } from "../config/store";
 import { createMediaState } from "../utils/helpers";
 import useUser from "../utils/useUser";
 import AlbumIcon from "./Icons/AlbumIcon";
@@ -19,6 +20,7 @@ interface ListState {
 
 function MediaDiary() {
   const router = useRouter();
+  const { filterBy } = useContext(ContextState);
   const { user } = useUser();
   const { data } = useCollection(user === null || !user ? null : user.email, {
     listen: true,
@@ -31,7 +33,7 @@ function MediaDiary() {
       Object.keys(mediaState).length > 0
     ) {
       let diaryDates: ListState = Object.keys(diaryState)
-        // .filter((e) => (filterBy === "" ? e : byDate[e].type === filterBy))
+        .filter((e) => filterBy.includes(diaryState[e].type))
         .reduce<ListState>((a, c) => {
           const dateString = diaryState[c].diaryDate
             .toDate()
@@ -60,7 +62,7 @@ function MediaDiary() {
                 >
                   <Box>
                     <Text
-                      fontSize={{ base: "lg", md: "xl" }}
+                      fontSize={{ base: "lg", md: "3xl" }}
                       color="gray.600"
                       fontWeight="bold"
                       position="sticky"
@@ -94,7 +96,10 @@ function MediaDiary() {
                         } = diaryDates[month][day];
                         return (
                           <Grid
-                            gridTemplateColumns="1.5rem 4rem 1fr"
+                            gridTemplateColumns={{
+                              base: "1.5rem 4rem 1fr",
+                              md: "3rem 8rem 1fr",
+                            }}
                             gridGap="1rem"
                             borderBottom="1px solid"
                             borderColor="gray.200"
@@ -106,12 +111,13 @@ function MediaDiary() {
                               cursor: "pointer",
                             }}
                             onClick={() =>
-                              router.push(`?day=${day}`, `/diary/${day}`)
+                              // router.push(`?day=${day}`, `/diary/${day}`)
+                              router.push(`/diary/${day}`)
                             }
                           >
                             <Box>
                               <Text
-                                fontSize={{ base: "lg", md: "xl" }}
+                                fontSize={{ base: "lg", md: "2xl" }}
                                 color="gray.500"
                               >
                                 {new Date(
@@ -131,8 +137,17 @@ function MediaDiary() {
                               />
                             </Box>
                             <Flex flexDirection="column">
-                              <Text color="gray.600">{title}</Text>
-                              <Text fontSize="sm" color="gray.500" pb={2}>
+                              <Text
+                                color="gray.600"
+                                fontSize={{ base: "md", md: "xl" }}
+                              >
+                                {title}
+                              </Text>
+                              <Text
+                                fontSize={{ base: "sm", md: "md" }}
+                                color="gray.500"
+                                pb={2}
+                              >
                                 {new Date(releasedDate).toLocaleDateString(
                                   "en-US",
                                   {
@@ -180,15 +195,15 @@ function MediaDiary() {
                                     initialRating={rating}
                                     fullSymbol={
                                       <StarIcon
-                                        h="12px"
-                                        w="12px"
+                                        h={{ base: "12px", md: "20px" }}
+                                        w={{ base: "12px", md: "20px" }}
                                         color="purple.400"
                                       />
                                     }
                                     emptySymbol={
                                       <StarEmptyIcon
-                                        h="12px"
-                                        w="12px"
+                                        h={{ base: "12px", md: "20px" }}
+                                        w={{ base: "12px", md: "20px" }}
                                         stroke="purple.400"
                                       />
                                     }
