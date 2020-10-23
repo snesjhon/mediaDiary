@@ -111,8 +111,7 @@ function MediaDiary() {
                               cursor: "pointer",
                             }}
                             onClick={() =>
-                              // router.push(`?day=${day}`, `/diary/${day}`)
-                              router.push(`/diary/${day}`)
+                              router.push(`?day=${day}`, `/diary/${day}`)
                             }
                           >
                             <Box>
