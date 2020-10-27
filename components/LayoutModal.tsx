@@ -14,7 +14,7 @@ function LayoutModal({ children }: PropsWithChildren<{}>) {
       isOpen={true}
       onClose={() => router.push("/home")}
       scrollBehavior="inside"
-      size="sm"
+      size="full"
       trapFocus={false}
     >
       <ModalOverlay px={4} sx={{ zIndex: 2 }}>

@@ -1,4 +1,15 @@
-import { Button, CircularProgress, Flex, Grid, Spinner } from "@chakra-ui/core";
+import {
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
+  Flex,
+  Grid,
+  Spinner,
+  Text,
+} from "@chakra-ui/core";
 import { useRouter } from "next/router";
 import React from "react";
 import Day from "../components/Day";
@@ -36,11 +47,35 @@ function App() {
           {!!router.query.search && <Search />}
           {!!router.query.log && <Log />}
           {!!router.query.view && router.query.view === "edit" && <LogEdit />}
-          {!!router.query.day && (
-            <LayoutModal>
-              <Day diaryId={router.query.day.toString()} />
-            </LayoutModal>
-          )}
+          <Drawer
+            onClose={() => router.push("/home")}
+            isOpen={!!router.query.day}
+            size="full"
+          >
+            <DrawerOverlay>
+              <DrawerContent>
+                <DrawerHeader>
+                  <Flex align="center">
+                    <LogoIcon boxSize={5} mr={1} />
+                    <Text
+                      fontSize={{ base: "md", md: "xl" }}
+                      color="purple.700"
+                      fontWeight="medium"
+                      cursor="pointer"
+                    >
+                      mediaDiary
+                    </Text>
+                  </Flex>
+                </DrawerHeader>
+                <DrawerCloseButton />
+                <DrawerBody>
+                  {!!router.query.day && (
+                    <Day diaryId={router.query.day.toString()} />
+                  )}
+                </DrawerBody>
+              </DrawerContent>
+            </DrawerOverlay>
+          </Drawer>
         </>
       )}
     </Layout>

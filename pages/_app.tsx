@@ -1,6 +1,6 @@
 // https://sergiodxa.com/articles/redirects-in-next-the-good-way
 
-import { ChakraProvider } from "@chakra-ui/core";
+import { ChakraProvider, extendTheme } from "@chakra-ui/core";
 import { Fuego, FuegoProvider } from "@nandorojo/swr-firestore";
 import "firebase/auth";
 import "firebase/firestore";
@@ -19,6 +19,12 @@ const firebaseConfig = {
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGE_ID,
 };
 const fuego = new Fuego(firebaseConfig);
+const config = {
+  useSystemColorMode: false,
+  initialColorMode: "light",
+};
+
+const customTheme = extendTheme({ config });
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [state, dispatch] = useReducer(Reducer, {
@@ -40,7 +46,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <FuegoProvider fuego={fuego}>
         <ContextState.Provider value={state}>
           <ContextDispatch.Provider value={dispatch}>
-            <ChakraProvider resetCSS>
+            <ChakraProvider resetCSS theme={customTheme}>
               <Component {...pageProps} />
             </ChakraProvider>
           </ContextDispatch.Provider>

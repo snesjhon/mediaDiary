@@ -15,10 +15,10 @@ function Info({ item }: Props) {
         flexDir="column"
         textAlign="center"
       >
-        <Heading fontWeight="normal" fontSize="md">
+        <Text fontSize="xl" lineHeight={1}>
           {item.artist}
-        </Heading>
-        <Heading fontWeight="bold" fontStyle="italic" fontSize="lg">
+        </Text>
+        <Heading fontWeight="bold" fontStyle="italic" fontSize="2xl">
           {item.title}
         </Heading>
       </Flex>

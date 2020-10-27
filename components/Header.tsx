@@ -7,7 +7,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/core";
-import { AddIcon, HamburgerIcon, SearchIcon } from "@chakra-ui/icons";
+import { AddIcon, HamburgerIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -31,7 +31,7 @@ function Header() {
         pos="fixed"
         top="0"
         zIndex="1"
-        bg="white"
+        // bg="white"
         left="0"
         right="0"
         borderBottomWidth="1px"
