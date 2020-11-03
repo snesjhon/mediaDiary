@@ -241,6 +241,7 @@ function MediaDiary() {
               .fill(null)
               .map((_, i) => (
                 <Button
+                  key={`pagination_${i}`}
                   onClick={() =>
                     dispatch({
                       type: "state",

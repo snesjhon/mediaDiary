@@ -38,8 +38,6 @@ function Sidebar({
   if (user !== null && user) {
     const { email, displayName, photoURL } = user;
     if (data) {
-      // const { exists, hasPendingWrites, id, ...restData }: any = data;
-      // const diaryData: DiaryState = restData;
       const dataCounts = data.reduce(
         (a, c) => {
           if (typeof a[c.type] !== "undefined") {
