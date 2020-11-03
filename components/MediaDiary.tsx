@@ -38,7 +38,7 @@ function MediaDiary() {
   const { data } = useCollection<DiaryAdd>(
     user === null || !user ? null : `${user.email}`,
     {
-      orderBy: ORDERBY,
+      orderBy: [ORDERBY, "desc"],
       listen: true,
     }
   );
@@ -59,7 +59,7 @@ function MediaDiary() {
         });
         a[`01-${dateString}`] = Object.assign(
           { ...a[`01-${dateString}`] },
-          { [c.mediaId]: c }
+          { [c.id]: c }
         );
         return a;
       }, {});
