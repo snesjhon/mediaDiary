@@ -1,6 +1,6 @@
 import { Button, Center, ModalFooter, Spinner } from "@chakra-ui/core";
 import { deleteDocument, update } from "@nandorojo/swr-firestore";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import { useRouter } from "next/router";
 import React, { useContext, useReducer } from "react";
 import { LogReducer } from "../config/logStore";
@@ -148,6 +148,7 @@ function Edit() {
         diaryDate: localDiaryDate,
         loggedBefore: localLoggedBefore,
         rating: localRating,
+        id,
         hasPendingWrites,
         exists,
         __snapshot,
