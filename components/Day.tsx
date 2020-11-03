@@ -19,7 +19,7 @@ import { ContextDispatch } from "../config/store";
 import { createMediaState } from "../utils/helpers";
 import useUser from "../utils/useUser";
 import StarEmptyIcon from "./Icons/StartEmptyIcon";
-// import Info from "./Info";
+import Info from "./Info";
 
 function Day({ diaryId }: { diaryId: string }) {
   const { user } = useUser();
@@ -31,10 +31,9 @@ function Day({ diaryId }: { diaryId: string }) {
   const router = useRouter();
   if (data) {
     const { rating, diaryDate, overview } = data;
-    debugger;
     return (
       <>
-        {/* <Info item={mediaInfo} /> */}
+        <Info item={data} />
         <HStack spacing={2} justify="center" mt={2}>
           {overview && (
             <>
@@ -61,7 +60,7 @@ function Day({ diaryId }: { diaryId: string }) {
                 type: "edit",
                 payload: {
                   diaryId,
-                  diary: data 
+                  diary: data,
                 },
               });
               router.push("/home/?view=edit", "/edit", {

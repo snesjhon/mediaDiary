@@ -1,5 +1,5 @@
 import { Button, Center, ModalFooter, Spinner } from "@chakra-ui/core";
-import { set, update, useCollection } from "@nandorojo/swr-firestore";
+import { set } from "@nandorojo/swr-firestore";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useReducer } from "react";
 import useSWR from "swr";
@@ -8,21 +8,14 @@ import { DiaryAdd } from "../config/mediaTypes";
 import { ContextState } from "../config/store";
 import { fetcher } from "../utils/helpers";
 import useUser from "../utils/useUser";
-import LogFields from "./LogFields";
 import Info from "./Info";
 import LayoutModal from "./LayoutModal";
+import LogFields from "./LogFields";
 
 function Log() {
   const { selected } = useContext(ContextState);
   const { user } = useUser();
   const router = useRouter();
-  const { add } = useCollection(user !== null && user ? `${user.email}` : null);
-  //  const { set } = useDocument<DiaryState>(
-  //    user !== null && user ? `${user.email}/diary2` : null
-  //  );
-  // const { data: mediaData } = useDocument<MediaState>(
-  //   user !== null && user ? `${user.email}/media` : null
-  // );
 
   let dataUrl = null;
   if (typeof selected !== "undefined") {

@@ -1,6 +1,6 @@
-import { Button, Center, Flex, ModalFooter, Spinner } from "@chakra-ui/core";
-import { fuego, useDocument } from "@nandorojo/swr-firestore";
-import { firestore } from "firebase/app";
+import { Button, Center, ModalFooter, Spinner } from "@chakra-ui/core";
+import { deleteDocument, update } from "@nandorojo/swr-firestore";
+import firebase from "firebase";
 import { useRouter } from "next/router";
 import React, { useContext, useReducer } from "react";
 import { LogReducer } from "../config/logStore";
@@ -15,9 +15,6 @@ function Edit() {
   const { edit } = useContext(ContextState);
   const { user } = useUser();
   const router = useRouter();
-  // const { data: mediaData } = useDocument<MediaState>(
-  //   user !== null && user ? `${user.email}/media` : null
-  // );
 
   let initData = {
     diaryDate: new Date(),
@@ -60,7 +57,7 @@ function Edit() {
         </Center>
       ) : (
         <>
-          {/* {typeof edit?.media !== "undefined" && <Info item={edit.media} />} */}
+          {typeof edit?.diary !== "undefined" && <Info item={edit.diary} />}
           <LogFields
             dispatch={dispatch}
             type={edit?.diary.type}
@@ -106,7 +103,12 @@ function Edit() {
     </LayoutModal>
   );
   function editData() {
-    if (user !== null && user && user.email !== null) {
+    if (
+      user !== null &&
+      user &&
+      user.email !== null &&
+      typeof edit !== "undefined"
+    ) {
       dispatch({
         type: "state",
         payload: {
@@ -114,19 +116,24 @@ function Edit() {
           value: true,
         },
       });
-      const diaryRef = fuego.db.collection(user.email).doc("diary");
       const diaryEdit = createEdit();
       if (diaryEdit) {
-        return diaryRef.update(diaryEdit).then(() => {
-          dispatch({
-            type: "state",
-            payload: {
-              key: "isLoading",
-              value: false,
-            },
+        const updatePromise = update(
+          `${user.email}/${edit.diaryId}`,
+          diaryEdit
+        );
+        if (updatePromise) {
+          updatePromise.then(() => {
+            dispatch({
+              type: "state",
+              payload: {
+                key: "isLoading",
+                value: false,
+              },
+            });
+            return router.push("/home");
           });
-          return router.push("/home");
-        });
+        }
       } else {
         console.log("error with diaryEdit");
       }
@@ -135,32 +142,25 @@ function Edit() {
     }
   }
 
-  function createEdit(): { [key: string]: DiaryAdd } | false {
+  function createEdit(): DiaryAdd | false {
     if (typeof edit !== "undefined") {
       const {
-        id,
-        type,
-        releasedDate,
-        addedDate,
         diaryDate: localDiaryDate,
         loggedBefore: localLoggedBefore,
         rating: localRating,
+        hasPendingWrites,
+        exists,
+        __snapshot,
         ...rest
       } = edit.diary;
       return {
-        [edit.diaryId]: {
-          id,
-          diaryDate: (diaryDate as unknown) as firebase.firestore.Timestamp,
-          addedDate,
-          loggedBefore,
-          rating,
-          type,
-          releasedDate,
-          ...(typeof seenEpisodes !== "undefined" && {
-            seenEpisodes: seenEpisodes,
-          }),
-          ...rest,
-        },
+        diaryDate: firebase.firestore.Timestamp.fromDate(diaryDate),
+        loggedBefore,
+        rating,
+        ...(typeof seenEpisodes !== "undefined" && {
+          seenEpisodes: seenEpisodes,
+        }),
+        ...rest,
       };
     } else {
       return false;
@@ -181,23 +181,21 @@ function Edit() {
           value: true,
         },
       });
-
-      const batch = fuego.db.batch();
-
-      batch.update(fuego.db.collection(user.email).doc("diary"), {
-        [edit.diaryId]: firestore.FieldValue.delete(),
-      });
-
-      return batch.commit().then(() => {
-        dispatch({
-          type: "state",
-          payload: {
-            key: "isSaving",
-            value: false,
-          },
+      const deletedPromise = deleteDocument(`${user.email}/${edit.diaryId}`);
+      if (deletedPromise) {
+        deletedPromise.then(() => {
+          dispatch({
+            type: "state",
+            payload: {
+              key: "isSaving",
+              value: false,
+            },
+          });
+          return router.push("/home");
         });
-        return router.push("/home");
-      });
+      } else {
+        console.error("delete promise failed");
+      }
     } else {
       console.log("error with delete");
     }

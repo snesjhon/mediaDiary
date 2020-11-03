@@ -1,11 +1,21 @@
-import { Box, Flex, Grid, Image, Spinner, Text } from "@chakra-ui/core";
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Grid,
+  HStack,
+  Image,
+  Spinner,
+  Text,
+} from "@chakra-ui/core";
 import { StarIcon } from "@chakra-ui/icons";
-import { fuego, useCollection } from "@nandorojo/swr-firestore";
+import { useCollection } from "@nandorojo/swr-firestore";
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
 import Rating from "react-rating";
 import { DiaryAdd, DiaryState } from "../config/mediaTypes";
-import { ContextState } from "../config/store";
+import { ContextDispatch, ContextState } from "../config/store";
 import useUser from "../utils/useUser";
 import AlbumIcon from "./Icons/AlbumIcon";
 import FilmIcon from "./Icons/FilmIcon";
@@ -17,30 +27,31 @@ interface ListState {
   [key: string]: DiaryState;
 }
 
-const limit = 30;
-const orderBy = "diaryDate";
+const LIMIT = 30;
+const ORDERBY = "diaryDate";
 
 function MediaDiary() {
   const router = useRouter();
-  const { filterBy } = useContext(ContextState);
+  const { filterBy, page } = useContext(ContextState);
+  const dispatch = useContext(ContextDispatch);
   const { user } = useUser();
-  const { data, mutate } = useCollection<DiaryAdd>(
+  const { data } = useCollection<DiaryAdd>(
     user === null || !user ? null : `${user.email}`,
     {
-      limit,
-      orderBy,
-    },
-    {
-      revalidateOnFocus: false,
-      refreshWhenHidden: false,
-      refreshWhenOffline: false,
-      refreshInterval: 0,
+      orderBy: ORDERBY,
+      listen: true,
     }
   );
 
   if (data) {
+    const currentRange = page * LIMIT;
     let diaryDates: ListState = data
-      .filter((e) => filterBy.includes(e.type))
+      .filter(
+        (e, i) =>
+          filterBy.includes(e.type) &&
+          i < currentRange &&
+          i >= currentRange - LIMIT
+      )
       .reduce<ListState>((a, c) => {
         const dateString = c.diaryDate.toDate().toLocaleDateString("en-us", {
           month: "short",
@@ -54,7 +65,6 @@ function MediaDiary() {
       }, {});
     return (
       <>
-        <button onClick={paginate}>paginate</button>
         {Object.keys(diaryDates)
           .sort((a, b) => (new Date(a) > new Date(b) ? -1 : 1))
           .map((month, monthIndex) => {
@@ -225,6 +235,27 @@ function MediaDiary() {
               </Grid>
             );
           })}
+        <Center py={4}>
+          <HStack spacing="24px">
+            {new Array(Math.ceil(data.length / LIMIT))
+              .fill(null)
+              .map((_, i) => (
+                <Button
+                  onClick={() =>
+                    dispatch({
+                      type: "state",
+                      payload: {
+                        key: "page",
+                        value: i + 1,
+                      },
+                    })
+                  }
+                >
+                  {i + 1}
+                </Button>
+              ))}
+          </HStack>
+        </Center>
       </>
     );
   }
@@ -242,38 +273,6 @@ function MediaDiary() {
       </Grid>
     </Flex>
   );
-
-  async function paginate() {
-    if (!data?.length) return;
-    if (user !== null && user) {
-      const ref = fuego.db.collection(`${user.email}`);
-
-      // get the snapshot of last document we have right now in our query
-      const startAfterDocument = await ref.doc(data[data.length - 1].id).get();
-
-      // get more documents, after the most recent one we have
-      const moreDocs = await ref
-        .orderBy(orderBy)
-        .startAfter(startAfterDocument)
-        .limit(limit)
-        .get()
-        .then((d) => {
-          const docs: any = [];
-          d.docs.forEach((doc) => docs.push({ ...doc.data(), id: doc.id }));
-          return docs;
-        });
-
-      // mutate our local cache, adding the docs we just added
-      // set revalidate to false to prevent SWR from revalidating on its own
-      mutate((state) => {
-        if (state !== null) {
-          return [...state, ...moreDocs];
-        } else {
-          return state;
-        }
-      }, false);
-    }
-  }
 }
 
 export default MediaDiary;

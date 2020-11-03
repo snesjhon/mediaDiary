@@ -1,3 +1,5 @@
+import { Document } from "@nandorojo/swr-firestore";
+
 export type MediaTypes = "movie" | "album" | "tv";
 
 export interface MediaBase {
@@ -13,7 +15,6 @@ export interface MediaBase {
 }
 
 export interface DiaryAdd extends MediaBase {
-  id: string;
   mediaId: string; // AppleID or MovieDB or MovieDB_TV
   diaryDate: firebase.firestore.Timestamp;
   addedDate: firebase.firestore.Timestamp;
@@ -23,7 +24,7 @@ export interface DiaryAdd extends MediaBase {
 }
 
 export interface DiaryState {
-  [key: string]: DiaryAdd;
+  [key: string]: DiaryAdd & Document;
 }
 
 export interface MediaSelected extends Omit<MediaBase, "count"> {
@@ -32,5 +33,5 @@ export interface MediaSelected extends Omit<MediaBase, "count"> {
 
 export interface MediaEdit {
   diaryId: string;
-  diary: DiaryAdd;
+  diary: DiaryAdd & Document;
 }
