@@ -17,9 +17,9 @@ import {
   StatLabel,
   StatNumber,
 } from "@chakra-ui/core";
-import { useDocument } from "@nandorojo/swr-firestore";
+import { useCollection, useDocument } from "@nandorojo/swr-firestore";
 import React from "react";
-import { DiaryState, MediaTypes } from "../config/mediaTypes";
+import { DiaryAdd, DiaryState, MediaTypes } from "../config/mediaTypes";
 import useUser from "../utils/useUser";
 import LogoIcon from "./Icons/LogoIcon";
 
@@ -31,21 +31,21 @@ function Sidebar({
   onClose: () => void;
 }) {
   const { user, logout } = useUser();
-  const { data } = useDocument(
-    user !== null && user ? `${user.email}/diary` : null
+  const { data } = useCollection<DiaryAdd>(
+    user !== null && user ? `${user.email}` : null
   );
 
   if (user !== null && user) {
     const { email, displayName, photoURL } = user;
     if (data) {
-      const { exists, hasPendingWrites, id, ...restData }: any = data;
-      const diaryData: DiaryState = restData;
-      const dataCounts = Object.keys(diaryData).reduce(
+      // const { exists, hasPendingWrites, id, ...restData }: any = data;
+      // const diaryData: DiaryState = restData;
+      const dataCounts = data.reduce(
         (a, c) => {
-          if (typeof a[diaryData[c]["type"]] !== "undefined") {
-            a[diaryData[c]["type"]] = ++a[diaryData[c]["type"]];
+          if (typeof a[c.type] !== "undefined") {
+            a[c.type] = ++a[c.type];
           } else {
-            a[diaryData[c]["type"]] = 1;
+            a[c.type] = 1;
           }
           return a;
         },
