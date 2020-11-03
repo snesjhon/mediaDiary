@@ -22,6 +22,7 @@ const fuego = new Fuego(firebaseConfig);
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [state, dispatch] = useReducer(Reducer, {
+    page: 1,
     filterBy: ["album", "movie", "tv"],
   });
 

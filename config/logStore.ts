@@ -1,13 +1,13 @@
-import { DiaryAdd, MediaAdd } from "./mediaTypes";
+import { DiaryAdd } from "./mediaTypes";
 
 export interface LogProps {
   diaryDate: Date;
   rating: DiaryAdd["rating"];
   loggedBefore: DiaryAdd["loggedBefore"];
-  poster: MediaAdd["poster"];
+  poster: DiaryAdd["poster"];
   seenEpisodes?: DiaryAdd["seenEpisodes"];
-  episodes?: MediaAdd["episodes"];
-  season?: MediaAdd["season"];
+  episodes?: DiaryAdd["episodes"];
+  season?: DiaryAdd["season"];
   externalSeasons?: any[];
   externalSeason?: any;
 }
@@ -15,9 +15,9 @@ export interface LogProps {
 export interface LogState extends LogProps {
   isSaving: boolean;
   isLoading: boolean;
-  artist: MediaAdd["artist"];
-  genre: MediaAdd["genre"];
-  overview?: MediaAdd["overview"];
+  artist: DiaryAdd["artist"];
+  genre: DiaryAdd["genre"];
+  overview?: DiaryAdd["overview"];
 }
 
 export type LogActions =

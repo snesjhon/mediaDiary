@@ -1,10 +1,10 @@
-import { Button, Center, Flex, ModalFooter, Spinner } from "@chakra-ui/core";
-import { fuego, useDocument } from "@nandorojo/swr-firestore";
-import { firestore } from "firebase/app";
+import { Button, Center, ModalFooter, Spinner } from "@chakra-ui/core";
+import { deleteDocument, update } from "@nandorojo/swr-firestore";
+import firebase from "firebase";
 import { useRouter } from "next/router";
 import React, { useContext, useReducer } from "react";
 import { LogReducer } from "../config/logStore";
-import { DiaryAdd, MediaState } from "../config/mediaTypes";
+import { DiaryAdd } from "../config/mediaTypes";
 import { ContextState } from "../config/store";
 import useUser from "../utils/useUser";
 import Info from "./Info";
@@ -15,9 +15,6 @@ function Edit() {
   const { edit } = useContext(ContextState);
   const { user } = useUser();
   const router = useRouter();
-  const { data: mediaData } = useDocument<MediaState>(
-    user !== null && user ? `${user.email}/media` : null
-  );
 
   let initData = {
     diaryDate: new Date(),
@@ -33,7 +30,6 @@ function Edit() {
     initData = {
       ...initData,
       ...edit.diary,
-      ...edit.media,
       diaryDate: edit.diary.diaryDate.toDate(),
     };
   }
@@ -61,10 +57,10 @@ function Edit() {
         </Center>
       ) : (
         <>
-          {typeof edit?.media !== "undefined" && <Info item={edit.media} />}
+          {typeof edit?.diary !== "undefined" && <Info item={edit.diary} />}
           <LogFields
             dispatch={dispatch}
-            type={edit?.media.type}
+            type={edit?.diary.type}
             item={{
               diaryDate,
               loggedBefore,
@@ -107,7 +103,12 @@ function Edit() {
     </LayoutModal>
   );
   function editData() {
-    if (user !== null && user && user.email !== null) {
+    if (
+      user !== null &&
+      user &&
+      user.email !== null &&
+      typeof edit !== "undefined"
+    ) {
       dispatch({
         type: "state",
         payload: {
@@ -115,19 +116,24 @@ function Edit() {
           value: true,
         },
       });
-      const diaryRef = fuego.db.collection(user.email).doc("diary");
       const diaryEdit = createEdit();
       if (diaryEdit) {
-        return diaryRef.update(diaryEdit).then(() => {
-          dispatch({
-            type: "state",
-            payload: {
-              key: "isLoading",
-              value: false,
-            },
+        const updatePromise = update(
+          `${user.email}/${edit.diaryId}`,
+          diaryEdit
+        );
+        if (updatePromise) {
+          updatePromise.then(() => {
+            dispatch({
+              type: "state",
+              payload: {
+                key: "isLoading",
+                value: false,
+              },
+            });
+            return router.push("/home");
           });
-          return router.push("/home");
-        });
+        }
       } else {
         console.log("error with diaryEdit");
       }
@@ -136,22 +142,25 @@ function Edit() {
     }
   }
 
-  function createEdit(): { [key: string]: DiaryAdd } | false {
+  function createEdit(): DiaryAdd | false {
     if (typeof edit !== "undefined") {
-      const { id, type, releasedDate, addedDate } = edit.diary;
+      const {
+        diaryDate: localDiaryDate,
+        loggedBefore: localLoggedBefore,
+        rating: localRating,
+        hasPendingWrites,
+        exists,
+        __snapshot,
+        ...rest
+      } = edit.diary;
       return {
-        [edit.diaryId]: {
-          id,
-          diaryDate: (diaryDate as unknown) as firebase.firestore.Timestamp,
-          addedDate,
-          loggedBefore,
-          rating,
-          type,
-          releasedDate,
-          ...(typeof seenEpisodes !== "undefined" && {
-            seenEpisodes: seenEpisodes,
-          }),
-        },
+        diaryDate: firebase.firestore.Timestamp.fromDate(diaryDate),
+        loggedBefore,
+        rating,
+        ...(typeof seenEpisodes !== "undefined" && {
+          seenEpisodes: seenEpisodes,
+        }),
+        ...rest,
       };
     } else {
       return false;
@@ -172,38 +181,21 @@ function Edit() {
           value: true,
         },
       });
-
-      const batch = fuego.db.batch();
-      if (
-        typeof mediaData !== "undefined" &&
-        mediaData !== null &&
-        typeof mediaData?.[edit.diary.id] !== "undefined"
-      ) {
-        if (mediaData?.[edit.diary.id].count === 1) {
-          batch.update(fuego.db.collection(user.email).doc("media"), {
-            [edit.diary.id]: firestore.FieldValue.delete(),
+      const deletedPromise = deleteDocument(`${user.email}/${edit.diaryId}`);
+      if (deletedPromise) {
+        deletedPromise.then(() => {
+          dispatch({
+            type: "state",
+            payload: {
+              key: "isSaving",
+              value: false,
+            },
           });
-        } else {
-          batch.update(fuego.db.collection(user.email).doc("media"), {
-            [`${edit.diary.id}.count`]: mediaData?.[edit.diary.id].count - 1,
-          });
-        }
-      }
-
-      batch.update(fuego.db.collection(user.email).doc("diary"), {
-        [edit.diaryId]: firestore.FieldValue.delete(),
-      });
-
-      return batch.commit().then(() => {
-        dispatch({
-          type: "state",
-          payload: {
-            key: "isSaving",
-            value: false,
-          },
+          return router.push("/home");
         });
-        return router.push("/home");
-      });
+      } else {
+        console.error("delete promise failed");
+      }
     } else {
       console.log("error with delete");
     }

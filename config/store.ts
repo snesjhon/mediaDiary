@@ -2,6 +2,7 @@ import { createContext } from "react";
 import { MediaEdit, MediaSelected, MediaTypes } from "./mediaTypes";
 
 export interface MDState {
+  page: number;
   selected?: MediaSelected;
   edit?: MediaEdit;
   filterBy: MediaTypes[];
@@ -62,6 +63,7 @@ export function Reducer(state: MDState, actions: Actions): MDState {
 }
 
 export const ContextState = createContext<MDState>({
+  page: 1,
   filterBy: ["album", "movie", "tv"],
 });
 

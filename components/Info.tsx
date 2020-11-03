@@ -1,9 +1,9 @@
 import { Center, Flex, Heading, Image, Text } from "@chakra-ui/core";
 import React from "react";
-import { MediaAdd, MediaSelected } from "../config/mediaTypes";
+import { MediaBase, MediaSelected } from "../config/mediaTypes";
 
 interface Props {
-  item: MediaAdd | MediaSelected;
+  item: MediaBase | MediaSelected;
 }
 
 function Info({ item }: Props) {

@@ -202,7 +202,7 @@ function Search() {
   function displayResult(item: MediaSelected) {
     return (
       <Box
-        key={item.id}
+        key={item.mediaId}
         fontSize="sm"
         borderBottom="1px"
         borderBottomColor="gray.200"
@@ -241,7 +241,7 @@ function Search() {
 
     if (type === "album") {
       return {
-        id: item.collectionId,
+        mediaId: item.collectionId,
         poster: item.artworkUrl100.replace("100x100", "500x500"),
         title: item.collectionName,
         releasedDate: item.releaseDate,
@@ -252,7 +252,7 @@ function Search() {
       };
     } else {
       return {
-        id: item.id,
+        mediaId: item.id,
         poster: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
         title: type === "movie" ? item.title : item.original_name,
         releasedDate:
