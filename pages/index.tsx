@@ -21,7 +21,7 @@ import "firebase/auth";
 import Cookies from "js-cookie";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import LogoIcon from "../components/Icons/LogoIcon";
 import Layout from "../components/Layout";
 import useUser from "../utils/useUser";
@@ -29,6 +29,7 @@ import useUser from "../utils/useUser";
 function App() {
   const { user } = useUser();
   const router = useRouter();
+
   if (user === null) {
     return (
       <Flex height="90vh" justifyContent="center" alignItems="center">

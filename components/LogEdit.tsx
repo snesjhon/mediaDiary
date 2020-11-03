@@ -4,7 +4,7 @@ import { firestore } from "firebase/app";
 import { useRouter } from "next/router";
 import React, { useContext, useReducer } from "react";
 import { LogReducer } from "../config/logStore";
-import { DiaryAdd, MediaState } from "../config/mediaTypes";
+import { DiaryAdd } from "../config/mediaTypes";
 import { ContextState } from "../config/store";
 import useUser from "../utils/useUser";
 import Info from "./Info";
@@ -15,9 +15,9 @@ function Edit() {
   const { edit } = useContext(ContextState);
   const { user } = useUser();
   const router = useRouter();
-  const { data: mediaData } = useDocument<MediaState>(
-    user !== null && user ? `${user.email}/media` : null
-  );
+  // const { data: mediaData } = useDocument<MediaState>(
+  //   user !== null && user ? `${user.email}/media` : null
+  // );
 
   let initData = {
     diaryDate: new Date(),
@@ -33,7 +33,6 @@ function Edit() {
     initData = {
       ...initData,
       ...edit.diary,
-      ...edit.media,
       diaryDate: edit.diary.diaryDate.toDate(),
     };
   }
@@ -61,10 +60,10 @@ function Edit() {
         </Center>
       ) : (
         <>
-          {typeof edit?.media !== "undefined" && <Info item={edit.media} />}
+          {/* {typeof edit?.media !== "undefined" && <Info item={edit.media} />} */}
           <LogFields
             dispatch={dispatch}
-            type={edit?.media.type}
+            type={edit?.diary.type}
             item={{
               diaryDate,
               loggedBefore,
@@ -138,7 +137,16 @@ function Edit() {
 
   function createEdit(): { [key: string]: DiaryAdd } | false {
     if (typeof edit !== "undefined") {
-      const { id, type, releasedDate, addedDate } = edit.diary;
+      const {
+        id,
+        type,
+        releasedDate,
+        addedDate,
+        diaryDate: localDiaryDate,
+        loggedBefore: localLoggedBefore,
+        rating: localRating,
+        ...rest
+      } = edit.diary;
       return {
         [edit.diaryId]: {
           id,
@@ -151,6 +159,7 @@ function Edit() {
           ...(typeof seenEpisodes !== "undefined" && {
             seenEpisodes: seenEpisodes,
           }),
+          ...rest,
         },
       };
     } else {
@@ -174,21 +183,6 @@ function Edit() {
       });
 
       const batch = fuego.db.batch();
-      if (
-        typeof mediaData !== "undefined" &&
-        mediaData !== null &&
-        typeof mediaData?.[edit.diary.id] !== "undefined"
-      ) {
-        if (mediaData?.[edit.diary.id].count === 1) {
-          batch.update(fuego.db.collection(user.email).doc("media"), {
-            [edit.diary.id]: firestore.FieldValue.delete(),
-          });
-        } else {
-          batch.update(fuego.db.collection(user.email).doc("media"), {
-            [`${edit.diary.id}.count`]: mediaData?.[edit.diary.id].count - 1,
-          });
-        }
-      }
 
       batch.update(fuego.db.collection(user.email).doc("diary"), {
         [edit.diaryId]: firestore.FieldValue.delete(),

@@ -1,10 +1,10 @@
 import { Button, Center, ModalFooter, Spinner } from "@chakra-ui/core";
-import { fuego, useDocument } from "@nandorojo/swr-firestore";
+import { set, update, useCollection } from "@nandorojo/swr-firestore";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useReducer } from "react";
 import useSWR from "swr";
 import { LogProps, LogReducer, LogState } from "../config/logStore";
-import { DiaryAdd, MediaAdd, MediaState } from "../config/mediaTypes";
+import { DiaryAdd } from "../config/mediaTypes";
 import { ContextState } from "../config/store";
 import { fetcher } from "../utils/helpers";
 import useUser from "../utils/useUser";
@@ -16,17 +16,21 @@ function Log() {
   const { selected } = useContext(ContextState);
   const { user } = useUser();
   const router = useRouter();
-  const { data: mediaData } = useDocument<MediaState>(
-    user !== null && user ? `${user.email}/media` : null
-  );
+  const { add } = useCollection(user !== null && user ? `${user.email}` : null);
+  //  const { set } = useDocument<DiaryState>(
+  //    user !== null && user ? `${user.email}/diary2` : null
+  //  );
+  // const { data: mediaData } = useDocument<MediaState>(
+  //   user !== null && user ? `${user.email}/media` : null
+  // );
 
   let dataUrl = null;
   if (typeof selected !== "undefined") {
     if (selected.type === "tv") {
-      dataUrl = `https://api.themoviedb.org/3/tv/${selected.id}?api_key=${process.env.NEXT_PUBLIC_MDBKEY}`;
+      dataUrl = `https://api.themoviedb.org/3/tv/${selected.mediaId}?api_key=${process.env.NEXT_PUBLIC_MDBKEY}`;
     } else if (selected.type === "movie") {
       dataUrl = `https://api.themoviedb.org/3/movie/${encodeURIComponent(
-        selected.id
+        selected.mediaId
       )}?api_key=${process.env.NEXT_PUBLIC_MDBKEY}&append_to_response=credits`;
     } else if (selected.type === "album") {
       dataUrl = `https://ws.audioscrobbler.com/2.0/?method=album.getinfo&artist=${encodeURIComponent(
@@ -123,7 +127,7 @@ function Log() {
     if (typeof externalSeasons !== "undefined" && selected.type !== "album") {
       mediaInfo = {
         ...mediaInfo,
-        id: `${selected.id}_${externalSeason.id}`,
+        mediaId: `${selected.mediaId}_${externalSeason.id}`,
         releasedDate: externalSeason.air_date,
         overview: externalSeason.overview,
       };
@@ -178,112 +182,65 @@ function Log() {
 
   function addData() {
     if (user !== null && user && user.email !== null) {
-      dispatch({
-        type: "state",
-        payload: {
-          key: "isSaving",
-          value: true,
-        },
-      });
-      const batch = fuego.db.batch();
-      const addDiary = createDiary();
-      const addMedia = createMedia();
-      if (addDiary && addMedia) {
-        const {
-          exists,
-          hasPendingWrites,
-          id,
-          ...allMediaData
-        }: any = mediaData;
-
-        if (
-          typeof allMediaData !== "undefined" &&
-          allMediaData !== null &&
-          Object.keys(allMediaData).length === 0
-        ) {
-          batch.set(fuego.db.collection(user.email).doc("diary"), addDiary);
-          batch.set(fuego.db.collection(user.email).doc("media"), addMedia);
-        } else {
-          batch.update(fuego.db.collection(user.email).doc("diary"), addDiary);
-          batch.update(fuego.db.collection(user.email).doc("media"), addMedia);
-        }
-
-        batch.commit().then(() => {
-          dispatch({
-            type: "state",
-            payload: {
-              key: "isSaving",
-              value: false,
-            },
-          });
-          console.log("happens?");
-          return router.push("/home");
+      const currentDate = new Date();
+      const addDiary = createDiary(currentDate);
+      if (addDiary) {
+        dispatch({
+          type: "state",
+          payload: {
+            key: "isSaving",
+            value: true,
+          },
         });
-      }
-    } else {
-      console.log("user missing");
-    }
-  }
-
-  function createDiary(): { [key: string]: DiaryAdd } | false {
-    if (typeof mediaInfo !== "undefined") {
-      const dateAdded = new Date();
-      const { id, type, releasedDate } = mediaInfo;
-      return {
-        [dateAdded.getTime()]: {
-          id: `${type}_${id}`,
-          diaryDate: (diaryDate as unknown) as firebase.firestore.Timestamp,
-          addedDate: (dateAdded as unknown) as firebase.firestore.Timestamp,
-          loggedBefore,
-          rating,
-          type,
-          releasedDate,
-          ...(typeof seenEpisodes !== "undefined" && {
-            seenEpisodes: seenEpisodes,
-          }),
-        },
-      };
-    } else {
-      return false;
-    }
-  }
-
-  function createMedia(): { [key: string]: MediaAdd } | false {
-    if (typeof mediaInfo !== "undefined") {
-      // This id is what's going to be saved and referenced in firestore
-      const itemId = `${mediaInfo.type}_${mediaInfo.id}`;
-      if (
-        typeof mediaData !== "undefined" &&
-        mediaData !== null &&
-        typeof mediaData?.[itemId] !== "undefined"
-      ) {
-        return {
-          [itemId]: {
-            ...mediaData[itemId],
-            count: mediaData[itemId].count + 1,
-          },
-        };
+        const updatePromise = set(
+          `${user.email}/${currentDate.getTime()}`,
+          addDiary
+        );
+        if (updatePromise !== null) {
+          updatePromise
+            .then(() => {
+              dispatch({
+                type: "state",
+                payload: {
+                  key: "isSaving",
+                  value: false,
+                },
+              });
+              return router.push("/home");
+            })
+            .catch(() => {
+              return console.log("error");
+            });
+        }
       } else {
-        return {
-          [itemId]: {
-            type: mediaInfo.type,
-            artist: mediaInfo.artist,
-            title: mediaInfo.title,
-            poster: mediaInfo.poster,
-            genre:
-              typeof mediaInfo?.genre !== "undefined" ? mediaInfo.genre : "",
-            releasedDate: mediaInfo.releasedDate,
-            count: 1,
-            ...(typeof mediaInfo.overview !== "undefined" && {
-              overview: mediaInfo.overview,
-            }),
-            ...(typeof externalSeason !== "undefined" && {
-              season: externalSeason.season_number,
-              episodes: externalSeason.episode_count,
-            }),
-          },
-        };
+        console.log("diary fails");
       }
+    }
+  }
+
+  function createDiary(currentDate: Date): DiaryAdd | false {
+    if (typeof mediaInfo !== "undefined") {
+      const { mediaId, type, releasedDate } = mediaInfo;
+      return {
+        mediaId,
+        diaryDate: (diaryDate as unknown) as firebase.firestore.Timestamp,
+        addedDate: (currentDate as unknown) as firebase.firestore.Timestamp,
+        loggedBefore,
+        rating,
+        type,
+        releasedDate,
+        ...(typeof seenEpisodes !== "undefined" && {
+          seenEpisodes: seenEpisodes,
+        }),
+        artist: mediaInfo.artist,
+        title: mediaInfo.title,
+        poster: mediaInfo.poster,
+        genre: typeof mediaInfo?.genre !== "undefined" ? mediaInfo.genre : "",
+        ...(typeof externalSeason !== "undefined" && {
+          season: externalSeason.season_number,
+          episodes: externalSeason.episode_count,
+        }),
+      };
     } else {
       return false;
     }
@@ -291,7 +248,7 @@ function Log() {
 
   function parseData(externalData: any, mediaType: any) {
     if (mediaType === "tv") {
-      const filteredSeasons = externalData.seasons.sort((a: any, b: any) =>
+      const filteredSeasons = externalData.seasons.sort((_: any, b: any) =>
         b.season_number === 0 ? -1 : 1
       );
       return {

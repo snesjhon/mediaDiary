@@ -156,45 +156,43 @@ function LogFields({
           {typeof episodes !== "undefined" && (
             <>
               <Divider my={2} />
-              <Collapse mt={4} isOpen={showEpisodes}>
-                <SimpleGrid columns={Math.floor(episodes / 3)} spacingY={3}>
-                  {Array.from(
-                    { length: episodes },
-                    (_, episodeNumber: number) => (
-                      <Checkbox
-                        key={`episode_${episodeNumber + 1}`}
-                        value={episodeNumber + 1}
-                        isChecked={seenEpisodes?.includes(episodeNumber + 1)}
-                        onChange={(e) => {
-                          if (typeof seenEpisodes !== "undefined") {
-                            const hasValue = seenEpisodes?.includes(
-                              parseInt(e.target.value)
-                            );
-                            const episodeArr = hasValue
-                              ? seenEpisodes?.filter(
-                                  (filterValue: any) =>
-                                    filterValue !== parseInt(e.target.value)
-                                )
-                              : [parseInt(e.target.value)].concat(seenEpisodes);
+              <SimpleGrid columns={Math.floor(episodes / 3)} spacingY={3}>
+                {Array.from(
+                  { length: episodes },
+                  (_, episodeNumber: number) => (
+                    <Checkbox
+                      key={`episode_${episodeNumber + 1}`}
+                      value={episodeNumber + 1}
+                      isChecked={seenEpisodes?.includes(episodeNumber + 1)}
+                      onChange={(e) => {
+                        if (typeof seenEpisodes !== "undefined") {
+                          const hasValue = seenEpisodes?.includes(
+                            parseInt(e.target.value)
+                          );
+                          const episodeArr = hasValue
+                            ? seenEpisodes?.filter(
+                                (filterValue: any) =>
+                                  filterValue !== parseInt(e.target.value)
+                              )
+                            : [parseInt(e.target.value)].concat(seenEpisodes);
 
-                            return dispatch({
-                              type: "state",
-                              payload: {
-                                key: "seenEpisodes",
-                                value: episodeArr,
-                              },
-                            });
-                          } else {
-                            return console.error("no episodes found");
-                          }
-                        }}
-                      >
-                        <Text fontSize="sm">{episodeNumber + 1}</Text>
-                      </Checkbox>
-                    )
-                  )}
-                </SimpleGrid>
-              </Collapse>
+                          return dispatch({
+                            type: "state",
+                            payload: {
+                              key: "seenEpisodes",
+                              value: episodeArr,
+                            },
+                          });
+                        } else {
+                          return console.error("no episodes found");
+                        }
+                      }}
+                    >
+                      <Text fontSize="sm">{episodeNumber + 1}</Text>
+                    </Checkbox>
+                  )
+                )}
+              </SimpleGrid>
             </>
           )}
         </>
