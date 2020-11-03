@@ -5,29 +5,29 @@
     "start": "next",
     "build": "next build",
     "prod": "next start",
-    "postbuild": "next-on-netlify",
     "validate": "node_modules/.bin/tsc --noEmit"
   },
   "dependencies": {
-    "@chakra-ui/core": "~1.0.0-rc.3",
-    "@chakra-ui/icons": "~1.0.0-rc.3",
+    "@chakra-ui/core": "^1.0.0-rc.8",
+    "@chakra-ui/icons": "^1.0.0-rc.8",
     "@nandorojo/swr-firestore": "^0.16.0",
     "dayjs": "~1.8.35",
-    "firebase": "^7.23.0",
+    "firebase": "~7.23.0",
+    "framer-motion": "~2.9.4",
     "js-cookie": "~2.2.1",
     "next": "latest",
-    "next-on-netlify": "~2.4.0",
     "react": "~16.12.0",
     "react-dom": "~16.12.0",
     "react-rating": "~2.0.5",
     "swr": "~0.3.2"
   },
   "devDependencies": {
+    "@types/js-cookie": "^2.2.6",
     "@types/node": "~12.12.21",
     "@types/react": "~16.9.16",
-    "@types/react-datepicker": "~3.1.1",
     "@types/react-dom": "~16.9.4",
-    "@types/js-cookie": "~2.2.6",
+    "install": "^0.13.0",
+    "npm": "^6.14.8",
     "typescript": "~4.0"
   },
   "license": "MIT"
