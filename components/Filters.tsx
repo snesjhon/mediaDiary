@@ -1,22 +1,16 @@
 import {
   Button,
-  Checkbox,
   Divider,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
-  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   Flex,
-  FormControl,
-  FormLabel,
   HStack,
   IconButton,
-  Switch,
   Text,
-  VStack,
 } from "@chakra-ui/core";
 import React, { useContext, useState } from "react";
 import { MediaTypes } from "../config/mediaTypes";
@@ -32,7 +26,7 @@ function Sidebar({
 }: {
   isOpen: boolean;
   onClose: () => void;
-}) {
+}): JSX.Element {
   const { filterBy } = useContext(ContextState);
   const dispatch = useContext(ContextDispatch);
   const [localFilter, setLocalFilter] = useState(filterBy);

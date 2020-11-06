@@ -12,14 +12,14 @@ import {
   DrawerHeader,
   DrawerOverlay,
   Flex,
-  Text,
   Stat,
   StatLabel,
   StatNumber,
+  Text,
 } from "@chakra-ui/core";
-import { useCollection, useDocument } from "@nandorojo/swr-firestore";
+import { useCollection } from "@nandorojo/swr-firestore";
 import React from "react";
-import { DiaryAdd, DiaryState, MediaTypes } from "../config/mediaTypes";
+import { DiaryAdd, MediaTypes } from "../config/mediaTypes";
 import useUser from "../utils/useUser";
 import LogoIcon from "./Icons/LogoIcon";
 
@@ -29,7 +29,7 @@ function Sidebar({
 }: {
   isOpen: boolean;
   onClose: () => void;
-}) {
+}): JSX.Element | null {
   const { user, logout } = useUser();
   const { data } = useCollection<DiaryAdd>(
     user !== null && user ? `${user.email}` : null

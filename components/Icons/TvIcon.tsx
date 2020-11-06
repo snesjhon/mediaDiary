@@ -1,6 +1,7 @@
+import React from "react";
 import { Icon, IconProps } from "@chakra-ui/core";
 
-function TvIcon(props: IconProps) {
+function TvIcon(props: IconProps): JSX.Element {
   return (
     <Icon
       viewBox="0 0 24 24"

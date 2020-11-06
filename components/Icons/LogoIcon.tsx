@@ -1,6 +1,7 @@
+import React from "react";
 import { Icon, IconProps } from "@chakra-ui/core";
 
-function LogoIcon(props: IconProps) {
+function LogoIcon(props: IconProps): JSX.Element {
   return (
     <Icon viewBox="0 0 38 40" {...props}>
       <line

@@ -12,7 +12,7 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { setUserCookie } from "../utils/getUserFromCookie";
 
 interface Props {
@@ -28,7 +28,7 @@ Login.getInitialProps = async (ctx: any) => {
   };
 };
 
-function Login({ isSending }: Props) {
+function Login({ isSending }: Props): JSX.Element {
   const router = useRouter();
 
   useEffect(() => {

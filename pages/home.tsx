@@ -22,7 +22,7 @@ import MediaDiary from "../components/MediaDiary";
 import Search from "../components/Search";
 import useUser from "../utils/useUser";
 
-function App() {
+function Home(): JSX.Element {
   const { user } = useUser();
   const router = useRouter();
   return (
@@ -81,4 +81,4 @@ function App() {
   );
 }
 
-export default App;
+export default Home;

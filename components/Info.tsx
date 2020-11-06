@@ -6,7 +6,7 @@ interface Props {
   item: MediaBase | MediaSelected;
 }
 
-function Info({ item }: Props) {
+function Info({ item }: Props):JSX.Element {
   return (
     <>
       <Flex

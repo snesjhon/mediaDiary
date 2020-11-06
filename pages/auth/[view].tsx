@@ -1,4 +1,4 @@
-import { CircularProgress, Flex, Grid, Spinner } from "@chakra-ui/core";
+import { Flex, Grid, Spinner } from "@chakra-ui/core";
 import firebase from "firebase/app";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
@@ -19,7 +19,7 @@ AuthView.getInitialProps = async (ctx: any) => {
   };
 };
 
-function AuthView({ isSending }: Props) {
+function AuthView({ isSending }: Props): JSX.Element {
   const router = useRouter();
 
   useEffect(() => {
