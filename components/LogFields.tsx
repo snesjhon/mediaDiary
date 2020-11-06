@@ -1,12 +1,11 @@
 import {
+  Box,
+  Button,
+  Checkbox,
   Divider,
   Flex,
-  Box,
   Input,
-  Checkbox,
-  Button,
   Select,
-  Collapse,
   SimpleGrid,
   Text,
 } from "@chakra-ui/core";
@@ -27,7 +26,7 @@ function LogFields({
   item: LogProps;
   type: any;
   isEdit?: boolean;
-}) {
+}): JSX.Element {
   const {
     diaryDate,
     rating,

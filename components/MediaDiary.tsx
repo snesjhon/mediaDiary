@@ -30,7 +30,7 @@ interface ListState {
 const LIMIT = 30;
 const ORDERBY = "diaryDate";
 
-function MediaDiary() {
+function MediaDiary(): JSX.Element {
   const router = useRouter();
   const { filterBy, page } = useContext(ContextState);
   const dispatch = useContext(ContextDispatch);
@@ -45,7 +45,7 @@ function MediaDiary() {
 
   if (data) {
     const currentRange = page * LIMIT;
-    let diaryDates: ListState = data
+    const diaryDates: ListState = data
       .filter(
         (e, i) =>
           filterBy.includes(e.type) &&
@@ -106,7 +106,6 @@ function MediaDiary() {
                         artist,
                         type,
                         season,
-                        loggedBefore,
                         seenEpisodes,
                       } = diaryDates[month][day];
                       return (

@@ -11,7 +11,7 @@ import Info from "./Info";
 import LayoutModal from "./LayoutModal";
 import LogFields from "./LogFields";
 
-function Edit() {
+function Edit(): JSX.Element {
   const { edit } = useContext(ContextState);
   const { user } = useUser();
   const router = useRouter();

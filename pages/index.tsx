@@ -21,12 +21,12 @@ import "firebase/auth";
 import Cookies from "js-cookie";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React from "react";
 import LogoIcon from "../components/Icons/LogoIcon";
 import Layout from "../components/Layout";
 import useUser from "../utils/useUser";
 
-function App() {
+function App(): JSX.Element {
   const { user } = useUser();
   const router = useRouter();
 

@@ -7,7 +7,8 @@ import {
 } from "@chakra-ui/core";
 import { useRouter } from "next/router";
 import React, { PropsWithChildren } from "react";
-function LayoutModal({ children }: PropsWithChildren<{}>) {
+
+function LayoutModal({ children }: PropsWithChildren<unknown>): JSX.Element {
   const router = useRouter();
   return (
     <Modal

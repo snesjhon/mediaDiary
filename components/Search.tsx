@@ -26,7 +26,7 @@ import FilmIcon from "./Icons/FilmIcon";
 import TvIcon from "./Icons/TvIcon";
 import LogoIcon from "./Icons/LogoIcon";
 
-function Search() {
+function Search(): JSX.Element {
   const [search, setSearch] = useState("");
   const [currMovie, setCurrMovie] = useState(3);
   const [currTv, setCurrTv] = useState(3);

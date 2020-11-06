@@ -4,15 +4,11 @@ import {
   Flex,
   Grid,
   Heading,
-  HStack,
   IconButton,
-  Stat,
-  StatHelpText,
-  StatNumber,
-  Text,
   Image,
+  Text,
 } from "@chakra-ui/core";
-import { EditIcon, InfoOutlineIcon, StarIcon } from "@chakra-ui/icons";
+import { EditIcon, StarIcon } from "@chakra-ui/icons";
 import { useDocument } from "@nandorojo/swr-firestore";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
@@ -23,7 +19,7 @@ import { ContextDispatch } from "../config/store";
 import useUser from "../utils/useUser";
 import StarEmptyIcon from "./Icons/StartEmptyIcon";
 
-function Day({ diaryId }: { diaryId: string }) {
+function Day({ diaryId }: { diaryId: string }): JSX.Element {
   const { user } = useUser();
   const dispatch = useContext(ContextDispatch);
   const { data } = useDocument<DiaryAdd>(

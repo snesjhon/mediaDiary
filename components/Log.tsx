@@ -12,7 +12,7 @@ import Info from "./Info";
 import LayoutModal from "./LayoutModal";
 import LogFields from "./LogFields";
 
-function Log() {
+function Log(): JSX.Element {
   const { selected } = useContext(ContextState);
   const { user } = useUser();
   const router = useRouter();

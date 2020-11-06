@@ -68,5 +68,5 @@ export const ContextState = createContext<MDState>({
 });
 
 export const ContextDispatch = createContext<(props: Actions) => void>(
-  () => {}
+  () => null
 );
