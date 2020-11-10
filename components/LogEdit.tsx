@@ -6,14 +6,14 @@ import React, { useContext, useReducer } from "react";
 import { LogReducer } from "../config/logStore";
 import { DiaryAdd } from "../config/mediaTypes";
 import { ContextState } from "../config/store";
-import useUser from "../utils/useUser";
+import { useAuth } from "../utils/auth";
 import Info from "./Info";
 import LayoutModal from "./LayoutModal";
 import LogFields from "./LogFields";
 
 function Edit(): JSX.Element {
   const { edit } = useContext(ContextState);
-  const { user } = useUser();
+  const { user } = useAuth();
   const router = useRouter();
 
   let initData = {

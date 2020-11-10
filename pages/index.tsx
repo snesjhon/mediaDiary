@@ -18,16 +18,16 @@ import {
 } from "@chakra-ui/core";
 import firebase from "firebase/app";
 import "firebase/auth";
-import Cookies from "js-cookie";
+import nookies from "nookies";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import LogoIcon from "../components/Icons/LogoIcon";
 import Layout from "../components/Layout";
-import useUser from "../utils/useUser";
+import { useAuth } from "../utils/auth";
 
 function App(): JSX.Element {
-  const { user } = useUser();
+  const { user } = useAuth();
   const router = useRouter();
 
   if (user === null) {
@@ -183,7 +183,7 @@ function App(): JSX.Element {
       .auth()
       .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
       .then(() => {
-        Cookies.set("authPending", "true");
+        nookies.set({}, "authPending", "true", {});
         firebase.auth().signInWithRedirect(provider);
       });
   }

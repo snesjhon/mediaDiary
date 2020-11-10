@@ -1,21 +1,24 @@
-import cookies from "js-cookie";
+import nookies from "nookies";
 
-export function getUserFromCookie() {
-  const cookie = cookies.get("auth");
+export function getUserFromCookie():
+  | false
+  | {
+      [key: string]: string;
+    } {
+  const cookie = nookies.get(undefined, "token");
   if (!cookie) {
     return false;
   }
-  return JSON.parse(cookie);
+  return cookie;
 }
 
-export function setUserCookie(user: any) {
-  cookies.set("auth", user, {
-    // firebase id tokens expire in one hour
-    // set cookie expiry to match
-    expires: 1 / 24,
+export async function setUserCookie(user: firebase.User): Promise<void> {
+  const id = await user.getIdToken();
+  nookies.set(undefined, "token", id, {
+    maxAge: 1 / 24,
   });
 }
 
-export function removeUserCookie() {
-  return cookies.remove("auth");
+export function removeUserCookie(): void {
+  nookies.destroy(undefined, "token");
 }

@@ -6,15 +6,15 @@ import useSWR from "swr";
 import { LogProps, LogReducer, LogState } from "../config/logStore";
 import { DiaryAdd } from "../config/mediaTypes";
 import { ContextState } from "../config/store";
+import { useAuth } from "../utils/auth";
 import { fetcher } from "../utils/helpers";
-import useUser from "../utils/useUser";
 import Info from "./Info";
 import LayoutModal from "./LayoutModal";
 import LogFields from "./LogFields";
 
 function Log(): JSX.Element {
   const { selected } = useContext(ContextState);
-  const { user } = useUser();
+  const { user } = useAuth();
   const router = useRouter();
 
   let dataUrl = null;

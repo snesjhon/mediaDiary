@@ -16,11 +16,11 @@ import React, { useContext } from "react";
 import Rating from "react-rating";
 import { DiaryAdd } from "../config/mediaTypes";
 import { ContextDispatch } from "../config/store";
-import useUser from "../utils/useUser";
+import { useAuth } from "../utils/auth";
 import StarEmptyIcon from "./Icons/StartEmptyIcon";
 
 function Day({ diaryId }: { diaryId: string }): JSX.Element {
-  const { user } = useUser();
+  const { user } = useAuth();
   const dispatch = useContext(ContextDispatch);
   const { data } = useDocument<DiaryAdd>(
     user !== null && user ? `${user.email}/${diaryId}` : null

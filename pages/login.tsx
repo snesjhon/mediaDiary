@@ -6,11 +6,11 @@
  *   because there's multiple cookies.
  */
 
-// https://vriad.com/essays/nextjs-firebase-authentication
 import { Button, Heading, Spinner } from "@chakra-ui/core";
 import * as firebase from "firebase/app";
 import "firebase/auth";
-import Cookies from "js-cookie";
+import nookies from "nookies";
+import { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { setUserCookie } from "../utils/getUserFromCookie";
@@ -19,12 +19,10 @@ interface Props {
   isSending: boolean;
 }
 
-Login.getInitialProps = async (ctx: any) => {
-  const cookies = ctx?.req?.headers?.cookie;
-  const isSending =
-    typeof cookies !== "undefined" ? cookies.split("=")[1] : false;
+Login.getInitialProps = async (ctx: GetServerSidePropsContext) => {
+  const cookies = nookies.get(ctx);
   return {
-    isSending,
+    isSending: cookies.authPending,
   };
 };
 
@@ -33,7 +31,6 @@ function Login({ isSending }: Props): JSX.Element {
 
   useEffect(() => {
     if (isSending) {
-      Cookies.remove("authPending");
       firebase
         .auth()
         .getRedirectResult()
@@ -67,7 +64,7 @@ function Login({ isSending }: Props): JSX.Element {
       .auth()
       .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
       .then(() => {
-        Cookies.set("authPending", "true");
+        nookies.set({}, "authPending", "true", {});
         firebase.auth().signInWithRedirect(provider);
       });
   }
