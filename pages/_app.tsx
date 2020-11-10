@@ -4,6 +4,7 @@ import { ChakraProvider } from "@chakra-ui/core";
 import { Fuego, FuegoProvider } from "@nandorojo/swr-firestore";
 import "firebase/auth";
 import "firebase/firestore";
+import { AuthProvider } from "../utils/auth";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useReducer } from "react";
@@ -40,13 +41,15 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
         <meta name="apple-mobile-web-app-status-bar" content="#90cdf4" />
       </Head>
       <FuegoProvider fuego={fuego}>
-        <ContextState.Provider value={state}>
-          <ContextDispatch.Provider value={dispatch}>
-            <ChakraProvider resetCSS>
-              <Component {...pageProps} />
-            </ChakraProvider>
-          </ContextDispatch.Provider>
-        </ContextState.Provider>
+        <AuthProvider>
+          <ContextState.Provider value={state}>
+            <ContextDispatch.Provider value={dispatch}>
+              <ChakraProvider resetCSS>
+                <Component {...pageProps} />
+              </ChakraProvider>
+            </ContextDispatch.Provider>
+          </ContextState.Provider>
+        </AuthProvider>
       </FuegoProvider>
     </>
   );

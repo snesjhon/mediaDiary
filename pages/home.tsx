@@ -20,10 +20,10 @@ import Log from "../components/Log";
 import LogEdit from "../components/LogEdit";
 import MediaDiary from "../components/MediaDiary";
 import Search from "../components/Search";
-import useUser from "../utils/useUser";
+import { useAuth } from "../utils/auth";
 
 function Home(): JSX.Element {
-  const { user } = useUser();
+  const { user } = useAuth();
   const router = useRouter();
   return (
     <Layout>

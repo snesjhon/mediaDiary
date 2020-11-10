@@ -16,7 +16,7 @@ import React, { useContext } from "react";
 import Rating from "react-rating";
 import { DiaryAdd, DiaryState } from "../config/mediaTypes";
 import { ContextDispatch, ContextState } from "../config/store";
-import useUser from "../utils/useUser";
+import { useAuth } from "../utils/auth";
 import AlbumIcon from "./Icons/AlbumIcon";
 import FilmIcon from "./Icons/FilmIcon";
 import LogoIcon from "./Icons/LogoIcon";
@@ -34,7 +34,7 @@ function MediaDiary(): JSX.Element {
   const router = useRouter();
   const { filterBy, page } = useContext(ContextState);
   const dispatch = useContext(ContextDispatch);
-  const { user } = useUser();
+  const { user } = useAuth();
   const { data } = useCollection<DiaryAdd>(
     user === null || !user ? null : `${user.email}`,
     {

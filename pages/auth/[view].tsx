@@ -1,21 +1,20 @@
 import { Flex, Grid, Spinner } from "@chakra-ui/core";
 import firebase from "firebase/app";
-import Cookies from "js-cookie";
+import { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import LogoIcon from "../../components/Icons/LogoIcon";
 import { setUserCookie } from "../../utils/getUserFromCookie";
+import nookies from "nookies";
 
 interface Props {
   isSending: boolean;
 }
 
-AuthView.getInitialProps = async (ctx: any) => {
-  const cookies = ctx?.req?.headers?.cookie;
-  const isSending =
-    typeof cookies !== "undefined" ? cookies.split("=")[1] : false;
+AuthView.getInitialProps = async (ctx: GetServerSidePropsContext) => {
+  const cookies = nookies.get(ctx);
   return {
-    isSending,
+    isSending: cookies.authPending,
   };
 };
 
@@ -24,7 +23,7 @@ function AuthView({ isSending }: Props): JSX.Element {
 
   useEffect(() => {
     if (isSending) {
-      Cookies.remove("authPending");
+      nookies.destroy({}, "authPending");
       firebase
         .auth()
         .getRedirectResult()

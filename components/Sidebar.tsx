@@ -17,10 +17,11 @@ import {
   StatNumber,
   Text,
 } from "@chakra-ui/core";
-import { useCollection } from "@nandorojo/swr-firestore";
+import { fuego, useCollection } from "@nandorojo/swr-firestore";
+import { useRouter } from "next/router";
 import React from "react";
 import { DiaryAdd, MediaTypes } from "../config/mediaTypes";
-import useUser from "../utils/useUser";
+import { useAuth } from "../utils/auth";
 import LogoIcon from "./Icons/LogoIcon";
 
 function Sidebar({
@@ -30,7 +31,8 @@ function Sidebar({
   isOpen: boolean;
   onClose: () => void;
 }): JSX.Element | null {
-  const { user, logout } = useUser();
+  const { user } = useAuth();
+  const router = useRouter();
   const { data } = useCollection<DiaryAdd>(
     user !== null && user ? `${user.email}` : null
   );
@@ -92,7 +94,20 @@ function Sidebar({
                 </Flex>
               </DrawerBody>
               <DrawerFooter>
-                <Button color="blue" onClick={logout}>
+                <Button
+                  color="blue"
+                  onClick={() => {
+                    return fuego
+                      .auth()
+                      .signOut()
+                      .then(() => {
+                        return router.push("/");
+                      })
+                      .catch(() => {
+                        return console.error("logout failed");
+                      });
+                  }}
+                >
                   Logout
                 </Button>
               </DrawerFooter>
