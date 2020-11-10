@@ -44,45 +44,50 @@ function Home(): JSX.Element {
         <>
           <Header />
           <MediaDiary />
-          <Drawer
-            onClose={() => router.push("/home")}
-            isOpen={
-              !!router.query.day ||
-              !!router.query.search ||
-              !!router.query.log ||
-              !!router.query.edit
-            }
-            size="full"
-            placement={!router.query.day ? "right" : "bottom"}
-            initialFocusRef={refFirstField}
-          >
-            <DrawerOverlay zIndex={2}>
-              <DrawerContent>
-                <DrawerHeader>
-                  <Flex align="center">
-                    <LogoIcon boxSize={5} mr={1} />
-                    <Text
-                      fontSize={{ base: "md", md: "xl" }}
-                      color="purple.700"
-                      fontWeight="medium"
-                      cursor="pointer"
-                    >
-                      mediaDiary
-                    </Text>
-                  </Flex>
-                </DrawerHeader>
-                <DrawerCloseButton />
-                <DrawerBody>
-                  {!!router.query.day && (
-                    <Day diaryId={router.query.day.toString()} />
-                  )}
-                  {!!router.query.search && <Search />}
-                  {!!router.query.log && <Log />}
-                  {!!router.query.edit && <LogEdit />}
-                </DrawerBody>
-              </DrawerContent>
-            </DrawerOverlay>
-          </Drawer>
+          {(!!router.query.day ||
+            !!router.query.search ||
+            !!router.query.log ||
+            !!router.query.edit) && (
+            <Drawer
+              onClose={() => router.push("/home")}
+              isOpen={
+                !!router.query.day ||
+                !!router.query.search ||
+                !!router.query.log ||
+                !!router.query.edit
+              }
+              size="full"
+              placement={!router.query.day ? "right" : "bottom"}
+              initialFocusRef={refFirstField}
+            >
+              <DrawerOverlay zIndex={2}>
+                <DrawerContent>
+                  <DrawerHeader>
+                    <Flex align="center">
+                      <LogoIcon boxSize={5} mr={1} />
+                      <Text
+                        fontSize={{ base: "md", md: "xl" }}
+                        color="purple.700"
+                        fontWeight="medium"
+                        cursor="pointer"
+                      >
+                        mediaDiary
+                      </Text>
+                    </Flex>
+                  </DrawerHeader>
+                  <DrawerCloseButton />
+                  <DrawerBody>
+                    {!!router.query.day && (
+                      <Day diaryId={router.query.day.toString()} />
+                    )}
+                    {!!router.query.search && <Search />}
+                    {!!router.query.log && <Log />}
+                    {!!router.query.edit && <LogEdit />}
+                  </DrawerBody>
+                </DrawerContent>
+              </DrawerOverlay>
+            </Drawer>
+          )}
         </>
       )}
     </Layout>

@@ -71,9 +71,11 @@ function Search(): JSX.Element {
   );
 
   useEffect(() => {
-    if (refInput.current !== null) {
-      refInput.current.focus();
-    }
+    setTimeout(() => {
+      if (refInput.current !== null) {
+        refInput.current.focus();
+      }
+    }, 400);
   }, []);
 
   return (
