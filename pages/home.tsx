@@ -76,7 +76,7 @@ function Home(): JSX.Element {
                   {!!router.query.day && (
                     <Day diaryId={router.query.day.toString()} />
                   )}
-                  {!!router.query.search && <Search refFocus={refFirstField} />}
+                  {!!router.query.search && <Search />}
                   {!!router.query.log && <Log />}
                   {!!router.query.edit && <LogEdit />}
                 </DrawerBody>
