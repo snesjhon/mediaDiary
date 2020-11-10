@@ -74,6 +74,7 @@ function Search(): JSX.Element {
     setTimeout(() => {
       if (refInput.current !== null) {
         refInput.current.focus();
+        refInput.current.scrollIntoView();
       }
     }, 400);
   }, []);
@@ -90,6 +91,7 @@ function Search(): JSX.Element {
           value={search}
           type="search"
           ref={refInput}
+          autoFocus
         />
       </Box>
       {(!itunesData || !mdbData) && (itunesValidating || mdbValidating) && (
