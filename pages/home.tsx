@@ -53,7 +53,7 @@ function Home(): JSX.Element {
               !!router.query.edit
             }
             size="full"
-            placement={!router.query.search ? "right" : "bottom"}
+            placement={!router.query.day ? "right" : "bottom"}
             initialFocusRef={refFirstField}
           >
             <DrawerOverlay zIndex={2}>
