@@ -1,4 +1,4 @@
-import { Button, Center, ModalFooter, Spinner } from "@chakra-ui/core";
+import { Button, Center, DrawerFooter, Spinner } from "@chakra-ui/core";
 import { set } from "@nandorojo/swr-firestore";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useReducer } from "react";
@@ -9,7 +9,6 @@ import { ContextState } from "../config/store";
 import { useAuth } from "../utils/auth";
 import { fetcher } from "../utils/helpers";
 import Info from "./Info";
-import LayoutModal from "./LayoutModal";
 import LogFields from "./LogFields";
 
 function Log(): JSX.Element {
@@ -144,7 +143,7 @@ function Log(): JSX.Element {
   }
 
   return (
-    <LayoutModal>
+    <>
       {isLoading ? (
         <Center minH="40vh">
           <Spinner />
@@ -157,7 +156,7 @@ function Log(): JSX.Element {
             type={mediaInfo?.type}
             item={logFields}
           />
-          <ModalFooter px={0} pt={2} pb={1} mt={2}>
+          <DrawerFooter px={0} pt={2} pb={1} mt={2}>
             <Button
               onClick={addData}
               isLoading={isSaving}
@@ -167,10 +166,10 @@ function Log(): JSX.Element {
             >
               Save
             </Button>
-          </ModalFooter>
+          </DrawerFooter>
         </>
       )}
-    </LayoutModal>
+    </>
   );
 
   function addData() {

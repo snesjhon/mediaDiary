@@ -114,7 +114,7 @@ function Day({ diaryId }: { diaryId: string }): JSX.Element {
                       diary: data,
                     },
                   });
-                  router.push("/home/?view=edit", "/edit", {
+                  router.push("/home/?edit=true", "/edit", {
                     shallow: true,
                   });
                 }}

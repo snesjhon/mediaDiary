@@ -1,4 +1,4 @@
-import { Button, Center, ModalFooter, Spinner } from "@chakra-ui/core";
+import { Button, Center, DrawerFooter, Spinner } from "@chakra-ui/core";
 import { deleteDocument, update } from "@nandorojo/swr-firestore";
 import firebase from "firebase/app";
 import { useRouter } from "next/router";
@@ -8,7 +8,6 @@ import { DiaryAdd } from "../config/mediaTypes";
 import { ContextState } from "../config/store";
 import { useAuth } from "../utils/auth";
 import Info from "./Info";
-import LayoutModal from "./LayoutModal";
 import LogFields from "./LogFields";
 
 function Edit(): JSX.Element {
@@ -50,7 +49,7 @@ function Edit(): JSX.Element {
   ] = useReducer(LogReducer, initData);
 
   return (
-    <LayoutModal>
+    <>
       {isLoading ? (
         <Center minH="40vh">
           <Spinner />
@@ -72,7 +71,7 @@ function Edit(): JSX.Element {
             }}
             isEdit
           />
-          <ModalFooter
+          <DrawerFooter
             px={0}
             pt={2}
             pb={1}
@@ -97,10 +96,10 @@ function Edit(): JSX.Element {
             >
               Save
             </Button>
-          </ModalFooter>
+          </DrawerFooter>
         </>
       )}
-    </LayoutModal>
+    </>
   );
   function editData() {
     if (
