@@ -10,7 +10,13 @@ import {
 } from "@chakra-ui/core";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
-import React, { MutableRefObject, useContext, useState } from "react";
+import React, {
+  MutableRefObject,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import useSWR from "swr";
 import type { MediaSelected, MediaTypes } from "../config/mediaTypes";
 import { ContextDispatch } from "../config/store";
@@ -20,17 +26,14 @@ import AlbumIcon from "./Icons/AlbumIcon";
 import FilmIcon from "./Icons/FilmIcon";
 import TvIcon from "./Icons/TvIcon";
 
-function Search({
-  refFocus,
-}: {
-  refFocus: MutableRefObject<null>;
-}): JSX.Element {
+function Search(): JSX.Element {
   const [search, setSearch] = useState("");
   const [currMovie, setCurrMovie] = useState(3);
   const [currTv, setCurrTv] = useState(3);
   const [currAlbum, setCurrAlbum] = useState(3);
   const dispatch = useContext(ContextDispatch);
   const router = useRouter();
+  const refInput = useRef<HTMLInputElement>(null);
 
   const bouncedSearch = useDebounce(search, 500);
   const {
@@ -67,6 +70,12 @@ function Search({
     }
   );
 
+  useEffect(() => {
+    if (refInput.current !== null) {
+      refInput.current.focus();
+    }
+  }, []);
+
   return (
     <>
       <Heading mb={3} size="lg">
@@ -78,7 +87,7 @@ function Search({
           onChange={(e) => setSearch(e.target.value)}
           value={search}
           type="search"
-          ref={refFocus}
+          ref={refInput}
         />
       </Box>
       {(!itunesData || !mdbData) && (itunesValidating || mdbValidating) && (
