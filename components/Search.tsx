@@ -2,20 +2,15 @@ import {
   Box,
   Center,
   Flex,
+  Heading,
   Icon,
   Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Spinner,
   Text,
 } from "@chakra-ui/core";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
-import React, { useContext, useRef, useState } from "react";
+import React, { MutableRefObject, useContext, useState } from "react";
 import useSWR from "swr";
 import type { MediaSelected, MediaTypes } from "../config/mediaTypes";
 import { ContextDispatch } from "../config/store";
@@ -24,16 +19,18 @@ import useDebounce from "../utils/useDebounce";
 import AlbumIcon from "./Icons/AlbumIcon";
 import FilmIcon from "./Icons/FilmIcon";
 import TvIcon from "./Icons/TvIcon";
-import LogoIcon from "./Icons/LogoIcon";
 
-function Search(): JSX.Element {
+function Search({
+  refFocus,
+}: {
+  refFocus: MutableRefObject<null>;
+}): JSX.Element {
   const [search, setSearch] = useState("");
   const [currMovie, setCurrMovie] = useState(3);
   const [currTv, setCurrTv] = useState(3);
   const [currAlbum, setCurrAlbum] = useState(3);
   const dispatch = useContext(ContextDispatch);
   const router = useRouter();
-  const SearchRef = useRef<HTMLInputElement>(null);
 
   const bouncedSearch = useDebounce(search, 500);
   const {
@@ -71,49 +68,31 @@ function Search(): JSX.Element {
   );
 
   return (
-    <Modal
-      isOpen={true}
-      onClose={() => router.push("/home")}
-      scrollBehavior="inside"
-      size="sm"
-      initialFocusRef={SearchRef}
-    >
-      <ModalOverlay px={4} sx={{ zIndex: 2 }}>
-        <ModalContent maxHeight="50vh">
-          <ModalCloseButton />
-          <ModalHeader pb={2}>
-            <Flex alignItems="center">
-              <LogoIcon boxSize={5} mr={1} />
-              <Text color="purple.700" fontWeight="medium">
-                Search
-              </Text>
-            </Flex>
-          </ModalHeader>
-          <ModalBody pt={0} pb={6}>
-            <Box position="sticky" pt={1} top={0} bgColor="white">
-              <Input
-                placeholder="search"
-                onChange={(e) => setSearch(e.target.value)}
-                value={search}
-                type="search"
-                ref={SearchRef}
-              />
-            </Box>
-            {(!itunesData || !mdbData) && (itunesValidating || mdbValidating) && (
-              <Center h="20vh">
-                <Spinner
-                  thickness="4px"
-                  speed="0.65s"
-                  emptyColor="gray.200"
-                  color="blue.500"
-                />
-              </Center>
-            )}
-            {itunesData && mdbData && createData(itunesData, mdbData)}
-          </ModalBody>
-        </ModalContent>
-      </ModalOverlay>
-    </Modal>
+    <>
+      <Heading mb={3} size="lg">
+        Add To Your Diary
+      </Heading>
+      <Box position="sticky" pt={1} top={0} bgColor="white">
+        <Input
+          placeholder="Search for Albums, TV, or Film"
+          onChange={(e) => setSearch(e.target.value)}
+          value={search}
+          type="search"
+          ref={refFocus}
+        />
+      </Box>
+      {(!itunesData || !mdbData) && (itunesValidating || mdbValidating) && (
+        <Center h="20vh">
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.500"
+          />
+        </Center>
+      )}
+      {itunesData && mdbData && createData(itunesData, mdbData)}
+    </>
   );
 
   function createData(itunesData: any, mdbData: any) {

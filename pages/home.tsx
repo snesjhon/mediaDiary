@@ -11,7 +11,7 @@ import {
   Spinner,
 } from "@chakra-ui/core";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useRef } from "react";
 import Day from "../components/Day";
 import Header from "../components/Header";
 import LogoIcon from "../components/Icons/LogoIcon";
@@ -25,6 +25,7 @@ import { useAuth } from "../utils/auth";
 function Home(): JSX.Element {
   const { user } = useAuth();
   const router = useRouter();
+  const refFirstField = useRef(null);
   return (
     <Layout>
       {!user ? (
@@ -43,13 +44,17 @@ function Home(): JSX.Element {
         <>
           <Header />
           <MediaDiary />
-          {!!router.query.search && <Search />}
-          {!!router.query.log && <Log />}
-          {!!router.query.view && router.query.view === "edit" && <LogEdit />}
           <Drawer
             onClose={() => router.push("/home")}
-            isOpen={!!router.query.day}
+            isOpen={
+              !!router.query.day ||
+              !!router.query.search ||
+              !!router.query.log ||
+              !!router.query.edit
+            }
             size="full"
+            placement={!router.query.search ? "right" : "bottom"}
+            initialFocusRef={refFirstField}
           >
             <DrawerOverlay zIndex={2}>
               <DrawerContent>
@@ -71,6 +76,9 @@ function Home(): JSX.Element {
                   {!!router.query.day && (
                     <Day diaryId={router.query.day.toString()} />
                   )}
+                  {!!router.query.search && <Search refFocus={refFirstField} />}
+                  {!!router.query.log && <Log />}
+                  {!!router.query.edit && <LogEdit />}
                 </DrawerBody>
               </DrawerContent>
             </DrawerOverlay>
