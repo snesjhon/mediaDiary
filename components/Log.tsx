@@ -1,18 +1,20 @@
-import { Button, Center, DrawerFooter, Spinner } from "@chakra-ui/core";
+import { Button, Center, DrawerFooter, Spinner } from "@chakra-ui/react";
 import { set } from "@nandorojo/swr-firestore";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useReducer } from "react";
 import useSWR from "swr";
 import { LogProps, LogReducer, LogState } from "../config/logStore";
 import { DiaryAdd } from "../config/mediaTypes";
-import { ContextState } from "../config/store";
+import { ContextState, useMDDispatch, useMDState } from "../config/store";
 import { useAuth } from "../utils/auth";
 import { fetcher } from "../utils/helpers";
 import Info from "./Info";
 import LogFields from "./LogFields";
 
 function Log(): JSX.Element {
-  const { selected } = useContext(ContextState);
+  // const { selected } = useContext(ContextState);
+  const { selected, isSaving } = useMDState();
+  const mdDispatch = useMDDispatch();
   const { user } = useAuth();
   const router = useRouter();
 
@@ -41,7 +43,6 @@ function Log(): JSX.Element {
     diaryDate: new Date(),
     loggedBefore: false,
     rating: 0,
-    isSaving: false,
     isLoading: typeof selected !== "undefined" ? !data && !error : false,
     artist: "",
     poster: "",
@@ -77,7 +78,6 @@ function Log(): JSX.Element {
       overview,
       externalSeason,
       externalSeasons,
-      isSaving,
       isLoading,
     },
     dispatch,
@@ -144,7 +144,7 @@ function Log(): JSX.Element {
 
   return (
     <>
-      {isLoading ? (
+      {isLoading || isSaving ? (
         <Center minH="40vh">
           <Spinner />
         </Center>
@@ -177,13 +177,7 @@ function Log(): JSX.Element {
       const currentDate = new Date();
       const addDiary = createDiary(currentDate);
       if (addDiary) {
-        dispatch({
-          type: "state",
-          payload: {
-            key: "isSaving",
-            value: true,
-          },
-        });
+        mdDispatch({ type: "saving" });
         const updatePromise = set(
           `${user.email}/${currentDate.getTime()}`,
           addDiary
@@ -191,13 +185,7 @@ function Log(): JSX.Element {
         if (updatePromise !== null) {
           updatePromise
             .then(() => {
-              dispatch({
-                type: "state",
-                payload: {
-                  key: "isSaving",
-                  value: false,
-                },
-              });
+              mdDispatch({ type: "saved" });
               return router.push("/home");
             })
             .catch(() => {

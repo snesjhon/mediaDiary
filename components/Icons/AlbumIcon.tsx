@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon, IconProps } from "@chakra-ui/core";
+import { Icon, IconProps } from "@chakra-ui/react";
 
 function AlbumIcon(props: IconProps): JSX.Element {
   return (
