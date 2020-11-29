@@ -1,4 +1,4 @@
-import { Center, Flex, Heading, Image, Text } from "@chakra-ui/react";
+import { Center, Flex, Heading, Image, Text } from "@chakra-ui/core";
 import React from "react";
 import { MediaBase, MediaSelected } from "../config/mediaTypes";
 
@@ -6,7 +6,7 @@ interface Props {
   item: MediaBase | MediaSelected;
 }
 
-function Info({ item }: Props): JSX.Element {
+function Info({ item }: Props):JSX.Element {
   return (
     <>
       <Flex

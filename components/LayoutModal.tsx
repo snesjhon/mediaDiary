@@ -4,7 +4,7 @@ import {
   ModalContent,
   ModalCloseButton,
   ModalBody,
-} from "@chakra-ui/react";
+} from "@chakra-ui/core";
 import { useRouter } from "next/router";
 import React, { PropsWithChildren } from "react";
 

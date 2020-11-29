@@ -13,8 +13,8 @@ export interface LogProps {
 }
 
 export interface LogState extends LogProps {
-  isSaving?: boolean;
-  isLoading?: boolean;
+  isSaving: boolean;
+  isLoading: boolean;
   artist: DiaryAdd["artist"];
   genre: DiaryAdd["genre"];
   overview?: DiaryAdd["overview"];

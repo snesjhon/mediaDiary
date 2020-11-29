@@ -11,7 +11,7 @@ import {
   HStack,
   IconButton,
   Text,
-} from "@chakra-ui/react";
+} from "@chakra-ui/core";
 import React, { useContext, useState } from "react";
 import { MediaTypes } from "../config/mediaTypes";
 import { ContextDispatch, ContextState } from "../config/store";

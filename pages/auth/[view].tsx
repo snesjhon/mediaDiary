@@ -1,4 +1,4 @@
-import { Flex, Grid, Spinner } from "@chakra-ui/react";
+import { Flex, Grid, Spinner } from "@chakra-ui/core";
 import firebase from "firebase/app";
 import { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
