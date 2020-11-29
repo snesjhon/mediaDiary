@@ -6,7 +6,7 @@ import {
   IconButton,
   Text,
   useDisclosure,
-} from "@chakra-ui/core";
+} from "@chakra-ui/react";
 import { AddIcon, HamburgerIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -15,6 +15,7 @@ import Filters from "./Filters";
 import FiltersIcon from "./Icons/FiltersIcon";
 import LogoIcon from "./Icons/LogoIcon";
 import Sidebar from "./Sidebar";
+import { useMDDispatch } from "../config/store";
 
 function Header(): JSX.Element {
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -23,7 +24,7 @@ function Header(): JSX.Element {
     onClose: menuOnClose,
     onOpen: menuOnOpen,
   } = useDisclosure();
-  const router = useRouter();
+  const dispatch = useMDDispatch();
   return (
     <>
       <Box
@@ -77,8 +78,9 @@ function Header(): JSX.Element {
                 size="sm"
                 colorScheme="purple"
                 onClick={() =>
-                  router.push("/home/?search=true", "/search", {
-                    shallow: true,
+                  dispatch({
+                    type: "state",
+                    payload: { key: "view", value: "search" },
                   })
                 }
               />

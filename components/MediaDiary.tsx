@@ -8,7 +8,7 @@ import {
   Image,
   Spinner,
   Text,
-} from "@chakra-ui/core";
+} from "@chakra-ui/react";
 import { StarIcon } from "@chakra-ui/icons";
 import { useCollection } from "@nandorojo/swr-firestore";
 import { useRouter } from "next/router";
