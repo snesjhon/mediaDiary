@@ -1,6 +1,6 @@
 // https://sergiodxa.com/articles/redirects-in-next-the-good-way
 
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/core";
 import { Fuego, FuegoProvider } from "@nandorojo/swr-firestore";
 import "firebase/auth";
 import "firebase/firestore";

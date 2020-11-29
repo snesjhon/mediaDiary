@@ -6,7 +6,7 @@
  *   because there's multiple cookies.
  */
 
-import { Button, Heading, Spinner } from "@chakra-ui/react";
+import { Button, Heading, Spinner } from "@chakra-ui/core";
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import nookies from "nookies";

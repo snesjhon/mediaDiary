@@ -8,7 +8,7 @@ import {
   Select,
   SimpleGrid,
   Text,
-} from "@chakra-ui/react";
+} from "@chakra-ui/core";
 import { StarIcon } from "@chakra-ui/icons";
 import dayjs from "dayjs";
 import React, { Dispatch, useState } from "react";

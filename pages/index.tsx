@@ -15,7 +15,7 @@ import {
   Spinner,
   Text,
   VStack,
-} from "@chakra-ui/react";
+} from "@chakra-ui/core";
 import firebase from "firebase/app";
 import "firebase/auth";
 import nookies from "nookies";

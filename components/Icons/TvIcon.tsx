@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon, IconProps } from "@chakra-ui/react";
+import { Icon, IconProps } from "@chakra-ui/core";
 
 function TvIcon(props: IconProps): JSX.Element {
   return (

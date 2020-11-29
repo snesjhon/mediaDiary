@@ -1,18 +1,17 @@
-import { Button, Center, DrawerFooter, Spinner } from "@chakra-ui/react";
+import { Button, Center, DrawerFooter, Spinner } from "@chakra-ui/core";
 import { deleteDocument, update } from "@nandorojo/swr-firestore";
 import firebase from "firebase/app";
 import { useRouter } from "next/router";
-import React, { useReducer } from "react";
+import React, { useContext, useReducer } from "react";
 import { LogReducer } from "../config/logStore";
 import { DiaryAdd } from "../config/mediaTypes";
-import { useMDDispatch, useMDState } from "../config/store";
+import { ContextState } from "../config/store";
 import { useAuth } from "../utils/auth";
 import Info from "./Info";
 import LogFields from "./LogFields";
 
 function Edit(): JSX.Element {
-  const { edit, isSaving } = useMDState();
-  const mdDispatch = useMDDispatch();
+  const { edit } = useContext(ContextState);
   const { user } = useAuth();
   const router = useRouter();
 
@@ -20,6 +19,8 @@ function Edit(): JSX.Element {
     diaryDate: new Date(),
     loggedBefore: false,
     rating: 0,
+    isLoading: false,
+    isSaving: false,
     artist: "",
     genre: "",
     poster: "",
@@ -33,13 +34,23 @@ function Edit(): JSX.Element {
   }
 
   const [
-    { diaryDate, loggedBefore, rating, episodes, poster, seenEpisodes, season },
+    {
+      diaryDate,
+      loggedBefore,
+      isSaving,
+      rating,
+      episodes,
+      poster,
+      isLoading,
+      seenEpisodes,
+      season,
+    },
     dispatch,
   ] = useReducer(LogReducer, initData);
 
   return (
     <>
-      {isSaving ? (
+      {isLoading ? (
         <Center minH="40vh">
           <Spinner />
         </Center>
@@ -97,7 +108,13 @@ function Edit(): JSX.Element {
       user.email !== null &&
       typeof edit !== "undefined"
     ) {
-      mdDispatch({ type: "saving" });
+      dispatch({
+        type: "state",
+        payload: {
+          key: "isLoading",
+          value: true,
+        },
+      });
       const diaryEdit = createEdit();
       if (diaryEdit) {
         const updatePromise = update(
@@ -106,7 +123,13 @@ function Edit(): JSX.Element {
         );
         if (updatePromise) {
           updatePromise.then(() => {
-            mdDispatch({ type: "saved" });
+            dispatch({
+              type: "state",
+              payload: {
+                key: "isLoading",
+                value: false,
+              },
+            });
             return router.push("/home");
           });
         }
@@ -124,23 +147,19 @@ function Edit(): JSX.Element {
         diaryDate: localDiaryDate,
         loggedBefore: localLoggedBefore,
         rating: localRating,
-        seenEpisodes: localSeenEpisodes,
         id,
         hasPendingWrites,
         exists,
         __snapshot,
         ...rest
       } = edit.diary;
-      let replacedEpisodes = localSeenEpisodes;
-      // something here where the "rest" might be overriding this
-      if (typeof seenEpisodes !== "undefined") {
-        replacedEpisodes = seenEpisodes;
-      }
       return {
         diaryDate: firebase.firestore.Timestamp.fromDate(diaryDate),
         loggedBefore,
         rating,
-        seenEpisodes: replacedEpisodes,
+        ...(typeof seenEpisodes !== "undefined" && {
+          seenEpisodes: seenEpisodes,
+        }),
         ...rest,
       };
     } else {
@@ -155,11 +174,23 @@ function Edit(): JSX.Element {
       user &&
       user.email !== null
     ) {
-      mdDispatch({ type: "saving" });
+      dispatch({
+        type: "state",
+        payload: {
+          key: "isSaving",
+          value: true,
+        },
+      });
       const deletedPromise = deleteDocument(`${user.email}/${edit.diaryId}`);
       if (deletedPromise) {
         deletedPromise.then(() => {
-          mdDispatch({ type: "saved" });
+          dispatch({
+            type: "state",
+            payload: {
+              key: "isSaving",
+              value: false,
+            },
+          });
           return router.push("/home");
         });
       } else {
