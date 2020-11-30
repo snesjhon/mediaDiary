@@ -7,7 +7,7 @@ import {
   IconButton,
   Image,
   Text,
-} from "@chakra-ui/core";
+} from "@chakra-ui/react";
 import { EditIcon, StarIcon } from "@chakra-ui/icons";
 import { useDocument } from "@nandorojo/swr-firestore";
 import dayjs from "dayjs";

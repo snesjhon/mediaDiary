@@ -1,4 +1,4 @@
-import { Button, Center, DrawerFooter, Spinner } from "@chakra-ui/core";
+import { Button, Center, DrawerFooter, Spinner } from "@chakra-ui/react";
 import { set } from "@nandorojo/swr-firestore";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useReducer } from "react";
