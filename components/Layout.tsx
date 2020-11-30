@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from "react";
-import { Box, Container } from "@chakra-ui/core";
+import { Box, Container } from "@chakra-ui/react";
 
 function Layout({ children }: PropsWithChildren<unknown>): JSX.Element {
   return (
