@@ -14,6 +14,7 @@ import type { PropsWithChildren } from "react";
 import { useMDDispatch } from "../config/store";
 import LogoIcon from "./Icons/LogoIcon";
 import { useRouter } from "next/router";
+import { useSwipeable } from "react-swipeable";
 
 function LayoutDrawer({
   children,
@@ -28,14 +29,13 @@ function LayoutDrawer({
 }): JSX.Element {
   const router = useRouter();
   const dispatch = useMDDispatch();
+  const handlers = useSwipeable({
+    onSwipedRight: () => onClose(),
+    onSwipedDown: () => onClose(),
+  });
   return (
     <Drawer
-      onClose={() => {
-        dispatch({ type: "state", payload: { key: "view", value: "" } });
-        if (isRoute) {
-          router.push("/home");
-        }
-      }}
+      onClose={onClose}
       isOpen={true}
       size="full"
       placement={placement}
@@ -58,11 +58,20 @@ function LayoutDrawer({
             </Flex>
           </DrawerHeader>
           <DrawerCloseButton />
-          <DrawerBody>{children}</DrawerBody>
+          <DrawerBody>
+            <div {...handlers}>{children}</div>
+          </DrawerBody>
         </DrawerContent>
       </DrawerOverlay>
     </Drawer>
   );
+
+  function onClose() {
+    dispatch({ type: "state", payload: { key: "view", value: "" } });
+    if (isRoute) {
+      router.push("/home");
+    }
+  }
 }
 
 export default LayoutDrawer;

@@ -13,6 +13,7 @@ import { useDocument } from "@nandorojo/swr-firestore";
 import dayjs from "dayjs";
 import React from "react";
 import Rating from "react-rating";
+import { useSwipeable } from "react-swipeable";
 import { DiaryAdd } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
 import { useAuth } from "../utils/auth";
