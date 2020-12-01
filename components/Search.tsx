@@ -5,6 +5,12 @@ import {
   Heading,
   Icon,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Spinner,
   Text,
 } from "@chakra-ui/react";
@@ -12,14 +18,13 @@ import dayjs from "dayjs";
 import React, { useRef, useState } from "react";
 import useSWR from "swr";
 import type { MediaSelected, MediaTypes } from "../config/mediaTypes";
-import { useMDDispatch, useMDState } from "../config/store";
+import { useMDDispatch } from "../config/store";
 import { fetcher } from "../utils/helpers";
 import useDebounce from "../utils/useDebounce";
 import AlbumIcon from "./Icons/AlbumIcon";
 import FilmIcon from "./Icons/FilmIcon";
+import LogoIcon from "./Icons/LogoIcon";
 import TvIcon from "./Icons/TvIcon";
-import LayoutDrawer from "./LayoutDrawer";
-import Log from "./Log";
 
 function Search(): JSX.Element {
   const [search, setSearch] = useState("");
@@ -27,7 +32,6 @@ function Search(): JSX.Element {
   const [currTv, setCurrTv] = useState(3);
   const [currAlbum, setCurrAlbum] = useState(3);
   const dispatch = useMDDispatch();
-  const { view } = useMDState();
   const refInput = useRef<HTMLInputElement>(null);
 
   const bouncedSearch = useDebounce(search, 500);
@@ -66,37 +70,55 @@ function Search(): JSX.Element {
   );
 
   return (
-    <LayoutDrawer refHook={refInput}>
-      {view === "search" && (
-        <>
-          <Heading mb={3} size="lg">
-            Add To Your Diary
-          </Heading>
-          <Box position="sticky" pt={1} top={0} bgColor="white">
-            <Input
-              placeholder="Search for Albums, TV, or Film"
-              onChange={(e) => setSearch(e.target.value)}
-              value={search}
-              type="search"
-              ref={refInput}
-              autoFocus
-            />
-          </Box>
-          {(!itunesData || !mdbData) && (itunesValidating || mdbValidating) && (
-            <Center h="20vh">
-              <Spinner
-                thickness="4px"
-                speed="0.65s"
-                emptyColor="gray.200"
-                color="blue.500"
+    <Modal
+      isOpen={true}
+      onClose={() =>
+        dispatch({ type: "state", payload: { key: "view", value: "" } })
+      }
+      scrollBehavior="inside"
+      size="sm"
+      initialFocusRef={refInput}
+    >
+      <ModalOverlay px={4} sx={{ zIndex: 2 }}>
+        <ModalContent maxHeight="50vh">
+          <ModalCloseButton />
+          <ModalHeader pb={2}>
+            <Flex alignItems="center">
+              <LogoIcon boxSize={5} mr={1} />
+              <Text color="purple.700" fontWeight="medium">
+                Search
+              </Text>
+            </Flex>
+          </ModalHeader>
+          <ModalBody pt={0} pb={6}>
+            <Heading mb={3} size="lg">
+              Add To Your Diary
+            </Heading>
+            <Box position="sticky" pt={1} top={0} bgColor="white">
+              <Input
+                placeholder="Search for Albums, TV, or Film"
+                onChange={(e) => setSearch(e.target.value)}
+                value={search}
+                type="search"
+                ref={refInput}
+                autoFocus
               />
-            </Center>
-          )}
-          {itunesData && mdbData && createData(itunesData, mdbData)}
-        </>
-      )}
-      {view === "log" && <Log />}
-    </LayoutDrawer>
+            </Box>
+            {(!itunesData || !mdbData) && (itunesValidating || mdbValidating) && (
+              <Center h="20vh">
+                <Spinner
+                  thickness="4px"
+                  speed="0.65s"
+                  emptyColor="gray.200"
+                  color="blue.500"
+                />
+              </Center>
+            )}
+            {itunesData && mdbData && createData(itunesData, mdbData)}
+          </ModalBody>
+        </ModalContent>
+      </ModalOverlay>
+    </Modal>
   );
 
   function createData(itunesData: any, mdbData: any) {

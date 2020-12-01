@@ -9,6 +9,7 @@ import { ContextState, useMDDispatch, useMDState } from "../config/store";
 import { useAuth } from "../utils/auth";
 import { fetcher } from "../utils/helpers";
 import Info from "./Info";
+import LayoutDrawer from "./LayoutDrawer";
 import LogFields from "./LogFields";
 
 function Log(): JSX.Element {
@@ -143,7 +144,7 @@ function Log(): JSX.Element {
   }
 
   return (
-    <>
+    <LayoutDrawer>
       {isLoading || isSaving ? (
         <Center minH="40vh">
           <Spinner />
@@ -169,7 +170,7 @@ function Log(): JSX.Element {
           </DrawerFooter>
         </>
       )}
-    </>
+    </LayoutDrawer>
   );
 
   function addData() {

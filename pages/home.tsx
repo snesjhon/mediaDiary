@@ -5,6 +5,7 @@ import Day from "../components/Day";
 import Header from "../components/Header";
 import LogoIcon from "../components/Icons/LogoIcon";
 import Layout from "../components/Layout";
+import Log from "../components/Log";
 import MediaDiary from "../components/MediaDiary";
 import Search from "../components/Search";
 import { useMDState } from "../config/store";
@@ -31,7 +32,8 @@ function Home(): JSX.Element {
         <>
           <Header />
           <MediaDiary />
-          {(view === "search" || view === "log") && <Search />}
+          {view === "search" && <Search />}
+          {view === "log" && <Log />}
           {(view === "day" || view === "edit") && <Day />}
         </>
       )}
