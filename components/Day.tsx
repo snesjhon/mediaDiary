@@ -20,7 +20,7 @@ import Edit from "./Edit";
 import StarEmptyIcon from "./Icons/StartEmptyIcon";
 import LayoutDrawer from "./LayoutDrawer";
 
-function Day(): JSX.Element {
+function Day(): JSX.Element | null {
   const { user } = useAuth();
   const dispatch = useMDDispatch();
   const { view, edit } = useMDState();
@@ -143,7 +143,7 @@ function Day(): JSX.Element {
       </LayoutDrawer>
     );
   }
-  return <div>Nothing to show</div>;
+  return null;
 }
 
 export default Day;

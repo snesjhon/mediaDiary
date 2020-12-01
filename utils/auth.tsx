@@ -25,7 +25,6 @@ export function AuthProvider({ children }: Props): JSX.Element {
     return fuego.auth().onIdTokenChanged(async (user) => {
       if (!user) {
         setUser(false);
-        // nookies.set(undefined, "token", "", {});
         removeUserCookie();
         return;
       }

@@ -7,7 +7,7 @@ export interface MDState {
   view?: "search" | "log" | "edit" | "day";
   selected?: MediaSelected;
   edit?: MediaEdit;
-  filterBy: MediaTypes[];
+  filterBy: MediaTypes[] | "all";
 }
 
 type Actions =
@@ -62,7 +62,7 @@ export function Reducer(state: MDState, actions: Actions): MDState {
       return {
         ...state,
         isSaving: false,
-        view: undefined,
+        view: "day",
       };
     }
     case "log": {
@@ -96,7 +96,7 @@ export function Reducer(state: MDState, actions: Actions): MDState {
 
 export const ContextState = createContext<MDState>({
   page: 1,
-  filterBy: ["album", "movie", "tv"],
+  filterBy: "all",
 });
 
 export const ContextDispatch = createContext<(props: Actions) => void>(

@@ -1,20 +1,16 @@
 import { Flex, Grid, Spinner } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import React from "react";
 import Day from "../components/Day";
-import Edit from "../components/Edit";
 import Header from "../components/Header";
 import LogoIcon from "../components/Icons/LogoIcon";
 import Layout from "../components/Layout";
 import Log from "../components/Log";
 import MediaDiary from "../components/MediaDiary";
 import Search from "../components/Search";
-import { useMDState } from "../config/store";
 import { useAuth } from "../utils/auth";
 
 function Home(): JSX.Element {
   const { user } = useAuth();
-  const { view } = useMDState();
   return (
     <Layout>
       {!user ? (
