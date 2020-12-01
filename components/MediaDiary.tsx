@@ -28,6 +28,7 @@ interface ListState {
 
 const LIMIT = 30;
 const ORDERBY = "diaryDate";
+const MEDIATYPESLENGTH = 3;
 
 function MediaDiary(): JSX.Element {
   const { filterBy, page } = useMDState();
@@ -44,7 +45,7 @@ function MediaDiary(): JSX.Element {
   if (data) {
     const currentRange = page * LIMIT;
     const diaryList = data.filter((e) =>
-      filterBy === "all" ? e : filterBy.includes(e.type)
+      filterBy.length === MEDIATYPESLENGTH ? e : filterBy.includes(e.type)
     );
 
     const diaryDates: ListState = diaryList
