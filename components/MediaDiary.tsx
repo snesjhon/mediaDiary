@@ -28,6 +28,7 @@ interface ListState {
 
 const LIMIT = 30;
 const ORDERBY = "diaryDate";
+const MEDIATYPESLENGTH = 3;
 
 function MediaDiary(): JSX.Element {
   const { filterBy, page } = useMDState();
@@ -43,13 +44,12 @@ function MediaDiary(): JSX.Element {
 
   if (data) {
     const currentRange = page * LIMIT;
-    const diaryDates: ListState = data
-      .filter(
-        (e, i) =>
-          filterBy.includes(e.type) &&
-          i < currentRange &&
-          i >= currentRange - LIMIT
-      )
+    const diaryList = data.filter((e) =>
+      filterBy.length === MEDIATYPESLENGTH ? e : filterBy.includes(e.type)
+    );
+
+    const diaryDates: ListState = diaryList
+      .filter((_, i) => i < currentRange && i >= currentRange - LIMIT)
       .reduce<ListState>((a, c) => {
         const dateString = c.diaryDate.toDate().toLocaleDateString("en-us", {
           month: "short",
@@ -240,20 +240,21 @@ function MediaDiary(): JSX.Element {
           })}
         <Center py={4}>
           <HStack spacing="24px">
-            {new Array(Math.ceil(data.length / LIMIT))
+            {new Array(Math.ceil(diaryList.length / LIMIT))
               .fill(null)
               .map((_, i) => (
                 <Button
                   key={`pagination_${i}`}
-                  onClick={() =>
+                  onClick={() => {
                     dispatch({
                       type: "state",
                       payload: {
                         key: "page",
                         value: i + 1,
                       },
-                    })
-                  }
+                    });
+                    return window.scrollTo({ top: 0 });
+                  }}
                 >
                   {i + 1}
                 </Button>

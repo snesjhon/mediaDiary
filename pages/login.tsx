@@ -7,7 +7,7 @@
  */
 
 import { Button, Heading, Spinner } from "@chakra-ui/react";
-import * as firebase from "firebase/app";
+import firebase from "firebase/app";
 import "firebase/auth";
 import nookies from "nookies";
 import { GetServerSidePropsContext } from "next";
