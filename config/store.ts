@@ -4,7 +4,7 @@ import { MediaEdit, MediaSelected, MediaTypes } from "./mediaTypes";
 export interface MDState {
   page: number;
   isSaving?: boolean;
-  view?: "search" | "log" | "edit";
+  view?: "search" | "log" | "edit" | "day";
   selected?: MediaSelected;
   edit?: MediaEdit;
   filterBy: MediaTypes[];
@@ -17,6 +17,10 @@ type Actions =
     }
   | {
       type: "edit";
+      payload: MDState["edit"];
+    }
+  | {
+      type: "day";
       payload: MDState["edit"];
     }
   | {
@@ -67,6 +71,14 @@ export function Reducer(state: MDState, actions: Actions): MDState {
         selected: actions.payload,
         view: "log",
         edit: undefined,
+      };
+    }
+    case "day": {
+      return {
+        ...state,
+        view: "day",
+        selected: undefined,
+        edit: actions.payload,
       };
     }
     case "edit": {

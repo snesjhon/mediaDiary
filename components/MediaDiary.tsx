@@ -1,3 +1,4 @@
+import { StarIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -9,13 +10,11 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react";
-import { StarIcon } from "@chakra-ui/icons";
 import { useCollection } from "@nandorojo/swr-firestore";
-import { useRouter } from "next/router";
-import React, { useContext } from "react";
+import React from "react";
 import Rating from "react-rating";
 import { DiaryAdd, DiaryState } from "../config/mediaTypes";
-import { ContextDispatch, ContextState } from "../config/store";
+import { useMDDispatch, useMDState } from "../config/store";
 import { useAuth } from "../utils/auth";
 import AlbumIcon from "./Icons/AlbumIcon";
 import FilmIcon from "./Icons/FilmIcon";
@@ -31,9 +30,8 @@ const LIMIT = 30;
 const ORDERBY = "diaryDate";
 
 function MediaDiary(): JSX.Element {
-  const router = useRouter();
-  const { filterBy, page } = useContext(ContextState);
-  const dispatch = useContext(ContextDispatch);
+  const { filterBy, page } = useMDState();
+  const dispatch = useMDDispatch();
   const { user } = useAuth();
   const { data } = useCollection<DiaryAdd>(
     user === null || !user ? null : `${user.email}`,
@@ -125,7 +123,13 @@ function MediaDiary(): JSX.Element {
                             cursor: "pointer",
                           }}
                           onClick={() =>
-                            router.push(`?day=${id}`, `/diary/${id}`)
+                            dispatch({
+                              type: "day",
+                              payload: {
+                                diaryId: id,
+                                diary: diaryDates[month][day],
+                              },
+                            })
                           }
                         >
                           <Box>

@@ -12,7 +12,6 @@ import { useAuth } from "../utils/auth";
 
 function Home(): JSX.Element {
   const { user } = useAuth();
-  const router = useRouter();
   const { view } = useMDState();
   return (
     <Layout>
@@ -33,7 +32,7 @@ function Home(): JSX.Element {
           <Header />
           <MediaDiary />
           {(view === "search" || view === "log") && <Search />}
-          {!!router.query.day && <Day diaryId={router.query.day.toString()} />}
+          {(view === "day" || view === "edit") && <Day />}
         </>
       )}
     </Layout>
