@@ -19,15 +19,14 @@ import { useSwipeable } from "react-swipeable";
 function LayoutDrawer({
   children,
   refHook,
-  isRoute,
   placement = "right",
+  isOpen,
   ...rest
 }: PropsWithChildren<unknown> & {
   refHook?: RefObject<HTMLInputElement> | undefined;
-  isRoute?: boolean;
+  isOpen: DrawerProps["isOpen"];
   placement?: DrawerProps["placement"];
 }): JSX.Element {
-  const router = useRouter();
   const dispatch = useMDDispatch();
   const handlers = useSwipeable({
     onSwipedRight: () => onClose(),
@@ -36,7 +35,7 @@ function LayoutDrawer({
   return (
     <Drawer
       onClose={onClose}
-      isOpen={true}
+      isOpen={isOpen}
       size="full"
       placement={placement}
       initialFocusRef={refHook}
@@ -68,9 +67,6 @@ function LayoutDrawer({
 
   function onClose() {
     dispatch({ type: "state", payload: { key: "view", value: "" } });
-    if (isRoute) {
-      router.push("/home");
-    }
   }
 }
 

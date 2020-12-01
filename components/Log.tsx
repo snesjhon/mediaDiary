@@ -13,8 +13,7 @@ import LayoutDrawer from "./LayoutDrawer";
 import LogFields from "./LogFields";
 
 function Log(): JSX.Element {
-  // const { selected } = useContext(ContextState);
-  const { selected, isSaving } = useMDState();
+  const { selected, isSaving, view } = useMDState();
   const mdDispatch = useMDDispatch();
   const { user } = useAuth();
   const router = useRouter();
@@ -144,7 +143,7 @@ function Log(): JSX.Element {
   }
 
   return (
-    <LayoutDrawer>
+    <LayoutDrawer isOpen={view === "log"}>
       {isLoading || isSaving ? (
         <Center minH="40vh">
           <Spinner />

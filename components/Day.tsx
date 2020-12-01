@@ -38,8 +38,12 @@ function Day(): JSX.Element {
       genre,
       releasedDate,
     } = data;
+
     return (
-      <LayoutDrawer placement="bottom" isRoute>
+      <LayoutDrawer
+        placement="bottom"
+        isOpen={view === "day" || view === "edit"}
+      >
         {view === "edit" ? (
           <Edit />
         ) : (

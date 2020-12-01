@@ -17,7 +17,7 @@ import dayjs from "dayjs";
 import React, { useRef, useState } from "react";
 import useSWR from "swr";
 import type { MediaSelected, MediaTypes } from "../config/mediaTypes";
-import { useMDDispatch } from "../config/store";
+import { useMDDispatch, useMDState } from "../config/store";
 import { fetcher } from "../utils/helpers";
 import useDebounce from "../utils/useDebounce";
 import AlbumIcon from "./Icons/AlbumIcon";
@@ -31,6 +31,7 @@ function Search(): JSX.Element {
   const [currTv, setCurrTv] = useState(3);
   const [currAlbum, setCurrAlbum] = useState(3);
   const dispatch = useMDDispatch();
+  const { view } = useMDState();
   const refInput = useRef<HTMLInputElement>(null);
 
   const bouncedSearch = useDebounce(search, 500);
@@ -70,7 +71,7 @@ function Search(): JSX.Element {
 
   return (
     <Modal
-      isOpen={true}
+      isOpen={view === "search"}
       onClose={() =>
         dispatch({ type: "state", payload: { key: "view", value: "" } })
       }
