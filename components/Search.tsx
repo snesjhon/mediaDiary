@@ -2,7 +2,6 @@ import {
   Box,
   Center,
   Flex,
-  Heading,
   Icon,
   Input,
   Modal,
@@ -79,21 +78,23 @@ function Search(): JSX.Element {
       size="sm"
       initialFocusRef={refInput}
     >
-      <ModalOverlay px={4} sx={{ zIndex: 2 }}>
-        <ModalContent maxHeight="50vh">
+      <ModalOverlay sx={{ zIndex: 2 }}>
+        <ModalContent maxHeight="50vh" my={{ base: 0, sm: "3.75rem" }}>
           <ModalCloseButton />
-          <ModalHeader pb={2}>
+          <ModalHeader>
             <Flex alignItems="center">
               <LogoIcon boxSize={5} mr={1} />
-              <Text color="purple.700" fontWeight="medium">
-                Search
+              <Text
+                fontSize={{ base: "md", md: "xl" }}
+                color="purple.700"
+                fontWeight="medium"
+                cursor="pointer"
+              >
+                mediaDiary
               </Text>
             </Flex>
           </ModalHeader>
           <ModalBody pt={0} pb={6}>
-            <Heading mb={3} size="lg">
-              Add To Your Diary
-            </Heading>
             <Box position="sticky" pt={1} top={0} bgColor="white">
               <Input
                 placeholder="Search for Albums, TV, or Film"
