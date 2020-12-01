@@ -13,7 +13,6 @@ import React, { RefObject } from "react";
 import type { PropsWithChildren } from "react";
 import { useMDDispatch } from "../config/store";
 import LogoIcon from "./Icons/LogoIcon";
-import { useRouter } from "next/router";
 import { useSwipeable } from "react-swipeable";
 
 function LayoutDrawer({
