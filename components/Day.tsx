@@ -20,12 +20,12 @@ import Edit from "./Edit";
 import StarEmptyIcon from "./Icons/StartEmptyIcon";
 import LayoutDrawer from "./LayoutDrawer";
 
-function Day({ diaryId }: { diaryId: string }): JSX.Element {
+function Day(): JSX.Element {
   const { user } = useAuth();
   const dispatch = useMDDispatch();
-  const { view } = useMDState();
+  const { view, edit } = useMDState();
   const { data } = useDocument<DiaryAdd>(
-    user !== null && user ? `${user.email}/${diaryId}` : null
+    user !== null && user && edit ? `${user.email}/${edit.diaryId}` : null
   );
   if (data) {
     const {
@@ -113,15 +113,15 @@ function Day({ diaryId }: { diaryId: string }): JSX.Element {
                     size="sm"
                     colorScheme="green"
                     isRound
-                    onClick={() => {
+                    onClick={() =>
                       dispatch({
-                        type: "edit",
+                        type: "state",
                         payload: {
-                          diaryId,
-                          diary: data,
+                          key: "view",
+                          value: "edit",
                         },
-                      });
-                    }}
+                      })
+                    }
                   />
                 </Box>
               </Flex>
