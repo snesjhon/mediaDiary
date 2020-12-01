@@ -21,6 +21,7 @@
     "react": "~16.12.0",
     "react-dom": "~16.12.0",
     "react-rating": "~2.0.5",
+    "react-swipeable": "^6.0.0",
     "swr": "~0.3.2"
   },
   "devDependencies": {
