@@ -9,30 +9,25 @@ import {
   Text,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
-import { useRouter } from "next/router";
-import React, {
-  MutableRefObject,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useRef, useState } from "react";
 import useSWR from "swr";
 import type { MediaSelected, MediaTypes } from "../config/mediaTypes";
-import { ContextDispatch } from "../config/store";
+import { useMDDispatch, useMDState } from "../config/store";
 import { fetcher } from "../utils/helpers";
 import useDebounce from "../utils/useDebounce";
 import AlbumIcon from "./Icons/AlbumIcon";
 import FilmIcon from "./Icons/FilmIcon";
 import TvIcon from "./Icons/TvIcon";
+import LayoutDrawer from "./LayoutDrawer";
+import Log from "./Log";
 
 function Search(): JSX.Element {
   const [search, setSearch] = useState("");
   const [currMovie, setCurrMovie] = useState(3);
   const [currTv, setCurrTv] = useState(3);
   const [currAlbum, setCurrAlbum] = useState(3);
-  const dispatch = useContext(ContextDispatch);
-  const router = useRouter();
+  const dispatch = useMDDispatch();
+  const { view } = useMDState();
   const refInput = useRef<HTMLInputElement>(null);
 
   const bouncedSearch = useDebounce(search, 500);
@@ -70,42 +65,38 @@ function Search(): JSX.Element {
     }
   );
 
-  useEffect(() => {
-    setTimeout(() => {
-      if (refInput.current !== null) {
-        refInput.current.focus();
-        refInput.current.scrollIntoView();
-      }
-    }, 400);
-  }, []);
-
   return (
-    <>
-      <Heading mb={3} size="lg">
-        Add To Your Diary
-      </Heading>
-      <Box position="sticky" pt={1} top={0} bgColor="white">
-        <Input
-          placeholder="Search for Albums, TV, or Film"
-          onChange={(e) => setSearch(e.target.value)}
-          value={search}
-          type="search"
-          ref={refInput}
-          autoFocus
-        />
-      </Box>
-      {(!itunesData || !mdbData) && (itunesValidating || mdbValidating) && (
-        <Center h="20vh">
-          <Spinner
-            thickness="4px"
-            speed="0.65s"
-            emptyColor="gray.200"
-            color="blue.500"
-          />
-        </Center>
+    <LayoutDrawer refHook={refInput}>
+      {view === "search" && (
+        <>
+          <Heading mb={3} size="lg">
+            Add To Your Diary
+          </Heading>
+          <Box position="sticky" pt={1} top={0} bgColor="white">
+            <Input
+              placeholder="Search for Albums, TV, or Film"
+              onChange={(e) => setSearch(e.target.value)}
+              value={search}
+              type="search"
+              ref={refInput}
+              autoFocus
+            />
+          </Box>
+          {(!itunesData || !mdbData) && (itunesValidating || mdbValidating) && (
+            <Center h="20vh">
+              <Spinner
+                thickness="4px"
+                speed="0.65s"
+                emptyColor="gray.200"
+                color="blue.500"
+              />
+            </Center>
+          )}
+          {itunesData && mdbData && createData(itunesData, mdbData)}
+        </>
       )}
-      {itunesData && mdbData && createData(itunesData, mdbData)}
-    </>
+      {view === "log" && <Log />}
+    </LayoutDrawer>
   );
 
   function createData(itunesData: any, mdbData: any) {
@@ -203,15 +194,12 @@ function Search(): JSX.Element {
           bg: "purple.50",
           cursor: "pointer",
         }}
-        onClick={() => {
+        onClick={() =>
           dispatch({
-            type: "select",
+            type: "log",
             payload: item,
-          });
-          router.push("/home/?log=true", "/log", {
-            shallow: true,
-          });
-        }}
+          })
+        }
       >
         <Text>{item.title}</Text>
         {item.artist !== "" ? (
