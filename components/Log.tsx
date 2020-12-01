@@ -1,11 +1,11 @@
 import { Button, Center, DrawerFooter, Spinner } from "@chakra-ui/react";
 import { set } from "@nandorojo/swr-firestore";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import useSWR from "swr";
 import { LogProps, LogReducer, LogState } from "../config/logStore";
 import { DiaryAdd } from "../config/mediaTypes";
-import { ContextState, useMDDispatch, useMDState } from "../config/store";
+import { useMDDispatch, useMDState } from "../config/store";
 import { useAuth } from "../utils/auth";
 import { fetcher } from "../utils/helpers";
 import Info from "./Info";

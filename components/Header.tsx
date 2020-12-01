@@ -1,3 +1,4 @@
+import { AddIcon, HamburgerIcon } from "@chakra-ui/icons";
 import {
   Box,
   Container,
@@ -7,15 +8,13 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { AddIcon, HamburgerIcon } from "@chakra-ui/icons";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React from "react";
+import { useMDDispatch } from "../config/store";
 import Filters from "./Filters";
 import FiltersIcon from "./Icons/FiltersIcon";
 import LogoIcon from "./Icons/LogoIcon";
 import Sidebar from "./Sidebar";
-import { useMDDispatch } from "../config/store";
 
 function Header(): JSX.Element {
   const { isOpen, onClose, onOpen } = useDisclosure();

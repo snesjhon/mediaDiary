@@ -1,7 +1,6 @@
 import { Button, Center, DrawerFooter, Spinner } from "@chakra-ui/react";
 import { deleteDocument, update } from "@nandorojo/swr-firestore";
 import firebase from "firebase/app";
-import { useRouter } from "next/router";
 import React, { useReducer } from "react";
 import { LogReducer } from "../config/logStore";
 import { DiaryAdd } from "../config/mediaTypes";
@@ -14,7 +13,6 @@ function Edit(): JSX.Element {
   const { edit, isSaving } = useMDState();
   const mdDispatch = useMDDispatch();
   const { user } = useAuth();
-  const router = useRouter();
 
   let initData = {
     diaryDate: new Date(),
@@ -25,10 +23,14 @@ function Edit(): JSX.Element {
     poster: "",
   };
   if (typeof edit !== "undefined") {
+    const item = edit.diary;
     initData = {
-      ...initData,
-      ...edit.diary,
-      diaryDate: edit.diary.diaryDate.toDate(),
+      diaryDate: item.diaryDate.toDate(),
+      loggedBefore: item.loggedBefore,
+      rating: item.rating,
+      artist: item.artist,
+      genre: item.genre,
+      poster: item.poster,
     };
   }
 
@@ -107,7 +109,6 @@ function Edit(): JSX.Element {
         if (updatePromise) {
           updatePromise.then(() => {
             mdDispatch({ type: "saved" });
-            return router.push("/home");
           });
         }
       } else {
@@ -120,29 +121,50 @@ function Edit(): JSX.Element {
 
   function createEdit(): DiaryAdd | false {
     if (typeof edit !== "undefined") {
-      const {
-        diaryDate: localDiaryDate,
-        loggedBefore: localLoggedBefore,
-        rating: localRating,
-        seenEpisodes: localSeenEpisodes,
-        id,
-        hasPendingWrites,
-        exists,
-        __snapshot,
-        ...rest
-      } = edit.diary;
-      let replacedEpisodes = localSeenEpisodes;
-      // something here where the "rest" might be overriding this
-      if (typeof seenEpisodes !== "undefined") {
-        replacedEpisodes = seenEpisodes;
-      }
-      return {
+      // const {
+      //   diaryDate: localDiaryDate,
+      //   loggedBefore: localLoggedBefore,
+      //   rating: localRating,
+      //   seenEpisodes: localSeenEpisodes,
+      //   id,
+      //   hasPendingWrites,
+      //   exists,
+      //   __snapshot,
+      //   ...rest
+      // } = edit.diary;
+      // let replacedEpisodes = localSeenEpisodes;
+      // // something here where the "rest" might be overriding this
+      // if (typeof seenEpisodes !== "undefined") {
+      //   replacedEpisodes = seenEpisodes;
+      // }
+      const item = edit.diary;
+      // diaryDate, loggedBefore, rating, episodes, poster, seenEpisodes, season
+      const editItem = {
+        addedDate: item.addedDate,
+        artist: item.artist,
+        genre: item.genre,
+        mediaId: item.mediaId,
+        releasedDate: item.releasedDate,
+        title: item.title,
+        type: item.type,
         diaryDate: firebase.firestore.Timestamp.fromDate(diaryDate),
         loggedBefore,
         rating,
-        seenEpisodes: replacedEpisodes,
-        ...rest,
+        poster,
       };
+      if (typeof episodes !== "undefined") {
+        Object.assign(editItem, { episodes });
+      }
+      if (typeof season !== "undefined") {
+        Object.assign(editItem, { season });
+      }
+      if (typeof seenEpisodes !== "undefined") {
+        Object.assign(editItem, { seenEpisodes });
+      }
+      // episodes: item.episodes,
+      // season: item.season,
+      // seenEpisodes: item.seenEpisodes,
+      return editItem;
     } else {
       return false;
     }
@@ -160,7 +182,6 @@ function Edit(): JSX.Element {
       if (deletedPromise) {
         deletedPromise.then(() => {
           mdDispatch({ type: "saved" });
-          return router.push("/home");
         });
       } else {
         console.error("delete promise failed");
