@@ -2,6 +2,7 @@ import { Flex, Grid, Spinner } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 import Day from "../components/Day";
+import Edit from "../components/Edit";
 import Header from "../components/Header";
 import LogoIcon from "../components/Icons/LogoIcon";
 import Layout from "../components/Layout";
@@ -32,9 +33,9 @@ function Home(): JSX.Element {
         <>
           <Header />
           <MediaDiary />
-          {view === "search" && <Search />}
-          {view === "log" && <Log />}
-          {(view === "day" || view === "edit") && <Day />}
+          <Search />
+          <Log />
+          <Day />
         </>
       )}
     </Layout>
