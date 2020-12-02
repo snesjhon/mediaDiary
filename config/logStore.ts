@@ -17,7 +17,7 @@ export interface LogState extends LogProps {
   isLoading?: boolean;
   artist: DiaryAdd["artist"];
   genre: DiaryAdd["genre"];
-  overview?: DiaryAdd["overview"];
+  albumId?: DiaryAdd["mediaId"];
 }
 
 export type LogActions =
@@ -53,7 +53,7 @@ export type LogActions =
       };
     }
   | {
-      type: "overview";
+      type: "albumId";
       payload: string;
     }
   | {
@@ -123,10 +123,10 @@ export function LogReducer(state: LogState, actions: LogActions): LogState {
         isLoading: false,
       };
     }
-    case "overview": {
+    case "albumId": {
       return {
         ...state,
-        overview: actions.payload,
+        albumId: actions.payload,
         isLoading: false,
       };
     }

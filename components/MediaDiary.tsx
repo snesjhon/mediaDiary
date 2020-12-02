@@ -74,8 +74,10 @@ function MediaDiary(): JSX.Element {
                 }}
                 key={monthIndex}
                 borderLeft="1px solid"
+                borderRight="1px solid"
                 borderColor="gray.100"
                 paddingLeft={8}
+                paddingRight={8}
               >
                 <Box>
                   <Text
@@ -113,7 +115,7 @@ function MediaDiary(): JSX.Element {
                         <Grid
                           gridTemplateColumns={{
                             base: "1.5rem 4rem 1fr",
-                            md: "3rem 6rem 1fr",
+                            md: "3rem 7rem 1fr",
                           }}
                           gridGap="1rem"
                           borderBottom="1px solid"
@@ -159,7 +161,7 @@ function MediaDiary(): JSX.Element {
                           <Flex flexDirection="column">
                             <Text
                               color="gray.600"
-                              fontSize={{ base: "md", md: "lg" }}
+                              fontSize={{ base: "md", md: "xl" }}
                             >
                               {title}
                             </Text>
@@ -215,15 +217,15 @@ function MediaDiary(): JSX.Element {
                                   initialRating={rating}
                                   fullSymbol={
                                     <StarIcon
-                                      h={{ base: "12px", md: "15px" }}
-                                      w={{ base: "12px", md: "15px" }}
+                                      h={{ base: "12px", md: "20px" }}
+                                      w={{ base: "12px", md: "20px" }}
                                       color="purple.400"
                                     />
                                   }
                                   emptySymbol={
                                     <StarEmptyIcon
-                                      h={{ base: "12px", md: "15px" }}
-                                      w={{ base: "12px", md: "15px" }}
+                                      h={{ base: "12px", md: "20px" }}
+                                      w={{ base: "12px", md: "20px" }}
                                       stroke="purple.400"
                                     />
                                   }

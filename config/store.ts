@@ -3,6 +3,7 @@ import { MediaEdit, MediaSelected, MediaTypes } from "./mediaTypes";
 
 export interface MDState {
   page: number;
+  spotifyToken?: string;
   isSaving?: boolean;
   view?: "search" | "log" | "edit" | "day";
   selected?: MediaSelected;

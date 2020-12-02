@@ -1,5 +1,6 @@
 import { Box, Flex, Grid, Spinner } from "@chakra-ui/react";
-import React from "react";
+import { InferGetStaticPropsType } from "next";
+import React, { useReducer } from "react";
 import Day from "../components/Day";
 import Header from "../components/Header";
 import LogoIcon from "../components/Icons/LogoIcon";
@@ -8,10 +9,49 @@ import Log from "../components/Log";
 import MediaDiary from "../components/MediaDiary";
 import Search from "../components/Search";
 import SidebarDesktop from "../components/SidebarDesktop";
+import { ContextDispatch, ContextState, Reducer } from "../config/store";
 import { useAuth } from "../utils/auth";
 
-function Home(): JSX.Element {
+interface Tokens {
+  access_token: any;
+}
+
+export const getStaticProps = async () => {
+  const client_id = ""; // Your client id
+  const client_secret = ""; // Your secret
+
+  const res = await fetch("https://accounts.spotify.com/api/token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Accept: "application/json",
+      Authorization:
+        "Basic " +
+        Buffer.from(client_id + ":" + client_secret).toString("base64"),
+    },
+    body: "grant_type=client_credentials",
+  });
+
+  const token: Tokens = await res.json();
+
+  return {
+    props: {
+      token,
+    },
+  };
+};
+
+function Home({
+  token,
+}: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element {
   const { user } = useAuth();
+
+  const [state, dispatch] = useReducer(Reducer, {
+    page: 1,
+    filterBy: ["album", "movie", "tv"],
+    spotifyToken: token.access_token,
+  });
+
   return (
     <Layout>
       {!user ? (
@@ -27,18 +67,20 @@ function Home(): JSX.Element {
           </Grid>
         </Flex>
       ) : (
-        <>
-          <Header />
-          <Grid gridTemplateColumns="0.2fr 1fr">
-            <SidebarDesktop />
-            <Box id="mediaDiary">
-              <MediaDiary />
-            </Box>
-          </Grid>
-          <Search />
-          <Log />
-          <Day />
-        </>
+        <ContextState.Provider value={state}>
+          <ContextDispatch.Provider value={dispatch}>
+            <Header />
+            <Grid gridTemplateColumns="0.2fr 1fr">
+              <SidebarDesktop />
+              <Box id="mediaDiary">
+                <MediaDiary />
+              </Box>
+            </Grid>
+            <Search />
+            <Log />
+            <Day />
+          </ContextDispatch.Provider>
+        </ContextState.Provider>
       )}
     </Layout>
   );

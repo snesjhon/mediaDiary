@@ -18,7 +18,7 @@ import React, { useRef, useState } from "react";
 import useSWR from "swr";
 import type { MediaSelected, MediaTypes } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
-import { fetcher } from "../utils/helpers";
+import { fetcher, fetcherSpotify } from "../utils/helpers";
 import useDebounce from "../utils/useDebounce";
 import AlbumIcon from "./Icons/AlbumIcon";
 import FilmIcon from "./Icons/FilmIcon";
@@ -31,7 +31,7 @@ function Search(): JSX.Element {
   const [currTv, setCurrTv] = useState(3);
   const [currAlbum, setCurrAlbum] = useState(3);
   const dispatch = useMDDispatch();
-  const { view } = useMDState();
+  const { view, spotifyToken } = useMDState();
   const refInput = useRef<HTMLInputElement>(null);
 
   const bouncedSearch = useDebounce(search, 500);
@@ -46,6 +46,20 @@ function Search(): JSX.Element {
           bouncedSearch
         )}&entity=album&limit=20`,
     fetcher,
+    {
+      revalidateOnFocus: false,
+    }
+  );
+
+  const { data: spotifyData } = useSWR(
+    bouncedSearch === ""
+      ? null
+      : `https://api.spotify.com/v1/search?q=${bouncedSearch}&type=album&limit=20`,
+    () =>
+      fetcherSpotify(
+        `https://api.spotify.com/v1/search?q=${bouncedSearch}&type=album&limit=20`,
+        spotifyToken
+      ),
     {
       revalidateOnFocus: false,
     }
@@ -68,6 +82,8 @@ function Search(): JSX.Element {
       revalidateOnFocus: false,
     }
   );
+
+  console.log(spotifyData);
 
   return (
     <Modal
