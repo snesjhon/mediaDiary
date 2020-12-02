@@ -1,4 +1,4 @@
-import { Flex, Grid, Spinner } from "@chakra-ui/react";
+import { Box, Flex, Grid, Spinner } from "@chakra-ui/react";
 import React from "react";
 import Day from "../components/Day";
 import Header from "../components/Header";
@@ -7,6 +7,7 @@ import Layout from "../components/Layout";
 import Log from "../components/Log";
 import MediaDiary from "../components/MediaDiary";
 import Search from "../components/Search";
+import SidebarDesktop from "../components/SidebarDesktop";
 import { useAuth } from "../utils/auth";
 
 function Home(): JSX.Element {
@@ -28,7 +29,12 @@ function Home(): JSX.Element {
       ) : (
         <>
           <Header />
-          <MediaDiary />
+          <Grid gridTemplateColumns="0.2fr 1fr">
+            <SidebarDesktop />
+            <Box id="mediaDiary">
+              <MediaDiary />
+            </Box>
+          </Grid>
           <Search />
           <Log />
           <Day />

@@ -1,6 +1,7 @@
-import { AddIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { AddIcon, HamburgerIcon, MoonIcon } from "@chakra-ui/icons";
 import {
   Box,
+  Button,
   Container,
   Flex,
   HStack,
@@ -40,14 +41,14 @@ function Header(): JSX.Element {
         <Container maxWidth={{ base: "xl", md: "lg" }}>
           <Flex w="100%" h="100%" py={2} align="center" justify="space-between">
             <Flex align="center">
-              <IconButton
+              {/* <IconButton
                 aria-label="Menu"
                 icon={<HamburgerIcon />}
                 mr={3}
                 size="sm"
                 variant="outline"
                 onClick={onOpen}
-              />
+              /> */}
               <LogoIcon boxSize={5} mr={1} />
               <Link href="/home">
                 <Text
@@ -63,15 +64,31 @@ function Header(): JSX.Element {
             <Flex maxW="720px" align="center">
               <HStack as="nav" spacing="2" mr={3}>
                 <IconButton
+                  aria-label="Theme Switcher"
+                  icon={<MoonIcon />}
+                  size="sm"
+                  variant="ghost"
+                  isRound
+                />
+                <Button
+                  leftIcon={<FiltersIcon />}
+                  border="1px solid"
+                  borderColor="gray.200"
+                  size="sm"
+                  onClick={menuOnOpen}
+                >
+                  Filters
+                </Button>
+                {/* <IconButton
                   aria-label="Menu"
                   icon={<FiltersIcon />}
                   size="sm"
                   variant="outline"
                   onClick={menuOnOpen}
                   isRound
-                />
+                /> */}
               </HStack>
-              <IconButton
+              {/* <IconButton
                 aria-label="Add"
                 icon={<AddIcon />}
                 size="sm"
@@ -82,7 +99,7 @@ function Header(): JSX.Element {
                     payload: { key: "view", value: "search" },
                   })
                 }
-              />
+              /> */}
             </Flex>
           </Flex>
         </Container>

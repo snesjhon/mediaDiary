@@ -73,10 +73,13 @@ function MediaDiary(): JSX.Element {
                   md: "0.1fr 0.9fr",
                 }}
                 key={monthIndex}
+                borderLeft="1px solid"
+                borderColor="gray.100"
+                paddingLeft={8}
               >
                 <Box>
                   <Text
-                    fontSize={{ base: "lg", md: "3xl" }}
+                    fontSize={{ base: "lg", md: "2xl" }}
                     color="gray.600"
                     fontWeight="bold"
                     position="sticky"
@@ -110,13 +113,13 @@ function MediaDiary(): JSX.Element {
                         <Grid
                           gridTemplateColumns={{
                             base: "1.5rem 4rem 1fr",
-                            md: "3rem 8rem 1fr",
+                            md: "3rem 6rem 1fr",
                           }}
                           gridGap="1rem"
                           borderBottom="1px solid"
                           borderColor="gray.200"
                           px={3}
-                          py={4}
+                          py={{ base: 4, md: 5 }}
                           key={monthIndex + dayIndex}
                           _hover={{
                             bg: "purple.50",
@@ -134,7 +137,7 @@ function MediaDiary(): JSX.Element {
                         >
                           <Box>
                             <Text
-                              fontSize={{ base: "lg", md: "2xl" }}
+                              fontSize={{ base: "lg", md: "xl" }}
                               color="gray.500"
                             >
                               {new Date(
@@ -156,12 +159,12 @@ function MediaDiary(): JSX.Element {
                           <Flex flexDirection="column">
                             <Text
                               color="gray.600"
-                              fontSize={{ base: "md", md: "xl" }}
+                              fontSize={{ base: "md", md: "lg" }}
                             >
                               {title}
                             </Text>
                             <Text
-                              fontSize={{ base: "sm", md: "md" }}
+                              fontSize={{ base: "sm" }}
                               color="gray.500"
                               pb={2}
                             >
@@ -212,15 +215,15 @@ function MediaDiary(): JSX.Element {
                                   initialRating={rating}
                                   fullSymbol={
                                     <StarIcon
-                                      h={{ base: "12px", md: "20px" }}
-                                      w={{ base: "12px", md: "20px" }}
+                                      h={{ base: "12px", md: "15px" }}
+                                      w={{ base: "12px", md: "15px" }}
                                       color="purple.400"
                                     />
                                   }
                                   emptySymbol={
                                     <StarEmptyIcon
-                                      h={{ base: "12px", md: "20px" }}
-                                      w={{ base: "12px", md: "20px" }}
+                                      h={{ base: "12px", md: "15px" }}
+                                      w={{ base: "12px", md: "15px" }}
                                       stroke="purple.400"
                                     />
                                   }
