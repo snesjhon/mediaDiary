@@ -37,8 +37,7 @@ function LayoutDrawer({
       onClose={onClose}
       isOpen={isOpen}
       size="lg"
-      placement="right"
-      // placement={placement}
+      placement={placement}
       initialFocusRef={refHook}
       {...rest}
     >
@@ -58,10 +57,8 @@ function LayoutDrawer({
             </Flex>
           </DrawerHeader>
           <DrawerCloseButton />
-          <DrawerBody>
-            <Container maxWidth={{ base: "xl", md: "md" }}>
-              <div {...handlers}>{children}</div>
-            </Container>
+          <DrawerBody px={{ base: 0, sm: 8 }}>
+            <div {...handlers}>{children}</div>
           </DrawerBody>
         </DrawerContent>
       </DrawerOverlay>

@@ -1,33 +1,20 @@
-import { DiaryState } from "../config/mediaTypes";
+import { Theme, useMediaQuery, useToken } from "@chakra-ui/react";
 
 export function fetcher(url: string) {
   const urlString =
     process.env.NODE_ENV === "development" ? `${url}&isLocal=true` : url;
   return fetch(urlString).then((res) => res.json());
 }
-export function fetcherSpotify(
-  url: string,
-  token: string | undefined
-): Promise<unknown> {
-  return fetch(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }).then((res) => res.json());
-}
 
-export function createMediaState(data: { id: string }[]) {
-  let diaryState: DiaryState;
-  if (Object.keys(data).length > 0) {
-    const {
-      id: diaryId,
-      hasPendingWrites,
-      exists,
-      ...diaryItems
-    }: any = data[0];
-    diaryState = diaryItems;
-  } else {
-    diaryState = {};
+export function useIsBreakpoint(
+  size: keyof {
+    sm: string;
+    md: string;
+    lg: string;
+    xl: string;
   }
-  return diaryState;
+): boolean {
+  const bp = useToken("breakpoints", [size]);
+  const [isBp] = useMediaQuery(`(min-width: ${bp})`);
+  return isBp;
 }

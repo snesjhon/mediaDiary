@@ -3,9 +3,9 @@ import {
   Box,
   Button,
   Divider,
+  Flex,
   Grid,
   Heading,
-  Flex,
   IconButton,
   Image,
   SimpleGrid,
@@ -16,17 +16,18 @@ import { useDocument } from "@nandorojo/swr-firestore";
 import dayjs from "dayjs";
 import React, { Suspense, useState } from "react";
 import Rating from "react-rating";
-import useSWR, { cache } from "swr";
+import useSWR from "swr";
 import { DiaryAdd, MediaTypes } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
 import { useAuth } from "../utils/auth";
-import { fetcher } from "../utils/helpers";
+import { fetcher, useIsBreakpoint } from "../utils/helpers";
 import Edit from "./Edit";
 import StarEmptyIcon from "./Icons/StartEmptyIcon";
 import LayoutDrawer from "./LayoutDrawer";
 
 function Day(): JSX.Element | null {
   const { user } = useAuth();
+  const isMd = useIsBreakpoint("md");
   const [localGenre, setLocalGenre] = useState("");
   const dispatch = useMDDispatch();
   const { view, edit, spotifyToken } = useMDState();
@@ -47,9 +48,10 @@ function Day(): JSX.Element | null {
 
     // spotify doesn't have good genre support for albums :(, thus add the first genre from artist payload
     const mediaGenre = localGenre !== "" ? localGenre : genre;
+
     return (
       <LayoutDrawer
-        placement="bottom"
+        placement={isMd ? "right" : "bottom"}
         isOpen={view === "day" || view === "edit"}
       >
         {view === "edit" ? (
@@ -244,9 +246,6 @@ function SpotifyData({
             <Image src={artistInfo.images[2].url} borderRadius="xl" />
           </Box>
           <Box>
-            {/* <Tag size={size} key={size} variant="solid" colorScheme="teal">
-      Teal
-    </Tag> */}
             <Heading size="md" mb={4}>
               {artistInfo.name}
             </Heading>
@@ -276,6 +275,7 @@ function SpotifyData({
     );
   }
   return null;
+
   function fetchAll() {
     const albumFetch = fetch(`https://api.spotify.com/v1/albums/${mediaId}`, {
       headers: { Authorization: `Bearer ${token}` },

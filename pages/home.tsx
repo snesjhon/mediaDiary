@@ -1,4 +1,13 @@
-import { Box, Flex, Grid, Spinner } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Grid,
+  Spinner,
+  useBreakpoint,
+  useMediaQuery,
+  useTheme,
+  useToken,
+} from "@chakra-ui/react";
 import { InferGetStaticPropsType } from "next";
 import React, { useReducer } from "react";
 import Day from "../components/Day";
@@ -8,17 +17,19 @@ import Layout from "../components/Layout";
 import Log from "../components/Log";
 import MediaDiary from "../components/MediaDiary";
 import Search from "../components/Search";
+import Sidebar from "../components/Sidebar";
 import SidebarDesktop from "../components/SidebarDesktop";
 import { ContextDispatch, ContextState, Reducer } from "../config/store";
 import { useAuth } from "../utils/auth";
+import { useIsBreakpoint } from "../utils/helpers";
 
 interface Tokens {
   access_token: any;
 }
 
 export const getStaticProps = async () => {
-  const client_id = ""; // Your client id
-  const client_secret = ""; // Your secret
+  const client_id = "cd408c25ac204f30bbc84f9921c68c1e"; // Your client id
+  const client_secret = "5eca56d37d664177b57da756084fe6cc"; // Your secret
 
   const res = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
@@ -45,7 +56,10 @@ function Home({
   token,
 }: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element {
   const { user } = useAuth();
+  // const mdBp = useToken("breakpoints", ["md"]);
+  // const [isMd] = useMediaQuery(`(min-width: ${mdBp})`);
 
+  const isMd = useIsBreakpoint("md");
   const [state, dispatch] = useReducer(Reducer, {
     page: 1,
     filterBy: ["album", "movie", "tv"],
@@ -70,9 +84,9 @@ function Home({
         <ContextState.Provider value={state}>
           <ContextDispatch.Provider value={dispatch}>
             <Header />
-            <Grid gridTemplateColumns="0.2fr 1fr">
-              <SidebarDesktop />
-              <Box id="mediaDiary">
+            <Grid gridTemplateColumns={{ base: "1fr", md: "0.2fr 1fr" }}>
+              {isMd && <SidebarDesktop />}
+              <Box>
                 <MediaDiary />
               </Box>
             </Grid>

@@ -75,11 +75,9 @@ function MediaDiary(): JSX.Element {
                   md: "0.1fr 0.9fr",
                 }}
                 key={monthIndex}
-                borderLeft="1px solid"
-                borderRight="1px solid"
-                borderColor="gray.100"
-                paddingLeft={8}
-                paddingRight={8}
+                borderX={{ base: 0, md: "1px solid" }}
+                borderColor={{ base: "transparent", md: "gray.100" }}
+                px={{ md: 8 }}
               >
                 <Box>
                   <Text

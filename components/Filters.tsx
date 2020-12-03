@@ -20,7 +20,7 @@ import FilmIcon from "./Icons/FilmIcon";
 import LogoIcon from "./Icons/LogoIcon";
 import TvIcon from "./Icons/TvIcon";
 
-function Sidebar({
+function Filters({
   onClose,
   isOpen,
 }: {
@@ -98,4 +98,4 @@ function Sidebar({
   }
 }
 
-export default Sidebar;
+export default Filters;
