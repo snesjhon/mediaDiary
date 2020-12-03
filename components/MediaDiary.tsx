@@ -9,6 +9,7 @@ import {
   Image,
   Spinner,
   Text,
+  useColorMode,
 } from "@chakra-ui/react";
 import { useCollection } from "@nandorojo/swr-firestore";
 import React from "react";
@@ -33,6 +34,7 @@ const MEDIATYPESLENGTH = 3;
 function MediaDiary(): JSX.Element {
   const { filterBy, page } = useMDState();
   const dispatch = useMDDispatch();
+  const { colorMode } = useColorMode();
   const { user } = useAuth();
   const { data } = useCollection<DiaryAdd>(
     user === null || !user ? null : `${user.email}`,
@@ -124,7 +126,8 @@ function MediaDiary(): JSX.Element {
                           py={{ base: 4, md: 5 }}
                           key={monthIndex + dayIndex}
                           _hover={{
-                            bg: "purple.50",
+                            bg:
+                              colorMode === "light" ? "purple.50" : "gray.700",
                             cursor: "pointer",
                           }}
                           onClick={() =>
@@ -160,7 +163,7 @@ function MediaDiary(): JSX.Element {
                           </Box>
                           <Flex flexDirection="column">
                             <Text
-                              color="gray.600"
+                              // color="gray.600"
                               fontSize={{ base: "md", md: "xl" }}
                             >
                               {title}

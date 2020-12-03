@@ -12,27 +12,11 @@ import LayoutDrawer from "./LayoutDrawer";
 import LogFields from "./LogFields";
 
 function Log(): JSX.Element {
-  const { selected, isSaving, view } = useMDState();
   const mdDispatch = useMDDispatch();
   const { user } = useAuth();
+  const { selected, isSaving, view } = useMDState();
 
-  let dataUrl = null;
-  if (typeof selected !== "undefined") {
-    if (selected.type === "tv") {
-      dataUrl = `https://api.themoviedb.org/3/tv/${selected.mediaId}?api_key=${process.env.NEXT_PUBLIC_MDBKEY}`;
-    } else if (selected.type === "movie") {
-      dataUrl = `https://api.themoviedb.org/3/movie/${encodeURIComponent(
-        selected.mediaId
-      )}?api_key=${process.env.NEXT_PUBLIC_MDBKEY}&append_to_response=credits`;
-    } else if (selected.type === "album") {
-      dataUrl = `https://ws.audioscrobbler.com/2.0/?method=album.getinfo&artist=${encodeURIComponent(
-        selected.artist
-      )}&album=${encodeURIComponent(selected.title)}&format=json&api_key=${
-        process.env.NEXT_PUBLIC_LASTFMKEY
-      }`;
-    }
-  }
-
+  const dataUrl = getDataUrl();
   const { data, error } = useSWR(dataUrl, fetcher, {
     revalidateOnFocus: false,
   });
@@ -41,19 +25,24 @@ function Log(): JSX.Element {
     diaryDate: new Date(),
     loggedBefore: false,
     rating: 0,
-    isLoading: typeof selected !== "undefined" ? !data && !error : false,
+    isLoading:
+      typeof selected !== "undefined" && selected.type !== "album"
+        ? !data && !error
+        : false,
     artist: "",
     poster: "",
     genre: "",
   };
 
   if (typeof selected !== "undefined") {
-    initData = {
-      ...initData,
-      artist: selected.artist,
-      poster: selected.poster,
-      genre: selected.genre,
-    };
+    initData.artist = selected.artist;
+    initData.poster = selected.poster;
+    initData.genre = selected.genre;
+
+    if (selected.type === "album") {
+      initData.artistId = selected.artistId;
+    }
+
     // Data can be cached by swr, if so, load initData from cache
     if (typeof data !== "undefined") {
       const cachedData = parseData(data, selected.type);
@@ -64,28 +53,25 @@ function Log(): JSX.Element {
     }
   }
 
-  const [
-    {
-      diaryDate,
-      loggedBefore,
-      rating,
-      seenEpisodes,
-      artist,
-      poster,
-      genre,
-      albumId,
-      externalSeason,
-      externalSeasons,
-      isLoading,
-    },
-    dispatch,
-  ] = useReducer(LogReducer, initData);
+  const [state, dispatch] = useReducer(LogReducer, initData);
 
+  const {
+    diaryDate,
+    loggedBefore,
+    rating,
+    seenEpisodes,
+    artist,
+    poster,
+    genre,
+    artistId,
+    externalSeason,
+    externalSeasons,
+    isLoading,
+  } = state;
   const parsedCb = useCallback(parseData, []);
 
   useEffect(() => {
     if (typeof data !== "undefined" && typeof selected !== "undefined") {
-      // const mediaType = selected.type;
       const apiData = parsedCb(data, selected);
 
       if (selected.type === "tv") {
@@ -96,11 +82,6 @@ function Log(): JSX.Element {
       } else if (selected.type === "movie") {
         dispatch({
           type: "credits",
-          payload: apiData as any,
-        });
-      } else if (selected.type === "album") {
-        dispatch({
-          type: "albumId",
           payload: apiData as any,
         });
       }
@@ -122,12 +103,6 @@ function Log(): JSX.Element {
         ...mediaInfo,
         mediaId: `${selected.mediaId}_${externalSeason.id}`,
         releasedDate: externalSeason.air_date,
-      };
-    }
-    if (typeof albumId !== "undefined" && selected.type === "album") {
-      mediaInfo = {
-        ...mediaInfo,
-        mediaId: albumId,
       };
     }
   }
@@ -217,6 +192,9 @@ function Log(): JSX.Element {
         ...(typeof seenEpisodes !== "undefined" && {
           seenEpisodes: seenEpisodes,
         }),
+        ...(typeof artistId !== "undefined" && {
+          artistId: artistId,
+        }),
         artist: mediaInfo.artist,
         title: mediaInfo.title,
         poster: mediaInfo.poster,
@@ -255,15 +233,23 @@ function Log(): JSX.Element {
           .name,
         genre: externalData.genres[0].name,
       };
-    } else if (mediaType === "album") {
-      console.log(externalData);
-
-      return "";
-      // return typeof externalData !== "undefined"
-      // return typeof externalData?.album?.wiki !== "undefined"
-      // ? externalData.album.wiki.summary.split("<a href")[0]
-      // : "";
     }
+  }
+
+  function getDataUrl() {
+    let returnUrl = null;
+    if (typeof selected !== "undefined") {
+      if (selected.type === "tv") {
+        returnUrl = `https://api.themoviedb.org/3/tv/${selected.mediaId}?api_key=${process.env.NEXT_PUBLIC_MDBKEY}`;
+      } else if (selected.type === "movie") {
+        returnUrl = `https://api.themoviedb.org/3/movie/${encodeURIComponent(
+          selected.mediaId
+        )}?api_key=${
+          process.env.NEXT_PUBLIC_MDBKEY
+        }&append_to_response=credits`;
+      }
+    }
+    return returnUrl;
   }
 }
 

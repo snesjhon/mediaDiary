@@ -7,6 +7,7 @@ import {
   HStack,
   IconButton,
   Text,
+  useColorMode,
   useDisclosure,
 } from "@chakra-ui/react";
 import Link from "next/link";
@@ -19,6 +20,7 @@ import Sidebar from "./Sidebar";
 
 function Header(): JSX.Element {
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const { colorMode, toggleColorMode } = useColorMode();
   const {
     isOpen: menuIsOpen,
     onClose: menuOnClose,
@@ -32,7 +34,7 @@ function Header(): JSX.Element {
         pos="fixed"
         top="0"
         zIndex="1"
-        bg="white"
+        bg={colorMode === "light" ? "white" : "gray.800"}
         left="0"
         right="0"
         borderBottomWidth="1px"
@@ -64,6 +66,7 @@ function Header(): JSX.Element {
             <Flex maxW="720px" align="center">
               <HStack as="nav" spacing="2" mr={3}>
                 <IconButton
+                  onClick={toggleColorMode}
                   aria-label="Theme Switcher"
                   icon={<MoonIcon />}
                   size="sm"

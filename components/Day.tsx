@@ -1,20 +1,22 @@
 import { EditIcon, StarIcon } from "@chakra-ui/icons";
 import {
   Box,
+  Button,
   Divider,
-  Flex,
   Grid,
   Heading,
+  Flex,
   IconButton,
   Image,
   SimpleGrid,
+  Tag,
   Text,
 } from "@chakra-ui/react";
 import { useDocument } from "@nandorojo/swr-firestore";
 import dayjs from "dayjs";
-import React, { Suspense } from "react";
+import React, { Suspense, useState } from "react";
 import Rating from "react-rating";
-import useSWR from "swr";
+import useSWR, { cache } from "swr";
 import { DiaryAdd, MediaTypes } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
 import { useAuth } from "../utils/auth";
@@ -25,8 +27,9 @@ import LayoutDrawer from "./LayoutDrawer";
 
 function Day(): JSX.Element | null {
   const { user } = useAuth();
+  const [localGenre, setLocalGenre] = useState("");
   const dispatch = useMDDispatch();
-  const { view, edit } = useMDState();
+  const { view, edit, spotifyToken } = useMDState();
   const { data } = useDocument<DiaryAdd>(
     user !== null && user && edit ? `${user.email}/${edit.diaryId}` : null
   );
@@ -39,10 +42,11 @@ function Day(): JSX.Element | null {
       poster,
       genre,
       releasedDate,
+      artistId,
     } = data;
 
-    console.log(data.mediaId);
-
+    // spotify doesn't have good genre support for albums :(, thus add the first genre from artist payload
+    const mediaGenre = localGenre !== "" ? localGenre : genre;
     return (
       <LayoutDrawer
         placement="bottom"
@@ -143,7 +147,7 @@ function Day(): JSX.Element | null {
                 ml="auto"
                 textTransform="uppercase"
               >
-                {genre && <>{genre} • </>}
+                {mediaGenre && <>{mediaGenre} • </>}
                 {typeof releasedDate !== "undefined" &&
                   `${new Date(releasedDate).toLocaleDateString("en-us", {
                     year: "numeric",
@@ -153,11 +157,22 @@ function Day(): JSX.Element | null {
             </Grid>
             <Divider mt={3} mb={2} />
             <Suspense fallback={<div>...loading</div>}>
-              <DayData
-                mediaId={data.mediaId}
-                type={data.type}
-                season={data.type === "tv" ? data.season : undefined}
-              />
+              {data.type === "album" &&
+              typeof spotifyToken !== "undefined" &&
+              typeof artistId !== "undefined" ? (
+                <SpotifyData
+                  mediaId={data.mediaId}
+                  token={spotifyToken}
+                  artistId={artistId}
+                  setLocalGenre={(newGenre: string) => setLocalGenre(newGenre)}
+                />
+              ) : (
+                <MDBData
+                  mediaId={data.mediaId}
+                  type={data.type}
+                  season={data.type === "tv" ? data.season : undefined}
+                />
+              )}
             </Suspense>
           </>
         )}
@@ -167,7 +182,116 @@ function Day(): JSX.Element | null {
   return null;
 }
 
-function DayData({
+function SpotifyData({
+  mediaId,
+  artistId,
+  token,
+  setLocalGenre,
+}: {
+  mediaId: string;
+  token: string;
+  artistId: string;
+  setLocalGenre: (genre: string) => void;
+}) {
+  const { data } = useSWR<any[]>(`/day/${mediaId}`, fetchAll, {
+    revalidateOnFocus: false,
+    suspense: true,
+  });
+
+  if (data) {
+    const albumInfo = data[0];
+    const artistInfo = data[1];
+
+    if (artistInfo.genres.length > 0) {
+      setLocalGenre(artistInfo.genres[0]);
+    }
+
+    console.log(data);
+
+    return (
+      <Box my={4}>
+        <Heading size="lg" mb={3}>
+          Tracks
+        </Heading>
+        {albumInfo.tracks.items.map((e: any) => (
+          <Grid
+            key={e.id}
+            gridTemplateColumns="1fr 5rem 2rem"
+            gridGap={4}
+            mb={2}
+            borderBottom="1px solid"
+            borderColor="gray.300"
+            pb={2}
+          >
+            <Text>{e.name}</Text>
+            <Text>{e.duration_ms}</Text>
+            <Button
+              as="a"
+              variant="link"
+              href={e.external_urls.spotify}
+              target="_blank"
+            >
+              link
+            </Button>
+          </Grid>
+        ))}
+        <Divider mt={4} mb={4} />
+        <Heading size="lg" mb={3}>
+          About
+        </Heading>
+        <Grid gridTemplateColumns="0.6fr 1fr">
+          <Box>
+            <Image src={artistInfo.images[2].url} borderRadius="xl" />
+          </Box>
+          <Box>
+            {/* <Tag size={size} key={size} variant="solid" colorScheme="teal">
+      Teal
+    </Tag> */}
+            <Heading size="md" mb={4}>
+              {artistInfo.name}
+            </Heading>
+            <Flex wrap="wrap">
+              {artistInfo.genres.map((e: string) => (
+                <Tag
+                  key={`${artistInfo.name}_${e}`}
+                  colorScheme="purple"
+                  mr={3}
+                  mb={4}
+                >
+                  {e}
+                </Tag>
+              ))}
+            </Flex>
+            <Button
+              as="a"
+              variant="link"
+              href={artistInfo.external_urls.spotify}
+              target="_blank"
+            >
+              Artist Page
+            </Button>
+          </Box>
+        </Grid>
+      </Box>
+    );
+  }
+  return null;
+  function fetchAll() {
+    const albumFetch = fetch(`https://api.spotify.com/v1/albums/${mediaId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    }).then((r) => r.json());
+    const artistFetch = fetch(
+      `https://api.spotify.com/v1/artists/${artistId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    ).then((r) => r.json());
+
+    return Promise.all([albumFetch, artistFetch]).then((results) => results);
+  }
+}
+
+function MDBData({
   mediaId,
   type,
   season,
@@ -181,14 +305,13 @@ function DayData({
     revalidateOnFocus: false,
     suspense: true,
   });
-  console.log(data);
 
   return (
     <Box my={4}>
-      <Heading size="md" mb={3}>
+      <Heading size="lg" mb={3}>
         About
       </Heading>
-      {data.tagline && (
+      {typeof data.tagline !== "undefined" && (
         <Text
           textTransform="uppercase"
           pb={2}
@@ -199,9 +322,9 @@ function DayData({
           {data.tagline}
         </Text>
       )}
-      <Text>{data.overview}</Text>
+      {typeof data.overview !== "undefined" && <Text>{data.overview}</Text>}
       <Divider mt={4} mb={4} />
-      <Heading size="md" mb={5}>
+      <Heading size="lg" mb={5}>
         Cast
       </Heading>
       <SimpleGrid columns={4} gap={4}>
@@ -218,6 +341,7 @@ function DayData({
       </SimpleGrid>
     </Box>
   );
+
   function createFetch(): string | null {
     if (type === "movie") {
       return `https://api.themoviedb.org/3/movie/${mediaId}?api_key=${process.env.NEXT_PUBLIC_MDBKEY}&append_to_response=credits,watch/providers,videos`;

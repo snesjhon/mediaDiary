@@ -18,7 +18,6 @@ import React, { useRef, useState } from "react";
 import useSWR from "swr";
 import type { MediaSelected, MediaTypes } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
-import { fetcher, fetcherSpotify } from "../utils/helpers";
 import useDebounce from "../utils/useDebounce";
 import AlbumIcon from "./Icons/AlbumIcon";
 import FilmIcon from "./Icons/FilmIcon";
@@ -35,55 +34,11 @@ function Search(): JSX.Element {
   const refInput = useRef<HTMLInputElement>(null);
 
   const bouncedSearch = useDebounce(search, 500);
-  const {
-    data: itunesData,
-    isValidating: itunesValidating,
-    error: itunesError,
-  } = useSWR(
-    bouncedSearch === ""
-      ? null
-      : `https://itunes.apple.com/search?term=${encodeURIComponent(
-          bouncedSearch
-        )}&entity=album&limit=20`,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-    }
+  const { data, isValidating } = useSWR(
+    bouncedSearch === "" ? null : `/search/${bouncedSearch}`,
+    searchFetcher,
+    { revalidateOnFocus: false }
   );
-
-  const { data: spotifyData } = useSWR(
-    bouncedSearch === ""
-      ? null
-      : `https://api.spotify.com/v1/search?q=${bouncedSearch}&type=album&limit=20`,
-    () =>
-      fetcherSpotify(
-        `https://api.spotify.com/v1/search?q=${bouncedSearch}&type=album&limit=20`,
-        spotifyToken
-      ),
-    {
-      revalidateOnFocus: false,
-    }
-  );
-
-  const {
-    data: mdbData,
-    isValidating: mdbValidating,
-    error: mdbError,
-  } = useSWR(
-    bouncedSearch === ""
-      ? null
-      : `https://api.themoviedb.org/3/search/multi?api_key=${
-          process.env.NEXT_PUBLIC_MDBKEY
-        }&query=${encodeURIComponent(
-          bouncedSearch
-        )}&include_adult=false&page=1,2,3`,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-    }
-  );
-
-  console.log(spotifyData);
 
   return (
     <Modal
@@ -122,7 +77,7 @@ function Search(): JSX.Element {
                 autoFocus
               />
             </Box>
-            {(!itunesData || !mdbData) && (itunesValidating || mdbValidating) && (
+            {!data && isValidating && (
               <Center h="20vh">
                 <Spinner
                   thickness="4px"
@@ -132,15 +87,19 @@ function Search(): JSX.Element {
                 />
               </Center>
             )}
-            {itunesData && mdbData && createData(itunesData, mdbData)}
+            {data && createData(data)}
           </ModalBody>
         </ModalContent>
       </ModalOverlay>
     </Modal>
   );
 
-  function createData(itunesData: any, mdbData: any) {
-    const albumData = itunesData.results.map((e: any) => mediaNormalize(e));
+  function createData(data: any) {
+    const mdbData = data[0];
+    const spotifyData = data[1];
+    const albumData = spotifyData.albums.items.map((e: any) =>
+      mediaNormalize(e)
+    );
     const filteredData: MediaSelected[] = mdbData.results
       .map((e: any) => mediaNormalize(e))
       .filter((e: any) => e.type !== "person");
@@ -261,13 +220,13 @@ function Search(): JSX.Element {
 
     if (type === "album") {
       return {
-        mediaId: item.collectionId,
-        poster: item.artworkUrl100.replace("100x100", "500x500"),
-        title: item.collectionName,
-        releasedDate: item.releaseDate,
-        overview: item.longDescription,
-        artist: item.artistName,
-        genre: item.primaryGenreName,
+        mediaId: item.id,
+        poster: item.images[0].url,
+        title: item.name,
+        releasedDate: item.release_date,
+        artist: item.artists[0].name,
+        artistId: item.artists[0].id,
+        genre: "",
         type,
       };
     } else {
@@ -277,12 +236,34 @@ function Search(): JSX.Element {
         title: type === "movie" ? item.title : item.original_name,
         releasedDate:
           type === "movie" ? item.release_date : item.first_air_date,
-        overview: item.overview,
         genre: "",
         artist: "",
         type,
       };
     }
+  }
+
+  function searchFetcher(query: string) {
+    // From my recollection it's better to keep a `/{key}/` when using swr, to make sure that caching is properly
+    // separated and reusable.
+    const queryString = query.substring(8);
+
+    const mdbFetch = fetch(
+      `https://api.themoviedb.org/3/search/multi?api_key=${
+        process.env.NEXT_PUBLIC_MDBKEY
+      }&query=${encodeURIComponent(queryString)}&include_adult=false&page=1,2,3`
+    ).then((r) => r.json());
+
+    const albumFetch = fetch(
+      `https://api.spotify.com/v1/search?q=${queryString}&type=album&limit=20`,
+      {
+        headers: { Authorization: `Bearer ${spotifyToken}` },
+      }
+    ).then((r) => r.json());
+
+    return Promise.all([mdbFetch, albumFetch])
+      .then((results) => results)
+      .catch((e) => console.error(e));
   }
 }
 

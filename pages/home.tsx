@@ -76,9 +76,9 @@ function Home({
                 <MediaDiary />
               </Box>
             </Grid>
-            <Search />
-            <Log />
-            <Day />
+            {state.view === "search" && <Search />}
+            {state.view === "log" && <Log />}
+            {(state.view === "day" || state.view === "edit") && <Day />}
           </ContextDispatch.Provider>
         </ContextState.Provider>
       )}
