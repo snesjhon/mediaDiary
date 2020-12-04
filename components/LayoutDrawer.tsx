@@ -57,7 +57,7 @@ function LayoutDrawer({
             </Flex>
           </DrawerHeader>
           <DrawerCloseButton />
-          <DrawerBody px={{ base: 0, sm: 8 }}>
+          <DrawerBody px={{ base: 6, sm: 8 }}>
             <div {...handlers}>{children}</div>
           </DrawerBody>
         </DrawerContent>

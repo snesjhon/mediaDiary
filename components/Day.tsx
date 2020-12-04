@@ -208,8 +208,6 @@ function SpotifyData({
       setLocalGenre(artistInfo.genres[0]);
     }
 
-    console.log(data);
-
     return (
       <Box my={4}>
         <Heading size="lg" mb={3}>
@@ -241,7 +239,10 @@ function SpotifyData({
         <Heading size="lg" mb={3}>
           About
         </Heading>
-        <Grid gridTemplateColumns="0.6fr 1fr">
+        <Grid
+          gridTemplateColumns={{ base: "0.5fr 1fr", md: "0.6fr 1fr" }}
+          gridGap={{ base: 4, md: 0 }}
+        >
           <Box>
             <Image src={artistInfo.images[2].url} borderRadius="xl" />
           </Box>
@@ -250,12 +251,12 @@ function SpotifyData({
               {artistInfo.name}
             </Heading>
             <Flex wrap="wrap">
-              {artistInfo.genres.map((e: string) => (
+              {artistInfo.genres.slice(0, 4).map((e: string) => (
                 <Tag
                   key={`${artistInfo.name}_${e}`}
                   colorScheme="purple"
                   mr={3}
-                  mb={4}
+                  mb={3}
                 >
                   {e}
                 </Tag>
@@ -327,7 +328,7 @@ function MDBData({
       <Heading size="lg" mb={5}>
         Cast
       </Heading>
-      <SimpleGrid columns={4} gap={4}>
+      <SimpleGrid columns={{ base: 2, md: 4 }} gap={4}>
         {data.credits.cast.slice(0, 4).map((e: any) => (
           <Box key={e.name}>
             <Image
