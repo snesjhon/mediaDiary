@@ -1,14 +1,5 @@
-import {
-  Box,
-  Flex,
-  Grid,
-  Spinner,
-  useBreakpoint,
-  useMediaQuery,
-  useTheme,
-  useToken,
-} from "@chakra-ui/react";
-import { InferGetStaticPropsType } from "next";
+import { Box, Flex, Grid, Spinner } from "@chakra-ui/react";
+import { InferGetServerSidePropsType } from "next";
 import React, { useReducer } from "react";
 import Day from "../components/Day";
 import Header from "../components/Header";
@@ -17,7 +8,6 @@ import Layout from "../components/Layout";
 import Log from "../components/Log";
 import MediaDiary from "../components/MediaDiary";
 import Search from "../components/Search";
-import Sidebar from "../components/Sidebar";
 import SidebarDesktop from "../components/SidebarDesktop";
 import { ContextDispatch, ContextState, Reducer } from "../config/store";
 import { useAuth } from "../utils/auth";
@@ -27,7 +17,11 @@ interface Tokens {
   access_token: any;
 }
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async (): Promise<{
+  props: {
+    token: Tokens;
+  };
+}> => {
   const client_id = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT;
   const client_secret = process.env.NEXT_PUBLIC_SPOTIFY_SECRET;
 
@@ -54,7 +48,7 @@ export const getStaticProps = async () => {
 
 function Home({
   token,
-}: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element {
+}: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
   const { user } = useAuth();
 
   const isMd = useIsBreakpoint("md");
