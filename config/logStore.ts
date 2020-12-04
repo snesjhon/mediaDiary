@@ -17,7 +17,7 @@ export interface LogState extends LogProps {
   isLoading?: boolean;
   artist: DiaryAdd["artist"];
   genre: DiaryAdd["genre"];
-  overview?: DiaryAdd["overview"];
+  artistId?: DiaryAdd["artistId"];
 }
 
 export type LogActions =
@@ -53,7 +53,7 @@ export type LogActions =
       };
     }
   | {
-      type: "overview";
+      type: "artistId";
       payload: string;
     }
   | {
@@ -63,28 +63,6 @@ export type LogActions =
         externalSeason: any;
       };
     };
-
-export function LogInit(initInfo: any, isLoading: any) {
-  let initData = {
-    diaryDate: new Date(),
-    loggedBefore: false,
-    rating: 0,
-    isSaving: false,
-    isLoading,
-    artist: "",
-    poster: "",
-    genre: "",
-  };
-  if (typeof initInfo !== "undefined") {
-    initData = {
-      ...initData,
-      artist: initInfo.artist,
-      poster: initInfo.poster,
-      genre: initInfo.genre,
-    };
-  }
-  return initData;
-}
 
 export function LogReducer(state: LogState, actions: LogActions): LogState {
   switch (actions.type) {
@@ -123,10 +101,10 @@ export function LogReducer(state: LogState, actions: LogActions): LogState {
         isLoading: false,
       };
     }
-    case "overview": {
+    case "artistId": {
       return {
         ...state,
-        overview: actions.payload,
+        artistId: actions.payload,
         isLoading: false,
       };
     }

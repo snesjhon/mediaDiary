@@ -9,6 +9,7 @@ import {
   Image,
   Spinner,
   Text,
+  useColorMode,
 } from "@chakra-ui/react";
 import { useCollection } from "@nandorojo/swr-firestore";
 import React from "react";
@@ -33,6 +34,7 @@ const MEDIATYPESLENGTH = 3;
 function MediaDiary(): JSX.Element {
   const { filterBy, page } = useMDState();
   const dispatch = useMDDispatch();
+  const { colorMode } = useColorMode();
   const { user } = useAuth();
   const { data } = useCollection<DiaryAdd>(
     user === null || !user ? null : `${user.email}`,
@@ -73,10 +75,13 @@ function MediaDiary(): JSX.Element {
                   md: "0.1fr 0.9fr",
                 }}
                 key={monthIndex}
+                borderX={{ base: 0, md: "1px solid" }}
+                borderColor={{ base: "transparent", md: "gray.100" }}
+                px={{ md: 8 }}
               >
                 <Box>
                   <Text
-                    fontSize={{ base: "lg", md: "3xl" }}
+                    fontSize={{ base: "lg", md: "2xl" }}
                     color="gray.600"
                     fontWeight="bold"
                     position="sticky"
@@ -110,16 +115,17 @@ function MediaDiary(): JSX.Element {
                         <Grid
                           gridTemplateColumns={{
                             base: "1.5rem 4rem 1fr",
-                            md: "3rem 8rem 1fr",
+                            md: "3rem 7rem 1fr",
                           }}
                           gridGap="1rem"
                           borderBottom="1px solid"
                           borderColor="gray.200"
                           px={3}
-                          py={4}
+                          py={{ base: 4, md: 5 }}
                           key={monthIndex + dayIndex}
                           _hover={{
-                            bg: "purple.50",
+                            bg:
+                              colorMode === "light" ? "purple.50" : "gray.700",
                             cursor: "pointer",
                           }}
                           onClick={() =>
@@ -134,7 +140,7 @@ function MediaDiary(): JSX.Element {
                         >
                           <Box>
                             <Text
-                              fontSize={{ base: "lg", md: "2xl" }}
+                              fontSize={{ base: "lg", md: "xl" }}
                               color="gray.500"
                             >
                               {new Date(
@@ -155,13 +161,13 @@ function MediaDiary(): JSX.Element {
                           </Box>
                           <Flex flexDirection="column">
                             <Text
-                              color="gray.600"
+                              // color="gray.600"
                               fontSize={{ base: "md", md: "xl" }}
                             >
                               {title}
                             </Text>
                             <Text
-                              fontSize={{ base: "sm", md: "md" }}
+                              fontSize={{ base: "sm" }}
                               color="gray.500"
                               pb={2}
                             >

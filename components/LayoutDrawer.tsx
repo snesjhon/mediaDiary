@@ -8,6 +8,7 @@ import {
   DrawerCloseButton,
   DrawerBody,
   DrawerProps,
+  Container,
 } from "@chakra-ui/react";
 import React, { RefObject } from "react";
 import type { PropsWithChildren } from "react";
@@ -35,7 +36,7 @@ function LayoutDrawer({
     <Drawer
       onClose={onClose}
       isOpen={isOpen}
-      size="full"
+      size="lg"
       placement={placement}
       initialFocusRef={refHook}
       {...rest}
@@ -56,7 +57,7 @@ function LayoutDrawer({
             </Flex>
           </DrawerHeader>
           <DrawerCloseButton />
-          <DrawerBody>
+          <DrawerBody px={{ base: 6, sm: 8 }}>
             <div {...handlers}>{children}</div>
           </DrawerBody>
         </DrawerContent>

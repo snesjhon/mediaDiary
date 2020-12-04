@@ -23,11 +23,6 @@ const firebaseConfig = {
 const fuego = new Fuego(firebaseConfig);
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
-  const [state, dispatch] = useReducer(Reducer, {
-    page: 1,
-    filterBy: ["album", "movie", "tv"],
-  });
-
   return (
     <>
       <Head>
@@ -42,13 +37,9 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
       </Head>
       <FuegoProvider fuego={fuego}>
         <AuthProvider>
-          <ContextState.Provider value={state}>
-            <ContextDispatch.Provider value={dispatch}>
-              <ChakraProvider resetCSS>
-                <Component {...pageProps} />
-              </ChakraProvider>
-            </ContextDispatch.Provider>
-          </ContextState.Provider>
+          <ChakraProvider resetCSS>
+            <Component {...pageProps} />
+          </ChakraProvider>
         </AuthProvider>
       </FuegoProvider>
     </>
