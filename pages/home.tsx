@@ -28,8 +28,8 @@ interface Tokens {
 }
 
 export const getStaticProps = async () => {
-  const client_id = "cd408c25ac204f30bbc84f9921c68c1e"; // Your client id
-  const client_secret = "5eca56d37d664177b57da756084fe6cc"; // Your secret
+  const client_id = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT;
+  const client_secret = process.env.NEXT_PUBLIC_SPOTIFY_SECRET;
 
   const res = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
@@ -56,8 +56,6 @@ function Home({
   token,
 }: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element {
   const { user } = useAuth();
-  // const mdBp = useToken("breakpoints", ["md"]);
-  // const [isMd] = useMediaQuery(`(min-width: ${mdBp})`);
 
   const isMd = useIsBreakpoint("md");
   const [state, dispatch] = useReducer(Reducer, {
