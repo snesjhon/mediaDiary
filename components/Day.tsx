@@ -20,14 +20,12 @@ import useSWR from "swr";
 import { DiaryAdd, MediaTypes } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
 import { useAuth } from "../utils/auth";
-import { fetcher, useIsBreakpoint } from "../utils/helpers";
+import { fetcher } from "../utils/helpers";
 import Edit from "./Edit";
 import StarEmptyIcon from "./Icons/StartEmptyIcon";
-import LayoutDrawer from "./Layouts/LayoutDrawer";
 
 function Day(): JSX.Element | null {
   const { user } = useAuth();
-  const isMd = useIsBreakpoint("md");
   const [localGenre, setLocalGenre] = useState("");
   const dispatch = useMDDispatch();
   const { view, edit, spotifyToken } = useMDState();

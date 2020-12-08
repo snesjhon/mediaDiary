@@ -44,7 +44,7 @@ function Header(): JSX.Element {
       >
         <Container maxWidth={{ base: "xl", md: "lg" }}>
           <Flex w="100%" h="100%" py={2} align="center" justify="space-between">
-            <Flex align="center" pl={2}>
+            <Flex align="center" pl={isMd ? 4 : undefined}>
               {!isMd && (
                 <IconButton
                   aria-label="Menu"
@@ -117,7 +117,7 @@ function Header(): JSX.Element {
           </Flex>
         </Container>
       </Box>
-      {isOpen && <Sidebar isOpen={isOpen} onClose={onClose} />}
+      {!isMd && <Sidebar isOpen={isOpen} onClose={onClose} />}
       <Filters isOpen={menuIsOpen} onClose={menuOnClose} />
     </>
   );

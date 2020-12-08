@@ -17,6 +17,7 @@ import { useMDDispatch } from "../config/store";
 import { useAuth, useLogout } from "../utils/auth";
 import ActivityIcon from "./Icons/ActivityIcon";
 import HomeIcon from "./Icons/HomeIcon";
+import { SidebarButton } from "./SidebarContent";
 
 function SidebarDesktop(): JSX.Element {
   const { user } = useAuth();
@@ -28,55 +29,21 @@ function SidebarDesktop(): JSX.Element {
       <Box position="sticky" top="3rem" pt={6}>
         <VStack spacing={6} align="flex-start">
           <Box>
-            <Button
-              variant="ghost"
-              leftIcon={<HomeIcon mb="4px" />}
-              px={2}
-              fontSize="xl"
-              bg="purple.50"
-              _hover={{
-                bg: "purple.50",
-              }}
-              _active={{
-                bg: "purple.100",
-              }}
-              onClick={() => router.push("/home")}
-            >
-              Home
-            </Button>
+            <SidebarButton title="Home" Icon={HomeIcon} route="/home" />
           </Box>
           <Box>
-            <Button
-              variant="ghost"
-              leftIcon={<ActivityIcon mb="4px" />}
-              px={2}
-              fontSize="xl"
-              _hover={{
-                bg: "purple.50",
-              }}
-              _active={{
-                bg: "purple.100",
-              }}
-              onClick={() => router.push("/activity")}
-            >
-              Activity
-            </Button>
+            <SidebarButton
+              title="Activity"
+              Icon={ActivityIcon}
+              route="/activity"
+            />
           </Box>
           <Box>
-            <Button
-              variant="ghost"
-              leftIcon={<SettingsIcon mb="2px" />}
-              px={2}
-              fontSize="xl"
-              _hover={{
-                bg: "purple.50",
-              }}
-              _active={{
-                bg: "purple.100",
-              }}
-            >
-              Settings
-            </Button>
+            <SidebarButton
+              title="Settings"
+              Icon={SettingsIcon}
+              route="/settings"
+            />
           </Box>
         </VStack>
         <Flex mt={12}>
