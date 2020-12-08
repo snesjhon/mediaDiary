@@ -8,13 +8,12 @@ import { useMDDispatch, useMDState } from "../config/store";
 import { useAuth } from "../utils/auth";
 import { fetcher } from "../utils/helpers";
 import Info from "./Info";
-import LayoutDrawer from "./LayoutDrawer";
 import LogFields from "./LogFields";
 
 function Log(): JSX.Element {
   const mdDispatch = useMDDispatch();
   const { user } = useAuth();
-  const { selected, isSaving, view } = useMDState();
+  const { selected, isSaving } = useMDState();
 
   const dataUrl = getDataUrl();
   const { data, error } = useSWR(dataUrl, fetcher, {
@@ -168,11 +167,9 @@ function Log(): JSX.Element {
         if (updatePromise !== null) {
           mdDispatch({ type: "view", payload: "md" });
           mdDispatch({ type: "saved" });
-          updatePromise
-            // .then(() => {})
-            .catch(() => {
-              return console.log("error");
-            });
+          updatePromise.catch(() => {
+            return console.log("error");
+          });
         }
       } else {
         console.log("diary fails");

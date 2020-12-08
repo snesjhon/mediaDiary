@@ -15,17 +15,20 @@ function Info({ item }: Props): JSX.Element {
         flexDir="column"
         textAlign="center"
       >
-        <Heading fontWeight="normal" fontSize="md">
-          {item.artist}
-        </Heading>
-        <Heading fontWeight="bold" fontStyle="italic" fontSize="lg">
+        <Text fontSize="lg">{item.artist}</Text>
+        <Heading
+          fontWeight="bold"
+          fontStyle="italic"
+          size="lg"
+          lineHeight={1.3}
+        >
           {item.title}
         </Heading>
       </Flex>
       <Center mt={3} mb={1}>
         <Image
           src={item.poster}
-          w="8rem"
+          w="13rem"
           borderRadius="5px"
           border="1px solid"
           borderColor="gray.300"

@@ -1,12 +1,26 @@
 import { SettingsIcon } from "@chakra-ui/icons";
-import { Box, Button, Flex, VStack } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Button,
+  Flex,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { useMDDispatch } from "../config/store";
+import { useAuth, useLogout } from "../utils/auth";
+import ActivityIcon from "./Icons/ActivityIcon";
 import HomeIcon from "./Icons/HomeIcon";
-import StatsIcon from "./Icons/StatsIcon";
 
 function SidebarDesktop(): JSX.Element {
+  const { user } = useAuth();
+  const logout = useLogout();
   const dispatch = useMDDispatch();
   const router = useRouter();
   return (
@@ -34,7 +48,7 @@ function SidebarDesktop(): JSX.Element {
           <Box>
             <Button
               variant="ghost"
-              leftIcon={<StatsIcon mb="4px" />}
+              leftIcon={<ActivityIcon mb="4px" />}
               px={2}
               fontSize="xl"
               _hover={{
@@ -79,6 +93,34 @@ function SidebarDesktop(): JSX.Element {
             Add Media
           </Button>
         </Flex>
+      </Box>
+      <Box position="fixed" bottom="2rem">
+        {user && (
+          <Menu autoSelect={false}>
+            <MenuButton _hover={{ bg: "purple.100" }} p={2} rounded="md">
+              <Flex alignItems="center">
+                {user.photoURL !== null && (
+                  <Avatar src={user.photoURL} size="sm" />
+                )}
+                <Box pl={2}>
+                  {user.displayName !== null && (
+                    <Text fontSize="sm" fontWeight="semibold">
+                      {user.displayName}
+                    </Text>
+                  )}
+                  {user.email !== null && (
+                    <Text fontSize="xs" color="gray.600">
+                      {user.email}
+                    </Text>
+                  )}
+                </Box>
+              </Flex>
+            </MenuButton>
+            <MenuList>
+              <MenuItem onClick={() => logout()}>Logout</MenuItem>
+            </MenuList>
+          </Menu>
+        )}
       </Box>
     </Box>
   );

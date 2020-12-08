@@ -12,8 +12,8 @@ import {
 } from "@chakra-ui/react";
 import React, { RefObject } from "react";
 import type { PropsWithChildren } from "react";
-import { useMDDispatch } from "../config/store";
-import LogoIcon from "./Icons/LogoIcon";
+import { useMDDispatch } from "../../config/store";
+import LogoIcon from "../Icons/LogoIcon";
 import { useSwipeable } from "react-swipeable";
 
 function LayoutDrawer({

@@ -1,4 +1,5 @@
 import { fuego } from "@nandorojo/swr-firestore";
+import { useRouter } from "next/router";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { removeUserCookie, setUserCookie } from "./getUserFromCookie";
 
@@ -12,6 +13,23 @@ export function useAuth(): {
   user: AuthUser;
 } {
   return useContext(AuthContext);
+}
+
+export function useLogout(): () => void {
+  const router = useRouter();
+
+  function logout() {
+    fuego
+      .auth()
+      .signOut()
+      .then(() => {
+        return router.push("/");
+      })
+      .catch(() => {
+        return console.error("logout failed");
+      });
+  }
+  return logout;
 }
 
 interface Props {

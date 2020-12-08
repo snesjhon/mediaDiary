@@ -1,7 +1,7 @@
 import React from "react";
 import { Icon, IconProps } from "@chakra-ui/react";
 
-function StatsIcon(props: IconProps): JSX.Element {
+function ActivityIcon(props: IconProps): JSX.Element {
   return (
     <Icon
       viewBox="0 0 24 24"
@@ -12,11 +12,9 @@ function StatsIcon(props: IconProps): JSX.Element {
       strokeLinejoin="round"
       {...props}
     >
-      <line x1="18" y1="20" x2="18" y2="10"></line>
-      <line x1="12" y1="20" x2="12" y2="4"></line>
-      <line x1="6" y1="20" x2="6" y2="14"></line>
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
     </Icon>
   );
 }
 
-export default StatsIcon;
+export default ActivityIcon;

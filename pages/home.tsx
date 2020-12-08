@@ -2,7 +2,7 @@ import { Flex, Grid, Spinner } from "@chakra-ui/react";
 import { InferGetServerSidePropsType } from "next";
 import React, { useEffect } from "react";
 import LogoIcon from "../components/Icons/LogoIcon";
-import Layout from "../components/Layout";
+import Layout from "../components/Layouts/Layout";
 import LayoutMain from "../components/Layouts/LayoutMain";
 import MediaDiary from "../components/MediaDiary";
 import { useMDDispatch, useMDState } from "../config/store";
@@ -49,10 +49,10 @@ function Home({
   const dispatch = useMDDispatch();
 
   useEffect(() => {
-    if (!spotifyToken) {
+    if (!spotifyToken && token) {
       dispatch({
         type: "state",
-        payload: { key: "spotifyToken", value: token },
+        payload: { key: "spotifyToken", value: token.access_token },
       });
     }
   }, [dispatch, spotifyToken, token]);

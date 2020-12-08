@@ -3,7 +3,7 @@ import React, { PropsWithChildren } from "react";
 import { useIsBreakpoint } from "../../utils/helpers";
 import Content from "../Content";
 import Header from "../Header";
-import Layout from "../Layout";
+import Layout from "./Layout";
 import SidebarDesktop from "../SidebarDesktop";
 
 function LayoutMain({ children }: PropsWithChildren<unknown>): JSX.Element {
