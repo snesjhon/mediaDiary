@@ -5,7 +5,7 @@ export interface MDState {
   page: number;
   spotifyToken?: string;
   isSaving?: boolean;
-  view?: "search" | "log" | "edit" | "day";
+  view?: "search" | "log" | "edit" | "day" | "md" | "activity";
   selected?: MediaSelected;
   edit?: MediaEdit;
   filterBy: MediaTypes[];
@@ -21,11 +21,15 @@ type Actions =
       payload: MDState["edit"];
     }
   | {
+      type: "view";
+      payload: MDState["view"];
+    }
+  | {
       type: "day";
       payload: MDState["edit"];
     }
   | {
-      type: "saved" | "saving";
+      type: "saved" | "saving" | "savedEdit";
     }
   | {
       type: "filter";
@@ -59,11 +63,25 @@ export function Reducer(state: MDState, actions: Actions): MDState {
         isSaving: true,
       };
     }
-    case "saved": {
+    case "savedEdit": {
       return {
         ...state,
         isSaving: false,
         view: "day",
+      };
+    }
+    case "saved": {
+      return {
+        ...state,
+        isSaving: false,
+        view: "md",
+        edit: undefined,
+      };
+    }
+    case "view": {
+      return {
+        ...state,
+        view: actions.payload,
       };
     }
     case "log": {

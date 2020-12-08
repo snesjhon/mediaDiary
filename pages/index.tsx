@@ -23,7 +23,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import LogoIcon from "../components/Icons/LogoIcon";
-import Layout from "../components/Layout";
+import Layout from "../components/Layouts/Layout";
 import { useAuth } from "../utils/auth";
 
 function App(): JSX.Element {

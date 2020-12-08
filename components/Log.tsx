@@ -8,13 +8,12 @@ import { useMDDispatch, useMDState } from "../config/store";
 import { useAuth } from "../utils/auth";
 import { fetcher } from "../utils/helpers";
 import Info from "./Info";
-import LayoutDrawer from "./LayoutDrawer";
 import LogFields from "./LogFields";
 
 function Log(): JSX.Element {
   const mdDispatch = useMDDispatch();
   const { user } = useAuth();
-  const { selected, isSaving, view } = useMDState();
+  const { selected, isSaving } = useMDState();
 
   const dataUrl = getDataUrl();
   const { data, error } = useSWR(dataUrl, fetcher, {
@@ -123,8 +122,10 @@ function Log(): JSX.Element {
     };
   }
 
+  console.log(isLoading, isSaving);
+
   return (
-    <LayoutDrawer isOpen={view === "log"}>
+    <>
       {isLoading || isSaving ? (
         <Center minH="40vh">
           <Spinner />
@@ -150,7 +151,7 @@ function Log(): JSX.Element {
           </DrawerFooter>
         </>
       )}
-    </LayoutDrawer>
+    </>
   );
 
   function addData() {
@@ -164,13 +165,11 @@ function Log(): JSX.Element {
           addDiary
         );
         if (updatePromise !== null) {
-          updatePromise
-            .then(() => {
-              mdDispatch({ type: "saved" });
-            })
-            .catch(() => {
-              return console.log("error");
-            });
+          mdDispatch({ type: "view", payload: "md" });
+          mdDispatch({ type: "saved" });
+          updatePromise.catch(() => {
+            return console.log("error");
+          });
         }
       } else {
         console.log("diary fails");

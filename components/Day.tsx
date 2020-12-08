@@ -20,14 +20,12 @@ import useSWR from "swr";
 import { DiaryAdd, MediaTypes } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
 import { useAuth } from "../utils/auth";
-import { fetcher, useIsBreakpoint } from "../utils/helpers";
+import { fetcher } from "../utils/helpers";
 import Edit from "./Edit";
 import StarEmptyIcon from "./Icons/StartEmptyIcon";
-import LayoutDrawer from "./LayoutDrawer";
 
 function Day(): JSX.Element | null {
   const { user } = useAuth();
-  const isMd = useIsBreakpoint("md");
   const [localGenre, setLocalGenre] = useState("");
   const dispatch = useMDDispatch();
   const { view, edit, spotifyToken } = useMDState();
@@ -50,10 +48,7 @@ function Day(): JSX.Element | null {
     const mediaGenre = localGenre !== "" ? localGenre : genre;
 
     return (
-      <LayoutDrawer
-        placement={isMd ? "right" : "bottom"}
-        isOpen={view === "day" || view === "edit"}
-      >
+      <>
         {view === "edit" ? (
           <Edit />
         ) : (
@@ -178,7 +173,7 @@ function Day(): JSX.Element | null {
             </Suspense>
           </>
         )}
-      </LayoutDrawer>
+      </>
     );
   }
   return null;
@@ -312,34 +307,38 @@ function MDBData({
       <Heading size="lg" mb={3}>
         About
       </Heading>
-      {typeof data.tagline !== "undefined" && (
-        <Text
-          textTransform="uppercase"
-          pb={2}
-          fontSize="sm"
-          fontWeight={400}
-          color="gray.500"
-        >
-          {data.tagline}
-        </Text>
+      {data && (
+        <>
+          {typeof data.tagline !== "undefined" && (
+            <Text
+              textTransform="uppercase"
+              pb={2}
+              fontSize="sm"
+              fontWeight={400}
+              color="gray.500"
+            >
+              {data.tagline}
+            </Text>
+          )}
+          {typeof data.overview !== "undefined" && <Text>{data.overview}</Text>}
+          <Divider mt={4} mb={4} />
+          <Heading size="lg" mb={5}>
+            Cast
+          </Heading>
+          <SimpleGrid columns={{ base: 2, md: 4 }} gap={4}>
+            {data.credits.cast.slice(0, 4).map((e: any) => (
+              <Box key={e.name}>
+                <Image
+                  src={`https://image.tmdb.org/t/p/w300${e.profile_path}`}
+                  borderRadius="lg"
+                  h="150px"
+                />
+                <Text>{e.name}</Text>
+              </Box>
+            ))}
+          </SimpleGrid>
+        </>
       )}
-      {typeof data.overview !== "undefined" && <Text>{data.overview}</Text>}
-      <Divider mt={4} mb={4} />
-      <Heading size="lg" mb={5}>
-        Cast
-      </Heading>
-      <SimpleGrid columns={{ base: 2, md: 4 }} gap={4}>
-        {data.credits.cast.slice(0, 4).map((e: any) => (
-          <Box key={e.name}>
-            <Image
-              src={`https://image.tmdb.org/t/p/w300${e.profile_path}`}
-              borderRadius="lg"
-              h="150px"
-            />
-            <Text>{e.name}</Text>
-          </Box>
-        ))}
-      </SimpleGrid>
     </Box>
   );
 

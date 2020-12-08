@@ -1,20 +1,19 @@
 import {
-  Text,
   Drawer,
-  DrawerContent,
-  DrawerOverlay,
-  Flex,
-  DrawerHeader,
-  DrawerCloseButton,
   DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
   DrawerProps,
-  Container,
+  Flex,
+  Text,
 } from "@chakra-ui/react";
-import React, { RefObject } from "react";
 import type { PropsWithChildren } from "react";
-import { useMDDispatch } from "../config/store";
-import LogoIcon from "./Icons/LogoIcon";
+import React, { RefObject } from "react";
 import { useSwipeable } from "react-swipeable";
+import { useMDDispatch } from "../../config/store";
+import LogoIcon from "../Icons/LogoIcon";
 
 function LayoutDrawer({
   children,
@@ -31,6 +30,7 @@ function LayoutDrawer({
   const handlers = useSwipeable({
     onSwipedRight: () => onClose(),
     onSwipedDown: () => onClose(),
+    delta: 400,
   });
   return (
     <Drawer
@@ -66,7 +66,7 @@ function LayoutDrawer({
   );
 
   function onClose() {
-    dispatch({ type: "state", payload: { key: "view", value: "" } });
+    dispatch({ type: "view", payload: "md" });
   }
 }
 

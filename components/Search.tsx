@@ -4,34 +4,30 @@ import {
   Flex,
   Icon,
   Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Spinner,
   Text,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
-import React, { useRef, useState } from "react";
+import React, { RefObject, useState } from "react";
 import useSWR from "swr";
 import type { MediaSelected, MediaTypes } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
 import useDebounce from "../utils/useDebounce";
 import AlbumIcon from "./Icons/AlbumIcon";
 import FilmIcon from "./Icons/FilmIcon";
-import LogoIcon from "./Icons/LogoIcon";
 import TvIcon from "./Icons/TvIcon";
 
-function Search(): JSX.Element {
+function Search({
+  refInput,
+}: {
+  refInput: RefObject<HTMLInputElement>;
+}): JSX.Element {
   const [search, setSearch] = useState("");
   const [currMovie, setCurrMovie] = useState(3);
   const [currTv, setCurrTv] = useState(3);
   const [currAlbum, setCurrAlbum] = useState(3);
   const dispatch = useMDDispatch();
-  const { view, spotifyToken } = useMDState();
-  const refInput = useRef<HTMLInputElement>(null);
+  const { spotifyToken } = useMDState();
 
   const bouncedSearch = useDebounce(search, 500);
   const { data, isValidating } = useSWR(
@@ -41,57 +37,29 @@ function Search(): JSX.Element {
   );
 
   return (
-    <Modal
-      isOpen={view === "search"}
-      onClose={() =>
-        dispatch({ type: "state", payload: { key: "view", value: "" } })
-      }
-      scrollBehavior="inside"
-      size="sm"
-      initialFocusRef={refInput}
-    >
-      <ModalOverlay sx={{ zIndex: 2 }}>
-        <ModalContent maxHeight="50vh" my={{ base: 0, sm: "3.75rem" }}>
-          <ModalCloseButton />
-          <ModalHeader>
-            <Flex alignItems="center">
-              <LogoIcon boxSize={5} mr={1} />
-              <Text
-                fontSize={{ base: "md", md: "xl" }}
-                color="purple.700"
-                fontWeight="medium"
-                cursor="pointer"
-              >
-                mediaDiary
-              </Text>
-            </Flex>
-          </ModalHeader>
-          <ModalBody pt={0} pb={6}>
-            <Box position="sticky" pt={1} top={0} bgColor="white">
-              <Input
-                placeholder="Search for Albums, TV, or Film"
-                onChange={(e) => setSearch(e.target.value)}
-                value={search}
-                type="search"
-                ref={refInput}
-                autoFocus
-              />
-            </Box>
-            {!data && isValidating && (
-              <Center h="20vh">
-                <Spinner
-                  thickness="4px"
-                  speed="0.65s"
-                  emptyColor="gray.200"
-                  color="blue.500"
-                />
-              </Center>
-            )}
-            {data && createData(data)}
-          </ModalBody>
-        </ModalContent>
-      </ModalOverlay>
-    </Modal>
+    <>
+      <Box position="sticky" pt={1} top={0} bgColor="white">
+        <Input
+          placeholder="Search for Albums, TV, or Film"
+          onChange={(e) => setSearch(e.target.value)}
+          value={search}
+          type="search"
+          ref={refInput}
+          autoFocus
+        />
+      </Box>
+      {!data && isValidating && (
+        <Center h="20vh">
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.500"
+          />
+        </Center>
+      )}
+      {data && createData(data)}
+    </>
   );
 
   function createData(data: any) {

@@ -1,17 +1,12 @@
-import { Box, Flex, Grid, Spinner } from "@chakra-ui/react";
+import { Flex, Grid, Spinner } from "@chakra-ui/react";
 import { InferGetServerSidePropsType } from "next";
-import React, { useReducer } from "react";
-import Day from "../components/Day";
-import Header from "../components/Header";
+import React, { useEffect } from "react";
 import LogoIcon from "../components/Icons/LogoIcon";
-import Layout from "../components/Layout";
-import Log from "../components/Log";
+import Layout from "../components/Layouts/Layout";
+import LayoutMain from "../components/Layouts/LayoutMain";
 import MediaDiary from "../components/MediaDiary";
-import Search from "../components/Search";
-import SidebarDesktop from "../components/SidebarDesktop";
-import { ContextDispatch, ContextState, Reducer } from "../config/store";
+import { useMDDispatch, useMDState } from "../config/store";
 import { useAuth } from "../utils/auth";
-import { useIsBreakpoint } from "../utils/helpers";
 
 interface Tokens {
   access_token: any;
@@ -50,45 +45,36 @@ function Home({
   token,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
   const { user } = useAuth();
+  const { spotifyToken } = useMDState();
+  const dispatch = useMDDispatch();
 
-  const isMd = useIsBreakpoint("md");
-  const [state, dispatch] = useReducer(Reducer, {
-    page: 1,
-    filterBy: ["album", "movie", "tv"],
-    spotifyToken: token.access_token,
-  });
+  useEffect(() => {
+    if (!spotifyToken && token) {
+      dispatch({
+        type: "state",
+        payload: { key: "spotifyToken", value: token.access_token },
+      });
+    }
+  }, [dispatch, spotifyToken, token]);
 
-  return (
+  return !user ? (
     <Layout>
-      {!user ? (
-        <Flex height="90vh" justifyContent="center" alignItems="center">
-          <Grid alignItems="center" justifyItems="center">
-            <LogoIcon boxSize={8} sx={{ gridRow: 1, gridColumn: 1 }} />
-            <Spinner
-              size="xl"
-              color="purple.500"
-              thickness="3px"
-              sx={{ gridRow: 1, gridColumn: 1 }}
-            />
-          </Grid>
-        </Flex>
-      ) : (
-        <ContextState.Provider value={state}>
-          <ContextDispatch.Provider value={dispatch}>
-            <Header />
-            <Grid gridTemplateColumns={{ base: "1fr", md: "0.2fr 1fr" }}>
-              {isMd && <SidebarDesktop />}
-              <Box>
-                <MediaDiary />
-              </Box>
-            </Grid>
-            {state.view === "search" && <Search />}
-            {state.view === "log" && <Log />}
-            {(state.view === "day" || state.view === "edit") && <Day />}
-          </ContextDispatch.Provider>
-        </ContextState.Provider>
-      )}
+      <Flex height="90vh" justifyContent="center" alignItems="center">
+        <Grid alignItems="center" justifyItems="center">
+          <LogoIcon boxSize={8} sx={{ gridRow: 1, gridColumn: 1 }} />
+          <Spinner
+            size="xl"
+            color="purple.500"
+            thickness="3px"
+            sx={{ gridRow: 1, gridColumn: 1 }}
+          />
+        </Grid>
+      </Flex>
     </Layout>
+  ) : (
+    <LayoutMain>
+      <MediaDiary />
+    </LayoutMain>
   );
 }
 
