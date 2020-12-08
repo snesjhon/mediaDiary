@@ -123,8 +123,10 @@ function Log(): JSX.Element {
     };
   }
 
+  console.log(isLoading, isSaving);
+
   return (
-    <LayoutDrawer isOpen={view === "log"}>
+    <>
       {isLoading || isSaving ? (
         <Center minH="40vh">
           <Spinner />
@@ -150,7 +152,7 @@ function Log(): JSX.Element {
           </DrawerFooter>
         </>
       )}
-    </LayoutDrawer>
+    </>
   );
 
   function addData() {
@@ -164,10 +166,10 @@ function Log(): JSX.Element {
           addDiary
         );
         if (updatePromise !== null) {
+          mdDispatch({ type: "view", payload: "md" });
+          mdDispatch({ type: "saved" });
           updatePromise
-            .then(() => {
-              mdDispatch({ type: "saved" });
-            })
+            // .then(() => {})
             .catch(() => {
               return console.log("error");
             });

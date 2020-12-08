@@ -50,10 +50,7 @@ function Day(): JSX.Element | null {
     const mediaGenre = localGenre !== "" ? localGenre : genre;
 
     return (
-      <LayoutDrawer
-        placement={isMd ? "right" : "bottom"}
-        isOpen={view === "day" || view === "edit"}
-      >
+      <>
         {view === "edit" ? (
           <Edit />
         ) : (
@@ -178,7 +175,7 @@ function Day(): JSX.Element | null {
             </Suspense>
           </>
         )}
-      </LayoutDrawer>
+      </>
     );
   }
   return null;

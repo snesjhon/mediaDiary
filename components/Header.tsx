@@ -44,7 +44,7 @@ function Header(): JSX.Element {
       >
         <Container maxWidth={{ base: "xl", md: "lg" }}>
           <Flex w="100%" h="100%" py={2} align="center" justify="space-between">
-            <Flex align="center">
+            <Flex align="center" pl={2}>
               {!isMd && (
                 <IconButton
                   aria-label="Menu"

@@ -4,9 +4,7 @@ import { Box, Container } from "@chakra-ui/react";
 function Layout({ children }: PropsWithChildren<unknown>): JSX.Element {
   return (
     <Container maxWidth={{ base: "xl", md: "lg" }}>
-      <Box mt="3rem" mx="auto">
-        {children}
-      </Box>
+      <Box mx="auto">{children}</Box>
     </Container>
   );
 }

@@ -39,6 +39,8 @@ function Edit(): JSX.Element {
     dispatch,
   ] = useReducer(LogReducer, initData);
 
+  // console.log(isSaving);
+
   return (
     <>
       {isSaving ? (
@@ -108,7 +110,7 @@ function Edit(): JSX.Element {
         );
         if (updatePromise) {
           updatePromise.then(() => {
-            mdDispatch({ type: "saved" });
+            mdDispatch({ type: "savedEdit" });
           });
         }
       } else {
@@ -121,24 +123,7 @@ function Edit(): JSX.Element {
 
   function createEdit(): DiaryAdd | false {
     if (typeof edit !== "undefined") {
-      // const {
-      //   diaryDate: localDiaryDate,
-      //   loggedBefore: localLoggedBefore,
-      //   rating: localRating,
-      //   seenEpisodes: localSeenEpisodes,
-      //   id,
-      //   hasPendingWrites,
-      //   exists,
-      //   __snapshot,
-      //   ...rest
-      // } = edit.diary;
-      // let replacedEpisodes = localSeenEpisodes;
-      // // something here where the "rest" might be overriding this
-      // if (typeof seenEpisodes !== "undefined") {
-      //   replacedEpisodes = seenEpisodes;
-      // }
       const item = edit.diary;
-      // diaryDate, loggedBefore, rating, episodes, poster, seenEpisodes, season
       const editItem = {
         addedDate: item.addedDate,
         artist: item.artist,
@@ -161,9 +146,6 @@ function Edit(): JSX.Element {
       if (typeof seenEpisodes !== "undefined") {
         Object.assign(editItem, { seenEpisodes });
       }
-      // episodes: item.episodes,
-      // season: item.season,
-      // seenEpisodes: item.seenEpisodes,
       return editItem;
     } else {
       return false;
@@ -180,6 +162,7 @@ function Edit(): JSX.Element {
       mdDispatch({ type: "saving" });
       const deletedPromise = deleteDocument(`${user.email}/${edit.diaryId}`);
       if (deletedPromise) {
+        mdDispatch({ type: "view", payload: "md" });
         deletedPromise.then(() => {
           mdDispatch({ type: "saved" });
         });

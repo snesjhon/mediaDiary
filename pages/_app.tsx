@@ -4,12 +4,11 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { Fuego, FuegoProvider } from "@nandorojo/swr-firestore";
 import "firebase/auth";
 import "firebase/firestore";
-import { AuthProvider } from "../utils/auth";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import { useReducer } from "react";
+import React, { useReducer } from "react";
 import { ContextDispatch, ContextState, Reducer } from "../config/store";
-import React from "react";
+import { AuthProvider } from "../utils/auth";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
@@ -23,6 +22,11 @@ const firebaseConfig = {
 const fuego = new Fuego(firebaseConfig);
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
+  const [state, dispatch] = useReducer(Reducer, {
+    page: 1,
+    filterBy: ["album", "movie", "tv"],
+    view: "md",
+  });
   return (
     <>
       <Head>
@@ -37,9 +41,13 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
       </Head>
       <FuegoProvider fuego={fuego}>
         <AuthProvider>
-          <ChakraProvider resetCSS>
-            <Component {...pageProps} />
-          </ChakraProvider>
+          <ContextState.Provider value={state}>
+            <ContextDispatch.Provider value={dispatch}>
+              <ChakraProvider resetCSS>
+                <Component {...pageProps} />
+              </ChakraProvider>
+            </ContextDispatch.Provider>
+          </ContextState.Provider>
         </AuthProvider>
       </FuegoProvider>
     </>

@@ -66,7 +66,7 @@ function LayoutDrawer({
   );
 
   function onClose() {
-    dispatch({ type: "state", payload: { key: "view", value: "" } });
+    dispatch({ type: "view", payload: "md" });
   }
 }
 
