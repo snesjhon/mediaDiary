@@ -39,8 +39,6 @@ function Edit(): JSX.Element {
     dispatch,
   ] = useReducer(LogReducer, initData);
 
-  // console.log(isSaving);
-
   return (
     <>
       {isSaving ? (
