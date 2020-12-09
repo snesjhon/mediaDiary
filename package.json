@@ -22,7 +22,8 @@
     "react-dom": "~16.12.0",
     "react-rating": "~2.0.5",
     "react-swipeable": "^6.0.0",
-    "swr": "~0.3.2"
+    "swr": "~0.3.2",
+    "victory": "^35.4.3"
   },
   "devDependencies": {
     "@types/node": "~12.12.21",
