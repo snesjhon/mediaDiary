@@ -37,24 +37,40 @@ function Activity(): JSX.Element {
     user !== null && user ? `${user.email}` : null
   );
   const [ratingType, setRatingType] = useState<MediaTypes | "all">("all");
+  const [yearType, setYearType] = useState<number | "all">(
+    parseInt(dayjs().format("YYYY"))
+  );
 
   if (user !== null && user) {
-    const { email, displayName, photoURL } = user;
+    const { displayName, photoURL } = user;
     if (data) {
-      // console.log(data);
-      const dataCounts = data.reduce(
+      const dataCounts = data.reduce<{
+        movie: number;
+        tv: number;
+        album: number;
+        years: { [key: string]: DiaryAdd[] };
+      }>(
         (a, c) => {
           if (typeof a[c.type] !== "undefined") {
             a[c.type] = ++a[c.type];
           } else {
             a[c.type] = 1;
           }
+
+          const addedYr = dayjs(c.diaryDate.toDate()).format("YYYY");
+          if (typeof a["years"][addedYr] === "undefined") {
+            a["years"][addedYr] = [c];
+          } else {
+            a["years"][addedYr].push(c);
+          }
           return a;
         },
-        { movie: 0, tv: 0, album: 0 }
+        { movie: 0, tv: 0, album: 0, years: { all: data } }
       );
 
-      const filteredList = data.filter((e) =>
+      const yearData = dataCounts.years[yearType];
+
+      const filteredList = yearData.filter((e) =>
         ratingType === "all" ? e : e.type === ratingType
       );
 
@@ -64,8 +80,6 @@ function Activity(): JSX.Element {
           return a;
         }, Array(11).fill(0))
         .map((e, i) => ({ rating: i / 2, count: e === 0 ? 0.5 : e }));
-
-      console.log(ratingCount);
 
       const yearList = filteredList.reduce<{ [key: string]: number }>(
         (a, c) => {
@@ -97,9 +111,31 @@ function Activity(): JSX.Element {
             py={10}
           >
             <Center>
-              <Heading size="4xl" as="h1">
-                ALL
-              </Heading>
+              {Object.keys(dataCounts.years).length > 0 ? (
+                <Flex alignItems="flex-end">
+                  {Object.keys(dataCounts.years)
+                    .reverse()
+                    .map((e) => {
+                      const yearString = e === "all" ? "all" : parseInt(e);
+                      const isActive = yearType === yearString;
+                      return (
+                        <Heading
+                          key={`listyear_${e}`}
+                          size={isActive ? "4xl" : undefined}
+                          color={!isActive ? "gray.500" : undefined}
+                          onClick={() => setYearType(yearString)}
+                          pl={3}
+                        >
+                          {e === "all" ? "ALL" : e}
+                        </Heading>
+                      );
+                    })}
+                </Flex>
+              ) : (
+                <Heading size="4xl" as="h1">
+                  ALL
+                </Heading>
+              )}
             </Center>
             <Flex alignItems="center" justifyContent="center" mt={4}>
               {photoURL !== null && <Avatar src={photoURL} size="sm" />}
@@ -148,7 +184,7 @@ function Activity(): JSX.Element {
               <SimpleGrid columns={5} gap={6}>
                 {topRated.map((e) => (
                   <Grid
-                    key={e.id}
+                    key={e.addedDate + e.mediaId}
                     gridTemplateRows="1fr 2rem 1.5rem"
                     alignItems="flex-end"
                   >
