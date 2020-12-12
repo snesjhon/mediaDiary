@@ -65,7 +65,7 @@ function Home({
   }, [dispatch, spotifyToken, token]);
 
   return !user ? (
-    <MdLoader fullPage />
+    <MdLoader />
   ) : (
     <LayoutMain>
       <MediaDiary />

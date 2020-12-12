@@ -11,7 +11,6 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import React from "react";
 import { useAuth, useLogout } from "../../config/auth";
 import { useMDDispatch } from "../../config/store";
@@ -23,7 +22,6 @@ function SidebarDesktop(): JSX.Element {
   const { user } = useAuth();
   const logout = useLogout();
   const dispatch = useMDDispatch();
-  const router = useRouter();
   return (
     <Box pr={8}>
       <Box position="sticky" top="3rem" pt={6}>
