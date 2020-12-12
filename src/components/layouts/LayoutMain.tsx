@@ -1,10 +1,10 @@
 import { Box, Grid } from "@chakra-ui/react";
 import React, { PropsWithChildren } from "react";
-import { useIsBreakpoint } from "../../utils/helpers";
+import useIsBreakpoint from "../../utils/useIsBreakpoint";
 import Content from "../Content";
 import Header from "../Header";
+import SidebarDesktop from "../sidebar/SidebarDesktop";
 import Layout from "./Layout";
-import SidebarDesktop from "../SidebarDesktop";
 
 function LayoutMain({ children }: PropsWithChildren<unknown>): JSX.Element {
   const isMd = useIsBreakpoint("md");

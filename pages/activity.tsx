@@ -22,13 +22,13 @@ import dayjs from "dayjs";
 import React, { useState } from "react";
 import Rating from "react-rating";
 import { VictoryAxis, VictoryBar, VictoryChart } from "victory";
-import AlbumIcon from "../components/Icons/AlbumIcon";
-import LogoFilm from "../components/Icons/FilmIcon";
-import StarEmptyIcon from "../components/Icons/StartEmptyIcon";
-import TvIcon from "../components/Icons/TvIcon";
-import LayoutMain from "../components/Layouts/LayoutMain";
-import { DiaryAdd, MediaTypes } from "../config/mediaTypes";
-import { useAuth } from "../utils/auth";
+import AlbumIcon from "../src/components/icons/AlbumIcon";
+import LogoFilm from "../src/components/icons/FilmIcon";
+import StarEmptyIcon from "../src/components/icons/StartEmptyIcon";
+import TvIcon from "../src/components/icons/TvIcon";
+import LayoutMain from "../src/components/layouts/LayoutMain";
+import { DiaryAdd, MediaTypes } from "../src/config/mediaTypes";
+import { useAuth } from "../src/config/auth";
 
 function Activity(): JSX.Element {
   const [purple700] = useToken("colors", ["gray.400"]);

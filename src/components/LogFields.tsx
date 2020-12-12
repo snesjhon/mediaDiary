@@ -14,7 +14,7 @@ import dayjs from "dayjs";
 import React, { Dispatch, useState } from "react";
 import Rating from "react-rating";
 import { LogActions, LogProps } from "../config/logStore";
-import StarEmptyIcon from "./Icons/StartEmptyIcon";
+import StarEmptyIcon from "./icons/StartEmptyIcon";
 
 function LogFields({
   dispatch,

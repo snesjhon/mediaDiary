@@ -1,12 +1,12 @@
 import { Flex, Grid, Spinner } from "@chakra-ui/react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import React, { useEffect } from "react";
-import LogoIcon from "../components/Icons/LogoIcon";
-import Layout from "../components/Layouts/Layout";
-import LayoutMain from "../components/Layouts/LayoutMain";
-import MediaDiary from "../components/MediaDiary";
-import { useMDDispatch, useMDState } from "../config/store";
-import { useAuth } from "../utils/auth";
+import LogoIcon from "../src/components/icons/LogoIcon";
+import Layout from "../src/components/layouts/Layout";
+import LayoutMain from "../src/components/layouts/LayoutMain";
+import MediaDiary from "../src/components/MediaDiary";
+import { useMDDispatch, useMDState } from "../src/config/store";
+import { useAuth } from "../src/config/auth";
 import nookies from "nookies";
 
 export const getServerSideProps: GetServerSideProps = async (

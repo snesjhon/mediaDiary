@@ -1,7 +1,7 @@
 import { fuego } from "@nandorojo/swr-firestore";
 import { useRouter } from "next/router";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { removeUserCookie, setUserCookie } from "./getUserFromCookie";
+import { removeUserCookie, setUserCookie } from "../utils/getUserFromCookie";
 
 type AuthUser = firebase.User | null | false;
 
