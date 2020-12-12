@@ -8,6 +8,7 @@ import { useMDDispatch, useMDState } from "../config/store";
 import { useAuth } from "../config/auth";
 import Info from "./Info";
 import LogFields from "./LogFields";
+import MdSpinner from "./md/MdSpinner";
 
 function Edit(): JSX.Element {
   const { edit, isSaving } = useMDState();
@@ -43,7 +44,7 @@ function Edit(): JSX.Element {
     <>
       {isSaving ? (
         <Center minH="40vh">
-          <Spinner />
+          <MdSpinner />
         </Center>
       ) : (
         <>

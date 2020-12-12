@@ -6,13 +6,14 @@
  *   because there's multiple cookies.
  */
 
-import { Button, Heading, Spinner } from "@chakra-ui/react";
+import { Button, Heading } from "@chakra-ui/react";
 import firebase from "firebase/app";
 import "firebase/auth";
-import nookies from "nookies";
 import type { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
+import nookies from "nookies";
 import React, { useEffect } from "react";
+import MdLoader from "../src/components/md/MdLoader";
 import { setUserCookie } from "../src/utils/getUserFromCookie";
 
 interface Props {
@@ -41,16 +42,10 @@ function Login({ isSending }: Props): JSX.Element {
           }
         });
     }
-  }, []);
+  }, [isSending, router]);
 
   return isSending ? (
-    <Spinner
-      thickness="4px"
-      speed="0.65s"
-      emptyColor="gray.200"
-      color="blue.500"
-      size="xl"
-    />
+    <MdLoader />
   ) : (
     <>
       <Heading>Login</Heading>

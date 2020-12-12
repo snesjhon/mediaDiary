@@ -7,21 +7,20 @@ import {
   Grid,
   HStack,
   Image,
-  Spinner,
   Text,
   useColorMode,
 } from "@chakra-ui/react";
 import { useCollection } from "@nandorojo/swr-firestore";
 import React from "react";
 import Rating from "react-rating";
+import { useAuth } from "../config/auth";
 import type { DiaryAdd, DiaryState } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
-import { useAuth } from "../config/auth";
 import AlbumIcon from "./icons/AlbumIcon";
 import FilmIcon from "./icons/FilmIcon";
-import LogoIcon from "./icons/LogoIcon";
 import StarEmptyIcon from "./icons/StartEmptyIcon";
 import TvIcon from "./icons/TvIcon";
+import MdLoader from "./md/MdLoader";
 
 interface ListState {
   [key: string]: DiaryState;
@@ -284,19 +283,7 @@ function MediaDiary(): JSX.Element {
     );
   }
 
-  return (
-    <Flex height="90vh" justifyContent="center" alignItems="center">
-      <Grid alignItems="center" justifyItems="center">
-        <LogoIcon boxSize={8} sx={{ gridRow: 1, gridColumn: 1 }} />
-        <Spinner
-          size="xl"
-          color="purple.500"
-          thickness="3px"
-          sx={{ gridRow: 1, gridColumn: 1 }}
-        />
-      </Grid>
-    </Flex>
-  );
+  return <MdLoader />;
 }
 
 export default MediaDiary;

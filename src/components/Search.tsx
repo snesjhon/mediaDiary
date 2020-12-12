@@ -1,5 +1,5 @@
 import type { Icon } from "@chakra-ui/react";
-import { Box, Center, Flex, Input, Spinner, Text } from "@chakra-ui/react";
+import { Box, Center, Flex, Input, Text } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import type { RefObject } from "react";
 import React, { useState } from "react";
@@ -10,6 +10,7 @@ import useDebounce from "../utils/useDebounce";
 import AlbumIcon from "./icons/AlbumIcon";
 import FilmIcon from "./icons/FilmIcon";
 import TvIcon from "./icons/TvIcon";
+import MdSpinner from "./md/MdSpinner";
 
 function Search({
   refInput,
@@ -44,12 +45,7 @@ function Search({
       </Box>
       {!data && isValidating && (
         <Center h="20vh">
-          <Spinner
-            thickness="4px"
-            speed="0.65s"
-            emptyColor="gray.200"
-            color="blue.500"
-          />
+          <MdSpinner />
         </Center>
       )}
       {data && createData(data)}

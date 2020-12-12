@@ -1,11 +1,10 @@
-import { Flex, Grid, Spinner } from "@chakra-ui/react";
 import firebase from "firebase/app";
 import type { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
-import LogoIcon from "../../src/components/icons/LogoIcon";
-import { setUserCookie } from "../../src/utils/getUserFromCookie";
 import nookies from "nookies";
+import React, { useEffect } from "react";
+import MdLoader from "../../src/components/md/MdLoader";
+import { setUserCookie } from "../../src/utils/getUserFromCookie";
 
 interface Props {
   isSending: boolean;
@@ -34,21 +33,9 @@ function AuthView({ isSending }: Props): JSX.Element {
           }
         });
     }
-  }, []);
+  }, [isSending, router]);
 
-  return (
-    <Flex height="90vh" justifyContent="center" alignItems="center">
-      <Grid alignItems="center" justifyItems="center">
-        <LogoIcon boxSize={8} sx={{ gridRow: 1, gridColumn: 1 }} />
-        <Spinner
-          size="xl"
-          color="purple.500"
-          thickness="3px"
-          sx={{ gridRow: 1, gridColumn: 1 }}
-        />
-      </Grid>
-    </Flex>
-  );
+  return <MdLoader />;
 }
 
 export default AuthView;

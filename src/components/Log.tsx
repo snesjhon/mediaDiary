@@ -10,6 +10,7 @@ import { useMDDispatch, useMDState } from "../config/store";
 import { fetcher, spotifyFetch } from "../utils/fetchers";
 import Info from "./Info";
 import LogFields from "./LogFields";
+import MdSpinner from "./md/MdSpinner";
 
 function Log(): JSX.Element {
   const mdDispatch = useMDDispatch();
@@ -139,7 +140,7 @@ function Log(): JSX.Element {
     <>
       {isLoading || isSaving ? (
         <Center minH="40vh">
-          <Spinner />
+          <MdSpinner />
         </Center>
       ) : (
         <>
