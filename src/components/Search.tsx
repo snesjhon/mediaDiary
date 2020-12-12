@@ -13,9 +13,9 @@ import useSWR from "swr";
 import type { MediaSelected, MediaTypes } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
 import useDebounce from "../utils/useDebounce";
-import AlbumIcon from "./Icons/AlbumIcon";
-import FilmIcon from "./Icons/FilmIcon";
-import TvIcon from "./Icons/TvIcon";
+import AlbumIcon from "./icons/AlbumIcon";
+import FilmIcon from "./icons/FilmIcon";
+import TvIcon from "./icons/TvIcon";
 
 function Search({
   refInput,

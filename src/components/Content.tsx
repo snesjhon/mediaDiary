@@ -16,11 +16,12 @@ import {
 } from "@chakra-ui/react";
 import React, { useRef } from "react";
 import { useMDDispatch, useMDState } from "../config/store";
-import { useIsBreakpoint } from "../utils/helpers";
+import useIsBreakpoint from "../utils/useIsBreakpoint";
 import Day from "./Day";
-import LogoIcon from "./Icons/LogoIcon";
-import LayoutDrawer from "./Layouts/LayoutDrawer";
+import LogoIcon from "./icons/LogoIcon";
+import LayoutDrawer from "./layouts/LayoutDrawer";
 import Log from "./Log";
+import MdLogo from "./md/MdLogo";
 import Search from "./Search";
 
 function Content(): JSX.Element {
@@ -42,15 +43,7 @@ function Content(): JSX.Element {
             <ModalCloseButton />
             <ModalHeader>
               <Flex alignItems="center">
-                <LogoIcon boxSize={5} mr={1} />
-                <Text
-                  fontSize={{ base: "md", md: "xl" }}
-                  color="purple.700"
-                  fontWeight="medium"
-                  cursor="pointer"
-                >
-                  mediaDiary
-                </Text>
+                <MdLogo title="Search" />
               </Flex>
             </ModalHeader>
             <ModalBody pt={0} pb={6}>

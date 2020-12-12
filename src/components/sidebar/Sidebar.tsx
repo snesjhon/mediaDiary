@@ -12,10 +12,11 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React from "react";
-import { useIsBreakpoint } from "../utils/helpers";
-import ActivityIcon from "./Icons/ActivityIcon";
-import HomeIcon from "./Icons/HomeIcon";
-import LogoIcon from "./Icons/LogoIcon";
+import useIsBreakpoint from "../../utils/useIsBreakpoint";
+import ActivityIcon from "../icons/ActivityIcon";
+import HomeIcon from "../icons/HomeIcon";
+import LogoIcon from "../icons/LogoIcon";
+import MdLogo from "../md/MdLogo";
 import { SidebarButton, SidebarFooter } from "./SidebarContent";
 
 function Sidebar({
@@ -33,10 +34,7 @@ function Sidebar({
           <DrawerCloseButton />
           <DrawerHeader borderBottomWidth="1px" py={3}>
             <Flex alignItems="center">
-              <LogoIcon boxSize={5} mr={1} />
-              <Text color="purple.700" fontWeight="medium">
-                mediaDiary
-              </Text>
+              <MdLogo title="mediaDiary" />
             </Flex>
           </DrawerHeader>
           <DrawerBody mt={4}>

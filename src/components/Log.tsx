@@ -5,7 +5,7 @@ import useSWR from "swr";
 import { LogProps, LogReducer, LogState } from "../config/logStore";
 import { DiaryAdd } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
-import { useAuth } from "../utils/auth";
+import { useAuth } from "../config/auth";
 import { fetcher } from "../utils/helpers";
 import Info from "./Info";
 import LogFields from "./LogFields";

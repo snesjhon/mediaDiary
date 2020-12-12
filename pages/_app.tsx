@@ -7,8 +7,8 @@ import "firebase/firestore";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import React, { useReducer } from "react";
-import { ContextDispatch, ContextState, Reducer } from "../config/store";
-import { AuthProvider } from "../utils/auth";
+import { ContextDispatch, ContextState, Reducer } from "../src/config/store";
+import { AuthProvider } from "../src/config/auth";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,

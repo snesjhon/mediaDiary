@@ -13,7 +13,7 @@ import nookies from "nookies";
 import { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import { setUserCookie } from "../utils/getUserFromCookie";
+import { setUserCookie } from "../src/utils/getUserFromCookie";
 
 interface Props {
   isSending: boolean;

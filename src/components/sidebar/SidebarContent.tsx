@@ -9,11 +9,12 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { FunctionComponent } from "react";
-import { useAuth, useLogout } from "../utils/auth";
-import { useIsBreakpoint } from "../utils/helpers";
+import { useAuth, useLogout } from "../../config/auth";
+import useIsBreakpoint from "../../utils/useIsBreakpoint";
 
 export function SidebarButton({
   title,
@@ -26,17 +27,19 @@ export function SidebarButton({
 }): JSX.Element {
   const router = useRouter();
   const isSm = useIsBreakpoint("sm");
+  const bgColor = useColorModeValue("purple.50", "purple.800");
+  const activeBg = useColorModeValue("purple.100", "purple.700");
   return (
     <Button
       variant="ghost"
       leftIcon={<Icon mb="2px" />}
       fontSize={isSm ? "xl" : undefined}
-      bg={router.pathname === route ? "purple.50" : undefined}
+      bg={router.pathname === route ? bgColor : undefined}
       _hover={{
-        bg: "purple.50",
+        bg: bgColor,
       }}
       _active={{
-        bg: "purple.100",
+        bg: activeBg,
       }}
       onClick={() => router.push(route)}
     >

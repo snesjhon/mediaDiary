@@ -3,8 +3,8 @@ import firebase from "firebase/app";
 import { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import LogoIcon from "../../components/Icons/LogoIcon";
-import { setUserCookie } from "../../utils/getUserFromCookie";
+import LogoIcon from "../../src/components/icons/LogoIcon";
+import { setUserCookie } from "../../src/utils/getUserFromCookie";
 import nookies from "nookies";
 
 interface Props {

@@ -17,12 +17,12 @@ import dayjs from "dayjs";
 import React, { Suspense, useState } from "react";
 import Rating from "react-rating";
 import useSWR from "swr";
+import { useAuth } from "../config/auth";
 import { DiaryAdd, MediaTypes } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
-import { useAuth } from "../utils/auth";
 import { fetcher } from "../utils/helpers";
 import Edit from "./Edit";
-import StarEmptyIcon from "./Icons/StartEmptyIcon";
+import StarEmptyIcon from "./icons/StartEmptyIcon";
 
 function Day(): JSX.Element | null {
   const { user } = useAuth();

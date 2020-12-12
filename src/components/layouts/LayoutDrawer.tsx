@@ -7,13 +7,12 @@ import {
   DrawerOverlay,
   DrawerProps,
   Flex,
-  Text,
 } from "@chakra-ui/react";
 import type { PropsWithChildren } from "react";
 import React, { RefObject } from "react";
 import { useSwipeable } from "react-swipeable";
 import { useMDDispatch } from "../../config/store";
-import LogoIcon from "../Icons/LogoIcon";
+import MdLogo from "../md/MdLogo";
 
 function LayoutDrawer({
   children,
@@ -45,15 +44,7 @@ function LayoutDrawer({
         <DrawerContent>
           <DrawerHeader>
             <Flex align="center">
-              <LogoIcon boxSize={5} mr={1} />
-              <Text
-                fontSize={{ base: "md", md: "xl" }}
-                color="purple.700"
-                fontWeight="medium"
-                cursor="pointer"
-              >
-                mediaDiary
-              </Text>
+              <MdLogo title="mediaDiary" />
             </Flex>
           </DrawerHeader>
           <DrawerCloseButton />

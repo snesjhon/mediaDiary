@@ -22,9 +22,9 @@ import nookies from "nookies";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import LogoIcon from "../components/Icons/LogoIcon";
-import Layout from "../components/Layouts/Layout";
-import { useAuth } from "../utils/auth";
+import LogoIcon from "../src/components/icons/LogoIcon";
+import Layout from "../src/components/layouts/Layout";
+import { useAuth } from "../src/config/auth";
 
 function App(): JSX.Element {
   const { user } = useAuth();

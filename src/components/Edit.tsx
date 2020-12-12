@@ -5,7 +5,7 @@ import React, { useReducer } from "react";
 import { LogReducer } from "../config/logStore";
 import { DiaryAdd } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
-import { useAuth } from "../utils/auth";
+import { useAuth } from "../config/auth";
 import Info from "./Info";
 import LogFields from "./LogFields";
 

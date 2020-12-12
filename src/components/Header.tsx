@@ -6,18 +6,16 @@ import {
   Flex,
   HStack,
   IconButton,
-  Text,
   useColorMode,
   useDisclosure,
 } from "@chakra-ui/react";
-import Link from "next/link";
 import React from "react";
 import { useMDDispatch } from "../config/store";
-import { useIsBreakpoint } from "../utils/helpers";
+import useIsBreakpoint from "../utils/useIsBreakpoint";
 import Filters from "./Filters";
-import FiltersIcon from "./Icons/FiltersIcon";
-import LogoIcon from "./Icons/LogoIcon";
-import Sidebar from "./Sidebar";
+import FiltersIcon from "./icons/FiltersIcon";
+import MdLogo from "./md/MdLogo";
+import Sidebar from "./sidebar/Sidebar";
 
 function Header(): JSX.Element {
   const isMd = useIsBreakpoint("md");
@@ -55,17 +53,7 @@ function Header(): JSX.Element {
                   onClick={onOpen}
                 />
               )}
-              <LogoIcon boxSize={5} mr={1} />
-              <Link href="/home">
-                <Text
-                  fontSize={{ base: "md", md: "xl" }}
-                  color="purple.700"
-                  fontWeight="medium"
-                  cursor="pointer"
-                >
-                  mediaDiary
-                </Text>
-              </Link>
+              <MdLogo title="mediaDiary" href="/home" />
             </Flex>
             <Flex maxW="720px" align="center">
               <HStack as="nav" spacing="2">

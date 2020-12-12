@@ -15,10 +15,11 @@ import {
 import React, { useContext, useState } from "react";
 import { MediaTypes } from "../config/mediaTypes";
 import { ContextDispatch, ContextState } from "../config/store";
-import AlbumIcon from "./Icons/AlbumIcon";
-import FilmIcon from "./Icons/FilmIcon";
-import LogoIcon from "./Icons/LogoIcon";
-import TvIcon from "./Icons/TvIcon";
+import AlbumIcon from "./icons/AlbumIcon";
+import FilmIcon from "./icons/FilmIcon";
+import LogoIcon from "./icons/LogoIcon";
+import TvIcon from "./icons/TvIcon";
+import MdLogo from "./md/MdLogo";
 
 function Filters({
   onClose,
@@ -38,10 +39,7 @@ function Filters({
           <DrawerCloseButton />
           <DrawerHeader borderBottomWidth="1px" py={3}>
             <Flex alignItems="center">
-              <LogoIcon boxSize={5} mr={1} />
-              <Text color="purple.700" fontWeight="medium">
-                Filters
-              </Text>
+              <MdLogo title="Filters" />
             </Flex>
           </DrawerHeader>
           <DrawerBody mt={4}>

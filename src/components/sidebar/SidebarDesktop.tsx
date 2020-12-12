@@ -13,10 +13,10 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
-import { useMDDispatch } from "../config/store";
-import { useAuth, useLogout } from "../utils/auth";
-import ActivityIcon from "./Icons/ActivityIcon";
-import HomeIcon from "./Icons/HomeIcon";
+import { useAuth, useLogout } from "../../config/auth";
+import { useMDDispatch } from "../../config/store";
+import ActivityIcon from "../icons/ActivityIcon";
+import HomeIcon from "../icons/HomeIcon";
 import { SidebarButton } from "./SidebarContent";
 
 function SidebarDesktop(): JSX.Element {

@@ -16,12 +16,12 @@ import React from "react";
 import Rating from "react-rating";
 import { DiaryAdd, DiaryState } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
-import { useAuth } from "../utils/auth";
-import AlbumIcon from "./Icons/AlbumIcon";
-import FilmIcon from "./Icons/FilmIcon";
-import LogoIcon from "./Icons/LogoIcon";
-import StarEmptyIcon from "./Icons/StartEmptyIcon";
-import TvIcon from "./Icons/TvIcon";
+import { useAuth } from "../config/auth";
+import AlbumIcon from "./icons/AlbumIcon";
+import FilmIcon from "./icons/FilmIcon";
+import LogoIcon from "./icons/LogoIcon";
+import StarEmptyIcon from "./icons/StartEmptyIcon";
+import TvIcon from "./icons/TvIcon";
 
 interface ListState {
   [key: string]: DiaryState;
@@ -75,14 +75,14 @@ function MediaDiary(): JSX.Element {
                   md: "0.1fr 0.9fr",
                 }}
                 key={monthIndex}
-                borderX={{ base: 0, md: "1px solid" }}
-                borderColor={{ base: "transparent", md: "gray.100" }}
+                borderLeftWidth={{ base: 0, md: "1px" }}
+                borderRightWidth={{ base: 0, md: "1px" }}
                 px={{ md: 8 }}
               >
                 <Box>
                   <Text
                     fontSize={{ base: "lg", md: "2xl" }}
-                    color="gray.600"
+                    color={colorMode === "light" ? "gray.600" : "gray.300"}
                     fontWeight="bold"
                     position="sticky"
                     top="4rem"
@@ -118,8 +118,11 @@ function MediaDiary(): JSX.Element {
                             md: "3rem 7rem 1fr",
                           }}
                           gridGap="1rem"
-                          borderBottom="1px solid"
-                          borderColor="gray.200"
+                          // borderBottom="1px solid"
+                          // borderColor={
+                          //   colorMode === "light" ? "gray.200" : "gray.600"
+                          // }
+                          borderBottomWidth="1px"
                           px={3}
                           py={{ base: 4, md: 5 }}
                           key={monthIndex + dayIndex}
@@ -141,7 +144,9 @@ function MediaDiary(): JSX.Element {
                           <Box>
                             <Text
                               fontSize={{ base: "lg", md: "xl" }}
-                              color="gray.500"
+                              color={
+                                colorMode === "light" ? "gray.500" : "gray.300"
+                              }
                             >
                               {new Date(
                                 diaryDates[month][day].diaryDate.toDate()
@@ -160,10 +165,7 @@ function MediaDiary(): JSX.Element {
                             />
                           </Box>
                           <Flex flexDirection="column">
-                            <Text
-                              // color="gray.600"
-                              fontSize={{ base: "md", md: "xl" }}
-                            >
+                            <Text fontSize={{ base: "md", md: "xl" }}>
                               {title}
                             </Text>
                             <Text
@@ -191,19 +193,24 @@ function MediaDiary(): JSX.Element {
                               >
                                 <Text>
                                   <Text as="span" fontWeight="semibold">
-                                    S:
+                                    S:{" "}
                                   </Text>
-                                  {season}{" "}
+                                  {season}
                                 </Text>
-                                <Text px={2}>·</Text>
-                                <Text>
-                                  <Text as="span" fontWeight="semibold">
-                                    Ep.{" "}
-                                  </Text>
-                                  {seenEpisodes
-                                    ?.sort((a, b) => (a < b ? -1 : 1))
-                                    .join(", ")}
-                                </Text>
+                                {typeof seenEpisodes !== "undefined" &&
+                                  seenEpisodes?.length > 0 && (
+                                    <>
+                                      <Text px={2}>·</Text>
+                                      <Text>
+                                        <Text as="span" fontWeight="semibold">
+                                          Ep.{" "}
+                                        </Text>
+                                        {seenEpisodes
+                                          ?.sort((a, b) => (a < b ? -1 : 1))
+                                          .join(", ")}
+                                      </Text>
+                                    </>
+                                  )}
                               </Flex>
                             )}
                             <Flex
@@ -212,25 +219,31 @@ function MediaDiary(): JSX.Element {
                               justifyContent="space-between"
                             >
                               <Box mt={type === "tv" ? "-3px" : undefined}>
-                                <Rating
-                                  fractions={2}
-                                  readonly
-                                  initialRating={rating}
-                                  fullSymbol={
-                                    <StarIcon
-                                      h={{ base: "12px", md: "20px" }}
-                                      w={{ base: "12px", md: "20px" }}
-                                      color="purple.400"
-                                    />
-                                  }
-                                  emptySymbol={
-                                    <StarEmptyIcon
-                                      h={{ base: "12px", md: "20px" }}
-                                      w={{ base: "12px", md: "20px" }}
-                                      stroke="purple.400"
-                                    />
-                                  }
-                                />
+                                {rating === 0 ? (
+                                  <Text fontSize="sm" color="gray.500">
+                                    No Rating
+                                  </Text>
+                                ) : (
+                                  <Rating
+                                    fractions={2}
+                                    readonly
+                                    initialRating={rating}
+                                    fullSymbol={
+                                      <StarIcon
+                                        h={{ base: "12px", md: "20px" }}
+                                        w={{ base: "12px", md: "20px" }}
+                                        color="purple.400"
+                                      />
+                                    }
+                                    emptySymbol={
+                                      <StarEmptyIcon
+                                        h={{ base: "12px", md: "20px" }}
+                                        w={{ base: "12px", md: "20px" }}
+                                        stroke="purple.400"
+                                      />
+                                    }
+                                  />
+                                )}
                               </Box>
                               {type === "movie" && <FilmIcon />}
                               {type === "album" && <AlbumIcon />}
