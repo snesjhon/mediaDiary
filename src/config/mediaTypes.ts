@@ -1,4 +1,4 @@
-import { Document } from "@nandorojo/swr-firestore";
+import type { Document } from "@nandorojo/swr-firestore";
 
 export type MediaTypes = "movie" | "album" | "tv";
 

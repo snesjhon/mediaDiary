@@ -27,8 +27,9 @@ import LogoFilm from "../src/components/icons/FilmIcon";
 import StarEmptyIcon from "../src/components/icons/StartEmptyIcon";
 import TvIcon from "../src/components/icons/TvIcon";
 import LayoutMain from "../src/components/layouts/LayoutMain";
-import { DiaryAdd, MediaTypes } from "../src/config/mediaTypes";
+import MdLoader from "../src/components/md/MdLoader";
 import { useAuth } from "../src/config/auth";
+import type { DiaryAdd, MediaTypes } from "../src/config/mediaTypes";
 
 function Activity(): JSX.Element {
   const [purple700] = useToken("colors", ["gray.400"]);
@@ -241,24 +242,16 @@ function Activity(): JSX.Element {
             <Divider my={10} />
             <Box>
               <Heading>By Release year</Heading>
-              {/* <VictoryChart>
-                <VictoryBar data={yearCount} x="year" y="count" />
-              </VictoryChart> */}
               <VictoryChart
                 height={100}
-                // width={600}
                 padding={{ top: 0, bottom: 40, left: 20, right: 20 }}
               >
                 <VictoryAxis
-                  // tickComponent={<Text fontSize="sm" />}
                   tickCount={2}
-                  // tickValues={[60, 20]}
-                  // tickFormat={(x) => dayjs(x).format("YY")}
                   style={{
                     axis: {
                       strokeWidth: 0,
                     },
-                    // ticks: { stroke: "grey", size: 5 },
                     tickLabels: { fontSize: 10, padding: 5 },
                   }}
                 />
@@ -280,9 +273,13 @@ function Activity(): JSX.Element {
       );
     }
   } else {
-    return <div>loading</div>;
+    return (
+      // <LayoutMain>
+      <MdLoader />
+      // {/* </LayoutMain> */}
+    );
   }
-  return <div>not</div>;
+  return <MdLoader fullPage />;
 
   function RatingIcon() {
     return <StarIcon color="purple.400" w="15px" h="15px" />;

@@ -13,11 +13,10 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { useContext, useState } from "react";
-import { MediaTypes } from "../config/mediaTypes";
+import type { MediaTypes } from "../config/mediaTypes";
 import { ContextDispatch, ContextState } from "../config/store";
 import AlbumIcon from "./icons/AlbumIcon";
 import FilmIcon from "./icons/FilmIcon";
-import LogoIcon from "./icons/LogoIcon";
 import TvIcon from "./icons/TvIcon";
 import MdLogo from "./md/MdLogo";
 

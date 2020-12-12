@@ -3,7 +3,6 @@ import {
   Button,
   Container,
   Flex,
-  Grid,
   Heading,
   HStack,
   Modal,
@@ -12,18 +11,18 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Spinner,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import firebase from "firebase/app";
 import "firebase/auth";
-import nookies from "nookies";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import nookies from "nookies";
 import React from "react";
 import LogoIcon from "../src/components/icons/LogoIcon";
 import Layout from "../src/components/layouts/Layout";
+import MdLoader from "../src/components/md/MdLoader";
 import { useAuth } from "../src/config/auth";
 
 function App(): JSX.Element {
@@ -31,34 +30,10 @@ function App(): JSX.Element {
   const router = useRouter();
 
   if (user === null) {
-    return (
-      <Flex height="90vh" justifyContent="center" alignItems="center">
-        <Grid alignItems="center" justifyItems="center">
-          <LogoIcon boxSize={8} sx={{ gridRow: 1, gridColumn: 1 }} />
-          <Spinner
-            size="xl"
-            color="purple.500"
-            thickness="3px"
-            sx={{ gridRow: 1, gridColumn: 1 }}
-          />
-        </Grid>
-      </Flex>
-    );
+    return <MdLoader />;
   } else if (user) {
     router.push("/home");
-    return (
-      <Flex height="90vh" justifyContent="center" alignItems="center">
-        <Grid alignItems="center" justifyItems="center">
-          <LogoIcon boxSize={8} sx={{ gridRow: 1, gridColumn: 1 }} />
-          <Spinner
-            size="xl"
-            color="purple.500"
-            thickness="3px"
-            sx={{ gridRow: 1, gridColumn: 1 }}
-          />
-        </Grid>
-      </Flex>
-    );
+    return <MdLoader />;
   } else {
     return (
       <>

@@ -10,7 +10,7 @@ import { Button, Heading, Spinner } from "@chakra-ui/react";
 import firebase from "firebase/app";
 import "firebase/auth";
 import nookies from "nookies";
-import { GetServerSidePropsContext } from "next";
+import type { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { setUserCookie } from "../src/utils/getUserFromCookie";

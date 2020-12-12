@@ -5,7 +5,8 @@
     "start": "next",
     "build": "next build",
     "prod": "next start",
-    "validate": "node_modules/.bin/tsc --noEmit"
+    "validate": "node_modules/.bin/tsc --noEmit",
+    "lint": "node_modules/.bin/eslint '**/**' --fix"
   },
   "dependencies": {
     "@chakra-ui/icons": "~1.0.1",

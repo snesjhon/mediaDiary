@@ -1,5 +1,6 @@
 import { Box, Grid } from "@chakra-ui/react";
-import React, { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
+import React from "react";
 import useIsBreakpoint from "../../utils/useIsBreakpoint";
 import Content from "../Content";
 import Header from "../Header";

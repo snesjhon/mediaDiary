@@ -14,19 +14,18 @@ import {
 } from "@chakra-ui/react";
 import { useDocument } from "@nandorojo/swr-firestore";
 import dayjs from "dayjs";
-import React, { Suspense, useState } from "react";
+import React, { Suspense } from "react";
 import Rating from "react-rating";
 import useSWR from "swr";
 import { useAuth } from "../config/auth";
-import { DiaryAdd, MediaTypes } from "../config/mediaTypes";
+import type { DiaryAdd, MediaTypes } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
-import { fetcher } from "../utils/helpers";
+import { fetcher } from "../utils/fetchers";
 import Edit from "./Edit";
 import StarEmptyIcon from "./icons/StartEmptyIcon";
 
 function Day(): JSX.Element | null {
   const { user } = useAuth();
-  const [localGenre, setLocalGenre] = useState("");
   const dispatch = useMDDispatch();
   const { view, edit, spotifyToken } = useMDState();
   const { data } = useDocument<DiaryAdd>(
@@ -43,9 +42,6 @@ function Day(): JSX.Element | null {
       releasedDate,
       artistId,
     } = data;
-
-    // spotify doesn't have good genre support for albums :(, thus add the first genre from artist payload
-    const mediaGenre = localGenre !== "" ? localGenre : genre;
 
     return (
       <>
@@ -144,7 +140,7 @@ function Day(): JSX.Element | null {
                 ml="auto"
                 textTransform="uppercase"
               >
-                {mediaGenre && <>{mediaGenre} • </>}
+                {genre && <>{genre} • </>}
                 {typeof releasedDate !== "undefined" &&
                   `${new Date(releasedDate).toLocaleDateString("en-us", {
                     year: "numeric",
@@ -161,7 +157,6 @@ function Day(): JSX.Element | null {
                   mediaId={data.mediaId}
                   token={spotifyToken}
                   artistId={artistId}
-                  setLocalGenre={(newGenre: string) => setLocalGenre(newGenre)}
                 />
               ) : (
                 <MDBData
@@ -183,12 +178,10 @@ function SpotifyData({
   mediaId,
   artistId,
   token,
-  setLocalGenre,
 }: {
   mediaId: string;
   token: string;
   artistId: string;
-  setLocalGenre: (genre: string) => void;
 }) {
   const { data } = useSWR<any[]>(`/day/${mediaId}`, fetchAll, {
     revalidateOnFocus: false,
@@ -198,10 +191,6 @@ function SpotifyData({
   if (data) {
     const albumInfo = data[0];
     const artistInfo = data[1];
-
-    if (artistInfo.genres.length > 0) {
-      setLocalGenre(artistInfo.genres[0]);
-    }
 
     return (
       <Box my={4}>

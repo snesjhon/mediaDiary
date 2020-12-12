@@ -1,3 +1,5 @@
+import type {
+  DrawerProps} from "@chakra-ui/react";
 import {
   Drawer,
   DrawerBody,
@@ -5,11 +7,10 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerOverlay,
-  DrawerProps,
   Flex,
 } from "@chakra-ui/react";
-import type { PropsWithChildren } from "react";
-import React, { RefObject } from "react";
+import type { PropsWithChildren , RefObject } from "react";
+import React from "react";
 import { useSwipeable } from "react-swipeable";
 import { useMDDispatch } from "../../config/store";
 import MdLogo from "../md/MdLogo";

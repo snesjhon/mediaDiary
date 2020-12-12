@@ -15,27 +15,28 @@ function MdLogo({
     <>
       <LogoIcon boxSize={5} mr={1} color={mdPurple} />
       {typeof href !== "undefined" ? (
-        <Link href={href}>
-          <MdText />
+        <Link href="/home">
+          <Text
+            fontSize={{ base: "md", md: "xl" }}
+            color={mdPurple}
+            fontWeight="medium"
+            cursor="pointer"
+          >
+            {title}
+          </Text>
         </Link>
       ) : (
-        <MdText />
+        <Text
+          fontSize={{ base: "md", md: "xl" }}
+          color={mdPurple}
+          fontWeight="medium"
+          cursor="pointer"
+        >
+          {title}
+        </Text>
       )}
     </>
   );
-
-  function MdText() {
-    return (
-      <Text
-        fontSize={{ base: "md", md: "xl" }}
-        color={mdPurple}
-        fontWeight="medium"
-        cursor="pointer"
-      >
-        {title}
-      </Text>
-    );
-  }
 }
 
 export default MdLogo;

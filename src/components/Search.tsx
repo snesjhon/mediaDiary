@@ -1,14 +1,8 @@
-import {
-  Box,
-  Center,
-  Flex,
-  Icon,
-  Input,
-  Spinner,
-  Text,
-} from "@chakra-ui/react";
+import type { Icon } from "@chakra-ui/react";
+import { Box, Center, Flex, Input, Spinner, Text } from "@chakra-ui/react";
 import dayjs from "dayjs";
-import React, { RefObject, useState } from "react";
+import type { RefObject } from "react";
+import React, { useState } from "react";
 import useSWR from "swr";
 import type { MediaSelected, MediaTypes } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";

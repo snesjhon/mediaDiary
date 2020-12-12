@@ -3,7 +3,7 @@ import { deleteDocument, update } from "@nandorojo/swr-firestore";
 import firebase from "firebase/app";
 import React, { useReducer } from "react";
 import { LogReducer } from "../config/logStore";
-import { DiaryAdd } from "../config/mediaTypes";
+import type { DiaryAdd } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
 import { useAuth } from "../config/auth";
 import Info from "./Info";

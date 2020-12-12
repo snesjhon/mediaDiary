@@ -2,23 +2,31 @@ import { Button, Center, DrawerFooter, Spinner } from "@chakra-ui/react";
 import { set } from "@nandorojo/swr-firestore";
 import React, { useCallback, useEffect, useReducer } from "react";
 import useSWR from "swr";
-import { LogProps, LogReducer, LogState } from "../config/logStore";
-import { DiaryAdd } from "../config/mediaTypes";
-import { useMDDispatch, useMDState } from "../config/store";
 import { useAuth } from "../config/auth";
-import { fetcher } from "../utils/helpers";
+import type { LogProps, LogState } from "../config/logStore";
+import { LogReducer } from "../config/logStore";
+import type { DiaryAdd, MediaSelected } from "../config/mediaTypes";
+import { useMDDispatch, useMDState } from "../config/store";
+import { fetcher, spotifyFetch } from "../utils/fetchers";
 import Info from "./Info";
 import LogFields from "./LogFields";
 
 function Log(): JSX.Element {
   const mdDispatch = useMDDispatch();
   const { user } = useAuth();
-  const { selected, isSaving } = useMDState();
+  const { selected, isSaving, spotifyToken } = useMDState();
 
   const dataUrl = getDataUrl();
-  const { data, error } = useSWR(dataUrl, fetcher, {
-    revalidateOnFocus: false,
-  });
+
+  const { data, error } = useSWR(
+    dataUrl,
+    selected?.type === "album" && typeof spotifyToken !== "undefined"
+      ? (url) => spotifyFetch(url, spotifyToken)
+      : fetcher,
+    {
+      revalidateOnFocus: false,
+    }
+  );
 
   let initData: LogState = {
     diaryDate: new Date(),
@@ -44,7 +52,7 @@ function Log(): JSX.Element {
 
     // Data can be cached by swr, if so, load initData from cache
     if (typeof data !== "undefined") {
-      const cachedData = parseData(data, selected.type);
+      const cachedData = parseData(data, selected);
       initData = {
         ...initData,
         ...cachedData,
@@ -81,6 +89,11 @@ function Log(): JSX.Element {
       } else if (selected.type === "movie") {
         dispatch({
           type: "credits",
+          payload: apiData as any,
+        });
+      } else if (selected.type === "album" && apiData) {
+        dispatch({
+          type: "genre",
           payload: apiData as any,
         });
       }
@@ -121,8 +134,6 @@ function Log(): JSX.Element {
       episodes: externalSeason.episode_count,
     };
   }
-
-  console.log(isLoading, isSaving);
 
   return (
     <>
@@ -208,7 +219,7 @@ function Log(): JSX.Element {
     }
   }
 
-  function parseData(externalData: any, selected: any) {
+  function parseData(externalData: any, selected: MediaSelected) {
     const mediaType = selected.type;
     if (mediaType === "tv") {
       const filteredSeasons = externalData.seasons.sort((_: any, b: any) =>
@@ -232,6 +243,13 @@ function Log(): JSX.Element {
           .name,
         genre: externalData.genres[0].name,
       };
+    } else if (mediaType === "album") {
+      if (
+        typeof externalData.genres !== "undefined" &&
+        externalData.genres.length > 0
+      ) {
+        return externalData.genres[0];
+      }
     }
   }
 
@@ -246,6 +264,8 @@ function Log(): JSX.Element {
         )}?api_key=${
           process.env.NEXT_PUBLIC_MDBKEY
         }&append_to_response=credits`;
+      } else if (selected.type === "album") {
+        returnUrl = `https://api.spotify.com/v1/artists/${selected.artistId}`;
       }
     }
     return returnUrl;
