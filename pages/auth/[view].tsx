@@ -1,6 +1,6 @@
 import { Flex, Grid, Spinner } from "@chakra-ui/react";
 import firebase from "firebase/app";
-import { GetServerSidePropsContext } from "next";
+import type { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import LogoIcon from "../../src/components/icons/LogoIcon";

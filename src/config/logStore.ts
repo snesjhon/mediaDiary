@@ -1,4 +1,4 @@
-import { DiaryAdd } from "./mediaTypes";
+import type { DiaryAdd } from "./mediaTypes";
 
 export interface LogProps {
   diaryDate: Date;
@@ -53,7 +53,7 @@ export type LogActions =
       };
     }
   | {
-      type: "artistId";
+      type: "artistId" | "genre";
       payload: string;
     }
   | {
@@ -98,6 +98,13 @@ export function LogReducer(state: LogState, actions: LogActions): LogState {
         ...state,
         artist: actions.payload.artist,
         genre: actions.payload.genre,
+        isLoading: false,
+      };
+    }
+    case "genre": {
+      return {
+        ...state,
+        genre: actions.payload,
         isLoading: false,
       };
     }

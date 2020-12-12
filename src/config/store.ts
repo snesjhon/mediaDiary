@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { MediaEdit, MediaSelected, MediaTypes } from "./mediaTypes";
+import type { MediaEdit, MediaSelected, MediaTypes } from "./mediaTypes";
 
 export interface MDState {
   page: number;

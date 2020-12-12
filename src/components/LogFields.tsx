@@ -11,9 +11,10 @@ import {
 } from "@chakra-ui/react";
 import { StarIcon } from "@chakra-ui/icons";
 import dayjs from "dayjs";
-import React, { Dispatch, useState } from "react";
+import type { Dispatch } from "react";
+import React, { useState } from "react";
 import Rating from "react-rating";
-import { LogActions, LogProps } from "../config/logStore";
+import type { LogActions, LogProps } from "../config/logStore";
 import StarEmptyIcon from "./icons/StartEmptyIcon";
 
 function LogFields({

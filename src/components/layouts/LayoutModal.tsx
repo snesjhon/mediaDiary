@@ -6,7 +6,8 @@ import {
   ModalBody,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
+import React from "react";
 
 function LayoutModal({ children }: PropsWithChildren<unknown>): JSX.Element {
   const router = useRouter();

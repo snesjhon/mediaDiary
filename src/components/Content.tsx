@@ -12,13 +12,11 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Text,
 } from "@chakra-ui/react";
 import React, { useRef } from "react";
 import { useMDDispatch, useMDState } from "../config/store";
 import useIsBreakpoint from "../utils/useIsBreakpoint";
 import Day from "./Day";
-import LogoIcon from "./icons/LogoIcon";
 import LayoutDrawer from "./layouts/LayoutDrawer";
 import Log from "./Log";
 import MdLogo from "./md/MdLogo";

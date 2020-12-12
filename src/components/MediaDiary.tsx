@@ -14,7 +14,7 @@ import {
 import { useCollection } from "@nandorojo/swr-firestore";
 import React from "react";
 import Rating from "react-rating";
-import { DiaryAdd, DiaryState } from "../config/mediaTypes";
+import type { DiaryAdd, DiaryState } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
 import { useAuth } from "../config/auth";
 import AlbumIcon from "./icons/AlbumIcon";

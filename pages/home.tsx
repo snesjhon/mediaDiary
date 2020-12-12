@@ -1,13 +1,11 @@
-import { Flex, Grid, Spinner } from "@chakra-ui/react";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import React, { useEffect } from "react";
-import LogoIcon from "../src/components/icons/LogoIcon";
-import Layout from "../src/components/layouts/Layout";
-import LayoutMain from "../src/components/layouts/LayoutMain";
-import MediaDiary from "../src/components/MediaDiary";
-import { useMDDispatch, useMDState } from "../src/config/store";
-import { useAuth } from "../src/config/auth";
+import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import nookies from "nookies";
+import React, { useEffect } from "react";
+import LayoutMain from "../src/components/layouts/LayoutMain";
+import MdLoader from "../src/components/md/MdLoader";
+import MediaDiary from "../src/components/MediaDiary";
+import { useAuth } from "../src/config/auth";
+import { useMDDispatch, useMDState } from "../src/config/store";
 
 export const getServerSideProps: GetServerSideProps = async (
   context
@@ -67,19 +65,7 @@ function Home({
   }, [dispatch, spotifyToken, token]);
 
   return !user ? (
-    <Layout>
-      <Flex height="90vh" justifyContent="center" alignItems="center">
-        <Grid alignItems="center" justifyItems="center">
-          <LogoIcon boxSize={8} sx={{ gridRow: 1, gridColumn: 1 }} />
-          <Spinner
-            size="xl"
-            color="purple.500"
-            thickness="3px"
-            sx={{ gridRow: 1, gridColumn: 1 }}
-          />
-        </Grid>
-      </Flex>
-    </Layout>
+    <MdLoader fullPage />
   ) : (
     <LayoutMain>
       <MediaDiary />

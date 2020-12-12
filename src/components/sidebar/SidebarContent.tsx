@@ -1,10 +1,11 @@
+import type {
+  IconProps} from "@chakra-ui/react";
 import {
   Text,
   Avatar,
   Box,
   Button,
   Flex,
-  IconProps,
   Menu,
   MenuButton,
   MenuItem,
@@ -12,7 +13,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
+import React from "react";
 import { useAuth, useLogout } from "../../config/auth";
 import useIsBreakpoint from "../../utils/useIsBreakpoint";
 

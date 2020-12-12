@@ -1,5 +1,6 @@
 import React from "react";
-import { Icon, IconProps } from "@chakra-ui/react";
+import type { IconProps } from "@chakra-ui/react";
+import { Icon } from "@chakra-ui/react";
 
 function LogoIcon(props: IconProps): JSX.Element {
   return (
