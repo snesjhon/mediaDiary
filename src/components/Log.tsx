@@ -1,12 +1,11 @@
-import { Button, Center, DrawerFooter, Spinner } from "@chakra-ui/react";
-import { set } from "@nandorojo/swr-firestore";
+import { Button, Center, DrawerFooter } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useReducer } from "react";
-import useSWR from "swr";
-import { useAuth } from "../config/auth";
+import useSWR, { mutate } from "swr";
 import type { LogProps, LogState } from "../config/logStore";
 import { LogReducer } from "../config/logStore";
 import type { DiaryAdd, MediaSelected } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
+import useFuegoUser from "../hooks/useFuegoUser";
 import { fetcher, spotifyFetch } from "../utils/fetchers";
 import Info from "./Info";
 import LogFields from "./LogFields";
@@ -14,7 +13,7 @@ import MdSpinner from "./md/MdSpinner";
 
 function Log(): JSX.Element {
   const mdDispatch = useMDDispatch();
-  const { user } = useAuth();
+  const { user } = useFuegoUser();
   const { selected, isSaving, spotifyToken } = useMDState();
 
   const dataUrl = getDataUrl();
@@ -30,7 +29,7 @@ function Log(): JSX.Element {
   );
 
   let initData: LogState = {
-    diaryDate: new Date(),
+    diaryDate: new Date().toDateString(),
     loggedBefore: false,
     rating: 0,
     isLoading:
@@ -172,17 +171,17 @@ function Log(): JSX.Element {
       const addDiary = createDiary(currentDate);
       if (addDiary) {
         mdDispatch({ type: "saving" });
-        const updatePromise = set(
-          `${user.email}/${currentDate.getTime()}`,
-          addDiary
-        );
-        if (updatePromise !== null) {
+        fetch(`/api/diary/add`, {
+          method: "POST",
+          body: JSON.stringify({
+            uid: user.uid,
+            data: addDiary,
+          }),
+        }).then(() => {
           mdDispatch({ type: "view", payload: "md" });
           mdDispatch({ type: "saved" });
-          updatePromise.catch(() => {
-            return console.log("error");
-          });
-        }
+          mutate(`/api/diary/${user.uid}`);
+        });
       } else {
         console.log("diary fails");
       }
@@ -194,8 +193,8 @@ function Log(): JSX.Element {
       const { mediaId, type, releasedDate } = mediaInfo;
       return {
         mediaId,
-        diaryDate: (diaryDate as unknown) as firebase.firestore.Timestamp,
-        addedDate: (currentDate as unknown) as firebase.firestore.Timestamp,
+        diaryDate,
+        addedDate: currentDate.toDateString(),
         loggedBefore,
         rating,
         type,

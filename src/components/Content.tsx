@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useRef } from "react";
 import { useMDDispatch, useMDState } from "../config/store";
-import useIsBreakpoint from "../utils/useIsBreakpoint";
+import useIsBreakpoint from "../hooks/useIsBreakpoint";
 import Day from "./Day";
 import LayoutDrawer from "./layouts/LayoutDrawer";
 import Log from "./Log";
@@ -31,7 +31,7 @@ function Content(): JSX.Element {
     <>
       <Modal
         isOpen={view === "search"}
-        onClose={() => dispatch({ type: "view", payload: "md" })}
+        onClose={() => dispatch({ type: "dayClose" })}
         scrollBehavior="inside"
         size={isMD ? "xl" : "sm"}
         initialFocusRef={refInput}

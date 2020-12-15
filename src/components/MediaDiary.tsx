@@ -10,12 +10,13 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react";
-import { useCollection } from "@nandorojo/swr-firestore";
 import React from "react";
 import Rating from "react-rating";
-import { useAuth } from "../config/auth";
-import type { DiaryAdd, DiaryState } from "../config/mediaTypes";
+import useSWR from "swr";
+import type { DiaryState } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
+import useFuegoUser from "../hooks/useFuegoUser";
+import { fetcher } from "../utils/fetchers";
 import AlbumIcon from "./icons/AlbumIcon";
 import FilmIcon from "./icons/FilmIcon";
 import StarEmptyIcon from "./icons/StartEmptyIcon";
@@ -34,31 +35,38 @@ function MediaDiary(): JSX.Element {
   const { filterBy, page } = useMDState();
   const dispatch = useMDDispatch();
   const { colorMode } = useColorMode();
-  const { user } = useAuth();
-  const { data } = useCollection<DiaryAdd>(
-    user === null || !user ? null : `${user.email}`,
+  const { user } = useFuegoUser();
+
+  const { data } = useSWR<DiaryState>(
+    user && user !== null && typeof user.uid !== "undefined"
+      ? `/api/diary/${user.uid}`
+      : null,
+    fetcher,
     {
-      orderBy: [ORDERBY, "desc"],
-      listen: true,
+      revalidateOnFocus: false,
     }
   );
 
   if (data) {
     const currentRange = page * LIMIT;
-    const diaryList = data.filter((e) =>
-      filterBy.length === MEDIATYPESLENGTH ? e : filterBy.includes(e.type)
+    const diaryKeys = Object.keys(data);
+    const diaryList = diaryKeys.filter((e) =>
+      filterBy.length === MEDIATYPESLENGTH ? e : filterBy.includes(data[e].type)
     );
 
     const diaryDates: ListState = diaryList
       .filter((_, i) => i < currentRange && i >= currentRange - LIMIT)
       .reduce<ListState>((a, c) => {
-        const dateString = c.diaryDate.toDate().toLocaleDateString("en-us", {
-          month: "short",
-          year: "numeric",
-        });
+        const dateString = new Date(data[c].diaryDate).toLocaleDateString(
+          "en-us",
+          {
+            month: "short",
+            year: "numeric",
+          }
+        );
         a[`01-${dateString}`] = Object.assign(
           { ...a[`01-${dateString}`] },
-          { [c.id]: c }
+          { [c]: data[c] }
         );
         return a;
       }, {});
@@ -93,14 +101,13 @@ function MediaDiary(): JSX.Element {
                 </Box>
                 <Box>
                   {Object.keys(diaryDates[month])
-                    .sort(
-                      (a, b) =>
-                        diaryDates[month][b].diaryDate.seconds -
-                        diaryDates[month][a].diaryDate.seconds
-                    )
+                    .sort((a, b) => {
+                      const aDate = new Date(diaryDates[month][a].diaryDate);
+                      const bDate = new Date(diaryDates[month][b].diaryDate);
+                      return aDate > bDate ? -1 : 1;
+                    })
                     .map((day, dayIndex) => {
                       const {
-                        id,
                         rating,
                         title,
                         poster,
@@ -117,10 +124,6 @@ function MediaDiary(): JSX.Element {
                             md: "3rem 7rem 1fr",
                           }}
                           gridGap="1rem"
-                          // borderBottom="1px solid"
-                          // borderColor={
-                          //   colorMode === "light" ? "gray.200" : "gray.600"
-                          // }
                           borderBottomWidth="1px"
                           px={3}
                           py={{ base: 4, md: 5 }}
@@ -134,7 +137,7 @@ function MediaDiary(): JSX.Element {
                             dispatch({
                               type: "day",
                               payload: {
-                                diaryId: id,
+                                diaryId: day,
                                 diary: diaryDates[month][day],
                               },
                             })
@@ -148,7 +151,7 @@ function MediaDiary(): JSX.Element {
                               }
                             >
                               {new Date(
-                                diaryDates[month][day].diaryDate.toDate()
+                                diaryDates[month][day].diaryDate
                               ).toLocaleDateString("en-us", {
                                 day: "numeric",
                               })}

@@ -25,11 +25,11 @@ type Actions =
       payload: MDState["view"];
     }
   | {
-      type: "day";
+      type: "day" | "savedEdit";
       payload: MDState["edit"];
     }
   | {
-      type: "saved" | "saving" | "savedEdit";
+      type: "saved" | "saving" | "dayClose";
     }
   | {
       type: "filter";
@@ -68,8 +68,10 @@ export function Reducer(state: MDState, actions: Actions): MDState {
         ...state,
         isSaving: false,
         view: "day",
+        edit: actions.payload,
       };
     }
+    case "dayClose":
     case "saved": {
       return {
         ...state,
@@ -104,8 +106,8 @@ export function Reducer(state: MDState, actions: Actions): MDState {
       return {
         ...state,
         view: "edit",
-        edit: actions.payload,
-        selected: undefined,
+        // edit: actions.payload,
+        // selected: undefined,
       };
     }
     default:

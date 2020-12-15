@@ -1,7 +1,5 @@
-import type {
-  IconProps} from "@chakra-ui/react";
+import type { IconProps } from "@chakra-ui/react";
 import {
-  Text,
   Avatar,
   Box,
   Button,
@@ -10,13 +8,15 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import type { FunctionComponent } from "react";
 import React from "react";
-import { useAuth, useLogout } from "../../config/auth";
-import useIsBreakpoint from "../../utils/useIsBreakpoint";
+import useFuegoUser from "../../hooks/useFuegoUser";
+import useIsBreakpoint from "../../hooks/useIsBreakpoint";
+import useLogout from "../../hooks/useLogout";
 
 export function SidebarButton({
   title,
@@ -51,7 +51,7 @@ export function SidebarButton({
 }
 
 export function SidebarFooter(): JSX.Element | null {
-  const { user } = useAuth();
+  const { user } = useFuegoUser();
   const logout = useLogout();
   return user ? (
     <Menu autoSelect={false}>

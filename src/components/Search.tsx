@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import useSWR from "swr";
 import type { MediaSelected, MediaTypes } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
-import useDebounce from "../utils/useDebounce";
+import useDebounce from "../hooks/useDebounce";
 import AlbumIcon from "./icons/AlbumIcon";
 import FilmIcon from "./icons/FilmIcon";
 import TvIcon from "./icons/TvIcon";

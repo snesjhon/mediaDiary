@@ -1,7 +1,7 @@
 import type { DiaryAdd } from "./mediaTypes";
 
 export interface LogProps {
-  diaryDate: Date;
+  diaryDate: string;
   rating: DiaryAdd["rating"];
   loggedBefore: DiaryAdd["loggedBefore"];
   poster: DiaryAdd["poster"];

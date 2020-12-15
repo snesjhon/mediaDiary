@@ -12,7 +12,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React from "react";
-import useIsBreakpoint from "../../utils/useIsBreakpoint";
+import useIsBreakpoint from "../../hooks/useIsBreakpoint";
 import ActivityIcon from "../icons/ActivityIcon";
 import HomeIcon from "../icons/HomeIcon";
 import LogoIcon from "../icons/LogoIcon";

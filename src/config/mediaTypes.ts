@@ -1,5 +1,3 @@
-import type { Document } from "@nandorojo/swr-firestore";
-
 export type MediaTypes = "movie" | "album" | "tv";
 
 export interface MediaBase {
@@ -16,8 +14,8 @@ export interface MediaBase {
 
 export interface DiaryAdd extends MediaBase {
   mediaId: string; // MovieDB or MovieDB_TV
-  diaryDate: firebase.firestore.Timestamp;
-  addedDate: firebase.firestore.Timestamp;
+  diaryDate: string;
+  addedDate: string;
   loggedBefore: boolean;
   rating: number;
   artistId?: string; // for Spotify API
@@ -25,7 +23,7 @@ export interface DiaryAdd extends MediaBase {
 }
 
 export interface DiaryState {
-  [key: string]: DiaryAdd & Document;
+  [key: string]: DiaryAdd;
 }
 
 export interface MediaSelected extends Omit<MediaBase, "count"> {
@@ -35,5 +33,5 @@ export interface MediaSelected extends Omit<MediaBase, "count"> {
 
 export interface MediaEdit {
   diaryId: string;
-  diary: DiaryAdd & Document;
+  diary: DiaryAdd;
 }
