@@ -14,25 +14,75 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import firebase from "firebase/app";
 import "firebase/auth";
+import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import nookies from "nookies";
-import React from "react";
+import { destroyCookie, parseCookies, setCookie } from "nookies";
+import React, { useEffect, useState } from "react";
 import LogoIcon from "../src/components/icons/LogoIcon";
 import Layout from "../src/components/layouts/Layout";
 import MdLoader from "../src/components/md/MdLoader";
-import { useAuth } from "../src/config/auth";
+import useLogin from "../src/hooks/useLogin";
+import fuego from "../src/interfaces/fuego";
+import fuegoAdmin from "../src/interfaces/fuegoAdmin";
 
-function App(): JSX.Element {
-  const { user } = useAuth();
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const cookies = parseCookies(context);
+  // If token present then redirect
+  try {
+    const token = await fuegoAdmin.auth().verifyIdToken(cookies.fuegoToken);
+    if (token) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: "/home",
+        },
+      };
+    }
+  } catch {
+    if (cookies.fuegoPending) {
+      return {
+        props: {
+          fuegoPending: cookies.fuegoPending,
+        },
+      };
+    }
+  }
+  return {
+    props: {
+      fuegoPending: false,
+    },
+  };
+};
+
+function App({
+  fuegoPending,
+}: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
+  const login = useLogin();
+  const [showModal, setShowModal] = useState(false);
   const router = useRouter();
 
-  if (user === null) {
-    return <MdLoader />;
-  } else if (user) {
-    router.push("/home");
+  useEffect(() => {
+    if (fuegoPending) {
+      destroyCookie(undefined, "fuegoPending");
+      fuego
+        .auth()
+        .getRedirectResult()
+        .then(async ({ user }) => {
+          if (user !== null) {
+            const value = await user.getIdToken();
+            setCookie(null, "fuegoToken", value, {
+              maxAge: 24 * 60 * 60,
+              path: "/",
+            });
+            router.push("/home");
+          }
+        });
+    }
+  }, [fuegoPending, router]);
+
+  if (fuegoPending) {
     return <MdLoader />;
   } else {
     return (
@@ -70,11 +120,7 @@ function App(): JSX.Element {
                   size="sm"
                   colorScheme="purple"
                   variant="outline"
-                  onClick={() =>
-                    router.push("/?view=signin", "/auth/signin", {
-                      shallow: true,
-                    })
-                  }
+                  onClick={() => setShowModal(true)}
                 >
                   Sign In
                 </Button>
@@ -93,74 +139,34 @@ function App(): JSX.Element {
             <Button
               colorScheme="purple"
               mt="24px"
-              onClick={() => router.push("/?view=signup", "/auth/signup")}
+              onClick={() => setShowModal(true)}
             >
               Sign Up
             </Button>
           </Box>
         </Layout>
-        {router.query.view === "signup" && (
-          <Modal isOpen={true} onClose={() => router.push("/")}>
-            <ModalOverlay>
-              <ModalContent>
-                <ModalCloseButton />
-                <ModalHeader textAlign="center">
-                  <LogoIcon boxSize={5} />
-                </ModalHeader>
-                <ModalBody>
-                  <Heading size="md" mb={4}>
-                    Create Your Account
-                  </Heading>
-                  <VStack align="stretch" spacing={4}>
-                    <Button onClick={loginWithGoogle}>
-                      Sign Up with Google
-                    </Button>
-                    <Button>Sign Up with Twitter</Button>
-                  </VStack>
-                  <br />
-                </ModalBody>
-              </ModalContent>
-            </ModalOverlay>
-          </Modal>
-        )}
-        {router.query.view === "signin" && (
-          <Modal isOpen={true} onClose={() => router.push("/")}>
-            <ModalOverlay>
-              <ModalContent>
-                <ModalCloseButton />
-                <ModalHeader textAlign="center">
-                  <LogoIcon boxSize={5} />
-                </ModalHeader>
-                <ModalBody>
-                  <Heading size="md" mb={4}>
-                    Signin
-                  </Heading>
-                  <VStack align="stretch" spacing={4}>
-                    <Button onClick={loginWithGoogle}>
-                      Sign In with Google
-                    </Button>
-                    <Button>Sign In with Twitter</Button>
-                  </VStack>
-                  <br />
-                </ModalBody>
-              </ModalContent>
-            </ModalOverlay>
-          </Modal>
-        )}
+        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+          <ModalOverlay>
+            <ModalContent>
+              <ModalCloseButton />
+              <ModalHeader textAlign="center">
+                <LogoIcon boxSize={5} />
+              </ModalHeader>
+              <ModalBody>
+                <Heading size="md" mb={4}>
+                  Signin
+                </Heading>
+                <VStack align="stretch" spacing={4}>
+                  <Button onClick={login}>Sign In with Google</Button>
+                  <Button>Sign In with Twitter</Button>
+                </VStack>
+                <br />
+              </ModalBody>
+            </ModalContent>
+          </ModalOverlay>
+        </Modal>
       </>
     );
-  }
-
-  function loginWithGoogle() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: "select_account" });
-    firebase
-      .auth()
-      .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-      .then(() => {
-        nookies.set({}, "authPending", "true", {});
-        firebase.auth().signInWithRedirect(provider);
-      });
   }
 }
 

@@ -17,23 +17,32 @@ import {
   Text,
   useToken,
 } from "@chakra-ui/react";
-import { useCollection } from "@nandorojo/swr-firestore";
 import dayjs from "dayjs";
 import React, { useState } from "react";
 import Rating from "react-rating";
+import useSWR from "swr";
 import { VictoryAxis, VictoryBar, VictoryChart } from "victory";
-import type { DiaryAdd, MediaTypes } from "../config/mediaTypes";
+import type { DiaryAdd, DiaryState, MediaTypes } from "../config/mediaTypes";
+import useFuegoUser from "../hooks/useFuegoUser";
+import { fetcher } from "../utils/fetchers";
 import AlbumIcon from "./icons/AlbumIcon";
 import LogoFilm from "./icons/FilmIcon";
 import StarEmptyIcon from "./icons/StartEmptyIcon";
 import TvIcon from "./icons/TvIcon";
 import MdLoader from "./md/MdLoader";
 
-function Charts({ user }: { user: firebase.User }): JSX.Element {
-  const { displayName, photoURL } = user;
-  const { data } = useCollection<DiaryAdd>(
-    user !== null && user ? `${user.email}` : null
+function Charts(): JSX.Element {
+  const { user } = useFuegoUser();
+  const { data } = useSWR<DiaryState>(
+    user && user !== null && typeof user.uid !== "undefined"
+      ? `/api/diary/${user.uid}`
+      : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
   );
+
   const [purple700] = useToken("colors", ["gray.400"]);
   const [ratingType, setRatingType] = useState<MediaTypes | "all">("all");
   const [yearType, setYearType] = useState<number | "all">(
@@ -43,28 +52,34 @@ function Charts({ user }: { user: firebase.User }): JSX.Element {
   if (!data) {
     return <MdLoader />;
   } else {
-    const dataCounts = data.reduce<{
+    const dataCounts = Object.keys(data).reduce<{
       movie: number;
       tv: number;
       album: number;
       years: { [key: string]: DiaryAdd[] };
     }>(
       (a, c) => {
-        if (typeof a[c.type] !== "undefined") {
-          a[c.type] = ++a[c.type];
+        const item = data[c];
+        if (typeof a[item.type] !== "undefined") {
+          a[item.type] = ++a[item.type];
         } else {
-          a[c.type] = 1;
+          a[item.type] = 1;
         }
 
-        const addedYr = dayjs(c.diaryDate.toDate()).format("YYYY");
+        const addedYr = dayjs(item.diaryDate).format("YYYY");
         if (typeof a["years"][addedYr] === "undefined") {
-          a["years"][addedYr] = [c];
+          a["years"][addedYr] = [item];
         } else {
-          a["years"][addedYr].push(c);
+          a["years"][addedYr].push(item);
         }
         return a;
       },
-      { movie: 0, tv: 0, album: 0, years: { all: data } }
+      {
+        movie: 0,
+        tv: 0,
+        album: 0,
+        years: { all: Object.keys(data).map((e) => data[e]) },
+      }
     );
 
     const yearData = dataCounts.years[yearType];
@@ -127,14 +142,16 @@ function Charts({ user }: { user: firebase.User }): JSX.Element {
             </Heading>
           )}
         </Center>
-        <Flex alignItems="center" justifyContent="center" mt={4}>
-          {photoURL !== null && <Avatar src={photoURL} size="sm" />}
-          {displayName !== null && (
-            <Text fontWeight="semibold" ml={3} color="gray.500">
-              {displayName}&apos;s year to date
-            </Text>
-          )}
-        </Flex>
+        {user && user !== null && (
+          <Flex alignItems="center" justifyContent="center" mt={4}>
+            {user.photoURL !== null && <Avatar src={user.photoURL} size="sm" />}
+            {user.displayName !== null && (
+              <Text fontWeight="semibold" ml={3} color="gray.500">
+                {user.displayName}&apos;s year to date
+              </Text>
+            )}
+          </Flex>
+        )}
         <Divider my={10} />
         <StatGroup textAlign="center">
           <Stat>

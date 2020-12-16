@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { useMDDispatch } from "../config/store";
-import useIsBreakpoint from "../utils/useIsBreakpoint";
+import useIsBreakpoint from "../hooks/useIsBreakpoint";
 import Filters from "./Filters";
 import FiltersIcon from "./icons/FiltersIcon";
 import MdLogo from "./md/MdLogo";

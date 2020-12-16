@@ -1,11 +1,11 @@
-import { Button, Center, DrawerFooter, Spinner } from "@chakra-ui/react";
-import { deleteDocument, update } from "@nandorojo/swr-firestore";
-import firebase from "firebase/app";
+import { Button, Center, DrawerFooter } from "@chakra-ui/react";
+import dayjs from "dayjs";
 import React, { useReducer } from "react";
+import { mutate } from "swr";
 import { LogReducer } from "../config/logStore";
 import type { DiaryAdd } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
-import { useAuth } from "../config/auth";
+import useFuegoUser from "../hooks/useFuegoUser";
 import Info from "./Info";
 import LogFields from "./LogFields";
 import MdSpinner from "./md/MdSpinner";
@@ -13,10 +13,10 @@ import MdSpinner from "./md/MdSpinner";
 function Edit(): JSX.Element {
   const { edit, isSaving } = useMDState();
   const mdDispatch = useMDDispatch();
-  const { user } = useAuth();
+  const { user } = useFuegoUser();
 
   let initData = {
-    diaryDate: new Date(),
+    diaryDate: dayjs().toISOString(),
     loggedBefore: false,
     rating: 0,
     artist: "",
@@ -24,21 +24,10 @@ function Edit(): JSX.Element {
     poster: "",
   };
   if (typeof edit !== "undefined") {
-    const item = edit.diary;
-    initData = {
-      diaryDate: item.diaryDate.toDate(),
-      loggedBefore: item.loggedBefore,
-      rating: item.rating,
-      artist: item.artist,
-      genre: item.genre,
-      poster: item.poster,
-    };
+    initData = edit.diary;
   }
 
-  const [
-    { diaryDate, loggedBefore, rating, episodes, poster, seenEpisodes, season },
-    dispatch,
-  ] = useReducer(LogReducer, initData);
+  const [state, dispatch] = useReducer(LogReducer, initData);
 
   return (
     <>
@@ -53,13 +42,13 @@ function Edit(): JSX.Element {
             dispatch={dispatch}
             type={edit?.diary.type}
             item={{
-              diaryDate,
-              loggedBefore,
-              poster,
-              rating,
-              episodes,
-              season,
-              seenEpisodes,
+              diaryDate: state.diaryDate,
+              loggedBefore: state.loggedBefore,
+              poster: state.poster,
+              rating: state.rating,
+              episodes: state.episodes,
+              season: state.season,
+              seenEpisodes: state.seenEpisodes,
             }}
             isEdit
           />
@@ -103,17 +92,28 @@ function Edit(): JSX.Element {
       mdDispatch({ type: "saving" });
       const diaryEdit = createEdit();
       if (diaryEdit) {
-        const updatePromise = update(
-          `${user.email}/${edit.diaryId}`,
-          diaryEdit
-        );
-        if (updatePromise) {
-          updatePromise.then(() => {
-            mdDispatch({ type: "savedEdit" });
+        fetch(`/api/diary/edit`, {
+          method: "POST",
+          body: JSON.stringify({
+            uid: user.uid,
+            diaryId: edit.diaryId,
+            data: diaryEdit,
+            prevDate: edit.diary.diaryDate,
+          }),
+        })
+          .then(() => {
+            mdDispatch({
+              type: "savedEdit",
+              payload: { diaryId: edit.diaryId, diary: diaryEdit },
+            });
+            mutate(`/api/diary/${user.uid}`);
+            mutate(`/api/diary/${user.uid}/${edit.diaryId}`);
+          })
+          .catch(() => {
+            console.error("[EDIT]: Failed editData");
           });
-        }
       } else {
-        console.log("error with diaryEdit");
+        console.error("[EDIT] error with diaryEdit");
       }
     } else {
       console.log("user missing");
@@ -122,28 +122,21 @@ function Edit(): JSX.Element {
 
   function createEdit(): DiaryAdd | false {
     if (typeof edit !== "undefined") {
-      const item = edit.diary;
       const editItem = {
-        addedDate: item.addedDate,
-        artist: item.artist,
-        genre: item.genre,
-        mediaId: item.mediaId,
-        releasedDate: item.releasedDate,
-        title: item.title,
-        type: item.type,
-        diaryDate: firebase.firestore.Timestamp.fromDate(diaryDate),
-        loggedBefore,
-        rating,
-        poster,
+        ...edit.diary,
+        diaryDate: state.diaryDate,
+        loggedBefore: state.loggedBefore,
+        rating: state.rating,
+        poster: state.poster,
       };
-      if (typeof episodes !== "undefined") {
-        Object.assign(editItem, { episodes });
+      if (typeof state.episodes !== "undefined") {
+        Object.assign(editItem, { episodes: state.episodes });
       }
-      if (typeof season !== "undefined") {
-        Object.assign(editItem, { season });
+      if (typeof state.season !== "undefined") {
+        Object.assign(editItem, { season: state.season });
       }
-      if (typeof seenEpisodes !== "undefined") {
-        Object.assign(editItem, { seenEpisodes });
+      if (typeof state.seenEpisodes !== "undefined") {
+        Object.assign(editItem, { seenEpisodes: state.seenEpisodes });
       }
       return editItem;
     } else {
@@ -159,17 +152,24 @@ function Edit(): JSX.Element {
       user.email !== null
     ) {
       mdDispatch({ type: "saving" });
-      const deletedPromise = deleteDocument(`${user.email}/${edit.diaryId}`);
-      if (deletedPromise) {
-        mdDispatch({ type: "view", payload: "md" });
-        deletedPromise.then(() => {
+      fetch(`/api/diary/delete`, {
+        method: "POST",
+        body: JSON.stringify({
+          uid: user.uid,
+          data: edit.diary,
+          diaryId: edit.diaryId,
+        }),
+      })
+        .then(() => {
+          mdDispatch({ type: "view", payload: "md" });
           mdDispatch({ type: "saved" });
+          mutate(`/api/diary/${user.uid}`);
+        })
+        .catch(() => {
+          console.error("[EDIT]: Failed delete");
         });
-      } else {
-        console.error("delete promise failed");
-      }
     } else {
-      console.log("error with delete");
+      console.error("[EDIT]: Missing delete params");
     }
   }
 }

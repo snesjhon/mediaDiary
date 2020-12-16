@@ -60,7 +60,7 @@ function LogFields({
                 type: "state",
                 payload: {
                   key: "diaryDate",
-                  value: dayjs(e.target.value).toDate(),
+                  value: dayjs(e.target.value).toISOString(),
                 },
               })
             }

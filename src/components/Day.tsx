@@ -12,25 +12,29 @@ import {
   Tag,
   Text,
 } from "@chakra-ui/react";
-import { useDocument } from "@nandorojo/swr-firestore";
 import dayjs from "dayjs";
 import React, { Suspense } from "react";
 import Rating from "react-rating";
 import useSWR from "swr";
-import { useAuth } from "../config/auth";
 import type { DiaryAdd, MediaTypes } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
+import useFuegoUser from "../hooks/useFuegoUser";
 import { fetcher } from "../utils/fetchers";
 import Edit from "./Edit";
 import StarEmptyIcon from "./icons/StartEmptyIcon";
 
 function Day(): JSX.Element | null {
-  const { user } = useAuth();
+  const { user } = useFuegoUser();
   const dispatch = useMDDispatch();
   const { view, edit, spotifyToken } = useMDState();
-  const { data } = useDocument<DiaryAdd>(
-    user !== null && user && edit ? `${user.email}/${edit.diaryId}` : null
+
+  const { data } = useSWR<DiaryAdd>(
+    user !== null && user && edit
+      ? `/api/diary/${user.uid}/${edit.diaryId}`
+      : null,
+    fetcher
   );
+
   if (data) {
     const {
       rating,
@@ -87,7 +91,7 @@ function Day(): JSX.Element | null {
                     Date
                   </Text>
                   <Text fontWeight="bold" fontSize="lg">
-                    {dayjs(diaryDate.toDate()).format("MMM D, YYYY")}
+                    {dayjs(diaryDate).format("MMM D, YYYY")}
                   </Text>
                 </Box>
                 <Box>
@@ -119,14 +123,15 @@ function Day(): JSX.Element | null {
                     size="sm"
                     colorScheme="green"
                     isRound
-                    onClick={() =>
-                      dispatch({
-                        type: "state",
-                        payload: {
-                          key: "view",
-                          value: "edit",
-                        },
-                      })
+                    onClick={
+                      () => dispatch({ type: "view", payload: "edit" })
+                      // dispatch({
+                      //   type: "state",
+                      //   payload: {
+                      //     key: "view",
+                      //     value: "edit",
+                      //   },
+                      // })
                     }
                   />
                 </Box>

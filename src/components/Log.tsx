@@ -1,12 +1,12 @@
-import { Button, Center, DrawerFooter, Spinner } from "@chakra-ui/react";
-import { set } from "@nandorojo/swr-firestore";
+import { Button, Center, DrawerFooter } from "@chakra-ui/react";
+import dayjs from "dayjs";
 import React, { useCallback, useEffect, useReducer } from "react";
-import useSWR from "swr";
-import { useAuth } from "../config/auth";
+import useSWR, { mutate } from "swr";
 import type { LogProps, LogState } from "../config/logStore";
 import { LogReducer } from "../config/logStore";
 import type { DiaryAdd, MediaSelected } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
+import useFuegoUser from "../hooks/useFuegoUser";
 import { fetcher, spotifyFetch } from "../utils/fetchers";
 import Info from "./Info";
 import LogFields from "./LogFields";
@@ -14,7 +14,7 @@ import MdSpinner from "./md/MdSpinner";
 
 function Log(): JSX.Element {
   const mdDispatch = useMDDispatch();
-  const { user } = useAuth();
+  const { user } = useFuegoUser();
   const { selected, isSaving, spotifyToken } = useMDState();
 
   const dataUrl = getDataUrl();
@@ -30,7 +30,7 @@ function Log(): JSX.Element {
   );
 
   let initData: LogState = {
-    diaryDate: new Date(),
+    diaryDate: new Date().toDateString(),
     loggedBefore: false,
     rating: 0,
     isLoading:
@@ -168,34 +168,33 @@ function Log(): JSX.Element {
 
   function addData() {
     if (user !== null && user && user.email !== null) {
-      const currentDate = new Date();
-      const addDiary = createDiary(currentDate);
+      const addDiary = createDiary();
       if (addDiary) {
         mdDispatch({ type: "saving" });
-        const updatePromise = set(
-          `${user.email}/${currentDate.getTime()}`,
-          addDiary
-        );
-        if (updatePromise !== null) {
+        fetch(`/api/diary/add`, {
+          method: "POST",
+          body: JSON.stringify({
+            uid: user.uid,
+            data: addDiary,
+          }),
+        }).then(() => {
           mdDispatch({ type: "view", payload: "md" });
           mdDispatch({ type: "saved" });
-          updatePromise.catch(() => {
-            return console.log("error");
-          });
-        }
+          mutate(`/api/diary/${user.uid}`);
+        });
       } else {
         console.log("diary fails");
       }
     }
   }
 
-  function createDiary(currentDate: Date): DiaryAdd | false {
+  function createDiary(): DiaryAdd | false {
     if (typeof mediaInfo !== "undefined") {
       const { mediaId, type, releasedDate } = mediaInfo;
       return {
         mediaId,
-        diaryDate: (diaryDate as unknown) as firebase.firestore.Timestamp,
-        addedDate: (currentDate as unknown) as firebase.firestore.Timestamp,
+        diaryDate,
+        addedDate: dayjs().toISOString(),
         loggedBefore,
         rating,
         type,
@@ -209,7 +208,10 @@ function Log(): JSX.Element {
         artist: mediaInfo.artist,
         title: mediaInfo.title,
         poster: mediaInfo.poster,
-        genre: typeof mediaInfo?.genre !== "undefined" ? mediaInfo.genre : "",
+        genre:
+          typeof mediaInfo?.genre !== "undefined"
+            ? mediaInfo.genre.toLocaleLowerCase()
+            : "",
         ...(typeof externalSeason !== "undefined" && {
           season: externalSeason.season_number,
           episodes: externalSeason.episode_count,
