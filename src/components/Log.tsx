@@ -1,4 +1,5 @@
 import { Button, Center, DrawerFooter } from "@chakra-ui/react";
+import dayjs from "dayjs";
 import React, { useCallback, useEffect, useReducer } from "react";
 import useSWR, { mutate } from "swr";
 import type { LogProps, LogState } from "../config/logStore";
@@ -167,8 +168,7 @@ function Log(): JSX.Element {
 
   function addData() {
     if (user !== null && user && user.email !== null) {
-      const currentDate = new Date();
-      const addDiary = createDiary(currentDate);
+      const addDiary = createDiary();
       if (addDiary) {
         mdDispatch({ type: "saving" });
         fetch(`/api/diary/add`, {
@@ -188,13 +188,13 @@ function Log(): JSX.Element {
     }
   }
 
-  function createDiary(currentDate: Date): DiaryAdd | false {
+  function createDiary(): DiaryAdd | false {
     if (typeof mediaInfo !== "undefined") {
       const { mediaId, type, releasedDate } = mediaInfo;
       return {
         mediaId,
         diaryDate,
-        addedDate: currentDate.toDateString(),
+        addedDate: dayjs().toISOString(),
         loggedBefore,
         rating,
         type,
@@ -208,7 +208,10 @@ function Log(): JSX.Element {
         artist: mediaInfo.artist,
         title: mediaInfo.title,
         poster: mediaInfo.poster,
-        genre: typeof mediaInfo?.genre !== "undefined" ? mediaInfo.genre : "",
+        genre:
+          typeof mediaInfo?.genre !== "undefined"
+            ? mediaInfo.genre.toLocaleLowerCase()
+            : "",
         ...(typeof externalSeason !== "undefined" && {
           season: externalSeason.season_number,
           episodes: externalSeason.episode_count,

@@ -1,4 +1,5 @@
 import { Button, Center, DrawerFooter } from "@chakra-ui/react";
+import dayjs from "dayjs";
 import React, { useReducer } from "react";
 import { mutate } from "swr";
 import { LogReducer } from "../config/logStore";
@@ -15,7 +16,7 @@ function Edit(): JSX.Element {
   const { user } = useFuegoUser();
 
   let initData = {
-    diaryDate: new Date().toDateString(),
+    diaryDate: dayjs().toISOString(),
     loggedBefore: false,
     rating: 0,
     artist: "",
@@ -95,8 +96,9 @@ function Edit(): JSX.Element {
           method: "POST",
           body: JSON.stringify({
             uid: user.uid,
-            mediaId: edit.diaryId,
+            diaryId: edit.diaryId,
             data: diaryEdit,
+            prevDate: edit.diary.diaryDate,
           }),
         })
           .then(() => {
@@ -154,7 +156,8 @@ function Edit(): JSX.Element {
         method: "POST",
         body: JSON.stringify({
           uid: user.uid,
-          mediaId: edit.diaryId,
+          data: edit.diary,
+          diaryId: edit.diaryId,
         }),
       })
         .then(() => {

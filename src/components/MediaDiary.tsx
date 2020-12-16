@@ -37,7 +37,7 @@ function MediaDiary(): JSX.Element {
   const { colorMode } = useColorMode();
   const { user } = useFuegoUser();
 
-  const { data } = useSWR<DiaryState>(
+  const { data, error } = useSWR<DiaryState>(
     user && user !== null && typeof user.uid !== "undefined"
       ? `/api/diary/${user.uid}`
       : null,
@@ -47,9 +47,15 @@ function MediaDiary(): JSX.Element {
     }
   );
 
+  // There's an error on the list, or the list is empty
+  if (error) {
+    return <div>nothing in this list</div>;
+  }
+
   if (data) {
     const currentRange = page * LIMIT;
     const diaryKeys = Object.keys(data);
+
     const diaryList = diaryKeys.filter((e) =>
       filterBy.length === MEDIATYPESLENGTH ? e : filterBy.includes(data[e].type)
     );

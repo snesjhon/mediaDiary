@@ -24,31 +24,26 @@ export async function getRefreshToken(
   context: GetServerSidePropsContext<ParsedUrlQuery>
 ): Promise<false | string> {
   try {
-    let refreshToken;
-    if (cookies.refreshToken) {
-      refreshToken = cookies.refreshToken;
-    } else {
-      const client_id = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT;
-      const client_secret = process.env.NEXT_PUBLIC_SPOTIFY_SECRET;
+    const client_id = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT;
+    const client_secret = process.env.NEXT_PUBLIC_SPOTIFY_SECRET;
 
-      const res = await fetch("https://accounts.spotify.com/api/token", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          Accept: "application/json",
-          Authorization:
-            "Basic " +
-            Buffer.from(client_id + ":" + client_secret).toString("base64"),
-        },
-        body: "grant_type=client_credentials",
-      });
+    const res = await fetch("https://accounts.spotify.com/api/token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Accept: "application/json",
+        Authorization:
+          "Basic " +
+          Buffer.from(client_id + ":" + client_secret).toString("base64"),
+      },
+      body: "grant_type=client_credentials",
+    });
 
-      const spotifyResponse = await res.json();
-      refreshToken = spotifyResponse.access_token;
-      setCookie(context, "refreshToken", refreshToken, {
-        maxAge: 3600,
-      });
-    }
+    const spotifyResponse = await res.json();
+    const refreshToken = spotifyResponse.access_token;
+    setCookie(context, "refreshToken", refreshToken, {
+      maxAge: 3600,
+    });
     return refreshToken;
   } catch {
     throw false;

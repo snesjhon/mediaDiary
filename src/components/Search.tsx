@@ -181,19 +181,26 @@ function Search({
         mediaId: item.id,
         poster: item.images[0].url,
         title: item.name,
-        releasedDate: item.release_date,
+        releasedDate: dayjs(item.release_date).toISOString(),
         artist: item.artists[0].name,
         artistId: item.artists[0].id,
         genre: "",
         type,
       };
     } else {
+      let released;
+      try {
+        released = dayjs(
+          type === "movie" ? item.release_date : item.first_air_date
+        ).toISOString();
+      } catch {
+        released = type === "movie" ? item.release_date : item.first_air_date;
+      }
       return {
         mediaId: item.id,
         poster: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
         title: type === "movie" ? item.title : item.original_name,
-        releasedDate:
-          type === "movie" ? item.release_date : item.first_air_date,
+        releasedDate: released,
         genre: "",
         artist: "",
         type,

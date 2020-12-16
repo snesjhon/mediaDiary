@@ -5,7 +5,7 @@ export interface MediaBase {
   title: string;
   poster: string;
   genre: string;
-  releasedDate: Date | "";
+  releasedDate: string | "";
   type: MediaTypes;
   season?: number;
   episodes?: number;
