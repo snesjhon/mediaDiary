@@ -1,4 +1,4 @@
-import { destroyCookie, setCookie } from "nookies";
+import { destroyCookie } from "nookies";
 import React, { createContext, useEffect, useState } from "react";
 import fuego from "./fuego";
 
@@ -23,10 +23,7 @@ export function FuegoProvider({
         return;
       }
 
-      const token = await user.getIdToken();
       setUser(user);
-      destroyCookie(null, "fuegoToken");
-      setCookie(null, "fuegoToken", token, {});
     });
   }, []);
   return (

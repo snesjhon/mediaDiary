@@ -10,13 +10,14 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react";
+import dayjs from "dayjs";
 import React from "react";
 import Rating from "react-rating";
 import useSWR from "swr";
 import type { DiaryState } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
 import useFuegoUser from "../hooks/useFuegoUser";
-import { fetcher } from "../utils/fetchers";
+import { fuegoDiaryGet } from "../interfaces/fuegoActions";
 import AlbumIcon from "./icons/AlbumIcon";
 import FilmIcon from "./icons/FilmIcon";
 import StarEmptyIcon from "./icons/StartEmptyIcon";
@@ -37,11 +38,11 @@ function MediaDiary(): JSX.Element {
   const { colorMode } = useColorMode();
   const { user } = useFuegoUser();
 
-  const { data, error } = useSWR<DiaryState>(
+  const { data, error } = useSWR(
     user && user !== null && typeof user.uid !== "undefined"
-      ? `/api/diary/${user.uid}`
+      ? ["/api/diary/", user.uid]
       : null,
-    fetcher,
+    fuegoDiaryGet,
     {
       revalidateOnFocus: false,
     }
@@ -54,32 +55,32 @@ function MediaDiary(): JSX.Element {
 
   if (data) {
     const currentRange = page * LIMIT;
-    const diaryKeys = Object.keys(data);
+    const diaryKeys = Object.keys(data.diaryItems);
 
     const diaryList = diaryKeys.filter((e) =>
-      filterBy.length === MEDIATYPESLENGTH ? e : filterBy.includes(data[e].type)
+      filterBy.length === MEDIATYPESLENGTH
+        ? e
+        : filterBy.includes(data.diaryItems[e].type)
     );
 
     const diaryDates: ListState = diaryList
-      .filter((_, i) => i < currentRange && i >= currentRange - LIMIT)
+      // .filter((_, i) => i < currentRange && i >= currentRange - LIMIT)
       .reduce<ListState>((a, c) => {
-        const dateString = new Date(data[c].diaryDate).toLocaleDateString(
-          "en-us",
-          {
-            month: "short",
-            year: "numeric",
-          }
+        const dateString = dayjs(data.diaryItems[c].diaryDate).format(
+          "YYYY-MM"
         );
-        a[`01-${dateString}`] = Object.assign(
-          { ...a[`01-${dateString}`] },
-          { [c]: data[c] }
+        a[dateString] = Object.assign(
+          { ...a[dateString] },
+          { [c]: data.diaryItems[c] }
         );
         return a;
       }, {});
+
+    // .sort((a, b) => (new Date(a) > new Date(b) ? -1 : 1))
     return (
       <>
         {Object.keys(diaryDates)
-          .sort((a, b) => (new Date(a) > new Date(b) ? -1 : 1))
+          .reverse()
           .map((month, monthIndex) => {
             return (
               <Grid
@@ -100,18 +101,20 @@ function MediaDiary(): JSX.Element {
                     position="sticky"
                     top="4rem"
                   >
-                    {new Date(month).toLocaleDateString("en-us", {
+                    {dayjs(`${month}-01`).format("MMM")}
+                    {/* {new Date(month).toLocaleDateString("en-us", {
                       month: "short",
-                    })}
+                    })} */}
                   </Text>
                 </Box>
                 <Box>
                   {Object.keys(diaryDates[month])
-                    .sort((a, b) => {
-                      const aDate = new Date(diaryDates[month][a].diaryDate);
-                      const bDate = new Date(diaryDates[month][b].diaryDate);
-                      return aDate > bDate ? -1 : 1;
-                    })
+                    .reverse()
+                    // .sort((a, b) => {
+                    //   const aDate = new Date(diaryDates[month][a].diaryDate);
+                    //   const bDate = new Date(diaryDates[month][b].diaryDate);
+                    //   return aDate > bDate ? -1 : 1;
+                    // })
                     .map((day, dayIndex) => {
                       const {
                         rating,

@@ -1,50 +1,45 @@
-import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { parseCookies } from "nookies";
+import dayjs from "dayjs";
+import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import LayoutMain from "../src/components/layouts/LayoutMain";
 import MdLoader from "../src/components/md/MdLoader";
 import MediaDiary from "../src/components/MediaDiary";
-import { getFuegoToken, getRefreshToken } from "../src/config/getSSRProps";
+import getSpotifyToken from "../src/config/getSpotifyToken";
 import { useMDDispatch, useMDState } from "../src/config/store";
+import useFuegoUser from "../src/hooks/useFuegoUser";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  try {
-    const cookies = parseCookies(context);
-    const refreshToken = await getRefreshToken(cookies, context);
-    const fuegoToken = await getFuegoToken(cookies);
-    return {
-      props: {
-        refreshToken,
-        fuegoToken,
-      },
-    };
-  } catch {
-    return {
-      redirect: {
-        permanent: false,
-        destination: "/",
-      },
-    };
-  }
-};
-
-function Home({
-  fuegoToken,
-  refreshToken,
-}: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
-  const { spotifyToken } = useMDState();
+function Home(): JSX.Element {
+  const { user } = useFuegoUser();
+  const { spotifyToken, spotifyTimeOut } = useMDState();
   const dispatch = useMDDispatch();
+  const router = useRouter();
 
   useEffect(() => {
-    if (!spotifyToken && refreshToken) {
-      dispatch({
-        type: "state",
-        payload: { key: "spotifyToken", value: refreshToken },
-      });
+    const now = dayjs();
+    if (user) {
+      if (!spotifyToken || !spotifyTimeOut || now.isAfter(spotifyTimeOut)) {
+        const newTimeout = now.add(1, "hour");
+        getSpotifyToken().then((response) => {
+          dispatch({
+            type: "spotifyToken",
+            payload: {
+              spotifyToken: response,
+              spotifyTimeOut: newTimeout,
+            },
+          });
+        });
+      }
     }
-  }, [dispatch, spotifyToken, refreshToken]);
+  }, [dispatch, spotifyToken, spotifyTimeOut, user]);
 
-  return !fuegoToken || !spotifyToken ? (
+  if (!user) {
+    if (typeof window !== "undefined") {
+      router.push("/");
+    }
+    return <MdLoader />;
+  }
+
+  return user === null || !spotifyToken ? (
     <MdLoader />
   ) : (
     <LayoutMain>

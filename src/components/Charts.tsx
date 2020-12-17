@@ -24,7 +24,7 @@ import useSWR from "swr";
 import { VictoryAxis, VictoryBar, VictoryChart } from "victory";
 import type { DiaryAdd, DiaryState, MediaTypes } from "../config/mediaTypes";
 import useFuegoUser from "../hooks/useFuegoUser";
-import { fetcher } from "../utils/fetchers";
+import { fuegoDiaryGetAll } from "../interfaces/fuegoActions";
 import AlbumIcon from "./icons/AlbumIcon";
 import LogoFilm from "./icons/FilmIcon";
 import StarEmptyIcon from "./icons/StartEmptyIcon";
@@ -32,22 +32,27 @@ import TvIcon from "./icons/TvIcon";
 import MdLoader from "./md/MdLoader";
 
 function Charts(): JSX.Element {
-  const { user } = useFuegoUser();
-  const { data } = useSWR<DiaryState>(
-    user && user !== null && typeof user.uid !== "undefined"
-      ? `/api/diary/${user.uid}`
-      : null,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-    }
-  );
-
   const [purple700] = useToken("colors", ["gray.400"]);
   const [ratingType, setRatingType] = useState<MediaTypes | "all">("all");
   const [yearType, setYearType] = useState<number | "all">(
     parseInt(dayjs().format("YYYY"))
   );
+
+  const { user } = useFuegoUser();
+  const { data, error } = useSWR<DiaryState>(
+    user && user !== null && typeof user.uid !== "undefined"
+      ? ["/api/diary/all", user.uid]
+      : null,
+    fuegoDiaryGetAll,
+    {
+      revalidateOnFocus: false,
+    }
+  );
+
+  // There's an error on the list, or the list is empty
+  if (error) {
+    return <div>nothing in this list</div>;
+  }
 
   if (!data) {
     return <MdLoader />;

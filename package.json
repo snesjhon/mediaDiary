@@ -15,7 +15,6 @@
     "@emotion/styled": "~11.0.0",
     "dayjs": "~1.8.35",
     "firebase": "~7.23.0",
-    "firebase-admin": "^9.4.2",
     "framer-motion": "~2.9.4",
     "next": "~10.0.1",
     "nookies": "~2.5.0",

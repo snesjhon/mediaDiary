@@ -7,6 +7,8 @@ import { LogReducer } from "../config/logStore";
 import type { DiaryAdd, MediaSelected } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
 import useFuegoUser from "../hooks/useFuegoUser";
+import { fuegoDiaryAdd } from "../interfaces/fuegoActions";
+// import { fuegoDiaryAdd } from "../interfaces/fuegoActions";
 import { fetcher, spotifyFetch } from "../utils/fetchers";
 import Info from "./Info";
 import LogFields from "./LogFields";
@@ -166,22 +168,23 @@ function Log(): JSX.Element {
     </>
   );
 
-  function addData() {
+  async function addData() {
     if (user !== null && user && user.email !== null) {
       const addDiary = createDiary();
       if (addDiary) {
         mdDispatch({ type: "saving" });
-        fetch(`/api/diary/add`, {
-          method: "POST",
-          body: JSON.stringify({
-            uid: user.uid,
-            data: addDiary,
-          }),
-        }).then(() => {
-          mdDispatch({ type: "view", payload: "md" });
-          mdDispatch({ type: "saved" });
-          mutate(`/api/diary/${user.uid}`);
-        });
+        await fuegoDiaryAdd(user.uid, addDiary);
+        // fetch(`/api/diary/add`, {
+        //   method: "POST",
+        //   body: JSON.stringify({
+        //     uid: user.uid,
+        //     data: addDiary,
+        //   }),
+        // }).then(() => {
+        mdDispatch({ type: "view", payload: "md" });
+        mdDispatch({ type: "saved" });
+        mutate(["/api/diary/", user.uid, 1]);
+        // });
       } else {
         console.log("diary fails");
       }
