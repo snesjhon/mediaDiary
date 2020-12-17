@@ -211,7 +211,7 @@ function Search({
   function searchFetcher(query: string) {
     // From my recollection it's better to keep a `/{key}/` when using swr, to make sure that caching is properly
     // separated and reusable.
-    const queryString = query.substring(8);
+    const queryString = query.substring(13);
 
     const mdbFetch = fetch(
       `https://api.themoviedb.org/3/search/multi?api_key=${
