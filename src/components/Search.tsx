@@ -26,7 +26,7 @@ function Search({
 
   const bouncedSearch = useDebounce(search, 500);
   const { data, isValidating } = useSWR(
-    bouncedSearch === "" ? null : `/search/${bouncedSearch}`,
+    bouncedSearch === "" ? null : `/mediaSearch/${bouncedSearch}`,
     searchFetcher,
     { revalidateOnFocus: false }
   );
