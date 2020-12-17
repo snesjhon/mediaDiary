@@ -19,9 +19,11 @@ import useSWR from "swr";
 import type { DiaryAdd, MediaTypes } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
 import useFuegoUser from "../hooks/useFuegoUser";
+import { fuegoDiaryEntry } from "../interfaces/fuegoActions";
 import { fetcher } from "../utils/fetchers";
 import Edit from "./Edit";
 import StarEmptyIcon from "./icons/StartEmptyIcon";
+import MdLoader from "./md/MdLoader";
 
 function Day(): JSX.Element | null {
   const { user } = useFuegoUser();
@@ -30,9 +32,12 @@ function Day(): JSX.Element | null {
 
   const { data } = useSWR<DiaryAdd>(
     user !== null && user && edit
-      ? `/api/diary/${user.uid}/${edit.diaryId}`
+      ? ["/api/diary/", user.uid, edit.diaryId]
       : null,
-    fetcher
+    fuegoDiaryEntry,
+    {
+      revalidateOnFocus: false,
+    }
   );
 
   if (data) {
@@ -123,16 +128,7 @@ function Day(): JSX.Element | null {
                     size="sm"
                     colorScheme="green"
                     isRound
-                    onClick={
-                      () => dispatch({ type: "view", payload: "edit" })
-                      // dispatch({
-                      //   type: "state",
-                      //   payload: {
-                      //     key: "view",
-                      //     value: "edit",
-                      //   },
-                      // })
-                    }
+                    onClick={() => dispatch({ type: "view", payload: "edit" })}
                   />
                 </Box>
               </Flex>
@@ -176,7 +172,7 @@ function Day(): JSX.Element | null {
       </>
     );
   }
-  return null;
+  return <MdLoader />;
 }
 
 function SpotifyData({

@@ -6,6 +6,7 @@ import { LogReducer } from "../config/logStore";
 import type { DiaryAdd } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
 import useFuegoUser from "../hooks/useFuegoUser";
+import { fuegoDelete, fuegoEdit } from "../interfaces/fuegoActions";
 import Info from "./Info";
 import LogFields from "./LogFields";
 import MdSpinner from "./md/MdSpinner";
@@ -82,7 +83,8 @@ function Edit(): JSX.Element {
       )}
     </>
   );
-  function editData() {
+
+  async function editData() {
     if (
       user !== null &&
       user &&
@@ -92,26 +94,32 @@ function Edit(): JSX.Element {
       mdDispatch({ type: "saving" });
       const diaryEdit = createEdit();
       if (diaryEdit) {
-        fetch(`/api/diary/edit`, {
-          method: "POST",
-          body: JSON.stringify({
-            uid: user.uid,
-            diaryId: edit.diaryId,
-            data: diaryEdit,
-            prevDate: edit.diary.diaryDate,
-          }),
-        })
-          .then(() => {
-            mdDispatch({
-              type: "savedEdit",
-              payload: { diaryId: edit.diaryId, diary: diaryEdit },
-            });
-            mutate(`/api/diary/${user.uid}`);
-            mutate(`/api/diary/${user.uid}/${edit.diaryId}`);
-          })
-          .catch(() => {
-            console.error("[EDIT]: Failed editData");
-          });
+        await fuegoEdit(
+          user.uid,
+          edit.diaryId,
+          diaryEdit,
+          edit.diary.diaryDate
+        );
+        mdDispatch({
+          type: "savedEdit",
+          payload: { diaryId: edit.diaryId, diary: diaryEdit },
+        });
+        mutate(["/api/diary/", user.uid]);
+        mutate(["/api/diary/", user.uid, edit.diaryId]);
+        // fetch(`/api/diary/edit`, {
+        //   method: "POST",
+        //   body: JSON.stringify({
+        //     uid: user.uid,
+        //     diaryId: edit.diaryId,
+        //     data: diaryEdit,
+        //     prevDate: edit.diary.diaryDate,
+        //   }),
+        // })
+        //   .then(() => {
+        // })
+        // .catch(() => {
+        //   console.error("[EDIT]: Failed editData");
+        // });
       } else {
         console.error("[EDIT] error with diaryEdit");
       }
@@ -144,7 +152,7 @@ function Edit(): JSX.Element {
     }
   }
 
-  function deleteData() {
+  async function deleteData() {
     if (
       typeof edit !== "undefined" &&
       user !== null &&
@@ -152,22 +160,10 @@ function Edit(): JSX.Element {
       user.email !== null
     ) {
       mdDispatch({ type: "saving" });
-      fetch(`/api/diary/delete`, {
-        method: "POST",
-        body: JSON.stringify({
-          uid: user.uid,
-          data: edit.diary,
-          diaryId: edit.diaryId,
-        }),
-      })
-        .then(() => {
-          mdDispatch({ type: "view", payload: "md" });
-          mdDispatch({ type: "saved" });
-          mutate(`/api/diary/${user.uid}`);
-        })
-        .catch(() => {
-          console.error("[EDIT]: Failed delete");
-        });
+      await fuegoDelete(user.uid, edit.diaryId, edit.diary);
+      mdDispatch({ type: "view", payload: "md" });
+      mdDispatch({ type: "saved" });
+      mutate(["/api/diary/", user.uid]);
     } else {
       console.error("[EDIT]: Missing delete params");
     }

@@ -1,9 +1,11 @@
+import type dayjs from "dayjs";
 import { createContext, useContext } from "react";
 import type { MediaEdit, MediaSelected, MediaTypes } from "./mediaTypes";
 
 export interface MDState {
   page: number;
   spotifyToken?: string;
+  spotifyTimeOut?: dayjs.Dayjs;
   isSaving?: boolean;
   view?: "search" | "log" | "edit" | "day" | "md" | "activity";
   selected?: MediaSelected;
@@ -34,6 +36,13 @@ type Actions =
   | {
       type: "filter";
       payload: MDState["filterBy"];
+    }
+  | {
+      type: "spotifyToken";
+      payload: {
+        spotifyToken: MDState["spotifyToken"];
+        spotifyTimeOut: MDState["spotifyTimeOut"];
+      };
     }
   | {
       type: "state";
@@ -102,12 +111,17 @@ export function Reducer(state: MDState, actions: Actions): MDState {
         edit: actions.payload,
       };
     }
+    case "spotifyToken": {
+      return {
+        ...state,
+        spotifyToken: actions.payload.spotifyToken,
+        spotifyTimeOut: actions.payload.spotifyTimeOut,
+      };
+    }
     case "edit": {
       return {
         ...state,
         view: "edit",
-        // edit: actions.payload,
-        // selected: undefined,
       };
     }
     default:

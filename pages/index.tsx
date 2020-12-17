@@ -23,35 +23,18 @@ import React, { useEffect, useState } from "react";
 import LogoIcon from "../src/components/icons/LogoIcon";
 import Layout from "../src/components/layouts/Layout";
 import MdLoader from "../src/components/md/MdLoader";
+import useFuegoUser from "../src/hooks/useFuegoUser";
 import useLogin from "../src/hooks/useLogin";
 import fuego from "../src/interfaces/fuego";
-import fuegoAdmin from "../src/interfaces/fuegoAdmin";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const cookies = parseCookies(context);
-  // If token present then redirect
-  try {
-    const token = await fuegoAdmin.auth().verifyIdToken(cookies.fuegoToken);
-    if (token) {
-      return {
-        redirect: {
-          permanent: false,
-          destination: "/home",
-        },
-      };
-    }
-  } catch {
-    if (cookies.fuegoPending) {
-      return {
-        props: {
-          fuegoPending: cookies.fuegoPending,
-        },
-      };
-    }
-  }
   return {
     props: {
-      fuegoPending: false,
+      fuegoPending:
+        typeof cookies.fuegoPending !== "undefined"
+          ? cookies.fuegoPending
+          : false,
     },
   };
 };
@@ -62,6 +45,7 @@ function App({
   const login = useLogin();
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
+  const { user } = useFuegoUser();
 
   useEffect(() => {
     if (fuegoPending) {
@@ -82,7 +66,10 @@ function App({
     }
   }, [fuegoPending, router]);
 
-  if (fuegoPending) {
+  if (fuegoPending || user === null) {
+    return <MdLoader />;
+  } else if (user) {
+    router.push("/home");
     return <MdLoader />;
   } else {
     return (
