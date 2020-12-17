@@ -45,9 +45,7 @@ function LayoutDrawer({
       <DrawerOverlay zIndex={2}>
         <DrawerContent>
           <DrawerHeader>
-            <Flex align="center">
-              <MdLogo title="mediaDiary" />
-            </Flex>
+            <MdLogo title="mediaDiary" />
           </DrawerHeader>
           <DrawerCloseButton />
           <DrawerBody px={{ base: 6, sm: 8 }}>

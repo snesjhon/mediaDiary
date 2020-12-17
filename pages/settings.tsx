@@ -42,7 +42,7 @@ function Settings(): JSX.Element {
   } else {
     return (
       <LayoutMain>
-        <Preferences />
+        <Preferences user={user} />
       </LayoutMain>
     );
   }

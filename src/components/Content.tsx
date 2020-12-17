@@ -40,9 +40,7 @@ function Content(): JSX.Element {
           <ModalContent maxHeight="50vh" my={{ base: 0, sm: "3.75rem" }}>
             <ModalCloseButton />
             <ModalHeader>
-              <Flex alignItems="center">
-                <MdLogo title="Search" />
-              </Flex>
+              <MdLogo title="Search" />
             </ModalHeader>
             <ModalBody pt={0} pb={6}>
               {view === "search" && <Search refInput={refInput} />}

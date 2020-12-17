@@ -1,28 +1,45 @@
+import type { ModalProps } from "@chakra-ui/react";
 import {
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalCloseButton,
   ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import type { PropsWithChildren } from "react";
 import React from "react";
+import MdLogo from "../md/MdLogo";
 
-function LayoutModal({ children }: PropsWithChildren<unknown>): JSX.Element {
-  const router = useRouter();
+function LayoutModal({
+  children,
+  onClose,
+  isOpen,
+  size,
+  title,
+}: PropsWithChildren<unknown> & {
+  onClose: ModalProps["onClose"];
+  isOpen: ModalProps["isOpen"];
+  size: ModalProps["size"];
+  title: string;
+}): JSX.Element {
   return (
     <Modal
-      isOpen={true}
-      onClose={() => router.push("/home")}
+      isOpen={isOpen}
+      onClose={onClose}
       scrollBehavior="inside"
-      size="sm"
+      size={size}
       trapFocus={false}
     >
-      <ModalOverlay px={4} sx={{ zIndex: 2 }}>
+      <ModalOverlay sx={{ zIndex: 2 }}>
         <ModalContent>
           <ModalCloseButton />
-          <ModalBody pt={6}>{children}</ModalBody>
+          <ModalHeader>
+            <MdLogo title={title} />
+          </ModalHeader>
+          <ModalBody pt={0} pb={6}>
+            {children}
+          </ModalBody>
         </ModalContent>
       </ModalOverlay>
     </Modal>

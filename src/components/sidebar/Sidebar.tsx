@@ -33,9 +33,7 @@ function Sidebar({
         <DrawerContent maxW={isSm ? "50%" : "70%"}>
           <DrawerCloseButton />
           <DrawerHeader borderBottomWidth="1px" py={3}>
-            <Flex alignItems="center">
-              <MdLogo title="mediaDiary" />
-            </Flex>
+            <MdLogo title="mediaDiary" />
           </DrawerHeader>
           <DrawerBody mt={4}>
             <VStack spacing={6} align="flex-start">
