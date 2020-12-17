@@ -1,5 +1,3 @@
-import type {
-  DrawerProps} from "@chakra-ui/react";
 import {
   Drawer,
   DrawerBody,
@@ -8,8 +6,10 @@ import {
   DrawerHeader,
   DrawerOverlay,
   Flex,
+  useBreakpointValue,
 } from "@chakra-ui/react";
-import type { PropsWithChildren , RefObject } from "react";
+import type { DrawerProps } from "@chakra-ui/react";
+import type { PropsWithChildren, RefObject } from "react";
 import React from "react";
 import { useSwipeable } from "react-swipeable";
 import { useMDDispatch } from "../../config/store";
@@ -30,13 +30,14 @@ function LayoutDrawer({
   const handlers = useSwipeable({
     onSwipedRight: () => onClose(),
     onSwipedDown: () => onClose(),
-    delta: 400,
+    delta: 250,
   });
+  const sizeType = useBreakpointValue({ base: "full", sm: "lg" });
   return (
     <Drawer
       onClose={onClose}
       isOpen={isOpen}
-      size="lg"
+      size={sizeType}
       placement={placement}
       initialFocusRef={refHook}
       {...rest}

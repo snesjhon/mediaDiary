@@ -52,7 +52,7 @@ function Content(): JSX.Element {
       </Modal>
       <LayoutDrawer
         isOpen={view === "log" || view === "day" || view === "edit"}
-        placement={isMD ? "right" : "bottom"}
+        placement="right"
       >
         {view === "log" && <Log />}
         {(view === "day" || view === "edit") && <Day />}
