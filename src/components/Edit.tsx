@@ -104,22 +104,8 @@ function Edit(): JSX.Element {
           type: "savedEdit",
           payload: { diaryId: edit.diaryId, diary: diaryEdit },
         });
-        mutate(["/api/diary/", user.uid]);
-        mutate(["/api/diary/", user.uid, edit.diaryId]);
-        // fetch(`/api/diary/edit`, {
-        //   method: "POST",
-        //   body: JSON.stringify({
-        //     uid: user.uid,
-        //     diaryId: edit.diaryId,
-        //     data: diaryEdit,
-        //     prevDate: edit.diary.diaryDate,
-        //   }),
-        // })
-        //   .then(() => {
-        // })
-        // .catch(() => {
-        //   console.error("[EDIT]: Failed editData");
-        // });
+        mutate(["/fuego/diary", user.uid, 1]);
+        mutate(["/fuego/diaryDay", user.uid, edit.diaryId]);
       } else {
         console.error("[EDIT] error with diaryEdit");
       }
@@ -163,7 +149,7 @@ function Edit(): JSX.Element {
       await fuegoDelete(user.uid, edit.diaryId, edit.diary);
       mdDispatch({ type: "view", payload: "md" });
       mdDispatch({ type: "saved" });
-      mutate(["/api/diary/", user.uid]);
+      mutate(["/fuego/diary", user.uid, 1]);
     } else {
       console.error("[EDIT]: Missing delete params");
     }

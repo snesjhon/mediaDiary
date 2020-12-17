@@ -32,7 +32,7 @@ function Day(): JSX.Element | null {
 
   const { data } = useSWR<DiaryAdd>(
     user !== null && user && edit
-      ? ["/api/diary/", user.uid, edit.diaryId]
+      ? ["/fuego/diaryDay", user.uid, edit.diaryId]
       : null,
     fuegoDiaryEntry,
     {
@@ -184,7 +184,7 @@ function SpotifyData({
   token: string;
   artistId: string;
 }) {
-  const { data } = useSWR<any[]>(`/day/${mediaId}`, fetchAll, {
+  const { data } = useSWR<any[]>(`/spotify/${mediaId}`, fetchAll, {
     revalidateOnFocus: false,
     suspense: true,
   });
