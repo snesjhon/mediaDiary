@@ -37,9 +37,7 @@ function Filters({
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader borderBottomWidth="1px" py={3}>
-            <Flex alignItems="center">
-              <MdLogo title="Filters" />
-            </Flex>
+            <MdLogo title="Filters" />
           </DrawerHeader>
           <DrawerBody mt={4}>
             <Text fontSize="xl" fontWeight="medium" mb={2}>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Text, useColorModeValue } from "@chakra-ui/react";
+import { Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
 import LogoIcon from "../icons/LogoIcon";
 
@@ -12,7 +12,7 @@ function MdLogo({
 }): JSX.Element {
   const mdPurple = useColorModeValue("purple.700", "purple.200");
   return (
-    <>
+    <Flex align="center">
       <LogoIcon boxSize={5} mr={1} color={mdPurple} />
       {typeof href !== "undefined" ? (
         <Link href="/home">
@@ -35,7 +35,7 @@ function MdLogo({
           {title}
         </Text>
       )}
-    </>
+    </Flex>
   );
 }
 

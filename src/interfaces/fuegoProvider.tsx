@@ -3,6 +3,7 @@ import React, { createContext, useEffect, useState } from "react";
 import fuego from "./fuego";
 
 export type FuegoUser = firebase.User | null | false;
+export type FuegoValidatedUser = firebase.User;
 
 export const FuegoContext = createContext<{ user: FuegoUser }>({
   user: null,
