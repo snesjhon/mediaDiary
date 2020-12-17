@@ -40,7 +40,7 @@ function MediaDiary(): JSX.Element {
   );
 
   // There's an error on the list, or the list is empty
-  if (error) {
+  if (error || data === null) {
     return <div>nothing in this list</div>;
   }
 

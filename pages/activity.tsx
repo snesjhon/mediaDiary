@@ -32,20 +32,20 @@ function Activity(): JSX.Element {
     }
   }, [dispatch, spotifyToken, spotifyTimeOut, user]);
 
-  if (!user) {
+  if (!user && user !== null) {
     if (typeof window !== "undefined") {
       router.push("/");
     }
     return <MdLoader />;
+  } else if (user === null || !spotifyToken) {
+    return <MdLoader />;
+  } else {
+    return (
+      <LayoutMain>
+        <Charts />
+      </LayoutMain>
+    );
   }
-
-  return user === null || !spotifyToken ? (
-    <MdLoader />
-  ) : (
-    <LayoutMain>
-      <Charts />
-    </LayoutMain>
-  );
 }
 
 export default Activity;

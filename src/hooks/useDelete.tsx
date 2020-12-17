@@ -1,0 +1,27 @@
+import { useRouter } from "next/router";
+import { useState } from "react";
+import fuego, { fuegoDb } from "../interfaces/fuego";
+
+function useLogout(): { isDeleting: boolean; deleteUser: () => void } {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const router = useRouter();
+
+  function deleteUser() {
+    setIsDeleting(true);
+    const currentUser = fuego.auth().currentUser;
+    if (currentUser) {
+      fuegoDb
+        .ref(`/users/${currentUser.uid}`)
+        .remove()
+        .then(() => {
+          currentUser.delete().then(() => {
+            setIsDeleting(false);
+            return router.push("/");
+          });
+        });
+    }
+  }
+  return { isDeleting, deleteUser };
+}
+
+export default useLogout;

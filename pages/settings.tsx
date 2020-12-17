@@ -3,12 +3,12 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import LayoutMain from "../src/components/layouts/LayoutMain";
 import MdLoader from "../src/components/md/MdLoader";
-import MediaDiary from "../src/components/MediaDiary";
+import Preferences from "../src/components/Preferences";
 import getSpotifyToken from "../src/config/getSpotifyToken";
 import { useMDDispatch, useMDState } from "../src/config/store";
 import useFuegoUser from "../src/hooks/useFuegoUser";
 
-function Home(): JSX.Element {
+function Settings(): JSX.Element {
   const { user } = useFuegoUser();
   const { spotifyToken, spotifyTimeOut } = useMDState();
   const dispatch = useMDDispatch();
@@ -42,10 +42,10 @@ function Home(): JSX.Element {
   } else {
     return (
       <LayoutMain>
-        <MediaDiary />
+        <Preferences />
       </LayoutMain>
     );
   }
 }
 
-export default Home;
+export default Settings;
