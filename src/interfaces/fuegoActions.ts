@@ -10,17 +10,26 @@ export async function fuegoDiaryGetAll(
   return diaryItems.val();
 }
 
-export async function fuegoDiaryGet(key: string, userId: string): Promise<any> {
-  const diaryCount = await fuegoDb.ref(`/users/${userId}/count`).once("value");
+export async function fuegoDiaryGet(
+  key: string,
+  userId: string,
+  page: number
+): Promise<any> {
   const diaryItems = await fuegoDb
     .ref(`/users/${userId}/diary`)
-    .limitToLast(30)
+    .orderByChild("diaryDate")
+    .limitToLast(30 * page)
     .once("value");
 
-  return {
-    diaryCount: diaryCount.val(),
-    diaryItems: diaryItems.val(),
-  };
+  return diaryItems.val();
+}
+
+export async function fuegoDiaryCount(
+  key: string,
+  userId: string
+): Promise<void> {
+  const diaryCount = await fuegoDb.ref(`/users/${userId}/count`).once("value");
+  return diaryCount.val();
 }
 
 export async function fuegoDiaryEntry(

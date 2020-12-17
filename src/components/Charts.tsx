@@ -41,7 +41,7 @@ function Charts(): JSX.Element {
   const { user } = useFuegoUser();
   const { data, error } = useSWR<DiaryState>(
     user && user !== null && typeof user.uid !== "undefined"
-      ? ["/api/diary/all", user.uid]
+      ? ["/fuego/diaryAll", user.uid]
       : null,
     fuegoDiaryGetAll,
     {
