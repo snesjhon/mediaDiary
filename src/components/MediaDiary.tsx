@@ -13,7 +13,6 @@ import FilmIcon from "./icons/FilmIcon";
 import StarEmptyIcon from "./icons/StartEmptyIcon";
 import TvIcon from "./icons/TvIcon";
 import MdLoader from "./md/MdLoader";
-import Pagination from "./Pagination";
 
 interface ListState {
   [key: string]: DiaryState;
@@ -84,7 +83,12 @@ function MediaDiary({ user }: { user: FuegoValidatedUser }): JSX.Element {
                   top="4rem"
                 >
                   {dayjs(`${month}-01`).format("MMM")}
-                  <Text as="div" fontSize="sm" color="purple.700">
+                  <Text
+                    as="span"
+                    display="block"
+                    fontSize="sm"
+                    color="purple.700"
+                  >
                     {dayjs(`${month}-01`).format("YYYY")}
                   </Text>
                 </Text>
@@ -233,7 +237,6 @@ function MediaDiary({ user }: { user: FuegoValidatedUser }): JSX.Element {
             </Grid>
           );
         })}
-        <Pagination userUid={user.uid} />
       </>
     );
   }

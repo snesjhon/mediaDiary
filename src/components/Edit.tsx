@@ -49,7 +49,7 @@ function Edit(): JSX.Element {
               rating: state.rating,
               episodes: state.episodes,
               season: state.season,
-              seenEpisodes: state.seenEpisodes,
+              seenEpisodes: state.seenEpisodes ?? [],
             }}
             isEdit
           />
@@ -132,6 +132,7 @@ function Edit(): JSX.Element {
       if (typeof state.seenEpisodes !== "undefined") {
         Object.assign(editItem, { seenEpisodes: state.seenEpisodes });
       }
+      debugger;
       return editItem;
     } else {
       return false;

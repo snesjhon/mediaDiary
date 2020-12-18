@@ -12,7 +12,6 @@ import {
   Tag,
   Text,
 } from "@chakra-ui/react";
-import { log } from "console";
 import dayjs from "dayjs";
 import React, { Suspense } from "react";
 import Rating from "react-rating";
@@ -31,7 +30,6 @@ function Day(): JSX.Element | null {
   const dispatch = useMDDispatch();
   const { view, edit, spotifyToken } = useMDState();
 
-  console.log(edit);
   const { data } = useSWR<DiaryAdd>(
     user !== null && user && edit
       ? ["/fuego/diaryDay", user.uid, edit.diaryId]
