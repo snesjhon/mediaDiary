@@ -9,6 +9,7 @@ import {
   useColorMode,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
 import { useMDDispatch } from "../config/store";
 import useIsBreakpoint from "../hooks/useIsBreakpoint";
@@ -19,6 +20,7 @@ import Sidebar from "./sidebar/Sidebar";
 
 function Header(): JSX.Element {
   const isMd = useIsBreakpoint("md");
+  const router = useRouter();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
   const {
@@ -56,35 +58,39 @@ function Header(): JSX.Element {
               <MdLogo title="mediaDiary" href="/home" />
             </Flex>
             <Flex maxW="720px" align="center">
-              <HStack as="nav" spacing="2">
+              <HStack spacing="2">
+                {router.pathname === "/home" && (
+                  <>
+                    {isMd ? (
+                      <Button
+                        leftIcon={<FiltersIcon />}
+                        border="1px solid"
+                        borderColor="gray.200"
+                        size="sm"
+                        variant="outline"
+                        onClick={menuOnOpen}
+                      >
+                        Filters
+                      </Button>
+                    ) : (
+                      <IconButton
+                        aria-label="Menu"
+                        icon={<FiltersIcon />}
+                        size="sm"
+                        variant="outline"
+                        onClick={menuOnOpen}
+                        isRound
+                      />
+                    )}
+                  </>
+                )}
                 <IconButton
                   onClick={toggleColorMode}
                   aria-label="Theme Switcher"
                   icon={<MoonIcon />}
                   size="sm"
-                  variant="ghost"
-                  isRound
+                  variant="outline"
                 />
-                {isMd ? (
-                  <Button
-                    leftIcon={<FiltersIcon />}
-                    border="1px solid"
-                    borderColor="gray.200"
-                    size="sm"
-                    onClick={menuOnOpen}
-                  >
-                    Filters
-                  </Button>
-                ) : (
-                  <IconButton
-                    aria-label="Menu"
-                    icon={<FiltersIcon />}
-                    size="sm"
-                    variant="outline"
-                    onClick={menuOnOpen}
-                    isRound
-                  />
-                )}
               </HStack>
               {!isMd && (
                 <IconButton

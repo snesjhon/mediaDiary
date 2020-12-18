@@ -42,7 +42,7 @@ function Home(): JSX.Element {
   } else {
     return (
       <LayoutMain title="Home">
-        <MediaDiary />
+        <MediaDiary user={user} />
       </LayoutMain>
     );
   }

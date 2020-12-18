@@ -1,4 +1,4 @@
-import type { Icon } from "@chakra-ui/react";
+import { Icon, useColorMode } from "@chakra-ui/react";
 import { Box, Center, Flex, Input, Text } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import type { RefObject } from "react";
@@ -23,6 +23,7 @@ function Search({
   const [currAlbum, setCurrAlbum] = useState(3);
   const dispatch = useMDDispatch();
   const { spotifyToken } = useMDState();
+  const { colorMode } = useColorMode();
 
   const bouncedSearch = useDebounce(search, 500);
   const { data, isValidating } = useSWR(
@@ -33,7 +34,7 @@ function Search({
 
   return (
     <>
-      <Box position="sticky" pt={1} top={0} bgColor="white">
+      <Box position="sticky" pt={1} top={0}>
         <Input
           placeholder="Search for Albums, TV, or Film"
           onChange={(e) => setSearch(e.target.value)}
@@ -126,12 +127,7 @@ function Search({
         </Flex>
         {data.slice(0, seeNumber).map((e: MediaSelected) => displayResult(e))}
         {data.length > seeNumber && (
-          <Text
-            mt={3}
-            fontSize="sm"
-            color="gray.500"
-            onClick={() => seeAction(seeNumber + 3)}
-          >
+          <Text mt={3} fontSize="sm" onClick={() => seeAction(seeNumber + 3)}>
             See More...
           </Text>
         )}
@@ -148,7 +144,7 @@ function Search({
         borderBottomColor="gray.200"
         py={2}
         _hover={{
-          bg: "purple.50",
+          bg: colorMode === "light" ? "purple.50" : "gray.800",
           cursor: "pointer",
         }}
         onClick={() =>
