@@ -41,7 +41,7 @@ function Settings(): JSX.Element {
     return <MdLoader />;
   } else {
     return (
-      <LayoutMain>
+      <LayoutMain title="Settings">
         <Preferences user={user} />
       </LayoutMain>
     );
