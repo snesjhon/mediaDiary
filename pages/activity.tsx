@@ -41,8 +41,8 @@ function Activity(): JSX.Element {
     return <MdLoader />;
   } else {
     return (
-      <LayoutMain>
-        <Charts />
+      <LayoutMain title="Activity">
+        <Charts user={user} />
       </LayoutMain>
     );
   }

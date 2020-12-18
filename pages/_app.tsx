@@ -24,6 +24,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
 
         <meta name="theme-color" content="#90cdf4" />
         <meta name="apple-mobile-web-app-status-bar" content="#90cdf4" />
+        <title>MediaDiary</title>
       </Head>
       <FuegoProvider>
         <ContextState.Provider value={state}>

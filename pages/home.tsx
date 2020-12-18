@@ -41,7 +41,7 @@ function Home(): JSX.Element {
     return <MdLoader />;
   } else {
     return (
-      <LayoutMain>
+      <LayoutMain title="Home">
         <MediaDiary />
       </LayoutMain>
     );

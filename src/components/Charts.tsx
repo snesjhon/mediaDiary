@@ -1,4 +1,4 @@
-import { StarIcon } from "@chakra-ui/icons";
+import { RepeatIcon, StarIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Box,
@@ -8,6 +8,7 @@ import {
   Flex,
   Grid,
   Heading,
+  IconButton,
   Image,
   SimpleGrid,
   Stat,
@@ -15,6 +16,9 @@ import {
   StatLabel,
   StatNumber,
   Text,
+  Tooltip,
+  useBreakpointValue,
+  useColorMode,
   useToken,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
@@ -23,22 +27,30 @@ import Rating from "react-rating";
 import useSWR from "swr";
 import { VictoryAxis, VictoryBar, VictoryChart } from "victory";
 import type { DiaryAdd, DiaryState, MediaTypes } from "../config/mediaTypes";
-import useFuegoUser from "../hooks/useFuegoUser";
+import { useMDDispatch } from "../config/store";
 import { fuegoDiaryGetAll } from "../interfaces/fuegoActions";
+import type { FuegoValidatedUser } from "../interfaces/fuegoProvider";
 import AlbumIcon from "./icons/AlbumIcon";
 import LogoFilm from "./icons/FilmIcon";
 import StarEmptyIcon from "./icons/StartEmptyIcon";
 import TvIcon from "./icons/TvIcon";
 import MdLoader from "./md/MdLoader";
 
-function Charts(): JSX.Element {
-  const [purple700] = useToken("colors", ["gray.400"]);
+interface DiaryAddWithId extends DiaryAdd {
+  id: string;
+}
+
+function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
+  const { colorMode } = useColorMode();
+  const [gray400, purple700] = useToken("colors", ["gray.400", "purple.300"]);
   const [ratingType, setRatingType] = useState<MediaTypes | "all">("all");
   const [yearType, setYearType] = useState<number | "all">(
     parseInt(dayjs().format("YYYY"))
   );
+  const [includeSeen, setIncludeSeen] = useState(false);
+  const dispatch = useMDDispatch();
+  const filterButtonSize = useBreakpointValue({ base: "xs", md: "sm" });
 
-  const { user } = useFuegoUser();
   const { data, error } = useSWR<DiaryState>(
     user && user !== null && typeof user.uid !== "undefined"
       ? ["/fuego/diaryAll", user.uid]
@@ -61,10 +73,10 @@ function Charts(): JSX.Element {
       movie: number;
       tv: number;
       album: number;
-      years: { [key: string]: DiaryAdd[] };
+      years: { [key: string]: DiaryAddWithId[] };
     }>(
       (a, c) => {
-        const item = data[c];
+        const item = { id: c, ...data[c] };
         if (typeof a[item.type] !== "undefined") {
           a[item.type] = ++a[item.type];
         } else {
@@ -83,15 +95,15 @@ function Charts(): JSX.Element {
         movie: 0,
         tv: 0,
         album: 0,
-        years: { all: Object.keys(data).map((e) => data[e]) },
+        years: { all: Object.keys(data).map((e) => ({ id: e, ...data[e] })) },
       }
     );
 
     const yearData = dataCounts.years[yearType];
 
-    const filteredList = yearData.filter((e) =>
-      ratingType === "all" ? e : e.type === ratingType
-    );
+    const filteredList = yearData
+      .filter((e) => (includeSeen ? e : !e.loggedBefore))
+      .filter((e) => (ratingType === "all" ? e : e.type === ratingType));
 
     const ratingCount = filteredList
       .reduce((a, c) => {
@@ -116,10 +128,15 @@ function Charts(): JSX.Element {
 
     const topRated = filteredList
       .sort((a, b) => (a.rating > b.rating ? -1 : 1))
-      .slice(0, 5);
+      .slice(0, 6);
 
     return (
-      <Box borderLeft="1px solid" borderColor="gray.100" pl={{ md: 8 }} py={10}>
+      <Box
+        py={10}
+        borderLeftWidth={{ base: 0, md: "1px" }}
+        borderRightWidth={{ base: 0, md: "1px" }}
+        px={{ md: 8 }}
+      >
         <Center>
           {Object.keys(dataCounts.years).length > 0 ? (
             <Flex alignItems="flex-end">
@@ -180,20 +197,37 @@ function Charts(): JSX.Element {
           </Stat>
         </StatGroup>
         <Divider my={10} />
-        <Flex pb={10} alignItems="center" justifyContent="flex-end">
-          <Text color="gray.500" mr={2}>
-            Filter:
-          </Text>
-          <Box>
-            <FilterButton title="All" type="all" />
-            <FilterButton title="By Movie" type="movie" />
-            <FilterButton title="By Tv" type="tv" />
-            <FilterButton title="By Album" type="album" />
-          </Box>
+        <Flex alignItems="center" justifyContent="space-between" pb={10}>
+          <Flex alignItems="center" justifyContent="flex-end">
+            <Text color="gray.500" mr={2} fontSize="sm">
+              Filter:
+            </Text>
+            <Box>
+              <FilterButton title="All" type="all" />
+              <FilterButton title="By Movie" type="movie" />
+              <FilterButton title="By Tv" type="tv" />
+              <FilterButton title="By Album" type="album" />
+            </Box>
+          </Flex>
+          <Flex alignItems="center">
+            <Tooltip label="Include Repeated Media">
+              <IconButton
+                variant={includeSeen ? undefined : "outline"}
+                colorScheme={includeSeen ? "purple" : undefined}
+                icon={
+                  <RepeatIcon color={includeSeen ? "gray.50" : "gray.700"} />
+                }
+                aria-label="Repeated Viewed"
+                size={filterButtonSize}
+                onClick={() => setIncludeSeen(!includeSeen)}
+              />
+            </Tooltip>
+          </Flex>
         </Flex>
         <Box>
-          <Heading mb={8}>Highest Rated</Heading>
-          <SimpleGrid columns={5} gap={6}>
+          <Heading size="lg">Highest Rated</Heading>
+          <Divider mt={3} mb={6} />
+          <SimpleGrid columns={{ base: 3, sm: 3, md: 6 }} gap={6}>
             {topRated.map((e) => (
               <Grid
                 key={e.addedDate + e.mediaId}
@@ -205,24 +239,53 @@ function Charts(): JSX.Element {
                   borderRadius="5px"
                   border="1px solid"
                   borderColor="gray.300"
+                  onClick={() =>
+                    dispatch({
+                      type: "day",
+                      payload: {
+                        diaryId: e.id,
+                        diary: e,
+                      },
+                    })
+                  }
+                  _hover={{
+                    boxShadow: `3px 3px 1px ${
+                      colorMode === "light" ? purple700 : purple700
+                    }`,
+                    borderColor:
+                      colorMode === "light" ? "purple.500" : "purple.500",
+                    cursor: "pointer",
+                  }}
                 />
-                <Text isTruncated>{e.title}</Text>
+                <Text isTruncated fontSize="sm">
+                  {e.title}
+                </Text>
                 <Rating
                   fractions={2}
                   readonly
                   initialRating={e.rating}
-                  fullSymbol={<StarIcon color="purple.400" w="15px" h="15px" />}
+                  fullSymbol={
+                    <StarIcon
+                      color="purple.400"
+                      w={{ base: "10px", sm: "15px", md: "10px", lg: "15px" }}
+                      h={{ base: "10px", sm: "15px", md: "10px", lg: "15px" }}
+                    />
+                  }
                   emptySymbol={
-                    <StarEmptyIcon stroke="purple.400" w="15px" h="15px" />
+                    <StarEmptyIcon
+                      stroke="purple.400"
+                      w={{ base: "10px", sm: "15px", md: "10px", lg: "15px" }}
+                      h={{ base: "10px", sm: "15px", md: "10px", lg: "15px" }}
+                    />
                   }
                 />
               </Grid>
             ))}
           </SimpleGrid>
         </Box>
-        <Divider my={10} />
-        <Box>
-          <Heading pb={8}>Rating Distribution</Heading>
+        <Box mt={16}>
+          <Heading size="lg">Rating Distribution</Heading>
+          <Divider mt={3} mb={6} />
           <Flex alignItems="flex-end">
             <RatingIcon />
             <VictoryBar
@@ -234,7 +297,7 @@ function Charts(): JSX.Element {
               padding={{ top: 0, bottom: 0, left: 30, right: 30 }}
               style={{
                 data: {
-                  fill: purple700,
+                  fill: gray400,
                 },
               }}
             />
@@ -247,9 +310,9 @@ function Charts(): JSX.Element {
             </Flex>
           </Flex>
         </Box>
-        <Divider my={10} />
-        <Box>
-          <Heading>By Release year</Heading>
+        <Box mt={16}>
+          <Heading size="lg">By Release year</Heading>
+          <Divider mt={3} mb={6} />
           <VictoryChart
             height={100}
             padding={{ top: 0, bottom: 40, left: 20, right: 20 }}
@@ -270,7 +333,7 @@ function Charts(): JSX.Element {
               y="count"
               style={{
                 data: {
-                  fill: purple700,
+                  fill: gray400,
                 },
               }}
             />
@@ -295,7 +358,7 @@ function Charts(): JSX.Element {
       <Button
         onClick={() => setRatingType(type)}
         variant={type === ratingType ? undefined : "outline"}
-        size="sm"
+        size={filterButtonSize}
         colorScheme="purple"
         mr={2}
       >
