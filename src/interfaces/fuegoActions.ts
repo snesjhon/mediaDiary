@@ -1,19 +1,24 @@
 import firebase from "firebase/app";
-import type { DiaryAdd, DiaryState, MediaTypes } from "../config/types";
+import type {
+  DiaryAdd,
+  DiaryAddWithId,
+  DiaryState,
+  MediaTypes,
+} from "../config/types";
 import type { Filters } from "../config/types";
 import { fuegoDb } from "./fuego";
 
 export async function fuegoDiaryGet(
   key: string,
   uid: string,
-  page: number,
+  cursor: string,
   mediaTypes: MediaTypes[] | null,
   rating: number | null,
   releasedDecade: number | null,
   diaryYear: number | null,
   loggedBefore: boolean | null,
   genre: string | null
-): Promise<DiaryState> {
+): Promise<any> {
   let diaryRef = fuegoDb.collection(
     `users/${uid}/diary`
   ) as firebase.firestore.Query;
@@ -42,12 +47,27 @@ export async function fuegoDiaryGet(
     diaryRef = diaryRef.where("genre", "==", genre);
   }
 
+  diaryRef = diaryRef.orderBy("diaryDate", "desc");
+
+  if (cursor !== null) {
+    const splitCursor = cursor.split("_");
+    if (splitCursor[0] === "after") {
+      diaryRef = diaryRef.startAfter(splitCursor[1]);
+    } else if (splitCursor[0] === "before") {
+      diaryRef = diaryRef.endBefore(splitCursor[1]);
+    }
+  }
+
   const diaryItems = await diaryRef.limit(30).get();
 
-  const items: DiaryState = {};
+  const items: DiaryAddWithId[] = [];
   diaryItems.forEach((item) => {
-    items[item.id] = item.data() as DiaryAdd;
+    items.push({
+      id: item.id,
+      ...(item.data() as DiaryAdd),
+    });
   });
+
   return items;
 }
 

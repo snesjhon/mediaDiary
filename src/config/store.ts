@@ -3,7 +3,7 @@ import { createContext, useContext } from "react";
 import type { FilterState, MediaEdit, MediaSelected } from "./types";
 
 export interface MDState extends FilterState {
-  page: number;
+  cursor: string | null;
   spotifyToken?: string;
   spotifyTimeOut?: dayjs.Dayjs;
   isSaving?: boolean;
@@ -142,7 +142,7 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
 }
 
 export const ContextState = createContext<MDState>({
-  page: 1,
+  cursor: null,
   filterGenre: null,
   filterLoggedBefore: null,
   filterMediaType: null,

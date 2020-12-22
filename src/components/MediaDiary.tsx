@@ -1,11 +1,19 @@
 import { StarIcon } from "@chakra-ui/icons";
-import { Box, Flex, Grid, Image, Text, useColorMode } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  Image,
+  Text,
+  useColorMode,
+} from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React from "react";
 import Rating from "react-rating";
 import useSWR from "swr";
 import { useMDDispatch, useMDState } from "../config/store";
-import type { DiaryState } from "../config/types";
+import type { DiaryAddWithId, DiaryState } from "../config/types";
 import { fuegoDiaryGet } from "../interfaces/fuegoActions";
 import type { FuegoValidatedUser } from "../interfaces/fuegoProvider";
 import createMDKey from "../utils/createMDKey";
@@ -19,37 +27,30 @@ interface ListState {
   [key: string]: DiaryState;
 }
 
-const LIMIT = 30;
-const MEDIATYPESLENGTH = 3;
-
 function MediaDiary({ user }: { user: FuegoValidatedUser }): JSX.Element {
   const state = useMDState();
   const dispatch = useMDDispatch();
   const { colorMode } = useColorMode();
 
   const mdKey = createMDKey(user, state);
-  const { data, error } = useSWR<DiaryState>(mdKey, fuegoDiaryGet, {
+  const { data, error } = useSWR<DiaryAddWithId[]>(mdKey, fuegoDiaryGet, {
     revalidateOnFocus: false,
   });
 
   // There's an error on the list, or the list is empty
   if (error || (data && Object.keys(data).length === 0)) {
+    if (error) {
+      console.error(error);
+    }
     return <div>nothing in this list</div>;
   }
 
   if (data) {
-    const currentRange = state.page * LIMIT;
-    const diaryKeys = Object.keys(data);
-    const diaryList = diaryKeys.sort((a, b) =>
-      new Date(data[a].diaryDate) > new Date(data[b].diaryDate) ? -1 : 1
-    );
-    const diaryDates: ListState = diaryList
-      .filter((_, i) => i < currentRange && i >= currentRange - LIMIT)
-      .reduce<ListState>((a, c) => {
-        const dateString = dayjs(data[c].diaryDate).format("YYYY-MM");
-        a[dateString] = Object.assign({ ...a[dateString] }, { [c]: data[c] });
-        return a;
-      }, {});
+    const diaryDates: ListState = data.reduce<ListState>((a, c) => {
+      const dateString = dayjs(c.diaryDate).format("YYYY-MM");
+      a[dateString] = Object.assign({ ...a[dateString] }, { [c.id]: c });
+      return a;
+    }, {});
 
     return (
       <>
@@ -228,6 +229,32 @@ function MediaDiary({ user }: { user: FuegoValidatedUser }): JSX.Element {
             </Grid>
           );
         })}
+        <Button
+          onClick={() =>
+            dispatch({
+              type: "state",
+              payload: {
+                key: "cursor",
+                value: `before_${data[0].diaryDate}`,
+              },
+            })
+          }
+        >
+          Before
+        </Button>
+        <Button
+          onClick={() =>
+            dispatch({
+              type: "state",
+              payload: {
+                key: "cursor",
+                value: `after_${data[data.length - 1].diaryDate}`,
+              },
+            })
+          }
+        >
+          After?
+        </Button>
       </>
     );
   }
