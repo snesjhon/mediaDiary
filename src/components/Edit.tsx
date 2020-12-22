@@ -3,16 +3,18 @@ import dayjs from "dayjs";
 import React, { useReducer } from "react";
 import { mutate } from "swr";
 import { LogReducer } from "../config/logStore";
-import type { DiaryAdd } from "../config/mediaTypes";
+import type { DiaryAdd } from "../config/types";
 import { useMDDispatch, useMDState } from "../config/store";
 import useFuegoUser from "../hooks/useFuegoUser";
 import { fuegoDelete, fuegoEdit } from "../interfaces/fuegoActions";
+import createMDKey from "../utils/createMDKey";
 import Info from "./Info";
 import LogFields from "./LogFields";
 import MdSpinner from "./md/MdSpinner";
 
 function Edit(): JSX.Element {
-  const { edit, isSaving } = useMDState();
+  const MDState = useMDState();
+  const { edit, isSaving } = MDState;
   const mdDispatch = useMDDispatch();
   const { user } = useFuegoUser();
 
@@ -94,17 +96,13 @@ function Edit(): JSX.Element {
       mdDispatch({ type: "saving" });
       const diaryEdit = createEdit();
       if (diaryEdit) {
-        await fuegoEdit(
-          user.uid,
-          edit.diaryId,
-          diaryEdit,
-          edit.diary.diaryDate
-        );
+        await fuegoEdit(user.uid, edit.diaryId, diaryEdit, edit.diary);
         mdDispatch({
           type: "savedEdit",
           payload: { diaryId: edit.diaryId, diary: diaryEdit },
         });
-        mutate(["/fuego/diary", user.uid, 1]);
+        const mdKey = createMDKey(user, MDState);
+        mutate(mdKey);
         mutate(["/fuego/diaryDay", user.uid, edit.diaryId]);
       } else {
         console.error("[EDIT] error with diaryEdit");
@@ -119,6 +117,7 @@ function Edit(): JSX.Element {
       const editItem = {
         ...edit.diary,
         diaryDate: state.diaryDate,
+        diaryYear: parseInt(dayjs(state.diaryDate).format("YYYY")),
         loggedBefore: state.loggedBefore,
         rating: state.rating,
         poster: state.poster,
@@ -132,7 +131,6 @@ function Edit(): JSX.Element {
       if (typeof state.seenEpisodes !== "undefined") {
         Object.assign(editItem, { seenEpisodes: state.seenEpisodes });
       }
-      debugger;
       return editItem;
     } else {
       return false;
@@ -150,7 +148,8 @@ function Edit(): JSX.Element {
       await fuegoDelete(user.uid, edit.diaryId, edit.diary);
       mdDispatch({ type: "view", payload: "md" });
       mdDispatch({ type: "saved" });
-      mutate(["/fuego/diary", user.uid, 1]);
+      const mdKey = createMDKey(user, MDState);
+      mutate(mdKey);
     } else {
       console.error("[EDIT]: Missing delete params");
     }

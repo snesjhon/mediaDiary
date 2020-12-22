@@ -1,10 +1,11 @@
-import { Icon, useColorMode } from "@chakra-ui/react";
+import { useColorMode } from "@chakra-ui/react";
+import type { Icon } from "@chakra-ui/react";
 import { Box, Center, Flex, Input, Text } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import type { RefObject } from "react";
 import React, { useState } from "react";
 import useSWR from "swr";
-import type { MediaSelected, MediaTypes } from "../config/mediaTypes";
+import type { MediaSelected, MediaTypes } from "../config/types";
 import { useMDDispatch, useMDState } from "../config/store";
 import useDebounce from "../hooks/useDebounce";
 import AlbumIcon from "./icons/AlbumIcon";

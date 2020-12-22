@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import Charts from "../src/components/Charts";
 import LayoutMain from "../src/components/layouts/LayoutMain";
 import MdLoader from "../src/components/md/MdLoader";
-import getSpotifyToken from "../src/config/getSpotifyToken";
+import getSpotifyToken from "../src/utils/getSpotifyToken";
 import { useMDDispatch, useMDState } from "../src/config/store";
 import useFuegoUser from "../src/hooks/useFuegoUser";
 

@@ -4,15 +4,21 @@ import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import React, { useReducer } from "react";
+import type { MDState } from "../src/config/store";
 import { ContextDispatch, ContextState, Reducer } from "../src/config/store";
 import { FuegoProvider } from "../src/interfaces/fuegoProvider";
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const [state, dispatch] = useReducer(Reducer, {
     page: 1,
-    filterBy: ["album", "movie", "tv"],
     view: "md",
-  });
+    filterMediaType: null,
+    filterGenre: null,
+    filterLoggedBefore: null,
+    filterRating: null,
+    filterDiaryYear: null,
+    filterReleasedDecade: null,
+  } as MDState);
   return (
     <>
       <Head>

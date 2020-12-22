@@ -33,6 +33,8 @@ function LayoutDrawer({
     delta: 250,
   });
   const sizeType = useBreakpointValue({ base: "full", sm: "lg" });
+  const fullHeight = useBreakpointValue({ base: true, sm: false });
+
   return (
     <Drawer
       onClose={onClose}
@@ -40,6 +42,7 @@ function LayoutDrawer({
       size={sizeType}
       placement={placement}
       initialFocusRef={refHook}
+      isFullHeight={fullHeight}
       {...rest}
     >
       <DrawerOverlay zIndex={2}>

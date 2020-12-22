@@ -1,8 +1,8 @@
 import type dayjs from "dayjs";
 import { createContext, useContext } from "react";
-import type { MediaEdit, MediaSelected, MediaTypes } from "./mediaTypes";
+import type { FilterState, MediaEdit, MediaSelected } from "./types";
 
-export interface MDState {
+export interface MDState extends FilterState {
   page: number;
   spotifyToken?: string;
   spotifyTimeOut?: dayjs.Dayjs;
@@ -10,10 +10,9 @@ export interface MDState {
   view?: "search" | "log" | "edit" | "day" | "md" | "activity";
   selected?: MediaSelected;
   edit?: MediaEdit;
-  filterBy: MediaTypes[];
 }
 
-type Actions =
+type MDActions =
   | {
       type: "log";
       payload: MDState["selected"];
@@ -35,7 +34,14 @@ type Actions =
     }
   | {
       type: "filter";
-      payload: MDState["filterBy"];
+      payload: {
+        filterMediaType: MDState["filterMediaType"];
+        filterRating: MDState["filterRating"];
+        filterReleasedDecade: MDState["filterReleasedDecade"];
+        filterDiaryYear: MDState["filterDiaryYear"];
+        filterLoggedBefore: MDState["filterLoggedBefore"];
+        filterGenre: MDState["filterGenre"];
+      };
     }
   | {
       type: "spotifyToken";
@@ -52,7 +58,7 @@ type Actions =
       };
     };
 
-export function Reducer(state: MDState, actions: Actions): MDState {
+export function Reducer(state: MDState, actions: MDActions): MDState {
   switch (actions.type) {
     case "state": {
       return {
@@ -63,7 +69,13 @@ export function Reducer(state: MDState, actions: Actions): MDState {
     case "filter": {
       return {
         ...state,
-        filterBy: actions.payload,
+        view: "md",
+        filterMediaType: actions.payload.filterMediaType,
+        filterRating: actions.payload.filterRating,
+        filterDiaryYear: actions.payload.filterDiaryYear,
+        filterReleasedDecade: actions.payload.filterReleasedDecade,
+        filterLoggedBefore: actions.payload.filterLoggedBefore,
+        filterGenre: actions.payload.filterGenre,
       };
     }
     case "saving": {
@@ -131,16 +143,21 @@ export function Reducer(state: MDState, actions: Actions): MDState {
 
 export const ContextState = createContext<MDState>({
   page: 1,
-  filterBy: ["movie", "tv", "album"],
+  filterGenre: null,
+  filterLoggedBefore: null,
+  filterMediaType: null,
+  filterRating: null,
+  filterDiaryYear: null,
+  filterReleasedDecade: null,
 });
 
-export const ContextDispatch = createContext<(props: Actions) => void>(
+export const ContextDispatch = createContext<(props: MDActions) => void>(
   () => null
 );
 
 export function useMDState(): MDState {
   return useContext(ContextState);
 }
-export function useMDDispatch(): (props: Actions) => void {
+export function useMDDispatch(): (props: MDActions) => void {
   return useContext(ContextDispatch);
 }
