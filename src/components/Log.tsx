@@ -4,10 +4,11 @@ import React, { useCallback, useEffect, useReducer } from "react";
 import useSWR, { mutate } from "swr";
 import type { LogProps, LogState } from "../config/logStore";
 import { LogReducer } from "../config/logStore";
-import type { DiaryAdd, MediaSelected } from "../config/mediaTypes";
+import type { DiaryAdd, MediaSelected } from "../config/types";
 import { useMDDispatch, useMDState } from "../config/store";
 import useFuegoUser from "../hooks/useFuegoUser";
 import { fuegoDiaryAdd } from "../interfaces/fuegoActions";
+import createMDKey from "../utils/createMDKey";
 import { fetcher, spotifyFetch } from "../utils/fetchers";
 import Info from "./Info";
 import LogFields from "./LogFields";
@@ -16,7 +17,8 @@ import MdSpinner from "./md/MdSpinner";
 function Log(): JSX.Element {
   const mdDispatch = useMDDispatch();
   const { user } = useFuegoUser();
-  const { selected, isSaving, spotifyToken } = useMDState();
+  const MDState = useMDState();
+  const { selected, isSaving, spotifyToken } = MDState;
 
   const dataUrl = getDataUrl();
 
@@ -31,7 +33,7 @@ function Log(): JSX.Element {
   );
 
   let initData: LogState = {
-    diaryDate: new Date().toDateString(),
+    diaryDate: dayjs().toISOString(),
     loggedBefore: false,
     rating: 0,
     isLoading:
@@ -175,7 +177,8 @@ function Log(): JSX.Element {
         await fuegoDiaryAdd(user.uid, addDiary);
         mdDispatch({ type: "view", payload: "md" });
         mdDispatch({ type: "saved" });
-        mutate(["/fuego/diary", user.uid, 1]);
+        const mdKey = createMDKey(user, MDState);
+        mutate(mdKey);
       } else {
         console.log("diary fails");
       }
@@ -185,14 +188,18 @@ function Log(): JSX.Element {
   function createDiary(): DiaryAdd | false {
     if (typeof mediaInfo !== "undefined") {
       const { mediaId, type, releasedDate } = mediaInfo;
+      const releasedYear = parseInt(dayjs(releasedDate).format("YYYY"));
       return {
         mediaId,
         diaryDate,
+        diaryYear: parseInt(dayjs(diaryDate).format("YYYY")),
         addedDate: dayjs().toISOString(),
         loggedBefore,
         rating,
         type,
         releasedDate,
+        releasedYear,
+        releasedDecade: Math.floor(releasedYear / 10) * 10,
         ...(typeof seenEpisodes !== "undefined" && {
           seenEpisodes: seenEpisodes,
         }),

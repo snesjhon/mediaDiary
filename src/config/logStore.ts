@@ -1,4 +1,4 @@
-import type { DiaryAdd } from "./mediaTypes";
+import type { DiaryAdd } from "./types";
 
 export interface LogProps {
   diaryDate: string;

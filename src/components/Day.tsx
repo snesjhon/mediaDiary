@@ -16,7 +16,7 @@ import dayjs from "dayjs";
 import React, { Suspense } from "react";
 import Rating from "react-rating";
 import useSWR from "swr";
-import type { DiaryAdd, MediaTypes } from "../config/mediaTypes";
+import type { DiaryAdd, MediaTypes } from "../config/types";
 import { useMDDispatch, useMDState } from "../config/store";
 import useFuegoUser from "../hooks/useFuegoUser";
 import { fuegoDiaryEntry } from "../interfaces/fuegoActions";
@@ -30,7 +30,7 @@ function Day(): JSX.Element | null {
   const dispatch = useMDDispatch();
   const { view, edit, spotifyToken } = useMDState();
 
-  const { data } = useSWR<DiaryAdd>(
+  const { data } = useSWR<DiaryAdd | false>(
     user !== null && user && edit
       ? ["/fuego/diaryDay", user.uid, edit.diaryId]
       : null,

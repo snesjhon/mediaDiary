@@ -4,10 +4,11 @@ import dayjs from "dayjs";
 import React from "react";
 import Rating from "react-rating";
 import useSWR from "swr";
-import type { DiaryState } from "../config/mediaTypes";
 import { useMDDispatch, useMDState } from "../config/store";
-import { fuegoDiaryGet, fuegoDiaryGetAll } from "../interfaces/fuegoActions";
+import type { DiaryState } from "../config/types";
+import { fuegoDiaryGet } from "../interfaces/fuegoActions";
 import type { FuegoValidatedUser } from "../interfaces/fuegoProvider";
+import createMDKey from "../utils/createMDKey";
 import AlbumIcon from "./icons/AlbumIcon";
 import FilmIcon from "./icons/FilmIcon";
 import StarEmptyIcon from "./icons/StartEmptyIcon";
@@ -22,36 +23,26 @@ const LIMIT = 30;
 const MEDIATYPESLENGTH = 3;
 
 function MediaDiary({ user }: { user: FuegoValidatedUser }): JSX.Element {
-  const { filterBy, page } = useMDState();
+  const state = useMDState();
   const dispatch = useMDDispatch();
   const { colorMode } = useColorMode();
 
-  const allData = filterBy.length !== MEDIATYPESLENGTH;
-  const { data, error } = useSWR<DiaryState>(
-    [allData ? "/fuego/diaryAll" : "/fuego/diary", user.uid, page],
-    allData ? fuegoDiaryGetAll : fuegoDiaryGet,
-    {
-      revalidateOnFocus: false,
-    }
-  );
+  const mdKey = createMDKey(user, state);
+  const { data, error } = useSWR<DiaryState>(mdKey, fuegoDiaryGet, {
+    revalidateOnFocus: false,
+  });
 
   // There's an error on the list, or the list is empty
-  if (error || data === null) {
+  if (error || (data && Object.keys(data).length === 0)) {
     return <div>nothing in this list</div>;
   }
 
   if (data) {
-    const currentRange = page * LIMIT;
+    const currentRange = state.page * LIMIT;
     const diaryKeys = Object.keys(data);
-    const diaryList = diaryKeys
-      .filter((e) =>
-        filterBy.length === MEDIATYPESLENGTH
-          ? e
-          : filterBy.includes(data[e].type)
-      )
-      .sort((a, b) =>
-        new Date(data[a].diaryDate) > new Date(data[b].diaryDate) ? -1 : 1
-      );
+    const diaryList = diaryKeys.sort((a, b) =>
+      new Date(data[a].diaryDate) > new Date(data[b].diaryDate) ? -1 : 1
+    );
     const diaryDates: ListState = diaryList
       .filter((_, i) => i < currentRange && i >= currentRange - LIMIT)
       .reduce<ListState>((a, c) => {
