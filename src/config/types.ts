@@ -25,6 +25,10 @@ export interface DiaryAdd extends MediaBase {
   seenEpisodes?: number[];
 }
 
+export interface DiaryAddWithId extends DiaryAdd {
+  id: string;
+}
+
 export interface DiaryState {
   [key: string]: DiaryAdd;
 }

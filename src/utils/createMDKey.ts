@@ -6,7 +6,7 @@ import type { FuegoValidatedUser } from "../interfaces/fuegoProvider";
 export type MDKeyArray = [
   string,
   string,
-  number,
+  string | null,
   MediaTypes[] | null,
   number | null,
   number | null,
@@ -21,7 +21,7 @@ export type MDKeyArray = [
  */
 function createMDKey(user: FuegoValidatedUser, state: MDState): MDKeyArray {
   const {
-    page,
+    cursor,
     filterMediaType,
     filterRating,
     filterReleasedDecade,
@@ -32,7 +32,7 @@ function createMDKey(user: FuegoValidatedUser, state: MDState): MDKeyArray {
   const defaultKey: MDKeyArray = [
     "/fuego/diary",
     user.uid,
-    page,
+    cursor,
     filterMediaType !== null ? filterMediaType : null,
     filterRating !== null ? filterRating : null,
     filterReleasedDecade !== null ? filterReleasedDecade : null,

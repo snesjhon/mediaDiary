@@ -215,6 +215,7 @@ function FiltersData({ data, onClose }: { data: any; onClose: () => void }) {
                 <option value="all">All</option>
                 {Object.keys(data.filterGenre)
                   .filter((f) => data.filterGenre[f] !== 0)
+                  .sort()
                   .map((e) => (
                     <option key={`genres_${e}`} value={e}>
                       {e}
