@@ -23,7 +23,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import useSWR from "swr";
-import type { MediaTypes } from "../config/types";
+import type { FilterData, Filters, MediaTypes } from "../config/types";
 import { useMDDispatch, useMDState } from "../config/store";
 import useFuegoUser from "../hooks/useFuegoUser";
 import { fuegoFiltersAll } from "../interfaces/fuegoActions";
@@ -34,7 +34,7 @@ import MdLoader from "./md/MdLoader";
 import MdLogo from "./md/MdLogo";
 import MdRating from "./md/MdRating";
 
-function Filters({
+function FiltersContainer({
   onClose,
   isOpen,
 }: {
@@ -43,7 +43,7 @@ function Filters({
 }): JSX.Element {
   const { user } = useFuegoUser();
 
-  const { data } = useSWR(
+  const { data } = useSWR<FilterData>(
     user && user !== null ? ["/filters/all", user.uid] : null,
     fuegoFiltersAll
   );
@@ -69,7 +69,13 @@ function Filters({
   );
 }
 
-function FiltersData({ data, onClose }: { data: any; onClose: () => void }) {
+function FiltersData({
+  data,
+  onClose,
+}: {
+  data: FilterData;
+  onClose: () => void;
+}) {
   const {
     filterMediaType,
     filterRating,
@@ -80,6 +86,7 @@ function FiltersData({ data, onClose }: { data: any; onClose: () => void }) {
   } = useMDState();
 
   const dispatch = useMDDispatch();
+  const [diaryYear, setDiaryYear] = useState(filterDiaryYear);
   const {
     value: mediaTypes,
     onChange: mediaTypesOnChange,
@@ -91,12 +98,63 @@ function FiltersData({ data, onClose }: { data: any; onClose: () => void }) {
   const [releasedDecade, setReleasedDecade] = useState(filterReleasedDecade);
   const [loggedBefore, setLoggedBefore] = useState(filterLoggedBefore);
   const [genre, setGenre] = useState(filterGenre);
-  const [diaryYear, setDiaryYear] = useState(filterDiaryYear);
 
+  const items = Object.keys(data.filterMediaType)
+    .filter((e) => (diaryYear === null ? e : parseInt(e) === diaryYear))
+    .reduce<string[]>((a, c) => {
+      Object.keys(data.filterMediaType[c]).map((e) => {
+        if (data.filterMediaType[c][e] > 0) {
+          a.push(e);
+        }
+      });
+      return [...new Set(a)];
+    }, []);
+
+  console.log(items);
   return (
     <>
-      <DrawerBody px={{ base: 0, sm: 8 }}>
-        <Box>
+      <DrawerBody px={0}>
+        <Box bg="gray.50" p={4}>
+          <Heading size="md">Diary Year</Heading>
+          <Divider mt={2} mb={4} />
+          {typeof data.filterDiaryYear !== "undefined" &&
+            Object.keys(data.filterDiaryYear).length > 0 && (
+              <Select
+                onChange={(e) => {
+                  const value = parseInt(e.target.value);
+                  if (diaryYear !== null) {
+                    if (value !== diaryYear) {
+                      setValue([]);
+                      setRating(null);
+                      setReleasedDecade(null);
+                      setLoggedBefore(null);
+                      setGenre(null);
+                      setDiaryYear(value);
+                    }
+                  } else {
+                    setValue([]);
+                    setRating(null);
+                    setReleasedDecade(null);
+                    setLoggedBefore(null);
+                    setGenre(null);
+                    setDiaryYear(value);
+                  }
+                }}
+                value={diaryYear ?? 0}
+              >
+                <option value={0}>All</option>
+                {Object.keys(data.filterDiaryYear)
+                  .filter((f) => data.filterDiaryYear[f] !== 0)
+                  .reverse()
+                  .map((e) => (
+                    <option key={`genres_${e}`} value={e}>
+                      {e}
+                    </option>
+                  ))}
+              </Select>
+            )}
+        </Box>
+        <Box p={4}>
           <Heading size="md">Media Types</Heading>
           <Divider mt={2} mb={4} />
           {typeof data.filterMediaType !== "undefined" &&
@@ -113,40 +171,38 @@ function FiltersData({ data, onClose }: { data: any; onClose: () => void }) {
                   />
                   <Text>All</Text>
                 </Box>
-                {Object.keys(data.filterMediaType)
-                  .filter((i) => data.filterMediaType[i] !== 0)
-                  .map((e) => {
-                    const typeActive = mediaTypes.includes(e);
-                    let typeIcon = <FilmIcon />;
-                    if (e === "tv") {
-                      typeIcon = <TvIcon />;
-                    } else if (e === "album") {
-                      typeIcon = <AlbumIcon />;
-                    }
-                    return (
-                      <Box key={`filterMedia_${e}`} textAlign="center">
-                        <IconButton
-                          variant={typeActive ? undefined : "outline"}
-                          colorScheme="purple"
-                          aria-label="Filter by TV"
-                          onClick={() => mediaTypesOnChange(e)}
-                          icon={typeIcon}
-                          size="lg"
-                        />
-                        <Text>{e}</Text>
-                      </Box>
-                    );
-                  })}
+                {createMediaKeys("filterMediaType").map((e) => {
+                  const typeActive = mediaTypes.includes(e);
+                  let typeIcon = <FilmIcon />;
+                  if (e === "tv") {
+                    typeIcon = <TvIcon />;
+                  } else if (e === "album") {
+                    typeIcon = <AlbumIcon />;
+                  }
+                  return (
+                    <Box key={`filterMedia_${e}`} textAlign="center">
+                      <IconButton
+                        variant={typeActive ? undefined : "outline"}
+                        colorScheme="purple"
+                        aria-label="Filter by TV"
+                        onClick={() => mediaTypesOnChange(e)}
+                        icon={typeIcon}
+                        size="lg"
+                      />
+                      <Text>{e}</Text>
+                    </Box>
+                  );
+                })}
               </HStack>
             )}
         </Box>
-        <Box my={8}>
+        <Box p={4}>
           <Heading size="md">Rating</Heading>
           <Divider mt={2} mb={4} />
           <Flex alignItems="center">
             <MdRating
               initialRating={rating ?? 0}
-              wh={{ base: "25px", sm: "15px", md: "25px" }}
+              wh={{ base: "25px", sm: "25px", md: "25px" }}
               onChange={(val) => setRating(val)}
             />
             {rating !== null && (
@@ -154,7 +210,7 @@ function FiltersData({ data, onClose }: { data: any; onClose: () => void }) {
             )}
           </Flex>
         </Box>
-        <Box my={8}>
+        <Box p={4}>
           <Heading size="md">Decade</Heading>
           <Divider mt={2} mb={4} />
           {typeof data.filterReleasedDecade !== "undefined" &&
@@ -170,8 +226,7 @@ function FiltersData({ data, onClose }: { data: any; onClose: () => void }) {
                 }
               >
                 <option value="all">All</option>
-                {Object.keys(data.filterReleasedDecade)
-                  .filter((f) => data.filterReleasedDecade[f] !== 0)
+                {createMediaKeys("filterReleasedDecade")
                   .reverse()
                   .map((e) => (
                     <option key={`releasedDate_${e}`} value={e}>
@@ -181,7 +236,7 @@ function FiltersData({ data, onClose }: { data: any; onClose: () => void }) {
               </Select>
             )}
         </Box>
-        <Box my={8}>
+        <Box p={4}>
           <Heading size="md">Logged Before</Heading>
           <Divider mt={2} mb={4} />
           <RadioGroup
@@ -201,7 +256,7 @@ function FiltersData({ data, onClose }: { data: any; onClose: () => void }) {
             </Stack>
           </RadioGroup>
         </Box>
-        <Box my={8}>
+        <Box p={4}>
           <Heading size="md">Genre</Heading>
           <Divider mt={2} mb={4} />
           {typeof data.filterGenre !== "undefined" &&
@@ -213,33 +268,8 @@ function FiltersData({ data, onClose }: { data: any; onClose: () => void }) {
                 value={genre ?? "all"}
               >
                 <option value="all">All</option>
-                {Object.keys(data.filterGenre)
-                  .filter((f) => data.filterGenre[f] !== 0)
+                {createMediaKeys("filterGenre")
                   .sort()
-                  .map((e) => (
-                    <option key={`genres_${e}`} value={e}>
-                      {e}
-                    </option>
-                  ))}
-              </Select>
-            )}
-        </Box>
-        <Box my={8}>
-          <Heading size="md">Diary Year</Heading>
-          <Divider mt={2} mb={4} />
-          {typeof data.filterDiaryYear !== "undefined" &&
-            Object.keys(data.filterDiaryYear).length > 0 && (
-              <Select
-                onChange={(e) =>
-                  setDiaryYear(
-                    e.target.value === "all" ? null : parseInt(e.target.value)
-                  )
-                }
-                value={diaryYear ?? "all"}
-              >
-                <option value="all">All</option>
-                {Object.keys(data.filterDiaryYear)
-                  .filter((f) => data.filterDiaryYear[f] !== 0)
                   .map((e) => (
                     <option key={`genres_${e}`} value={e}>
                       {e}
@@ -295,6 +325,21 @@ function FiltersData({ data, onClose }: { data: any; onClose: () => void }) {
       </DrawerFooter>
     </>
   );
+
+  function createMediaKeys(
+    type: keyof Omit<Filters, "filterDiaryYear">
+  ): string[] {
+    return Object.keys(data[type])
+      .filter((e) => (diaryYear === null ? e : parseInt(e) === diaryYear))
+      .reduce<string[]>((a, c) => {
+        Object.keys(data[type][c]).map((e) => {
+          if (data[type][c][e] > 0) {
+            a.push(e);
+          }
+        });
+        return [...new Set(a)];
+      }, []);
+  }
 }
 
-export default Filters;
+export default FiltersContainer;

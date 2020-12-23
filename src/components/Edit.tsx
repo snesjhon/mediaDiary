@@ -7,7 +7,6 @@ import type { DiaryAdd } from "../config/types";
 import { useMDDispatch, useMDState } from "../config/store";
 import useFuegoUser from "../hooks/useFuegoUser";
 import { fuegoDelete, fuegoEdit } from "../interfaces/fuegoActions";
-import createMDKey from "../utils/createMDKey";
 import Info from "./Info";
 import LogFields from "./LogFields";
 import MdSpinner from "./md/MdSpinner";
@@ -101,8 +100,6 @@ function Edit(): JSX.Element {
           type: "savedEdit",
           payload: { diaryId: edit.diaryId, diary: diaryEdit },
         });
-        const mdKey = createMDKey(user, MDState);
-        mutate(mdKey);
         mutate(["/fuego/diaryDay", user.uid, edit.diaryId]);
       } else {
         console.error("[EDIT] error with diaryEdit");
@@ -148,8 +145,6 @@ function Edit(): JSX.Element {
       await fuegoDelete(user.uid, edit.diaryId, edit.diary);
       mdDispatch({ type: "view", payload: "md" });
       mdDispatch({ type: "saved" });
-      const mdKey = createMDKey(user, MDState);
-      mutate(mdKey);
     } else {
       console.error("[EDIT]: Missing delete params");
     }

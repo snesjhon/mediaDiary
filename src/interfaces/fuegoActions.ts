@@ -2,10 +2,10 @@ import firebase from "firebase/app";
 import type {
   DiaryAdd,
   DiaryAddWithId,
-  DiaryState,
+  FilterData,
+  Filters,
   MediaTypes,
 } from "../config/types";
-import type { Filters } from "../config/types";
 import { fuegoDb } from "./fuego";
 
 export async function fuegoDiaryGet(
@@ -18,7 +18,7 @@ export async function fuegoDiaryGet(
   diaryYear: number | null,
   loggedBefore: boolean | null,
   genre: string | null
-): Promise<any> {
+): Promise<DiaryAddWithId[]> {
   let diaryRef = fuegoDb.collection(
     `users/${uid}/diary`
   ) as firebase.firestore.Query;
@@ -50,22 +50,14 @@ export async function fuegoDiaryGet(
   diaryRef = diaryRef.orderBy("diaryDate", "desc");
 
   if (cursor !== null) {
-    const splitCursor = cursor.split("_");
-    if (splitCursor[0] === "after") {
-      diaryRef = diaryRef.startAfter(splitCursor[1]);
-    } else if (splitCursor[0] === "before") {
-      diaryRef = diaryRef.endBefore(splitCursor[1]);
-    }
+    diaryRef = diaryRef.startAfter(cursor);
   }
 
   const diaryItems = await diaryRef.limit(30).get();
 
   const items: DiaryAddWithId[] = [];
   diaryItems.forEach((item) => {
-    items.push({
-      id: item.id,
-      ...(item.data() as DiaryAdd),
-    });
+    items.push(item.data() as DiaryAddWithId);
   });
 
   return items;
@@ -74,7 +66,7 @@ export async function fuegoDiaryGet(
 export async function fuegoDiaryAdd(uid: string, data: DiaryAdd): Promise<any> {
   const batch = fuegoDb.batch();
   const diaryRef = fuegoDb.collection(`users/${uid}/diary`).doc();
-  diaryRef.set(data, { merge: true });
+  diaryRef.set({ id: diaryRef.id, ...data }, { merge: true });
 
   const filtersKeys = createFilterKeys(data);
   const filtersSetObj = createFilterSet(filtersKeys, 1);
@@ -102,9 +94,83 @@ export async function fuegoDelete(
   return batch.commit();
 }
 
-export async function fuegoFiltersAll(key: string, uid: string): Promise<any> {
+export async function fuegoFiltersAll(
+  key: string,
+  uid: string
+): Promise<FilterData> {
   const filterKeys = await fuegoDb.collection("users").doc(uid).get();
-  return filterKeys.data();
+  return filterKeys.data() as FilterData;
+}
+
+export async function fuegoChartYear(
+  key: string,
+  uid: string,
+  diaryYear: number | null,
+  mediaTypes: MediaTypes[] | null,
+  rating: number | null,
+  releasedDecade: number | null,
+  loggedBefore: boolean | null,
+  genre: string | null
+): Promise<DiaryAddWithId[]> {
+  let diaryRef = fuegoDb.collection(
+    `users/${uid}/diary`
+  ) as firebase.firestore.Query;
+
+  diaryRef = diaryRef.where("diaryYear", "==", diaryYear);
+
+  if (mediaTypes !== null) {
+    diaryRef = diaryRef.where("type", "in", mediaTypes);
+  }
+
+  if (rating !== null) {
+    diaryRef = diaryRef.where("rating", "==", rating);
+  }
+
+  if (releasedDecade !== null) {
+    diaryRef = diaryRef.where("releasedDecade", "==", releasedDecade);
+  }
+
+  if (loggedBefore !== null) {
+    diaryRef = diaryRef.where("loggedBefore", "==", loggedBefore);
+  }
+
+  if (genre !== null) {
+    diaryRef = diaryRef.where("genre", "==", genre);
+  }
+
+  // diaryRef = diaryRef.orderBy("diaryDate", "desc");
+
+  const diaryItems = await diaryRef.get();
+
+  const items: DiaryAddWithId[] = [];
+  diaryItems.forEach((item) => {
+    items.push(item.data() as DiaryAddWithId);
+  });
+
+  return items;
+}
+
+export async function fuegoTop5(
+  key: string,
+  uid: string,
+  year: number | null
+): Promise<DiaryAddWithId[]> {
+  let diaryRef = fuegoDb.collection(
+    `users/${uid}/diary`
+  ) as firebase.firestore.Query;
+
+  if (year !== null) {
+    diaryRef = diaryRef.where("diaryYear", "==", year);
+  }
+  diaryRef = diaryRef.orderBy("rating", "asc");
+
+  const diaryItems = await diaryRef.limit(5).get();
+
+  const items: DiaryAddWithId[] = [];
+  diaryItems.forEach((item) => {
+    items.push(item.data() as DiaryAddWithId);
+  });
+  return items;
 }
 
 export async function fuegoDiaryEntry(
@@ -146,9 +212,17 @@ export async function fuegoEdit(
 function createFilterSet(filters: Filters, incrementor: number) {
   const setObj: Partial<firebase.firestore.DocumentData> = {};
   (Object.keys(filters) as Array<keyof Filters>).forEach((e) => {
-    if (filters[e] !== null) {
+    if (e === "filterDiaryYear" && filters[e] !== null) {
       setObj[e] = {
         [`${filters[e]}`]: firebase.firestore.FieldValue.increment(incrementor),
+      };
+    } else if (filters[e] !== null) {
+      setObj[e] = {
+        [`${filters.filterDiaryYear}`]: {
+          [`${filters[e]}`]: firebase.firestore.FieldValue.increment(
+            incrementor
+          ),
+        },
       };
     }
   });
@@ -163,15 +237,49 @@ function createFilterEditSet(
   const newKeys = createFilterKeys(data);
   const oldKeys = createFilterKeys(prevData);
 
+  // if the years are different then go through all of the keys,
+  // if not then go through just the comparisons.
   const setObj: Partial<firebase.firestore.DocumentData> = {};
-  comparison.forEach((e) => {
-    if (newKeys[e] !== oldKeys[e]) {
-      setObj[e] = {
-        [`${oldKeys[e]}`]: firebase.firestore.FieldValue.increment(-1),
-        [`${newKeys[e]}`]: firebase.firestore.FieldValue.increment(1),
-      };
-    }
-  });
+  if (newKeys.filterDiaryYear !== oldKeys.filterDiaryYear) {
+    (Object.keys(newKeys) as Array<keyof Filters>).forEach((e) => {
+      if (e === "filterDiaryYear") {
+        setObj[e] = {
+          [`${oldKeys[e]}`]: firebase.firestore.FieldValue.increment(-1),
+          [`${newKeys[e]}`]: firebase.firestore.FieldValue.increment(1),
+        };
+      } else {
+        setObj[e] = {
+          [`${oldKeys.filterDiaryYear}`]: {
+            [`${oldKeys[e]}`]: firebase.firestore.FieldValue.increment(-1),
+          },
+          [`${newKeys.filterDiaryYear}`]: {
+            [`${newKeys[e]}`]: firebase.firestore.FieldValue.increment(1),
+          },
+        };
+      }
+    });
+  } else {
+    comparison.forEach((e) => {
+      if (newKeys[e] !== oldKeys[e]) {
+        if (e === "filterDiaryYear") {
+          setObj[e] = {
+            [`${oldKeys[e]}`]: firebase.firestore.FieldValue.increment(-1),
+            [`${newKeys[e]}`]: firebase.firestore.FieldValue.increment(1),
+          };
+        } else {
+          setObj[e] = {
+            [`${oldKeys.filterDiaryYear}`]: {
+              [`${oldKeys[e]}`]: firebase.firestore.FieldValue.increment(-1),
+            },
+            [`${newKeys.filterDiaryYear}`]: {
+              [`${newKeys[e]}`]: firebase.firestore.FieldValue.increment(1),
+            },
+          };
+        }
+      }
+    });
+  }
+
   return setObj;
 }
 

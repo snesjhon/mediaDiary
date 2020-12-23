@@ -62,3 +62,23 @@ export interface FilterState {
   filterLoggedBefore: Filters["filterLoggedBefore"] | null;
   filterGenre: Filters["filterGenre"] | null;
 }
+
+export type FilterDataNoYear = {
+  [K in keyof Omit<Filters, "filterDiaryYear">]: {
+    [key: string]: {
+      [key: string]: number;
+    };
+  };
+};
+
+export type FilterData = {
+  filterDiaryYear: {
+    [key: string]: number;
+  };
+} & {
+  [K in keyof Omit<Filters, "filterDiaryYear">]: {
+    [key: string]: {
+      [key: string]: number;
+    };
+  };
+};
