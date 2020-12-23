@@ -1,14 +1,13 @@
 import { Button, Center, DrawerFooter } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React, { useCallback, useEffect, useReducer } from "react";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import type { LogProps, LogState } from "../config/logStore";
 import { LogReducer } from "../config/logStore";
-import type { DiaryAdd, MediaSelected } from "../config/types";
 import { useMDDispatch, useMDState } from "../config/store";
+import type { DiaryAdd, MediaSelected } from "../config/types";
 import useFuegoUser from "../hooks/useFuegoUser";
 import { fuegoDiaryAdd } from "../interfaces/fuegoActions";
-import createMDKey from "../utils/createMDKey";
 import { fetcher, spotifyFetch } from "../utils/fetchers";
 import Info from "./Info";
 import LogFields from "./LogFields";
@@ -177,10 +176,8 @@ function Log(): JSX.Element {
         await fuegoDiaryAdd(user.uid, addDiary);
         mdDispatch({ type: "view", payload: "md" });
         mdDispatch({ type: "saved" });
-        const mdKey = createMDKey(user, MDState);
-        mutate(mdKey);
       } else {
-        console.log("diary fails");
+        console.error("diary fails");
       }
     }
   }

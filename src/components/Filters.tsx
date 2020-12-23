@@ -23,8 +23,8 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import useSWR from "swr";
-import type { FilterData, Filters, MediaTypes } from "../config/types";
 import { useMDDispatch, useMDState } from "../config/store";
+import type { FilterData, Filters, MediaTypes } from "../config/types";
 import useFuegoUser from "../hooks/useFuegoUser";
 import { fuegoFiltersAll } from "../interfaces/fuegoActions";
 import AlbumIcon from "./icons/AlbumIcon";
@@ -99,18 +99,6 @@ function FiltersData({
   const [loggedBefore, setLoggedBefore] = useState(filterLoggedBefore);
   const [genre, setGenre] = useState(filterGenre);
 
-  const items = Object.keys(data.filterMediaType)
-    .filter((e) => (diaryYear === null ? e : parseInt(e) === diaryYear))
-    .reduce<string[]>((a, c) => {
-      Object.keys(data.filterMediaType[c]).map((e) => {
-        if (data.filterMediaType[c][e] > 0) {
-          a.push(e);
-        }
-      });
-      return [...new Set(a)];
-    }, []);
-
-  console.log(items);
   return (
     <>
       <DrawerBody px={0}>

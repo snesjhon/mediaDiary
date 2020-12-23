@@ -1,100 +1,88 @@
-import React from "react";
+import { RepeatIcon, StarIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  Heading,
+  IconButton,
+  Text,
+  Tooltip,
+  useBreakpointValue,
+  useToken,
+} from "@chakra-ui/react";
+import React, { useState } from "react";
+import useSWR from "swr";
+import { VictoryAxis, VictoryBar, VictoryChart } from "victory";
+import type { DiaryAddWithId, MediaTypes } from "../../config/types";
+import { fuegoChartYear } from "../../interfaces/fuegoActions";
+import MdLoader from "../md/MdLoader";
 
-function ChartYear() {
-  const dispatch = useMDDispatch();
-
-  const { colorMode } = useColorMode();
-  const [gray400, purple700] = useToken("colors", ["gray.400", "purple.300"]);
-  const [ratingType, setRatingType] = useState<MediaTypes | null>(null);
+function ChartYear({ uid, year }: { uid: string; year: number }): JSX.Element {
+  const [gray400] = useToken("colors", ["gray.400"]);
+  const [mediaType, setMediaType] = useState<MediaTypes | null>(null);
   const [includeSeen, setIncludeSeen] = useState(false);
   const filterButtonSize = useBreakpointValue({ base: "xs", md: "sm" });
-  const { data: yearData, error: yearError } = useSWR<DiaryAddWithId[]>(
-    yearType !== null
-      ? [
-          "/fuego/chartYear",
-          user.uid,
-          yearType,
-          ratingType,
-          null,
-          null,
-          includeSeen,
-          null,
-        ]
-      : null,
+  const { data, error } = useSWR<DiaryAddWithId[]>(
+    ["/fuego/chartYear", uid, year, mediaType, includeSeen],
     fuegoChartYear,
     { revalidateOnFocus: false }
   );
-  // const dataCounts = Object.keys(data).reduce<{
-  //   movie: number;
-  //   tv: number;
-  //   album: number;
-  //   years: { [key: string]: DiaryAddWithId[] };
-  // }>(
-  //   (a, c) => {
-  //     const item = { id: c, ...data[c] };
-  //     if (typeof a[item.type] !== "undefined") {
-  //       a[item.type] = ++a[item.type];
-  //     } else {
-  //       a[item.type] = 1;
-  //     }
 
-  //     const addedYr = dayjs(item.diaryDate).format("YYYY");
-  //     if (typeof a["years"][addedYr] === "undefined") {
-  //       a["years"][addedYr] = [item];
-  //     } else {
-  //       a["years"][addedYr].push(item);
-  //     }
-  //     return a;
-  //   },
-  //   {
-  //     movie: 0,
-  //     tv: 0,
-  //     album: 0,
-  //     years: { all: Object.keys(data).map((e) => ({ id: e, ...data[e] })) },
-  //   }
-  // );
+  if (error || (data && Object.keys(data).length === 0)) {
+    if (error) {
+      console.error(error);
+    }
+    return <div>nothing in this list</div>;
+  }
 
-  // const yearData = dataCounts.years[yearType];
+  if (data) {
+    const ratingCount = data
+      .reduce((a, c) => {
+        a[c.rating * 2] += 1;
+        return a;
+      }, Array(11).fill(0))
+      .map((e, i) => ({ rating: i / 2, count: e === 0 ? 0.05 : e }));
 
-  // const filteredList = yearData
-  //   .filter((e) => (includeSeen ? e : !e.loggedBefore))
-  //   .filter((e) => (ratingType === "all" ? e : e.type === ratingType));
+    const yearList = data.reduce<{ [key: string]: number }>((a, c) => {
+      if (typeof a[c.releasedYear] === "undefined") {
+        a[c.releasedYear] = 1;
+      } else {
+        ++a[c.releasedYear];
+      }
+      return a;
+    }, {});
 
-  // const ratingCount = filteredList
-  //   .reduce((a, c) => {
-  //     a[c.rating * 2] += 1;
-  //     return a;
-  //   }, Array(11).fill(0))
-  //   .map((e, i) => ({ rating: i / 2, count: e === 0 ? 0.5 : e }));
+    const yearListKeys = Object.keys(yearList).sort();
 
-  // const yearList = filteredList.reduce<{ [key: string]: number }>((a, c) => {
-  //   const year = dayjs(c.releasedDate).format("YYYY");
-  //   if (typeof a[year] === "undefined") {
-  //     a[year] = 1;
-  //   } else {
-  //     ++a[year];
-  //   }
-  //   return a;
-  // }, {});
-  // const yearCount = Object.keys(yearList).map((e) => ({
-  //   year: e,
-  //   count: yearList[e],
-  // }));
+    const yearListComplete: { year: number; count: number }[] = [];
+    for (
+      let i = parseInt(yearListKeys[0]);
+      i <= parseInt(yearListKeys[yearListKeys.length - 1]);
+      i++
+    ) {
+      if (typeof yearList[i] !== "undefined") {
+        yearListComplete.push({
+          year: i,
+          count: yearList[i],
+        });
+      } else {
+        yearListComplete.push({
+          year: i,
+          count: 0.05,
+        });
+      }
+    }
 
-  // const topRated = filteredList
-  //   .sort((a, b) => (a.rating > b.rating ? -1 : 1))
-  //   .slice(0, 6);
-
-  return (
-    <>
-      {yearType !== null && (
+    return (
+      <>
         <Flex alignItems="center" justifyContent="space-between" pb={10}>
           <Flex alignItems="center" justifyContent="flex-end">
             <Text color="gray.500" mr={2} fontSize="sm">
               Filter:
             </Text>
             <Box>
-              <FilterButton title="All" type="all" />
+              <FilterButton title="All" type={null} />
               <FilterButton title="By Movie" type="movie" />
               <FilterButton title="By Tv" type="tv" />
               <FilterButton title="By Album" type="album" />
@@ -115,65 +103,72 @@ function ChartYear() {
             </Tooltip>
           </Flex>
         </Flex>
-      )}
-      <Box mt={16}>
-        <Heading size="lg">Rating Distribution</Heading>
-        <Divider mt={3} mb={6} />
-        <Flex alignItems="flex-end">
-          <RatingIcon />
-          <VictoryBar
-            barRatio={1.2}
-            data={ratingCount}
-            x="rating"
-            y="count"
-            height={75}
-            padding={{ top: 0, bottom: 0, left: 30, right: 30 }}
-            style={{
-              data: {
-                fill: gray400,
-              },
-            }}
-          />
-          <Flex>
+        <Box mt={16}>
+          <Heading size="lg">Rating Distribution</Heading>
+          <Divider mt={3} mb={6} />
+          <Flex alignItems="flex-end">
             <RatingIcon />
-            <RatingIcon />
-            <RatingIcon />
-            <RatingIcon />
-            <RatingIcon />
+            <VictoryBar
+              barRatio={1.2}
+              data={ratingCount}
+              x="rating"
+              y="count"
+              height={75}
+              padding={{ top: 0, bottom: 0, left: 30, right: 30 }}
+              style={{
+                data: {
+                  fill: gray400,
+                },
+              }}
+            />
+            <Flex>
+              <RatingIcon />
+              <RatingIcon />
+              <RatingIcon />
+              <RatingIcon />
+              <RatingIcon />
+            </Flex>
           </Flex>
-        </Flex>
-      </Box>
-      <Box mt={16}>
-        <Heading size="lg">By Release year</Heading>
-        <Divider mt={3} mb={6} />
-        <VictoryChart
-          height={100}
-          padding={{ top: 0, bottom: 40, left: 20, right: 20 }}
-        >
-          <VictoryAxis
-            tickCount={2}
-            style={{
-              axis: {
-                strokeWidth: 0,
-              },
-              tickLabels: { fontSize: 10, padding: 5 },
-            }}
-          />
-          <VictoryBar
-            barRatio={0.75}
-            data={yearCount}
-            x="year"
-            y="count"
-            style={{
-              data: {
-                fill: gray400,
-              },
-            }}
-          />
-        </VictoryChart>
-      </Box>
-    </>
-  );
+        </Box>
+        <Box mt={16}>
+          <Heading size="lg">By Release year</Heading>
+          <Divider mt={3} mb={6} />
+          <VictoryChart
+            domainPadding={0}
+            height={100}
+            padding={{ top: 20, bottom: 40, left: 20, right: 20 }}
+          >
+            <VictoryAxis
+              tickValues={[
+                yearListComplete[0].year,
+                yearListComplete[yearListComplete.length - 1].year,
+              ]}
+              tickCount={2}
+              tickFormat={(t) => Math.round(t)}
+              style={{
+                axis: {
+                  strokeWidth: 0,
+                },
+              }}
+            />
+            <VictoryBar
+              barRatio={0.75}
+              data={yearListComplete}
+              x="year"
+              y="count"
+              style={{
+                data: {
+                  fill: gray400,
+                },
+              }}
+            />
+          </VictoryChart>
+        </Box>
+      </>
+    );
+  }
+
+  return <MdLoader />;
 
   function RatingIcon() {
     return <StarIcon color="purple.400" w="15px" h="15px" />;
@@ -184,12 +179,12 @@ function ChartYear() {
     type,
   }: {
     title: string;
-    type: MediaTypes | "all";
+    type: MediaTypes | null;
   }) {
     return (
       <Button
-        onClick={() => setRatingType(type === "all" ? null : type)}
-        variant={type === ratingType ? undefined : "outline"}
+        onClick={() => setMediaType(type)}
+        variant={type === mediaType ? undefined : "outline"}
         size={filterButtonSize}
         colorScheme="purple"
         mr={2}
@@ -199,3 +194,5 @@ function ChartYear() {
     );
   }
 }
+
+export default ChartYear;

@@ -106,11 +106,8 @@ export async function fuegoChartYear(
   key: string,
   uid: string,
   diaryYear: number | null,
-  mediaTypes: MediaTypes[] | null,
-  rating: number | null,
-  releasedDecade: number | null,
-  loggedBefore: boolean | null,
-  genre: string | null
+  mediaType: MediaTypes | null,
+  loggedBefore: boolean | null
 ): Promise<DiaryAddWithId[]> {
   let diaryRef = fuegoDb.collection(
     `users/${uid}/diary`
@@ -118,27 +115,13 @@ export async function fuegoChartYear(
 
   diaryRef = diaryRef.where("diaryYear", "==", diaryYear);
 
-  if (mediaTypes !== null) {
-    diaryRef = diaryRef.where("type", "in", mediaTypes);
-  }
-
-  if (rating !== null) {
-    diaryRef = diaryRef.where("rating", "==", rating);
-  }
-
-  if (releasedDecade !== null) {
-    diaryRef = diaryRef.where("releasedDecade", "==", releasedDecade);
+  if (mediaType !== null) {
+    diaryRef = diaryRef.where("type", "==", mediaType);
   }
 
   if (loggedBefore !== null) {
     diaryRef = diaryRef.where("loggedBefore", "==", loggedBefore);
   }
-
-  if (genre !== null) {
-    diaryRef = diaryRef.where("genre", "==", genre);
-  }
-
-  // diaryRef = diaryRef.orderBy("diaryDate", "desc");
 
   const diaryItems = await diaryRef.get();
 

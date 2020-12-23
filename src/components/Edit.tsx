@@ -105,7 +105,7 @@ function Edit(): JSX.Element {
         console.error("[EDIT] error with diaryEdit");
       }
     } else {
-      console.log("user missing");
+      console.error("user missing");
     }
   }
 

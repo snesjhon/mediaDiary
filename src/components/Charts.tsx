@@ -16,13 +16,15 @@ import useSWR from "swr";
 import type { FilterData } from "../config/types";
 import { fuegoFiltersAll } from "../interfaces/fuegoActions";
 import type { FuegoValidatedUser } from "../interfaces/fuegoProvider";
+import ChartAll from "./chart/ChartAll";
+import ChartYear from "./chart/ChartYear";
 import LogoFilm from "./icons/FilmIcon";
 import MdLoader from "./md/MdLoader";
 
 function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
   const [yearType, setYearType] = useState<number | null>(null);
   const { data, error } = useSWR<FilterData>(
-    yearType === null ? ["/fuego/chartCounts", user.uid] : null,
+    ["/fuego/chartCounts", user.uid],
     fuegoFiltersAll,
     {
       revalidateOnFocus: false,
@@ -100,16 +102,20 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
         </Flex>
         <Divider my={10} />
         <StatGroup textAlign="center">
-          {Object.keys(dataCounts).map((e) => (
-            <Stat key={`activity_${e}`}>
-              <StatLabel>
-                <LogoFilm /> {e}
-              </StatLabel>
-              <StatNumber>{dataCounts[e]}</StatNumber>
-            </Stat>
-          ))}
+          {Object.keys(dataCounts)
+            .sort()
+            .map((e) => (
+              <Stat key={`activity_${e}`}>
+                <StatLabel>
+                  <LogoFilm /> {e}
+                </StatLabel>
+                <StatNumber>{dataCounts[e]}</StatNumber>
+              </Stat>
+            ))}
         </StatGroup>
         <Divider my={10} />
+        {yearType === null && <ChartAll data={data} />}
+        {yearType !== null && <ChartYear uid={user.uid} year={yearType} />}
       </Box>
     );
   }
