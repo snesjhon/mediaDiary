@@ -14,7 +14,7 @@ import Rating from "react-rating";
 import { useSWRInfinite } from "swr";
 import { useMDDispatch, useMDState } from "../config/store";
 import type { DiaryAddWithId, DiaryState } from "../config/types";
-import { fuegoDiaryGet } from "../interfaces/fuegoActions";
+import { fuegoDiaryGet } from "../interfaces/fuegoMDActions";
 import type { FuegoValidatedUser } from "../interfaces/fuegoProvider";
 import createMDKey from "../utils/createMDKey";
 import AlbumIcon from "./icons/AlbumIcon";

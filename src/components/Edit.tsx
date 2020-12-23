@@ -6,10 +6,10 @@ import { LogReducer } from "../config/logStore";
 import type { DiaryAdd } from "../config/types";
 import { useMDDispatch, useMDState } from "../config/store";
 import useFuegoUser from "../hooks/useFuegoUser";
-import { fuegoDelete, fuegoEdit } from "../interfaces/fuegoActions";
 import Info from "./Info";
 import LogFields from "./LogFields";
 import MdSpinner from "./md/MdSpinner";
+import { fuegoEdit, fuegoDelete } from "../interfaces/fuegoMDActions";
 
 function Edit(): JSX.Element {
   const MDState = useMDState();

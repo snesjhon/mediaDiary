@@ -19,11 +19,11 @@ import useSWR from "swr";
 import type { DiaryAdd, MediaTypes } from "../config/types";
 import { useMDDispatch, useMDState } from "../config/store";
 import useFuegoUser from "../hooks/useFuegoUser";
-import { fuegoDiaryEntry } from "../interfaces/fuegoActions";
 import { fetcher } from "../utils/fetchers";
 import Edit from "./Edit";
 import StarEmptyIcon from "./icons/StartEmptyIcon";
 import MdLoader from "./md/MdLoader";
+import { fuegoDiaryEntry } from "../interfaces/fuegoMDActions";
 
 function Day(): JSX.Element | null {
   const { user } = useFuegoUser();

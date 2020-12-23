@@ -14,9 +14,10 @@ import {
 import React, { useState } from "react";
 import useSWR from "swr";
 import type { FilterData } from "../config/types";
-import { fuegoFiltersAll } from "../interfaces/fuegoActions";
+import { fuegoFiltersAll } from "../interfaces/fuegoFilterActions";
 import type { FuegoValidatedUser } from "../interfaces/fuegoProvider";
 import ChartAll from "./chart/ChartAll";
+import ChartTop from "./chart/ChartTop";
 import ChartYear from "./chart/ChartYear";
 import LogoFilm from "./icons/FilmIcon";
 import MdLoader from "./md/MdLoader";
@@ -114,6 +115,7 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
             ))}
         </StatGroup>
         <Divider my={10} />
+        <ChartTop uid={user.uid} year={yearType} />
         {yearType === null && <ChartAll data={data} />}
         {yearType !== null && <ChartYear uid={user.uid} year={yearType} />}
       </Box>
