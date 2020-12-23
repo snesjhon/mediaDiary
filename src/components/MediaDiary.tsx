@@ -9,12 +9,12 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
-import React from "react";
+import React, { useEffect } from "react";
 import Rating from "react-rating";
-import useSWR from "swr";
+import { useSWRInfinite } from "swr";
 import { useMDDispatch, useMDState } from "../config/store";
 import type { DiaryAddWithId, DiaryState } from "../config/types";
-import { fuegoDiaryGet } from "../interfaces/fuegoActions";
+import { fuegoDiaryGet } from "../interfaces/fuegoMDActions";
 import type { FuegoValidatedUser } from "../interfaces/fuegoProvider";
 import createMDKey from "../utils/createMDKey";
 import AlbumIcon from "./icons/AlbumIcon";
@@ -32,10 +32,31 @@ function MediaDiary({ user }: { user: FuegoValidatedUser }): JSX.Element {
   const dispatch = useMDDispatch();
   const { colorMode } = useColorMode();
 
-  const mdKey = createMDKey(user, state);
-  const { data, error } = useSWR<DiaryAddWithId[]>(mdKey, fuegoDiaryGet, {
-    revalidateOnFocus: false,
-  });
+  const { data, error, size, setSize, mutate } = useSWRInfinite<
+    DiaryAddWithId[]
+  >(
+    (_, prev) => {
+      const mdKey = createMDKey(
+        user,
+        state,
+        prev !== null ? prev[prev.length - 1].diaryDate : undefined
+      );
+      // we're nearing the end?
+      if (prev && prev.length < 30) return null;
+
+      return mdKey;
+    },
+    fuegoDiaryGet,
+    {
+      revalidateOnFocus: false,
+    }
+  );
+
+  useEffect(() => {
+    if (state.isSaving) {
+      mutate();
+    }
+  }, [state.isSaving, mutate]);
 
   // There's an error on the list, or the list is empty
   if (error || (data && Object.keys(data).length === 0)) {
@@ -46,11 +67,21 @@ function MediaDiary({ user }: { user: FuegoValidatedUser }): JSX.Element {
   }
 
   if (data) {
-    const diaryDates: ListState = data.reduce<ListState>((a, c) => {
+    const testData = data ? ([] as DiaryAddWithId[]).concat(...data) : [];
+
+    if (testData.length === 0) {
+      return <div>nothing??</div>;
+    }
+
+    const diaryDates: ListState = testData.reduce<ListState>((a, c) => {
       const dateString = dayjs(c.diaryDate).format("YYYY-MM");
       a[dateString] = Object.assign({ ...a[dateString] }, { [c.id]: c });
       return a;
     }, {});
+
+    const isEmpty = data?.[0]?.length === 0;
+    const isReachingEnd =
+      isEmpty || (data && data[data.length - 1]?.length < 30);
 
     return (
       <>
@@ -229,32 +260,9 @@ function MediaDiary({ user }: { user: FuegoValidatedUser }): JSX.Element {
             </Grid>
           );
         })}
-        <Button
-          onClick={() =>
-            dispatch({
-              type: "state",
-              payload: {
-                key: "cursor",
-                value: `before_${data[0].diaryDate}`,
-              },
-            })
-          }
-        >
-          Before
-        </Button>
-        <Button
-          onClick={() =>
-            dispatch({
-              type: "state",
-              payload: {
-                key: "cursor",
-                value: `after_${data[data.length - 1].diaryDate}`,
-              },
-            })
-          }
-        >
-          After?
-        </Button>
+        {!isReachingEnd && (
+          <Button onClick={() => setSize(size + 1)}>Load More</Button>
+        )}
       </>
     );
   }

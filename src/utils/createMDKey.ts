@@ -1,6 +1,5 @@
-import { log } from "console";
-import type { MediaTypes } from "../config/types";
 import type { MDState } from "../config/store";
+import type { MediaTypes } from "../config/types";
 import type { FuegoValidatedUser } from "../interfaces/fuegoProvider";
 
 export type MDKeyArray = [
@@ -19,9 +18,12 @@ export type MDKeyArray = [
  * - SWR keys are passed parameters through an array, so in order to keep a "global"
  *   key of what's currently in the MediaDiaryList then create the SWR key
  */
-function createMDKey(user: FuegoValidatedUser, state: MDState): MDKeyArray {
+function createMDKey(
+  user: FuegoValidatedUser,
+  state: MDState,
+  cursor: string | null = null
+): MDKeyArray {
   const {
-    cursor,
     filterMediaType,
     filterRating,
     filterReleasedDecade,
