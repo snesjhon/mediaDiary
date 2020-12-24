@@ -250,6 +250,8 @@ function Log(): JSX.Element {
         externalData.genres.length > 0
       ) {
         return externalData.genres[0];
+      } else {
+        return "none";
       }
     }
   }

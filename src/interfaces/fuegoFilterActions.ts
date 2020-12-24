@@ -72,10 +72,8 @@ export function createFilterEditSet(
           };
         } else {
           setObj[e] = {
-            [`${oldKeys.filterDiaryYear}`]: {
-              [`${oldKeys[e]}`]: firebase.firestore.FieldValue.increment(-1),
-            },
             [`${newKeys.filterDiaryYear}`]: {
+              [`${oldKeys[e]}`]: firebase.firestore.FieldValue.increment(-1),
               [`${newKeys[e]}`]: firebase.firestore.FieldValue.increment(1),
             },
           };
