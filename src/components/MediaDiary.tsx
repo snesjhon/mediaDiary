@@ -1,9 +1,10 @@
-import { StarIcon } from "@chakra-ui/icons";
+import { ArrowDownIcon, StarIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
   Flex,
   Grid,
+  HStack,
   Image,
   Text,
   useColorMode,
@@ -11,12 +12,11 @@ import {
 import dayjs from "dayjs";
 import React, { useEffect } from "react";
 import Rating from "react-rating";
-import { useSWRInfinite } from "swr";
+import { cache, useSWRInfinite } from "swr";
 import { useMDDispatch, useMDState } from "../config/store";
 import type { DiaryAddWithId, DiaryState } from "../config/types";
 import { fuegoDiaryGet } from "../interfaces/fuegoMDActions";
 import type { FuegoValidatedUser } from "../interfaces/fuegoProvider";
-import createMDKey from "../utils/createMDKey";
 import AlbumIcon from "./icons/AlbumIcon";
 import FilmIcon from "./icons/FilmIcon";
 import StarEmptyIcon from "./icons/StartEmptyIcon";
@@ -36,15 +36,20 @@ function MediaDiary({ user }: { user: FuegoValidatedUser }): JSX.Element {
     DiaryAddWithId[]
   >(
     (_, prev) => {
-      const mdKey = createMDKey(
-        user,
-        state,
-        prev !== null ? prev[prev.length - 1].diaryDate : undefined
-      );
-      // we're nearing the end?
+      // We've reached the end of the list since we got < 30, don't call again
       if (prev && prev.length < 30) return null;
 
-      return mdKey;
+      return [
+        "/fuego/diary",
+        user.uid,
+        prev !== null ? prev[prev.length - 1].diaryDate : null,
+        state.filterMediaType,
+        state.filterRating,
+        state.filterReleasedDecade,
+        state.filterDiaryYear,
+        state.filterLoggedBefore,
+        state.filterGenre,
+      ];
     },
     fuegoDiaryGet,
     {
@@ -58,28 +63,43 @@ function MediaDiary({ user }: { user: FuegoValidatedUser }): JSX.Element {
     }
   }, [state.isSaving, mutate]);
 
+  // We need to reset whenever we unmount to keep the rendering times at a good pace
+  useEffect(() => {
+    return () => {
+      if (size > 1) {
+        cache.clear();
+      }
+    };
+  }, [size]);
+
+  // We have data! Or not...
+  const isLoadingInitialData = !data && !error;
+  const isLoadingMore =
+    isLoadingInitialData ||
+    (size > 0 && data && typeof data[size - 1] === "undefined");
+  const isEmpty = data?.[0]?.length === 0;
+
   // There's an error on the list, or the list is empty
-  if (error || (data && Object.keys(data).length === 0)) {
+  if (error) {
     if (error) {
       console.error(error);
     }
-    return <div>nothing in this list</div>;
+    return <div>An Error Happened</div>;
+  }
+
+  if (isEmpty) {
+    return <div>Nothing</div>;
   }
 
   if (data) {
-    const testData = data ? ([] as DiaryAddWithId[]).concat(...data) : [];
+    const allData = data ? ([] as DiaryAddWithId[]).concat(...data) : [];
 
-    if (testData.length === 0) {
-      return <div>nothing??</div>;
-    }
-
-    const diaryDates: ListState = testData.reduce<ListState>((a, c) => {
+    const diaryDates: ListState = allData.reduce<ListState>((a, c) => {
       const dateString = dayjs(c.diaryDate).format("YYYY-MM");
       a[dateString] = Object.assign({ ...a[dateString] }, { [c.id]: c });
       return a;
     }, {});
 
-    const isEmpty = data?.[0]?.length === 0;
     const isReachingEnd =
       isEmpty || (data && data[data.length - 1]?.length < 30);
 
@@ -261,7 +281,20 @@ function MediaDiary({ user }: { user: FuegoValidatedUser }): JSX.Element {
           );
         })}
         {!isReachingEnd && (
-          <Button onClick={() => setSize(size + 1)}>Load More</Button>
+          <HStack mt={3} mb={10} borderLeftWidth="1px" borderRightWidth="1px">
+            <Button
+              onClick={() => setSize(size + 1)}
+              flex={1}
+              variant="ghost"
+              py={8}
+              isLoading={isLoadingMore}
+              loadingText="Loading More"
+            >
+              <ArrowDownIcon />
+              LoadMore
+              <ArrowDownIcon />
+            </Button>
+          </HStack>
         )}
       </>
     );

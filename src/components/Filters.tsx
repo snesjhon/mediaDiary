@@ -20,6 +20,7 @@ import {
   Stack,
   Text,
   useCheckboxGroup,
+  useColorMode,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import useSWR from "swr";
@@ -84,8 +85,10 @@ function FiltersData({
     filterLoggedBefore,
     filterGenre,
   } = useMDState();
-
   const dispatch = useMDDispatch();
+
+  const { colorMode } = useColorMode();
+
   const [diaryYear, setDiaryYear] = useState(filterDiaryYear);
   const {
     value: mediaTypes,
@@ -102,7 +105,7 @@ function FiltersData({
   return (
     <>
       <DrawerBody px={0}>
-        <Box bg="gray.50" p={4}>
+        <Box bg={colorMode === "light" ? "gray.50" : "gray.600"} p={4}>
           <Heading size="md">Diary Year</Heading>
           <Divider mt={2} mb={4} />
           {typeof data.filterDiaryYear !== "undefined" &&

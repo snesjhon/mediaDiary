@@ -1,4 +1,4 @@
-import { AddIcon, HamburgerIcon, MoonIcon } from "@chakra-ui/icons";
+import { AddIcon, HamburgerIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -16,12 +16,10 @@ import useIsBreakpoint from "../hooks/useIsBreakpoint";
 import Filters from "./Filters";
 import FiltersIcon from "./icons/FiltersIcon";
 import MdLogo from "./md/MdLogo";
-import Sidebar from "./sidebar/Sidebar";
 
-function Header(): JSX.Element {
+function Header({ onOpen }: { onOpen: () => void }): JSX.Element {
   const isMd = useIsBreakpoint("md");
   const router = useRouter();
-  const { isOpen, onClose, onOpen } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
   const {
     isOpen: menuIsOpen,
@@ -64,8 +62,6 @@ function Header(): JSX.Element {
                     {isMd ? (
                       <Button
                         leftIcon={<FiltersIcon />}
-                        border="1px solid"
-                        borderColor="gray.200"
                         size="sm"
                         variant="outline"
                         onClick={menuOnOpen}
@@ -87,7 +83,7 @@ function Header(): JSX.Element {
                 <IconButton
                   onClick={toggleColorMode}
                   aria-label="Theme Switcher"
-                  icon={<MoonIcon />}
+                  icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
                   size="sm"
                   variant="outline"
                 />
@@ -111,7 +107,6 @@ function Header(): JSX.Element {
           </Flex>
         </Container>
       </Box>
-      {!isMd && <Sidebar isOpen={isOpen} onClose={onClose} />}
       <Filters isOpen={menuIsOpen} onClose={menuOnClose} />
     </>
   );

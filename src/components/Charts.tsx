@@ -66,6 +66,10 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
                 size={yearType === null ? "4xl" : undefined}
                 color={yearType !== null ? "gray.500" : undefined}
                 onClick={() => setYearType(null)}
+                cursor={yearType !== null ? "pointer" : undefined}
+                _hover={{
+                  color: yearType !== null ? "gray.400" : undefined,
+                }}
               >
                 All
               </Heading>
@@ -81,6 +85,10 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
                       color={!isActive ? "gray.500" : undefined}
                       onClick={() => setYearType(yearInt)}
                       pl={3}
+                      cursor={!isActive ? "pointer" : undefined}
+                      _hover={{
+                        color: !isActive ? "gray.400" : undefined,
+                      }}
                     >
                       {e}
                     </Heading>

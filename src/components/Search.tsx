@@ -35,7 +35,12 @@ function Search({
 
   return (
     <>
-      <Box position="sticky" pt={1} top={0}>
+      <Box
+        position="sticky"
+        pt={1}
+        top={0}
+        bg={colorMode === "light" ? "white" : "gray.700"}
+      >
         <Input
           placeholder="Search for Albums, TV, or Film"
           onChange={(e) => setSearch(e.target.value)}

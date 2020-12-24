@@ -7,15 +7,11 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
-  Flex,
-  Text,
   VStack,
 } from "@chakra-ui/react";
 import React from "react";
-import useIsBreakpoint from "../../hooks/useIsBreakpoint";
 import ActivityIcon from "../icons/ActivityIcon";
 import HomeIcon from "../icons/HomeIcon";
-import LogoIcon from "../icons/LogoIcon";
 import MdLogo from "../md/MdLogo";
 import { SidebarButton, SidebarFooter } from "./SidebarContent";
 
@@ -26,11 +22,10 @@ function Sidebar({
   isOpen: boolean;
   onClose: () => void;
 }): JSX.Element | null {
-  const isSm = useIsBreakpoint("sm");
   return (
     <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
       <DrawerOverlay sx={{ zIndex: 2 }}>
-        <DrawerContent maxW={isSm ? "50%" : "70%"}>
+        <DrawerContent maxW={{ base: "60%", sm: "18rem" }}>
           <DrawerCloseButton />
           <DrawerHeader borderBottomWidth="1px" py={3}>
             <MdLogo title="mediaDiary" />

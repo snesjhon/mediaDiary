@@ -15,7 +15,6 @@ import { useRouter } from "next/router";
 import type { FunctionComponent } from "react";
 import React from "react";
 import useFuegoUser from "../../hooks/useFuegoUser";
-import useIsBreakpoint from "../../hooks/useIsBreakpoint";
 import useLogout from "../../hooks/useLogout";
 
 export function SidebarButton({
@@ -28,14 +27,13 @@ export function SidebarButton({
   Icon: FunctionComponent<IconProps>;
 }): JSX.Element {
   const router = useRouter();
-  const isSm = useIsBreakpoint("sm");
   const bgColor = useColorModeValue("purple.50", "purple.800");
   const activeBg = useColorModeValue("purple.100", "purple.700");
   return (
     <Button
       variant="ghost"
       leftIcon={<Icon mb="2px" />}
-      fontSize={isSm ? "xl" : undefined}
+      fontSize="xl"
       bg={router.pathname === route ? bgColor : undefined}
       _hover={{
         bg: bgColor,
@@ -56,7 +54,7 @@ export function SidebarFooter(): JSX.Element | null {
   return user ? (
     <Menu autoSelect={false}>
       <MenuButton _hover={{ bg: "purple.100" }} p={2} rounded="md">
-        <Flex alignItems="center">
+        <Flex alignItems="center" flexDir={{ base: "column", sm: "initial" }}>
           {user.photoURL !== null && <Avatar src={user.photoURL} size="sm" />}
           <Box pl={2}>
             {user.displayName !== null && (

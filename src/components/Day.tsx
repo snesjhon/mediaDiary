@@ -1,4 +1,4 @@
-import { EditIcon, StarIcon } from "@chakra-ui/icons";
+import { EditIcon, ExternalLinkIcon, StarIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -195,29 +195,44 @@ function SpotifyData({
 
     return (
       <Box my={4}>
-        <Heading size="lg" mb={3}>
-          Tracks
-        </Heading>
-        {albumInfo.tracks.items.map((e: any) => (
+        <Flex justifyContent="space-between" alignItems="center" mb={3}>
+          <Heading size="lg">Tracks</Heading>
+          <Button
+            href={albumInfo.external_urls.spotify}
+            as="a"
+            target="_blank"
+            variant="outline"
+            size="xs"
+            rightIcon={<ExternalLinkIcon />}
+          >
+            Album Page
+          </Button>
+        </Flex>
+        {albumInfo.tracks.items.map((e: any, i: number) => (
           <Grid
             key={e.id}
-            gridTemplateColumns="1fr 5rem 2rem"
+            gridTemplateColumns="1fr 0.1fr"
             gridGap={4}
             mb={2}
-            borderBottom="1px solid"
-            borderColor="gray.300"
-            pb={2}
+            borderBottomWidth={
+              i === albumInfo.tracks.items.length - 1 ? undefined : "1px"
+            }
+            pb={i === albumInfo.tracks.items.length - 1 ? undefined : 2}
           >
-            <Text>{e.name}</Text>
-            <Text>{e.duration_ms}</Text>
-            <Button
-              as="a"
-              variant="link"
-              href={e.external_urls.spotify}
-              target="_blank"
-            >
-              link
-            </Button>
+            <Text fontSize={{ base: "sm" }}>{e.name}</Text>
+            <Flex>
+              <Text>{dayjs(e.duration_ms).format("m:ss")}</Text>
+              <IconButton
+                variant="link"
+                icon={<ExternalLinkIcon />}
+                aria-label="Play Track"
+                as="a"
+                href={e.external_urls.spotify}
+                target="_blank"
+                color="gray.500"
+                size="sm"
+              />
+            </Flex>
           </Grid>
         ))}
         <Divider mt={4} mb={4} />
@@ -247,14 +262,18 @@ function SpotifyData({
                 </Tag>
               ))}
             </Flex>
-            <Button
-              as="a"
-              variant="link"
-              href={artistInfo.external_urls.spotify}
-              target="_blank"
-            >
-              Artist Page
-            </Button>
+            <Box my={3}>
+              <Button
+                as="a"
+                href={artistInfo.external_urls.spotify}
+                target="_blank"
+                size="xs"
+                variant="outline"
+                rightIcon={<ExternalLinkIcon />}
+              >
+                Artist Page
+              </Button>
+            </Box>
           </Box>
         </Grid>
       </Box>

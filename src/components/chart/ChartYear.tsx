@@ -51,7 +51,7 @@ function ChartYear({ uid, year }: { uid: string; year: number }): JSX.Element {
             <IconButton
               variant={includeSeen ? undefined : "outline"}
               colorScheme={includeSeen ? "purple" : undefined}
-              icon={<RepeatIcon color={includeSeen ? "gray.50" : "gray.700"} />}
+              icon={<RepeatIcon color={includeSeen ? "gray.50" : "gray.300"} />}
               aria-label="Repeated Viewed"
               size={filterButtonSize}
               onClick={() => setIncludeSeen(!includeSeen)}
