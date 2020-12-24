@@ -37,7 +37,7 @@ function Content(): JSX.Element {
         initialFocusRef={refInput}
       >
         <ModalOverlay sx={{ zIndex: 2 }}>
-          <ModalContent maxHeight="50vh" my={{ base: 0, sm: "3.75rem" }}>
+          <ModalContent maxHeight="50vh" my={{ base: 2, sm: "3.75rem" }}>
             <ModalCloseButton />
             <ModalHeader>
               <MdLogo title="Search" />
