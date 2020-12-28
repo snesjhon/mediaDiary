@@ -6,7 +6,6 @@ import {
   Heading,
   Text,
   useColorMode,
-  useColorModeValue,
   useToken,
 } from "@chakra-ui/react";
 import { ResponsiveBar } from "@nivo/bar";
@@ -14,14 +13,12 @@ import React from "react";
 import MdRating from "../md/MdRating";
 
 export function ChartVizRating({ list }: { list: number[] }): JSX.Element {
-  // const [purple600, purple800] = useToken("colors", ["purple.600", "gray.800"]);
   const { colorMode } = useColorMode();
   const [purple500, borderColor, zeroColor] = useToken("colors", [
     "purple.500",
     colorMode === "light" ? "white" : "gray.800",
     colorMode === "light" ? "purple.200" : "gray.600",
   ]);
-  // const borderColor = useColorModeValue("white", purple800);
 
   let ratingCount = list
     .map((e, i) => ({
@@ -66,7 +63,7 @@ export function ChartVizRating({ list }: { list: number[] }): JSX.Element {
           enableLabel={false}
           enableGridY={false}
           padding={0}
-          tooltip={({ id, index }) => <TooltipFormat index={index} />}
+          tooltip={({ index }) => <TooltipFormat index={index} />}
           axisTop={null}
           axisRight={null}
           axisBottom={null}

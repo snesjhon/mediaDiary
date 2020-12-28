@@ -1,18 +1,12 @@
 import {
   Avatar,
   Box,
-  Button,
   Center,
   Divider,
   Flex,
   Grid,
   Heading,
-  IconButton,
   SimpleGrid,
-  Stat,
-  StatGroup,
-  StatLabel,
-  StatNumber,
   Text,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
@@ -21,7 +15,6 @@ import type { FilterData, MediaTypes } from "../config/types";
 import { fuegoFiltersAll } from "../interfaces/fuegoFilterActions";
 import type { FuegoValidatedUser } from "../interfaces/fuegoProvider";
 import ChartAll from "./chart/ChartAll";
-import ChartTop from "./chart/ChartTop";
 import ChartYear from "./chart/ChartYear";
 import AlbumIcon from "./icons/AlbumIcon";
 import LogoFilm from "./icons/FilmIcon";
@@ -94,7 +87,6 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
                       key={`listyear_${e}`}
                       size={isActive ? "4xl" : undefined}
                       color={!isActive ? "gray.500" : undefined}
-                      // onClick={() => setYearType(yearInt)}
                       onClick={() => newYearHandler(yearInt)}
                       pl={3}
                       cursor={!isActive ? "pointer" : undefined}
@@ -134,9 +126,6 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
             textAlign="center"
             onClick={() => setMediaType(null)}
             cursor="pointer"
-            // _hover={{
-            //   color: "purple.500",
-            // }}
           >
             <Heading
               size="md"
@@ -179,10 +168,7 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
                     />{" "}
                     {dataCounts[e]}
                   </Heading>
-                  <Text
-                    color={mediaType === e ? "purple.500" : undefined}
-                    // fontWeight={mediaType === e ? "semibold" : undefined}
-                  >
+                  <Text color={mediaType === e ? "purple.500" : undefined}>
                     {e}
                   </Text>
                 </SimpleGrid>
