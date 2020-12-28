@@ -5,22 +5,21 @@ export async function fuegoChartYear(
   key: string,
   uid: string,
   diaryYear: number | null,
-  mediaType: MediaTypes | null,
-  loggedBefore: boolean | null
+  mediaType: MediaTypes | null
 ): Promise<DiaryAddWithId[]> {
   let diaryRef = fuegoDb.collection(
     `users/${uid}/diary`
   ) as firebase.firestore.Query;
 
-  diaryRef = diaryRef.where("diaryYear", "==", diaryYear);
+  if (diaryYear !== null) {
+    diaryRef = diaryRef.where("diaryYear", "==", diaryYear);
+  }
 
   if (mediaType !== null) {
     diaryRef = diaryRef.where("type", "==", mediaType);
   }
 
-  if (loggedBefore !== null) {
-    diaryRef = diaryRef.where("loggedBefore", "==", loggedBefore);
-  }
+  diaryRef = diaryRef.orderBy("rating", "desc");
 
   const diaryItems = await diaryRef.get();
 
@@ -34,16 +33,12 @@ export async function fuegoChartYear(
 
 export async function fuegoChartTop6(
   key: string,
-  uid: string,
-  year: number | null
+  uid: string
 ): Promise<DiaryAddWithId[]> {
   let diaryRef = fuegoDb.collection(
     `users/${uid}/diary`
   ) as firebase.firestore.Query;
 
-  if (year !== null) {
-    diaryRef = diaryRef.where("diaryYear", "==", year);
-  }
   diaryRef = diaryRef.orderBy("rating", "desc");
 
   const diaryItems = await diaryRef.limit(6).get();

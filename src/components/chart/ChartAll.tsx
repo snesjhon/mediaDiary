@@ -1,9 +1,22 @@
 import React from "react";
-import type { FilterData } from "../../config/types";
+import useSWR from "swr";
+import type { FilterData, MediaTypes } from "../../config/types";
+import { fuegoChartTop6 } from "../../interfaces/fuegoChartActions";
+import ChartTop from "./ChartTop";
 import { ChartVizRating, ChartVizReleased } from "./ChartViz";
 
-function ChartAll({ data }: { data: FilterData }): JSX.Element {
-  const { filterRating, filterReleasedYear } = data;
+function ChartAll({
+  uid,
+  list,
+}: {
+  uid: string;
+  list: FilterData;
+}): JSX.Element {
+  const { data, error } = useSWR(["fuego/chartTop", uid], fuegoChartTop6, {
+    revalidateOnFocus: false,
+  });
+
+  const { filterRating, filterReleasedYear } = list;
   const ratingCount = Object.keys(filterRating).reduce<number[]>((a, c) => {
     Object.keys(filterRating[c]).forEach((i) => {
       a[parseInt(i)] += filterRating[c][i];
@@ -23,6 +36,7 @@ function ChartAll({ data }: { data: FilterData }): JSX.Element {
   }, {});
   return (
     <>
+      {data && <ChartTop list={data} />}
       <ChartVizRating list={ratingCount} />
       <ChartVizReleased list={yearList} />
     </>
