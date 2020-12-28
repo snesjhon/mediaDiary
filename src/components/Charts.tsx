@@ -1,10 +1,14 @@
 import {
   Avatar,
   Box,
+  Button,
   Center,
   Divider,
   Flex,
+  Grid,
   Heading,
+  IconButton,
+  SimpleGrid,
   Stat,
   StatGroup,
   StatLabel,
@@ -13,19 +17,23 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import useSWR from "swr";
-import type { FilterData } from "../config/types";
+import type { FilterData, MediaTypes } from "../config/types";
 import { fuegoFiltersAll } from "../interfaces/fuegoFilterActions";
 import type { FuegoValidatedUser } from "../interfaces/fuegoProvider";
 import ChartAll from "./chart/ChartAll";
 import ChartTop from "./chart/ChartTop";
 import ChartYear from "./chart/ChartYear";
+import AlbumIcon from "./icons/AlbumIcon";
 import LogoFilm from "./icons/FilmIcon";
+import LayersIcon from "./icons/LayersIcon";
+import TvIcon from "./icons/TvIcon";
 import MdLoader from "./md/MdLoader";
 
 function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
   const [yearType, setYearType] = useState<number | null>(null);
+  const [mediaType, setMediaType] = useState<MediaTypes | null>(null);
   const { data, error } = useSWR<FilterData>(
-    ["/fuego/chartCounts", user.uid],
+    ["fuego/chartCounts", user.uid],
     fuegoFiltersAll,
     {
       revalidateOnFocus: false,
@@ -46,12 +54,15 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
       .reduce<{ [key: string]: number }>((a, c) => {
         Object.keys(filterMediaType[c]).map((e) => {
           if (filterMediaType[c][e] > 0) {
-            a[e] = filterMediaType[c][e];
+            if (typeof a[e] !== "undefined") {
+              a[e] += filterMediaType[c][e];
+            } else {
+              a[e] = filterMediaType[c][e];
+            }
           }
         });
         return a;
       }, {});
-
     return (
       <Box
         py={10}
@@ -65,7 +76,7 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
               <Heading
                 size={yearType === null ? "4xl" : undefined}
                 color={yearType !== null ? "gray.500" : undefined}
-                onClick={() => setYearType(null)}
+                onClick={() => newYearHandler(null)}
                 cursor={yearType !== null ? "pointer" : undefined}
                 _hover={{
                   color: yearType !== null ? "gray.400" : undefined,
@@ -83,7 +94,8 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
                       key={`listyear_${e}`}
                       size={isActive ? "4xl" : undefined}
                       color={!isActive ? "gray.500" : undefined}
-                      onClick={() => setYearType(yearInt)}
+                      // onClick={() => setYearType(yearInt)}
+                      onClick={() => newYearHandler(yearInt)}
                       pl={3}
                       cursor={!isActive ? "pointer" : undefined}
                       _hover={{
@@ -110,24 +122,89 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
           )}
         </Flex>
         <Divider my={10} />
-        <StatGroup textAlign="center">
+        <Grid
+          gridTemplateColumns={`repeat(${
+            Object.keys(dataCounts).length + 1
+          }, 1fr)`}
+          gridColumnGap={6}
+          justifyContent="center"
+        >
+          <SimpleGrid
+            row={2}
+            textAlign="center"
+            onClick={() => setMediaType(null)}
+            cursor="pointer"
+            // _hover={{
+            //   color: "purple.500",
+            // }}
+          >
+            <Heading
+              size="md"
+              color={mediaType === null ? "purple.500" : undefined}
+            >
+              <LayersIcon mr={2} boxSize={4} mb={1} />
+              {Object.keys(dataCounts).reduce(
+                (a, c) => (a += dataCounts[c]),
+                0
+              )}
+            </Heading>
+            <Text color={mediaType === null ? "purple.500" : undefined}>
+              Memories
+            </Text>
+          </SimpleGrid>
           {Object.keys(dataCounts)
             .sort()
-            .map((e) => (
-              <Stat key={`activity_${e}`}>
-                <StatLabel>
-                  <LogoFilm /> {e}
-                </StatLabel>
-                <StatNumber>{dataCounts[e]}</StatNumber>
-              </Stat>
-            ))}
-        </StatGroup>
+            .map((e) => {
+              const StatIcon =
+                e === "tv" ? TvIcon : e === "album" ? AlbumIcon : LogoFilm;
+              return (
+                <SimpleGrid
+                  key={`statIcon_${e}`}
+                  row={2}
+                  textAlign="center"
+                  cursor="pointer"
+                  onClick={() => setMediaType(e as MediaTypes)}
+                  _hover={{
+                    color: "purple.500",
+                  }}
+                >
+                  <Heading
+                    size="md"
+                    color={mediaType === e ? "purple.500" : undefined}
+                  >
+                    <StatIcon
+                      boxSize={4}
+                      mb={1}
+                      color={mediaType === e ? "purple.500" : undefined}
+                    />{" "}
+                    {dataCounts[e]}
+                  </Heading>
+                  <Text
+                    color={mediaType === e ? "purple.500" : undefined}
+                    // fontWeight={mediaType === e ? "semibold" : undefined}
+                  >
+                    {e}
+                  </Text>
+                </SimpleGrid>
+              );
+            })}
+        </Grid>
         <Divider my={10} />
-        <ChartTop uid={user.uid} year={yearType} />
-        {yearType === null && <ChartAll data={data} />}
-        {yearType !== null && <ChartYear uid={user.uid} year={yearType} />}
+        {yearType === null && mediaType === null && (
+          <ChartAll uid={user.uid} list={data} />
+        )}
+        {yearType === null && mediaType !== null && (
+          <ChartYear uid={user.uid} mediaType={mediaType} year={null} />
+        )}
+        {yearType !== null && (
+          <ChartYear uid={user.uid} mediaType={mediaType} year={yearType} />
+        )}
       </Box>
     );
+  }
+  function newYearHandler(year: number | null) {
+    setMediaType(null);
+    return setYearType(year);
   }
 }
 
