@@ -2,10 +2,13 @@ import { ArrowDownIcon, StarIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
+  Center,
   Flex,
   Grid,
+  Heading,
   HStack,
   Image,
+  Square,
   Text,
   useColorMode,
 } from "@chakra-ui/react";
@@ -19,6 +22,7 @@ import { fuegoDiaryGet } from "../interfaces/fuegoMDActions";
 import type { FuegoValidatedUser } from "../interfaces/fuegoProvider";
 import AlbumIcon from "./icons/AlbumIcon";
 import FilmIcon from "./icons/FilmIcon";
+import LogoIcon from "./icons/LogoIcon";
 import StarEmptyIcon from "./icons/StartEmptyIcon";
 import TvIcon from "./icons/TvIcon";
 import MdLoader from "./md/MdLoader";
@@ -88,7 +92,12 @@ function MediaDiary({ user }: { user: FuegoValidatedUser }): JSX.Element {
   }
 
   if (isEmpty) {
-    return <div>Nothing</div>;
+    return (
+      <Square height="80vh">
+        <LogoIcon boxSize={8} color="purple.500" mr={2} />
+        <Heading size="lg">No Memories</Heading>
+      </Square>
+    );
   }
 
   if (data) {

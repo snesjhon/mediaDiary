@@ -34,6 +34,7 @@ import TvIcon from "./icons/TvIcon";
 import MdLoader from "./md/MdLoader";
 import MdLogo from "./md/MdLogo";
 import MdRating from "./md/MdRating";
+import MdStatus from "./md/MdStatus";
 
 function FiltersContainer({
   onClose,
@@ -44,10 +45,17 @@ function FiltersContainer({
 }): JSX.Element {
   const { user } = useFuegoUser();
 
-  const { data } = useSWR<FilterData>(
+  const { data, isValidating, error } = useSWR<FilterData>(
     user && user !== null ? ["/filters/all", user.uid] : null,
     fuegoFiltersAll
   );
+
+  console.log(data);
+
+  if (error) {
+    console.error(error);
+    return <MdStatus title="There was an Error" />;
+  }
 
   return (
     <Drawer placement="right" onClose={onClose} isOpen={isOpen}>
@@ -61,7 +69,7 @@ function FiltersContainer({
             <FiltersData data={data} onClose={onClose} />
           ) : (
             <DrawerBody px={{ base: 0, sm: 8 }}>
-              <MdLoader />
+              <MdStatus title="No Memories" />
             </DrawerBody>
           )}
         </DrawerContent>
