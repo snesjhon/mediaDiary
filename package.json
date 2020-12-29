@@ -20,11 +20,11 @@
     "framer-motion": "~2.9.4",
     "next": "~10.0.1",
     "nookies": "~2.5.0",
-    "react": "~16.12.0",
-    "react-dom": "~16.12.0",
+    "react": "~16.11.0",
+    "react-dom": "~16.11.0",
     "react-rating": "~2.0.5",
-    "react-swipeable": "^6.0.0",
-    "swr": "~0.3.2"
+    "react-swipeable": "~6.0.0",
+    "swr": "~0.3.11"
   },
   "devDependencies": {
     "@types/node": "~12.12.21",
@@ -34,7 +34,7 @@
     "@typescript-eslint/parser": "~4.6.1",
     "eslint": "~7.12.1",
     "eslint-plugin-react": "~7.21.5",
-    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-react-hooks": "~4.2.0",
     "typescript": "~4.0"
   },
   "license": "MIT"

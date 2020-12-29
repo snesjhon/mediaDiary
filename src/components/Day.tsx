@@ -24,6 +24,7 @@ import Edit from "./Edit";
 import StarEmptyIcon from "./icons/StartEmptyIcon";
 import MdLoader from "./md/MdLoader";
 import { fuegoDiaryEntry } from "../interfaces/fuegoMDActions";
+import MdSpinner from "./md/MdSpinner";
 
 function Day(): JSX.Element | null {
   const { user } = useFuegoUser();
@@ -150,7 +151,7 @@ function Day(): JSX.Element | null {
               <div />
             </Grid>
             <Divider mt={3} mb={2} />
-            <Suspense fallback={<div>...loading</div>}>
+            <Suspense fallback={<MdSpinner />}>
               {data.type === "album" &&
               typeof spotifyToken !== "undefined" &&
               typeof artistId !== "undefined" ? (
@@ -313,24 +314,31 @@ function MDBData({
 
   return (
     <Box my={4}>
-      <Heading size="lg" mb={3}>
-        About
-      </Heading>
       {data && (
         <>
-          {typeof data.tagline !== "undefined" && (
-            <Text
-              textTransform="uppercase"
-              pb={2}
-              fontSize="sm"
-              fontWeight={400}
-              color="gray.500"
-            >
-              {data.tagline}
-            </Text>
-          )}
-          {typeof data.overview !== "undefined" && <Text>{data.overview}</Text>}
-          <Divider mt={4} mb={4} />
+          {typeof data.tagline !== "undefined" &&
+            typeof data.overview !== "undefined" && (
+              <>
+                <Heading size="lg" mb={3}>
+                  About
+                </Heading>
+                {typeof data.tagline !== "undefined" && (
+                  <Text
+                    textTransform="uppercase"
+                    pb={2}
+                    fontSize="sm"
+                    fontWeight={400}
+                    color="gray.500"
+                  >
+                    {data.tagline}
+                  </Text>
+                )}
+                {typeof data.overview !== "undefined" && (
+                  <Text>{data.overview}</Text>
+                )}
+                <Divider mt={4} mb={4} />
+              </>
+            )}
           <Heading size="lg" mb={5}>
             Cast
           </Heading>
