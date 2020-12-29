@@ -21,11 +21,12 @@ import LogoFilm from "./icons/FilmIcon";
 import LayersIcon from "./icons/LayersIcon";
 import TvIcon from "./icons/TvIcon";
 import MdLoader from "./md/MdLoader";
+import MdStatus from "./md/MdStatus";
 
 function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
   const [yearType, setYearType] = useState<number | null>(null);
   const [mediaType, setMediaType] = useState<MediaTypes | null>(null);
-  const { data, error } = useSWR<FilterData>(
+  const { data, error, isValidating } = useSWR<FilterData>(
     ["fuego/chartCounts", user.uid],
     fuegoFiltersAll,
     {
@@ -35,12 +36,14 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
 
   // There's an error on the list, or the list is empty
   if (error) {
-    return <div>nothing in this list</div>;
+    console.error(error);
+    return <MdStatus title="There was an Error, please contact Admin" />;
   }
 
-  if (!data) {
-    return <MdLoader />;
-  } else {
+  if (!data && isValidating) return <MdLoader />;
+  if (!data && !isValidating) return <MdStatus title="No Memories" />;
+
+  if (data) {
     const { filterDiaryYear, filterMediaType } = data;
     const dataCounts = Object.keys(filterMediaType)
       .filter((e) => (yearType === null ? e : parseInt(e) === yearType))
@@ -188,6 +191,9 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
       </Box>
     );
   }
+
+  return <MdLoader />;
+
   function newYearHandler(year: number | null) {
     setMediaType(null);
     return setYearType(year);
