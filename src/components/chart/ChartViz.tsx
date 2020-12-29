@@ -214,6 +214,85 @@ export function ChartVizReleased({
   }
 }
 
+export function ChartVizGenre({
+  list,
+}: {
+  list: {
+    [key: string]: number;
+  };
+}): JSX.Element {
+  const { colorMode } = useColorMode();
+  const [purple500, borderColor, zeroColor] = useToken("colors", [
+    "purple.500",
+    colorMode === "light" ? "white" : "gray.800",
+    colorMode === "light" ? "purple.200" : "gray.600",
+  ]);
+
+  // Get the largest count to fill -- the filler
+  let data = Object.keys(list)
+    .map((e) => ({
+      genre: e,
+      count: list[e],
+    }))
+    .sort((a, b) => (a.count > b.count ? 1 : -1));
+
+  // Based on the largest count use a filler to get better tooltip
+  data = data.map((e) => ({
+    ...e,
+    filler: data[data.length - 1].count - e.count,
+  }));
+
+  return (
+    <Box mt={16} maxW={{ sm: "98%", md: "100%" }}>
+      <Heading size="lg">By Genre</Heading>
+      <Divider mt={3} mb={6} />
+      <Box height="300px">
+        <ResponsiveBar
+          colors={({ id, data }) => {
+            if (id === "filler") {
+              return "transparent";
+            } else if (
+              data.count === 0.8 ||
+              data.count === 0.25 ||
+              data.count === 0.5
+            ) {
+              return zeroColor;
+            }
+            return purple500;
+          }}
+          margin={{ left: 150 }}
+          data={data}
+          keys={["count", "filler"]}
+          indexBy="genre"
+          enableLabel={false}
+          enableGridY={false}
+          padding={0}
+          layout="horizontal"
+          // tooltip={({ index }) => <TooltipFormat index={index} />}
+          axisTop={null}
+          axisRight={null}
+          axisBottom={null}
+          borderWidth={3}
+          axisLeft={{ tickSize: 0, tickPadding: 20 }}
+          borderColor={borderColor}
+          animate={true}
+          theme={{
+            axis: {
+              ticks: {
+                text: {
+                  fontSize: "15px",
+                  fontWeight: 500,
+                  fill: colorMode === "light" ? "black" : "white",
+                },
+              },
+            },
+          }}
+        />
+      </Box>
+    </Box>
+  );
+}
+
 function RatingIcon() {
   return <StarIcon color="purple.400" w="15px" h="15px" />;
 }
