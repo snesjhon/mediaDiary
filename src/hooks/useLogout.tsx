@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { destroyCookie } from "nookies";
 import fuego from "../interfaces/fuego";
 
 function useLogout(): () => void {
@@ -9,6 +10,7 @@ function useLogout(): () => void {
       .auth()
       .signOut()
       .then(() => {
+        destroyCookie(null, "fuegoToken");
         return router.push("/");
       })
       .catch(() => {

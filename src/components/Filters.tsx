@@ -45,12 +45,13 @@ function FiltersContainer({
 }): JSX.Element {
   const { user } = useFuegoUser();
 
-  const { data, isValidating, error } = useSWR<FilterData>(
+  const { data, error } = useSWR<FilterData>(
     user && user !== null ? ["/filters/all", user.uid] : null,
-    fuegoFiltersAll
+    fuegoFiltersAll,
+    {
+      revalidateOnFocus: false,
+    }
   );
-
-  console.log(data);
 
   if (error) {
     console.error(error);
