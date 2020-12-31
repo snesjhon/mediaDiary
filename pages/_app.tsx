@@ -10,7 +10,7 @@ import { FuegoProvider } from "../src/interfaces/fuegoProvider";
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const [state, dispatch] = useReducer(Reducer, {
-    cursor: null,
+    preference: null,
     view: "md",
     filterMediaType: null,
     filterGenre: null,

@@ -11,9 +11,12 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import useSWR from "swr";
-import type { FilterData, MediaTypes } from "../config/types";
+import type {
+  FilterData,
+  FuegoValidatedUser,
+  MediaTypes,
+} from "../config/types";
 import { fuegoFiltersAll } from "../interfaces/fuegoFilterActions";
-import type { FuegoValidatedUser } from "../interfaces/fuegoProvider";
 import ChartAll from "./chart/ChartAll";
 import ChartYear from "./chart/ChartYear";
 import AlbumIcon from "./icons/AlbumIcon";

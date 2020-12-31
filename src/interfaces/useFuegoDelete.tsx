@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
-import fuego from "../interfaces/fuego";
+import fuego from "./fuego";
 
-function useLogout(): { isDeleting: boolean; deleteUser: () => void } {
+function useFuegoDelete(): { isDeleting: boolean; deleteUser: () => void } {
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
 
@@ -19,4 +19,4 @@ function useLogout(): { isDeleting: boolean; deleteUser: () => void } {
   return { isDeleting, deleteUser };
 }
 
-export default useLogout;
+export default useFuegoDelete;

@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useRef } from "react";
 import { useMDDispatch, useMDState } from "../config/store";
-import useIsBreakpoint from "../hooks/useIsBreakpoint";
+import useIsBreakpoint from "../utils/useIsBreakpoint";
 import Day from "./Day";
 import LayoutDrawer from "./layouts/LayoutDrawer";
 import Log from "./Log";

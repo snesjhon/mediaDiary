@@ -1,9 +1,10 @@
 import { useContext } from "react";
-import type { FuegoUser } from "../interfaces/fuegoProvider";
-import { FuegoContext } from "../interfaces/fuegoProvider";
+import type { FuegoUser } from "../config/types";
+import { FuegoContext } from "./fuegoProvider";
 
 function useFuegoUser(): {
   user: FuegoUser;
+  isValidating: boolean;
 } {
   return useContext(FuegoContext);
 }

@@ -7,7 +7,15 @@ export async function fuegoFiltersAll(
   uid: string
 ): Promise<FilterData> {
   const filterKeys = await fuegoDb.collection("users").doc(uid).get();
-  return filterKeys.data() as FilterData;
+  return {
+    filterMediaType: filterKeys.get("filterMediaType") ?? {},
+    filterDiaryYear: filterKeys.get("filterDiaryYear") ?? {},
+    filterGenre: filterKeys.get("filterGenre") ?? {},
+    filterLoggedBefore: filterKeys.get("filterLoggedBefore") ?? {},
+    filterRating: filterKeys.get("filterRating") ?? {},
+    filterReleasedDecade: filterKeys.get("filterReleasedDecade") ?? {},
+    filterReleasedYear: filterKeys.get("filterReleasedYear") ?? {},
+  };
 }
 
 export function createFilterSet(

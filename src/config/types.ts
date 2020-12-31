@@ -82,3 +82,22 @@ export type FilterData = {
     };
   };
 };
+
+export type FuegoUser = firebase.User | null | false;
+export type FuegoValidatedUser = firebase.User;
+
+/**
+ * Structure for a user's preference set during NewUserFlow
+ */
+export interface UserPreference {
+  /**
+   * User's choice of media to track set during NewUserFlow
+   */
+  mediaType: MediaTypes[];
+  /**
+   * User's choice of theme set during NewUserFlow
+   */
+  theme: "light" | "dark";
+}
+
+export type FuegoUserPreference = UserPreference | null | false;

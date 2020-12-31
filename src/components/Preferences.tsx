@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React, { useState } from "react";
-import useDelete from "../hooks/useDelete";
+import useFuegoDelete from "../interfaces/useFuegoDelete";
 import type { FuegoValidatedUser } from "../interfaces/fuegoProvider";
 import LayoutModal from "./layouts/LayoutModal";
 
@@ -84,7 +84,7 @@ function DeleteContent({
   onClose: () => void;
 }) {
   const [value, setValue] = useState("");
-  const { isDeleting, deleteUser } = useDelete();
+  const { isDeleting, deleteUser } = useFuegoDelete();
 
   return (
     <>

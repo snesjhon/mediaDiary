@@ -26,7 +26,7 @@ import React, { useState } from "react";
 import useSWR from "swr";
 import { useMDDispatch, useMDState } from "../config/store";
 import type { FilterData, Filters, MediaTypes } from "../config/types";
-import useFuegoUser from "../hooks/useFuegoUser";
+import useFuegoUser from "../interfaces/useFuegoUser";
 import { fuegoFiltersAll } from "../interfaces/fuegoFilterActions";
 import AlbumIcon from "./icons/AlbumIcon";
 import FilmIcon from "./icons/FilmIcon";

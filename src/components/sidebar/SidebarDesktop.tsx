@@ -13,15 +13,15 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { useMDDispatch } from "../../config/store";
-import useFuegoUser from "../../hooks/useFuegoUser";
-import useLogout from "../../hooks/useLogout";
+import useFuegoUser from "../../interfaces/useFuegoUser";
+import useFuegoLogout from "../../interfaces/useFuegoLogout";
 import ActivityIcon from "../icons/ActivityIcon";
 import HomeIcon from "../icons/HomeIcon";
 import { SidebarButton } from "./SidebarContent";
 
 function SidebarDesktop(): JSX.Element {
   const { user } = useFuegoUser();
-  const logout = useLogout();
+  const logout = useFuegoLogout();
   const dispatch = useMDDispatch();
   return (
     <Box pr={8}>
