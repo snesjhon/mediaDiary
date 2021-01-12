@@ -13,15 +13,16 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { useMDDispatch } from "../../config/store";
-import useFuegoUser from "../../hooks/useFuegoUser";
-import useLogout from "../../hooks/useLogout";
+import useFuegoUser from "../../interfaces/useFuegoUser";
+import useFuegoLogout from "../../interfaces/useFuegoLogout";
 import ActivityIcon from "../icons/ActivityIcon";
 import HomeIcon from "../icons/HomeIcon";
 import { SidebarButton } from "./SidebarContent";
+import PlusIcon from "../icons/PlusIcon";
 
 function SidebarDesktop(): JSX.Element {
   const { user } = useFuegoUser();
-  const logout = useLogout();
+  const logout = useFuegoLogout();
   const dispatch = useMDDispatch();
   return (
     <Box pr={8}>
@@ -48,15 +49,15 @@ function SidebarDesktop(): JSX.Element {
         <Flex mt={12}>
           <Button
             colorScheme="purple"
-            px={10}
             onClick={() =>
               dispatch({
                 type: "state",
                 payload: { key: "view", value: "search" },
               })
             }
+            leftIcon={<PlusIcon boxSize={5} />}
           >
-            Add Media
+            mediaMemory
           </Button>
         </Flex>
       </Box>

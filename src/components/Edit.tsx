@@ -5,7 +5,7 @@ import { mutate } from "swr";
 import { LogReducer } from "../config/logStore";
 import type { DiaryAdd } from "../config/types";
 import { useMDDispatch, useMDState } from "../config/store";
-import useFuegoUser from "../hooks/useFuegoUser";
+import useFuegoUser from "../interfaces/useFuegoUser";
 import Info from "./Info";
 import LogFields from "./LogFields";
 import MdSpinner from "./md/MdSpinner";

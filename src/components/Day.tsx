@@ -18,7 +18,7 @@ import Rating from "react-rating";
 import useSWR from "swr";
 import type { DiaryAdd, MediaTypes } from "../config/types";
 import { useMDDispatch, useMDState } from "../config/store";
-import useFuegoUser from "../hooks/useFuegoUser";
+import useFuegoUser from "../interfaces/useFuegoUser";
 import { fetcher } from "../utils/fetchers";
 import Edit from "./Edit";
 import StarEmptyIcon from "./icons/StartEmptyIcon";

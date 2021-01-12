@@ -14,8 +14,8 @@ import {
 import { useRouter } from "next/router";
 import type { FunctionComponent } from "react";
 import React from "react";
-import useFuegoUser from "../../hooks/useFuegoUser";
-import useLogout from "../../hooks/useLogout";
+import useFuegoUser from "../../interfaces/useFuegoUser";
+import useFuegoLogout from "../../interfaces/useFuegoLogout";
 
 export function SidebarButton({
   title,
@@ -50,7 +50,7 @@ export function SidebarButton({
 
 export function SidebarFooter(): JSX.Element | null {
   const { user } = useFuegoUser();
-  const logout = useLogout();
+  const logout = useFuegoLogout();
   return user ? (
     <Menu autoSelect={false}>
       <MenuButton _hover={{ bg: "purple.100" }} p={2} rounded="md">

@@ -1,30 +1,12 @@
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Heading,
-  HStack,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
 import "firebase/auth";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { destroyCookie, parseCookies, setCookie } from "nookies";
 import React, { useEffect, useState } from "react";
-import LogoIcon from "../src/components/icons/LogoIcon";
-import Layout from "../src/components/layouts/Layout";
 import MdLoader from "../src/components/md/MdLoader";
-import useFuegoUser from "../src/hooks/useFuegoUser";
-import useLogin from "../src/hooks/useLogin";
+import UserNew from "../src/components/user/UserNew";
+import Welcome from "../src/components/Welcome";
+import useFuegoUser from "../src/interfaces/useFuegoUser";
 import fuego from "../src/interfaces/fuego";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -35,17 +17,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         typeof cookies.fuegoPending !== "undefined"
           ? cookies.fuegoPending
           : false,
+      fuegoNewUser: typeof cookies.fuegoNewUser !== "undefined" ? true : false,
     },
   };
 };
 
 function App({
   fuegoPending,
+  fuegoNewUser,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
-  const login = useLogin();
-  const [showModal, setShowModal] = useState(false);
+  const [isNewUser, setIsNewUser] = useState(fuegoNewUser);
   const router = useRouter();
-  const { user } = useFuegoUser();
+  const { user, isValidating } = useFuegoUser();
 
   useEffect(() => {
     if (fuegoPending) {
@@ -53,107 +36,32 @@ function App({
       fuego
         .auth()
         .getRedirectResult()
-        .then(async ({ user }) => {
+        .then(async ({ additionalUserInfo, user }) => {
           if (user !== null) {
-            const value = await user.getIdToken();
-            setCookie(null, "fuegoToken", value, {
-              maxAge: 24 * 60 * 60,
-              path: "/",
-            });
-            router.push("/home");
+            if (additionalUserInfo?.isNewUser) {
+              setCookie(null, "fuegoNewUser", "true", {
+                maxAge: 60 * 60,
+                path: "/",
+              });
+              setIsNewUser(user);
+            } else {
+              router.push("/home");
+            }
           }
         });
     }
   }, [fuegoPending, router]);
 
-  if (fuegoPending || user === null) {
+  if ((fuegoPending && user === null) || isValidating) {
     return <MdLoader />;
+  } else if ((fuegoPending || fuegoNewUser) && user && isNewUser) {
+    destroyCookie(null, "fuegoNewUser");
+    return <UserNew user={user} />;
   } else if (user) {
     router.push("/home");
     return <MdLoader />;
   } else {
-    return (
-      <>
-        <Box as="header" bg="white" width="full">
-          <Container maxWidth={{ base: "xl", md: "lg" }}>
-            <Flex
-              w="100%"
-              h="100%"
-              py={2}
-              align="center"
-              justify="space-between"
-            >
-              <Flex align="center">
-                <LogoIcon boxSize={5} mr={1} />
-                <Link href="/" passHref>
-                  <Text fontSize="md" color="purple.700" fontWeight="medium">
-                    mediaDiary
-                  </Text>
-                </Link>
-                <HStack
-                  as="nav"
-                  spacing="4"
-                  ml="24px"
-                  display={{ base: "none", md: "flex" }}
-                >
-                  <div>asd</div>
-                  <div>asd</div>
-                  <div>asd</div>
-                </HStack>
-              </Flex>
-
-              <Flex maxW="720px" align="center">
-                <Button
-                  size="sm"
-                  colorScheme="purple"
-                  variant="outline"
-                  onClick={() => setShowModal(true)}
-                >
-                  Sign In
-                </Button>
-              </Flex>
-            </Flex>
-          </Container>
-        </Box>
-        <Layout>
-          <Box>
-            <Heading>Keep track of your favorite Movies</Heading>
-            <br />
-            <Text fontSize="xl">
-              MediaDiary is a media logging platform that helps you keep track
-              of when you watched or listened to your favorite media.
-            </Text>
-            <Button
-              colorScheme="purple"
-              mt="24px"
-              onClick={() => setShowModal(true)}
-            >
-              Sign Up
-            </Button>
-          </Box>
-        </Layout>
-        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-          <ModalOverlay>
-            <ModalContent>
-              <ModalCloseButton />
-              <ModalHeader textAlign="center">
-                <LogoIcon boxSize={5} />
-              </ModalHeader>
-              <ModalBody>
-                <Heading size="md" mb={4}>
-                  Signin
-                </Heading>
-                <VStack align="stretch" spacing={4}>
-                  <Button onClick={login}>Sign In with Google</Button>
-                  <Button>Sign In with Twitter</Button>
-                </VStack>
-                <br />
-              </ModalBody>
-            </ModalContent>
-          </ModalOverlay>
-        </Modal>
-      </>
-    );
+    return <Welcome />;
   }
 }
 

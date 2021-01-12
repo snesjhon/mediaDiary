@@ -1,12 +1,13 @@
-import { destroyCookie } from "nookies";
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useRef, useState } from "react";
+import type { FuegoUser } from "../config/types";
 import fuego from "./fuego";
 
-export type FuegoUser = firebase.User | null | false;
-export type FuegoValidatedUser = firebase.User;
-
-export const FuegoContext = createContext<{ user: FuegoUser }>({
+export const FuegoContext = createContext<{
+  user: FuegoUser;
+  isValidating: boolean;
+}>({
   user: null,
+  isValidating: true,
 });
 
 export function FuegoProvider({
@@ -15,12 +16,13 @@ export function FuegoProvider({
   children: JSX.Element;
 }): JSX.Element {
   const [user, setUser] = useState<FuegoUser>(null);
+  const isValidating = useRef(true);
 
   useEffect(() => {
     return fuego.auth().onIdTokenChanged(async (user) => {
+      isValidating.current = false;
       if (!user) {
         setUser(false);
-        destroyCookie(null, "fuegoToken");
         return;
       }
 
@@ -28,6 +30,8 @@ export function FuegoProvider({
     });
   }, []);
   return (
-    <FuegoContext.Provider value={{ user }}>{children}</FuegoContext.Provider>
+    <FuegoContext.Provider value={{ user, isValidating: isValidating.current }}>
+      {children}
+    </FuegoContext.Provider>
   );
 }

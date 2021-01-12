@@ -2,7 +2,6 @@ import { ArrowDownIcon, StarIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
-  Center,
   Flex,
   Grid,
   Heading,
@@ -17,9 +16,12 @@ import React, { useEffect } from "react";
 import Rating from "react-rating";
 import { cache, useSWRInfinite } from "swr";
 import { useMDDispatch, useMDState } from "../config/store";
-import type { DiaryAddWithId, DiaryState } from "../config/types";
+import type {
+  DiaryAddWithId,
+  DiaryState,
+  FuegoValidatedUser,
+} from "../config/types";
 import { fuegoDiaryGet } from "../interfaces/fuegoMDActions";
-import type { FuegoValidatedUser } from "../interfaces/fuegoProvider";
 import AlbumIcon from "./icons/AlbumIcon";
 import FilmIcon from "./icons/FilmIcon";
 import LogoIcon from "./icons/LogoIcon";

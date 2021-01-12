@@ -1,51 +1,41 @@
-import dayjs from "dayjs";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React from "react";
 import Charts from "../src/components/Charts";
 import LayoutMain from "../src/components/layouts/LayoutMain";
 import MdLoader from "../src/components/md/MdLoader";
-import getSpotifyToken from "../src/utils/getSpotifyToken";
-import { useMDDispatch, useMDState } from "../src/config/store";
-import useFuegoUser from "../src/hooks/useFuegoUser";
+import UserNew from "../src/components/user/UserNew";
+import useFuegoAuth from "../src/interfaces/useFuegoAuth";
 
+/**
+ * Activity Route presents the user with the Charting interface for their
+ * MediaDiary memories. In case there's no preferences, there's also a
+ * NewUserFlow available.
+ */
 function Activity(): JSX.Element {
-  const { user } = useFuegoUser();
-  const { spotifyToken, spotifyTimeOut } = useMDState();
-  const dispatch = useMDDispatch();
+  const {
+    userValid,
+    userValidHasPreference,
+    userNoPreference,
+    userNotValid,
+    userValidating,
+  } = useFuegoAuth();
   const router = useRouter();
 
-  useEffect(() => {
-    const now = dayjs();
-    if (user) {
-      if (!spotifyToken || !spotifyTimeOut || now.isAfter(spotifyTimeOut)) {
-        const newTimeout = now.add(1, "hour");
-        getSpotifyToken().then((response) => {
-          dispatch({
-            type: "spotifyToken",
-            payload: {
-              spotifyToken: response,
-              spotifyTimeOut: newTimeout,
-            },
-          });
-        });
-      }
-    }
-  }, [dispatch, spotifyToken, spotifyTimeOut, user]);
-
-  if (!user && user !== null) {
+  if (userNotValid) {
     if (typeof window !== "undefined") {
       router.push("/");
     }
     return <MdLoader />;
-  } else if (user === null || !spotifyToken) {
-    return <MdLoader />;
-  } else {
+  } else if (!userValidating && userValid && userNoPreference) {
+    return <UserNew user={userValid} />;
+  } else if (userValidHasPreference) {
     return (
       <LayoutMain title="Activity">
-        <Charts user={user} />
+        <Charts user={userValidHasPreference} />
       </LayoutMain>
     );
   }
+  return <MdLoader />;
 }
 
 export default Activity;

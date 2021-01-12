@@ -12,12 +12,15 @@ import {
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React, { useState } from "react";
-import useDelete from "../hooks/useDelete";
-import type { FuegoValidatedUser } from "../interfaces/fuegoProvider";
+import { useMDState } from "../config/store";
+import type { FuegoValidatedUser } from "../config/types";
+import useFuegoDelete from "../interfaces/useFuegoDelete";
 import LayoutModal from "./layouts/LayoutModal";
+import UserPreference from "./user/UserPreference";
 
 function Preferences({ user }: { user: FuegoValidatedUser }): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { preference } = useMDState();
 
   return (
     <Box
@@ -49,6 +52,15 @@ function Preferences({ user }: { user: FuegoValidatedUser }): JSX.Element {
             </Text>
           </Box>
         </Flex>
+      </Box>
+      <Box>
+        <Heading color="blue.600" size="lg">
+          Preferences
+        </Heading>
+        <Divider mt={2} mb={3} />
+        <Box mt={2} mb={12}>
+          <UserPreference user={user} preference={preference} />
+        </Box>
       </Box>
       <Box>
         <Heading color="red.600" size="lg">
@@ -84,7 +96,7 @@ function DeleteContent({
   onClose: () => void;
 }) {
   const [value, setValue] = useState("");
-  const { isDeleting, deleteUser } = useDelete();
+  const { isDeleting, deleteUser } = useFuegoDelete();
 
   return (
     <>

@@ -6,7 +6,7 @@ import type { LogProps, LogState } from "../config/logStore";
 import { LogReducer } from "../config/logStore";
 import { useMDDispatch, useMDState } from "../config/store";
 import type { DiaryAdd, MediaSelected } from "../config/types";
-import useFuegoUser from "../hooks/useFuegoUser";
+import useFuegoUser from "../interfaces/useFuegoUser";
 import { fuegoDiaryAdd } from "../interfaces/fuegoMDActions";
 import { fetcher, spotifyFetch } from "../utils/fetchers";
 import Info from "./Info";

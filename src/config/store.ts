@@ -1,9 +1,14 @@
 import type dayjs from "dayjs";
 import { createContext, useContext } from "react";
-import type { FilterState, MediaEdit, MediaSelected } from "./types";
+import type {
+  FilterState,
+  FuegoUserPref,
+  MediaEdit,
+  MediaSelected,
+} from "./types";
 
 export interface MDState extends FilterState {
-  cursor: string | null;
+  preference: FuegoUserPref;
   spotifyToken?: string;
   spotifyTimeOut?: dayjs.Dayjs;
   isSaving?: boolean;
@@ -28,6 +33,10 @@ type MDActions =
   | {
       type: "day" | "savedEdit";
       payload: MDState["edit"];
+    }
+  | {
+      type: "savedPreference";
+      payload: MDState["preference"];
     }
   | {
       type: "saved" | "saving" | "dayClose";
@@ -92,6 +101,13 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
         edit: actions.payload,
       };
     }
+    case "savedPreference": {
+      return {
+        ...state,
+        isSaving: false,
+        preference: actions.payload,
+      };
+    }
     case "dayClose":
     case "saved": {
       return {
@@ -142,7 +158,7 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
 }
 
 export const ContextState = createContext<MDState>({
-  cursor: null,
+  preference: null,
   filterGenre: null,
   filterLoggedBefore: null,
   filterMediaType: null,

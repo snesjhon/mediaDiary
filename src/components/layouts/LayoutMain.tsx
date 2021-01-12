@@ -3,7 +3,7 @@ import Head from "next/head";
 import { Router } from "next/router";
 import type { PropsWithChildren } from "react";
 import React, { useEffect } from "react";
-import useIsBreakpoint from "../../hooks/useIsBreakpoint";
+import useIsBreakpoint from "../../utils/useIsBreakpoint";
 import Content from "../Content";
 import Header from "../Header";
 import MdLoader from "../md/MdLoader";

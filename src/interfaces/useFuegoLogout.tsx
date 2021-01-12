@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
-import fuego from "../interfaces/fuego";
+import fuego from "./fuego";
 
-function useLogout(): () => void {
+function useFuegoLogout(): () => void {
   const router = useRouter();
 
   function logout() {
@@ -18,4 +18,4 @@ function useLogout(): () => void {
   return logout;
 }
 
-export default useLogout;
+export default useFuegoLogout;

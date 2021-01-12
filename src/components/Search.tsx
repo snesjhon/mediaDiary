@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import useSWR from "swr";
 import type { MediaSelected, MediaTypes } from "../config/types";
 import { useMDDispatch, useMDState } from "../config/store";
-import useDebounce from "../hooks/useDebounce";
+import useDebounce from "../utils/useDebounce";
 import AlbumIcon from "./icons/AlbumIcon";
 import FilmIcon from "./icons/FilmIcon";
 import TvIcon from "./icons/TvIcon";
@@ -65,9 +65,11 @@ function Search({
     const albumData = spotifyData.albums.items.map((e: any) =>
       mediaNormalize(e)
     );
+
     const filteredData: MediaSelected[] = mdbData.results
       .map((e: any) => mediaNormalize(e))
       .filter((e: any) => e.type !== "person");
+
     const { movieData, tvData } = filteredData.reduce<{
       movieData: MediaSelected[];
       tvData: MediaSelected[];
@@ -215,11 +217,15 @@ function Search({
     // separated and reusable.
     const queryString = query.substring(13);
 
+    // We need to conditionally add fetches depending on userPref, but currently (01/21) we're not.
+    const fetchers = [];
+
     const mdbFetch = fetch(
       `https://api.themoviedb.org/3/search/multi?api_key=${
         process.env.NEXT_PUBLIC_MDBKEY
       }&query=${encodeURIComponent(queryString)}&include_adult=false&page=1,2,3`
     ).then((r) => r.json());
+    fetchers.push(mdbFetch);
 
     const albumFetch = fetch(
       `https://api.spotify.com/v1/search?q=${queryString}&type=album&limit=20`,
@@ -227,8 +233,9 @@ function Search({
         headers: { Authorization: `Bearer ${spotifyToken}` },
       }
     ).then((r) => r.json());
+    fetchers.push(albumFetch);
 
-    return Promise.all([mdbFetch, albumFetch])
+    return Promise.all(fetchers)
       .then((results) => results)
       .catch((e) => console.error(e));
   }

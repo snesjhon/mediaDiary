@@ -12,7 +12,7 @@ import {
 import { useRouter } from "next/router";
 import React from "react";
 import { useMDDispatch } from "../config/store";
-import useIsBreakpoint from "../hooks/useIsBreakpoint";
+import useIsBreakpoint from "../utils/useIsBreakpoint";
 import Filters from "./Filters";
 import FiltersIcon from "./icons/FiltersIcon";
 import MdLogo from "./md/MdLogo";
