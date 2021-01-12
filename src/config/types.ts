@@ -1,6 +1,13 @@
+/**
+ * MediaTypes include all of the current available types for mediaDiary
+ */
 export type MediaTypes = "movie" | "album" | "tv";
 
+/**
+ * MediaBase is the structure for a mediaItem.
+ */
 export interface MediaBase {
+  /** Artist for the selected mediaItem  */
   artist: string;
   title: string;
   poster: string;
@@ -15,7 +22,8 @@ export interface MediaBase {
 }
 
 export interface DiaryAdd extends MediaBase {
-  mediaId: string; // MovieDB or MovieDB_TV or SpotifyID
+  /** MovieDB or MovieDB_TV or SpotifyID */
+  mediaId: string;
   diaryDate: string;
   diaryYear: number;
   addedDate: string;
@@ -89,15 +97,12 @@ export type FuegoValidatedUser = firebase.User;
 /**
  * Structure for a user's preference set during NewUserFlow
  */
-export interface UserPreference {
-  /**
-   * User's choice of media to track set during NewUserFlow
-   */
+export interface UserPref {
+  /** User's choice of media to track set during NewUserFlow */
   mediaType: MediaTypes[];
-  /**
-   * User's choice of theme set during NewUserFlow
-   */
+
+  /** User's choice of theme set during NewUserFlow */
   theme: "light" | "dark";
 }
 
-export type FuegoUserPreference = UserPreference | null | false;
+export type FuegoUserPref = UserPref | null | false;

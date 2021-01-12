@@ -16,9 +16,9 @@ import {
 import { setCookie } from "nookies";
 import React, { useState } from "react";
 import Link from "next/link";
-import fuego from "../../interfaces/fuego";
-import LogoIcon from "../icons/LogoIcon";
-import Layout from "../layouts/Layout";
+import fuego from "../interfaces/fuego";
+import LogoIcon from "./icons/LogoIcon";
+import Layout from "./layouts/Layout";
 
 function Welcome(): JSX.Element {
   const [showModal, setShowModal] = useState(false);

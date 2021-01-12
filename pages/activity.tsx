@@ -3,7 +3,7 @@ import React from "react";
 import Charts from "../src/components/Charts";
 import LayoutMain from "../src/components/layouts/LayoutMain";
 import MdLoader from "../src/components/md/MdLoader";
-import NewUser from "../src/components/welcome/NewUser";
+import UserNew from "../src/components/user/UserNew";
 import useFuegoAuth from "../src/interfaces/useFuegoAuth";
 
 /**
@@ -14,6 +14,7 @@ import useFuegoAuth from "../src/interfaces/useFuegoAuth";
 function Activity(): JSX.Element {
   const {
     userValid,
+    userValidHasPreference,
     userNoPreference,
     userNotValid,
     userValidating,
@@ -25,12 +26,12 @@ function Activity(): JSX.Element {
       router.push("/");
     }
     return <MdLoader />;
-  } else if (!userValidating && userNoPreference) {
-    return <NewUser />;
-  } else if (userValid) {
+  } else if (!userValidating && userValid && userNoPreference) {
+    return <UserNew user={userValid} />;
+  } else if (userValidHasPreference) {
     return (
       <LayoutMain title="Activity">
-        <Charts user={userValid} />
+        <Charts user={userValidHasPreference} />
       </LayoutMain>
     );
   }

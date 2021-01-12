@@ -3,7 +3,7 @@ import React from "react";
 import LayoutMain from "../src/components/layouts/LayoutMain";
 import MdLoader from "../src/components/md/MdLoader";
 import MediaDiary from "../src/components/MediaDiary";
-import NewUser from "../src/components/welcome/NewUser";
+import UserNew from "../src/components/user/UserNew";
 import useFuegoAuth from "../src/interfaces/useFuegoAuth";
 
 /**
@@ -13,6 +13,7 @@ import useFuegoAuth from "../src/interfaces/useFuegoAuth";
 function Home(): JSX.Element {
   const {
     userValid,
+    userValidHasPreference,
     userNoPreference,
     userNotValid,
     userValidating,
@@ -24,12 +25,13 @@ function Home(): JSX.Element {
       router.push("/");
     }
     return <MdLoader />;
-  } else if (!userValidating && userNoPreference) {
-    return <NewUser />;
-  } else if (userValid) {
+  } else if (!userValidating && userValid && userNoPreference) {
+    console.log("hap");
+    return <UserNew user={userValid} />;
+  } else if (userValidHasPreference) {
     return (
       <LayoutMain title="Home">
-        <MediaDiary user={userValid} />
+        <MediaDiary user={userValidHasPreference} />
       </LayoutMain>
     );
   }

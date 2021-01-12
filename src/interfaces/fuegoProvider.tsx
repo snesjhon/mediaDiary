@@ -1,4 +1,3 @@
-import { destroyCookie } from "nookies";
 import React, { createContext, useEffect, useRef, useState } from "react";
 import type { FuegoUser } from "../config/types";
 import fuego from "./fuego";

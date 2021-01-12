@@ -1,7 +1,6 @@
-import { Flex } from "@chakra-ui/react";
 import React from "react";
 import useSWR from "swr";
-import type { FilterData, MediaTypes } from "../../config/types";
+import type { FilterData } from "../../config/types";
 import { fuegoChartTop6 } from "../../interfaces/fuegoChartActions";
 import ChartTop from "./ChartTop";
 import { ChartVizGenre, ChartVizRating, ChartVizReleased } from "./ChartViz";
@@ -17,6 +16,7 @@ function ChartAll({
     revalidateOnFocus: false,
   });
 
+  console.log(data);
   const { filterRating, filterReleasedYear, filterGenre } = list;
 
   const ratingCount = Object.keys(filterRating).reduce<number[]>((a, c) => {

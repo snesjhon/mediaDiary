@@ -23,6 +23,7 @@ import AlbumIcon from "./icons/AlbumIcon";
 import LogoFilm from "./icons/FilmIcon";
 import LayersIcon from "./icons/LayersIcon";
 import TvIcon from "./icons/TvIcon";
+import MdEmpty from "./md/MdEmpty";
 import MdLoader from "./md/MdLoader";
 import MdStatus from "./md/MdStatus";
 
@@ -47,6 +48,19 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
   if (!data && !isValidating) return <MdStatus title="No Memories" />;
 
   if (data) {
+    // We either have a no items in our list, or the user has removed all items in the list. But we've
+    // kept all of the keys. Thus needing to reduce to a single count
+    const isEmpty =
+      Object.keys(data.filterDiaryYear).length === 0
+        ? true
+        : Object.keys(data.filterDiaryYear).reduce(
+            (a, c) => (a += data.filterDiaryYear[c]),
+            0
+          ) === 0;
+    if (isEmpty) {
+      return <MdEmpty />;
+    }
+
     const { filterDiaryYear, filterMediaType } = data;
     const dataCounts = Object.keys(filterMediaType)
       .filter((e) => (yearType === null ? e : parseInt(e) === yearType))
@@ -62,6 +76,7 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
         });
         return a;
       }, {});
+
     return (
       <Box
         py={10}

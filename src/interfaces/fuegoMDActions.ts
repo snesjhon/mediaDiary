@@ -1,4 +1,9 @@
-import type { MediaTypes, DiaryAddWithId, DiaryAdd } from "../config/types";
+import type {
+  MediaTypes,
+  DiaryAddWithId,
+  DiaryAdd,
+  UserPref,
+} from "../config/types";
 import { fuegoDb } from "./fuego";
 import {
   createFilterKeys,
@@ -129,4 +134,16 @@ export async function fuegoEdit(
   userRef.set(fitlerEditSet, { merge: true });
 
   return batch.commit();
+}
+
+export async function fuegoSetPreferences(
+  uid: string,
+  preference: UserPref
+): Promise<void> {
+  const userRef = fuegoDb.collection("users").doc(uid);
+  try {
+    await userRef.set({ preference }, { merge: true });
+  } catch (e) {
+    throw `[fuegoSetPreferences]: Failed to set, ${e}`;
+  }
 }

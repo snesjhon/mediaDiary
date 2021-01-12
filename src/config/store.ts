@@ -2,13 +2,13 @@ import type dayjs from "dayjs";
 import { createContext, useContext } from "react";
 import type {
   FilterState,
-  FuegoUserPreference,
+  FuegoUserPref,
   MediaEdit,
   MediaSelected,
 } from "./types";
 
 export interface MDState extends FilterState {
-  preference: FuegoUserPreference;
+  preference: FuegoUserPref;
   spotifyToken?: string;
   spotifyTimeOut?: dayjs.Dayjs;
   isSaving?: boolean;
@@ -33,6 +33,10 @@ type MDActions =
   | {
       type: "day" | "savedEdit";
       payload: MDState["edit"];
+    }
+  | {
+      type: "savedPreference";
+      payload: MDState["preference"];
     }
   | {
       type: "saved" | "saving" | "dayClose";
@@ -95,6 +99,13 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
         isSaving: false,
         view: "day",
         edit: actions.payload,
+      };
+    }
+    case "savedPreference": {
+      return {
+        ...state,
+        isSaving: false,
+        preference: actions.payload,
       };
     }
     case "dayClose":

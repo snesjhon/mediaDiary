@@ -5,7 +5,6 @@
  */
 
 import {
-  Flex,
   Modal,
   ModalBody,
   ModalCloseButton,

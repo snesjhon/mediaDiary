@@ -5,16 +5,24 @@ import type { FuegoValidatedUser } from "../config/types";
 import { fuegoDb } from "./fuego";
 import useFuegoUser from "./useFuegoUser";
 
+interface FuegoAuth {
+  /** User not in our system */
+  userNotValid: boolean;
+  /** User has no preferences, route to NewUser */
+  userNoPreference: boolean;
+  /** Validating user, show loaders */
+  userValidating: boolean;
+  /** User is valid, but might not have Preference */
+  userValid: FuegoValidatedUser | false;
+  /** User is valid and has preference, show MediaDiary */
+  userValidHasPreference: FuegoValidatedUser | false;
+}
+
 /**
  * A hook to provide a consistent way of getting necessary information during our
  * authentication process. Also to provide the spotify token based on userPref
  */
-function useFuegoAuth(): {
-  userNotValid: boolean;
-  userNoPreference: boolean;
-  userValidating: boolean;
-  userValid: FuegoValidatedUser | false;
-} {
+function useFuegoAuth(): FuegoAuth {
   const { user, isValidating } = useFuegoUser();
   const { spotifyToken, spotifyTimeOut, preference } = useMDState();
   const dispatch = useMDDispatch();
@@ -41,47 +49,48 @@ function useFuegoAuth(): {
   // If the user chooses to record Albums, use the spotify API
   useEffect(() => {
     const now = dayjs();
-    if (user && preference && preference.mediaType.includes("album")) {
-      if (!spotifyToken || !spotifyTimeOut || now.isAfter(spotifyTimeOut)) {
-        const newTimeout = now.add(1, "hour");
+    // if (user && preference && preference.mediaType.includes("album")) {
+    if (!spotifyToken || !spotifyTimeOut || now.isAfter(spotifyTimeOut)) {
+      const newTimeout = now.add(1, "hour");
 
-        fetch("https://accounts.spotify.com/api/token", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            Accept: "application/json",
-            Authorization:
-              "Basic " +
-              Buffer.from(
-                process.env.NEXT_PUBLIC_SPOTIFY_CLIENT +
-                  ":" +
-                  process.env.NEXT_PUBLIC_SPOTIFY_SECRET
-              ).toString("base64"),
-          },
-          body: "grant_type=client_credentials",
+      fetch("https://accounts.spotify.com/api/token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Accept: "application/json",
+          Authorization:
+            "Basic " +
+            Buffer.from(
+              process.env.NEXT_PUBLIC_SPOTIFY_CLIENT +
+                ":" +
+                process.env.NEXT_PUBLIC_SPOTIFY_SECRET
+            ).toString("base64"),
+        },
+        body: "grant_type=client_credentials",
+      })
+        .then((r) => r.json())
+        .then((spotifyResponse) => {
+          dispatch({
+            type: "spotifyToken",
+            payload: {
+              spotifyToken: spotifyResponse.access_token,
+              spotifyTimeOut: newTimeout,
+            },
+          });
         })
-          .then((r) => r.json())
-          .then((spotifyResponse) => {
-            dispatch({
-              type: "spotifyToken",
-              payload: {
-                spotifyToken: spotifyResponse.access_token,
-                spotifyTimeOut: newTimeout,
-              },
-            });
-          })
-          .catch((e) => console.error("[SPOTIFY]: failed to refresh token", e));
-      }
+        .catch((e) => console.error("[SPOTIFY]: failed to refresh token", e));
     }
-  }, [dispatch, spotifyToken, spotifyTimeOut, user, preference]);
+    // }
+    // }, [dispatch, spotifyToken, spotifyTimeOut, user, preference]);
+  }, [dispatch, spotifyToken, spotifyTimeOut]);
 
   // Validating requires two states, either we're waiting for SpotifyToken or just waiting for
   // userpreferences to validate
   let userValidating = true;
   if (
     preference !== null &&
-    preference &&
-    preference.mediaType.includes("album")
+    preference
+    // && preference.mediaType.includes("album")
   ) {
     userValidating = user === null && !spotifyToken;
   } else {
@@ -92,7 +101,8 @@ function useFuegoAuth(): {
     userNotValid: !user && user !== null,
     userNoPreference: user !== null && preference !== null && !preference,
     userValidating: userValidating || isValidating,
-    userValid:
+    userValid: user && user !== null ? user : false,
+    userValidHasPreference:
       user && user !== null && preference !== null && preference ? user : false,
   };
 }

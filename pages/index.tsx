@@ -4,8 +4,8 @@ import { useRouter } from "next/router";
 import { destroyCookie, parseCookies, setCookie } from "nookies";
 import React, { useEffect, useState } from "react";
 import MdLoader from "../src/components/md/MdLoader";
-import NewUser from "../src/components/welcome/NewUser";
-import Welcome from "../src/components/welcome/Welcome";
+import UserNew from "../src/components/user/UserNew";
+import Welcome from "../src/components/Welcome";
 import useFuegoUser from "../src/interfaces/useFuegoUser";
 import fuego from "../src/interfaces/fuego";
 
@@ -43,7 +43,7 @@ function App({
                 maxAge: 60 * 60,
                 path: "/",
               });
-              setIsNewUser(true);
+              setIsNewUser(user);
             } else {
               router.push("/home");
             }
@@ -54,8 +54,9 @@ function App({
 
   if ((fuegoPending && user === null) || isValidating) {
     return <MdLoader />;
-  } else if ((fuegoPending || fuegoNewUser) && isNewUser) {
-    return <NewUser />;
+  } else if ((fuegoPending || fuegoNewUser) && user && isNewUser) {
+    destroyCookie(null, "fuegoNewUser");
+    return <UserNew user={user} />;
   } else if (user) {
     router.push("/home");
     return <MdLoader />;

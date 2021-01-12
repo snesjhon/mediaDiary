@@ -3,7 +3,7 @@ import React from "react";
 import LayoutMain from "../src/components/layouts/LayoutMain";
 import MdLoader from "../src/components/md/MdLoader";
 import Preferences from "../src/components/Preferences";
-import NewUser from "../src/components/welcome/NewUser";
+import NewUser from "../src/components/user/UserNew";
 import useFuegoAuth from "../src/interfaces/useFuegoAuth";
 
 /**
@@ -13,6 +13,7 @@ import useFuegoAuth from "../src/interfaces/useFuegoAuth";
 function Settings(): JSX.Element {
   const {
     userValid,
+    userValidHasPreference,
     userNoPreference,
     userNotValid,
     userValidating,
@@ -24,12 +25,12 @@ function Settings(): JSX.Element {
       router.push("/");
     }
     return <MdLoader />;
-  } else if (!userValidating && userNoPreference) {
-    return <NewUser />;
-  } else if (userValid) {
+  } else if (!userValidating && userValid && userNoPreference) {
+    return <NewUser user={userValid} />;
+  } else if (userValidHasPreference) {
     return (
       <LayoutMain title="Settings">
-        <Preferences user={userValid} />
+        <Preferences user={userValidHasPreference} />
       </LayoutMain>
     );
   }
