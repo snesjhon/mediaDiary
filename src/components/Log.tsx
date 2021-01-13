@@ -117,8 +117,13 @@ function Log(): JSX.Element {
       mediaInfo = {
         ...mediaInfo,
         mediaId: `${selected.mediaId}_${externalSeason.id}`,
-        releasedDate: dayjs(externalSeason.air_date).toISOString(),
       };
+      if (externalSeason.air_date !== null) {
+        mediaInfo = {
+          ...mediaInfo,
+          releasedDate: dayjs(externalSeason.air_date).toISOString(),
+        };
+      }
     }
   }
 
