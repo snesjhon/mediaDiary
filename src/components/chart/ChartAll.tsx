@@ -16,7 +16,6 @@ function ChartAll({
     revalidateOnFocus: false,
   });
 
-  console.log(data);
   const { filterRating, filterReleasedYear, filterGenre } = list;
 
   const ratingCount = Object.keys(filterRating).reduce<number[]>((a, c) => {

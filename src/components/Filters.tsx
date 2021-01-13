@@ -30,6 +30,7 @@ import { fuegoFiltersAll } from "../interfaces/fuegoFilterActions";
 import useFuegoUser from "../interfaces/useFuegoUser";
 import AlbumIcon from "./icons/AlbumIcon";
 import FilmIcon from "./icons/FilmIcon";
+import StarEmptyIcon from "./icons/StartEmptyIcon";
 import TvIcon from "./icons/TvIcon";
 import MdLogo from "./md/MdLogo";
 import MdRating from "./md/MdRating";
@@ -78,6 +79,19 @@ function FiltersContainer({
   );
 }
 
+const ratingSelect: { [key: string]: string } = {
+  1: "½",
+  2: "⭑",
+  3: "⭑ ½",
+  4: "⭑⭑",
+  5: "⭑⭑ ½",
+  6: "⭑⭑⭑",
+  7: "⭑⭑⭑ ½",
+  8: "⭑⭑⭑⭑",
+  9: "⭑⭑⭑⭑ ½",
+  10: "⭑⭑⭑⭑⭑",
+};
+
 function FiltersData({
   data,
   onClose,
@@ -105,11 +119,20 @@ function FiltersData({
   } = useCheckboxGroup({
     defaultValue: filterMediaType ?? [],
   });
-  const [rating, setRating] = useState(filterRating);
+  const [rating, setRating] = useState(
+    filterRating !== null
+      ? filterRating === 0
+        ? "no"
+        : ratingSelect[filterRating * 2]
+      : null
+  );
   const [releasedDecade, setReleasedDecade] = useState(filterReleasedDecade);
   const [loggedBefore, setLoggedBefore] = useState(filterLoggedBefore);
   const [genre, setGenre] = useState(filterGenre);
 
+  const ratingKey = Object.keys(ratingSelect).find(
+    (key) => ratingSelect[key] === rating
+  );
   return (
     <>
       <DrawerBody px={0}>
@@ -199,14 +222,25 @@ function FiltersData({
           <Heading size="md">Rating</Heading>
           <Divider mt={2} mb={4} />
           <Flex alignItems="center">
-            <MdRating
-              initialRating={rating ?? 0}
-              wh={{ base: "25px", sm: "25px", md: "25px" }}
-              onChange={(val) => setRating(val)}
-            />
-            {rating !== null && (
-              <CloseButton onClick={() => setRating(null)} size="sm" ml={2} />
-            )}
+            <Select
+              onChange={(e) =>
+                setRating(e.target.value === "all" ? null : e.target.value)
+              }
+              color={
+                rating === null || rating === "no" ? undefined : "purple.500"
+              }
+              value={rating === null ? "all" : rating}
+            >
+              <option value="all">All Ratings</option>
+              {[...Array(10)]
+                .map((e, i) => (
+                  <option value={ratingSelect[i + 1]} key={`ratingCount_${i}`}>
+                    {ratingSelect[i + 1]}
+                  </option>
+                ))
+                .reverse()}
+              <option value="no">No Rating</option>
+            </Select>
           </Flex>
         </Box>
         <Box p={4}>
@@ -312,7 +346,12 @@ function FiltersData({
                   mediaTypes.length === 0 ? null : (mediaTypes as MediaTypes[]),
                 filterGenre: genre,
                 filterLoggedBefore: loggedBefore,
-                filterRating: rating,
+                filterRating:
+                  rating === "no"
+                    ? 0
+                    : typeof ratingKey !== "undefined"
+                    ? parseInt(ratingKey) / 2
+                    : null,
                 filterReleasedDecade: releasedDecade,
                 filterDiaryYear: diaryYear,
               },
