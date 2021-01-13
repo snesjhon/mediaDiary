@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Divider,
+  DrawerBody,
   Flex,
   Grid,
   Heading,
@@ -58,7 +59,7 @@ function Day(): JSX.Element | null {
         {view === "edit" ? (
           <Edit />
         ) : (
-          <>
+          <DrawerBody px={{ base: 6, sm: 8 }}>
             <Flex
               alignItems="center"
               justifyContent="center"
@@ -168,7 +169,7 @@ function Day(): JSX.Element | null {
                 />
               )}
             </Suspense>
-          </>
+          </DrawerBody>
         )}
       </>
     );

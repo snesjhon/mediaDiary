@@ -109,15 +109,17 @@ function LogFields({
         <>
           <Flex alignItems="center" justifyContent="space-between">
             <Text flex="1">Season</Text>
-            <Button
-              size="sm"
-              colorScheme="purple"
-              mr={3}
-              variant="link"
-              onClick={() => setShowEpisodes(!showEpisodes)}
-            >
-              + Episodes
-            </Button>
+            {episodes && (
+              <Button
+                size="sm"
+                colorScheme="purple"
+                mr={3}
+                variant="link"
+                onClick={() => setShowEpisodes(!showEpisodes)}
+              >
+                + Episodes
+              </Button>
+            )}
             <Box w="30%">
               {isEdit && <div>{season}</div>}
               {typeof externalSeasons !== "undefined" && (
@@ -153,7 +155,7 @@ function LogFields({
               )}
             </Box>
           </Flex>
-          {typeof episodes !== "undefined" && (
+          {typeof episodes !== "undefined" && showEpisodes && (
             <>
               <Divider my={2} />
               <SimpleGrid columns={Math.floor(episodes / 3)} spacingY={3}>
@@ -164,6 +166,7 @@ function LogFields({
                       key={`episode_${episodeNumber + 1}`}
                       value={episodeNumber + 1}
                       isChecked={seenEpisodes?.includes(episodeNumber + 1)}
+                      colorScheme="purple"
                       onChange={(e) => {
                         if (typeof seenEpisodes !== "undefined") {
                           const hasValue = seenEpisodes?.includes(

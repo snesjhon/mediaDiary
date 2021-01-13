@@ -336,7 +336,8 @@ function FiltersData({
           </Button>
         )}
         <Button
-          colorScheme="blue"
+          colorScheme="purple"
+          variant="outline"
           onClick={() => {
             onClose();
             return dispatch({

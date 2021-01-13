@@ -1,4 +1,4 @@
-import { Button, Center, DrawerFooter } from "@chakra-ui/react";
+import { Button, Center, DrawerBody, DrawerFooter } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React, { useReducer } from "react";
 import { mutate } from "swr";
@@ -39,42 +39,36 @@ function Edit(): JSX.Element {
         </Center>
       ) : (
         <>
-          {typeof edit?.diary !== "undefined" && <Info item={edit.diary} />}
-          <LogFields
-            dispatch={dispatch}
-            type={edit?.diary.type}
-            item={{
-              diaryDate: state.diaryDate,
-              loggedBefore: state.loggedBefore,
-              poster: state.poster,
-              rating: state.rating,
-              episodes: state.episodes,
-              season: state.season,
-              seenEpisodes: state.seenEpisodes ?? [],
-            }}
-            isEdit
-          />
-          <DrawerFooter
-            px={0}
-            pt={2}
-            pb={1}
-            mt={2}
-            justifyContent="space-between"
-          >
+          <DrawerBody px={{ base: 6, sm: 8 }}>
+            {typeof edit?.diary !== "undefined" && <Info item={edit.diary} />}
+            <LogFields
+              dispatch={dispatch}
+              type={edit?.diary.type}
+              item={{
+                diaryDate: state.diaryDate,
+                loggedBefore: state.loggedBefore,
+                poster: state.poster,
+                rating: state.rating,
+                episodes: state.episodes,
+                season: state.season,
+                seenEpisodes: state.seenEpisodes ?? [],
+              }}
+              isEdit
+            />
+          </DrawerBody>
+          <DrawerFooter justifyContent="space-between">
             <Button
               onClick={deleteData}
               isLoading={isSaving}
               colorScheme="red"
               variant="outline"
-              size="sm"
             >
               Delete
             </Button>
             <Button
               onClick={editData}
               isLoading={isSaving}
-              colorScheme="blue"
-              size="sm"
+              colorScheme="purple"
               variant="outline"
             >
               Save
