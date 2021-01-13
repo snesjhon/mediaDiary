@@ -46,14 +46,12 @@ function LayoutDrawer({
       {...rest}
     >
       <DrawerOverlay zIndex={2}>
-        <DrawerContent>
+        <DrawerContent {...handlers}>
           <DrawerHeader>
             <MdLogo title="mediaDiary" />
           </DrawerHeader>
           <DrawerCloseButton />
-          <DrawerBody px={{ base: 6, sm: 8 }}>
-            <div {...handlers}>{children}</div>
-          </DrawerBody>
+          {children}
         </DrawerContent>
       </DrawerOverlay>
     </Drawer>

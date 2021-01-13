@@ -1,4 +1,4 @@
-import { Button, Center, DrawerFooter } from "@chakra-ui/react";
+import { Button, Center, DrawerBody, DrawerFooter } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React, { useCallback, useEffect, useReducer } from "react";
 import useSWR from "swr";
@@ -151,18 +151,19 @@ function Log(): JSX.Element {
         </Center>
       ) : (
         <>
-          {typeof mediaInfo !== "undefined" && <Info item={mediaInfo} />}
-          <LogFields
-            dispatch={dispatch}
-            type={mediaInfo?.type}
-            item={logFields}
-          />
-          <DrawerFooter px={0} pt={2} pb={1} mt={2}>
+          <DrawerBody px={{ base: 6, sm: 8 }}>
+            {typeof mediaInfo !== "undefined" && <Info item={mediaInfo} />}
+            <LogFields
+              dispatch={dispatch}
+              type={mediaInfo?.type}
+              item={logFields}
+            />
+          </DrawerBody>
+          <DrawerFooter>
             <Button
               onClick={addData}
               isLoading={isSaving}
-              colorScheme="blue"
-              size="sm"
+              colorScheme="purple"
               variant="outline"
             >
               Save
