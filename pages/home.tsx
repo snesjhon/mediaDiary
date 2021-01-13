@@ -26,7 +26,6 @@ function Home(): JSX.Element {
     }
     return <MdLoader />;
   } else if (!userValidating && userValid && userNoPreference) {
-    console.log("hap");
     return <UserNew user={userValid} />;
   } else if (userValidHasPreference) {
     return (
