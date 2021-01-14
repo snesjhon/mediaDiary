@@ -16,6 +16,8 @@ import React, { useState } from "react";
 import Rating from "react-rating";
 import type { LogActions, LogProps } from "../config/logStore";
 import StarEmptyIcon from "./icons/StartEmptyIcon";
+import type { MediaBase } from "../config/types";
+import { MEDIA_LOGGED_BEFORE } from "../config/contants";
 
 function LogFields({
   dispatch,
@@ -25,7 +27,7 @@ function LogFields({
 }: {
   dispatch: Dispatch<LogActions>;
   item: LogProps;
-  type: any;
+  type: MediaBase["type"];
   isEdit?: boolean;
 }): JSX.Element {
   const {
@@ -92,7 +94,7 @@ function LogFields({
       </Flex>
       <Divider my={2} />
       <Flex alignItems="center" justifyContent="space-between">
-        <Text>Heard Before?</Text>
+        <Text>{MEDIA_LOGGED_BEFORE[type]}</Text>
         <Checkbox
           colorScheme="purple"
           isChecked={loggedBefore}

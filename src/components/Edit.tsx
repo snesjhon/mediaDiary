@@ -41,20 +41,22 @@ function Edit(): JSX.Element {
         <>
           <DrawerBody px={{ base: 6, sm: 8 }}>
             {typeof edit?.diary !== "undefined" && <Info item={edit.diary} />}
-            <LogFields
-              dispatch={dispatch}
-              type={edit?.diary.type}
-              item={{
-                diaryDate: state.diaryDate,
-                loggedBefore: state.loggedBefore,
-                poster: state.poster,
-                rating: state.rating,
-                episodes: state.episodes,
-                season: state.season,
-                seenEpisodes: state.seenEpisodes ?? [],
-              }}
-              isEdit
-            />
+            {typeof edit?.diary !== "undefined" && (
+              <LogFields
+                dispatch={dispatch}
+                type={edit.diary.type}
+                item={{
+                  diaryDate: state.diaryDate,
+                  loggedBefore: state.loggedBefore,
+                  poster: state.poster,
+                  rating: state.rating,
+                  episodes: state.episodes,
+                  season: state.season,
+                  seenEpisodes: state.seenEpisodes ?? [],
+                }}
+                isEdit
+              />
+            )}
           </DrawerBody>
           <DrawerFooter justifyContent="space-between">
             <Button
