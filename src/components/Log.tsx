@@ -152,12 +152,16 @@ function Log(): JSX.Element {
       ) : (
         <>
           <DrawerBody px={{ base: 6, sm: 8 }}>
-            {typeof mediaInfo !== "undefined" && <Info item={mediaInfo} />}
-            <LogFields
-              dispatch={dispatch}
-              type={mediaInfo?.type}
-              item={logFields}
-            />
+            {typeof mediaInfo !== "undefined" && (
+              <>
+                <Info item={mediaInfo} />
+                <LogFields
+                  dispatch={dispatch}
+                  type={mediaInfo.type}
+                  item={logFields}
+                />
+              </>
+            )}
           </DrawerBody>
           <DrawerFooter>
             <Button
