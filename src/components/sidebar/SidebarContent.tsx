@@ -27,14 +27,15 @@ export function SidebarButton({
   Icon: FunctionComponent<IconProps>;
 }): JSX.Element {
   const router = useRouter();
-  const bgColor = useColorModeValue("purple.50", "purple.800");
-  const activeBg = useColorModeValue("purple.100", "purple.700");
+  const bgColor = useColorModeValue("purple.100", "purple.500");
+  const colorActiveBg = useColorModeValue("purple.600", "purple.300");
+  const activeBg = useColorModeValue("purple.200", "purple.400");
   return (
     <Button
       variant="ghost"
       leftIcon={<Icon mb="2px" />}
       fontSize="xl"
-      bg={router.pathname === route ? bgColor : undefined}
+      color={router.pathname === route ? colorActiveBg : undefined}
       _hover={{
         bg: bgColor,
       }}
