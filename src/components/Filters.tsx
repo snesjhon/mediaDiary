@@ -28,6 +28,7 @@ import { useMDDispatch, useMDState } from "../config/store";
 import type { FilterData, Filters, MediaTypes } from "../config/types";
 import { fuegoFiltersAll } from "../interfaces/fuegoFilterActions";
 import useFuegoUser from "../interfaces/useFuegoUser";
+import { capFormat } from "../utils/helpers";
 import AlbumIcon from "./icons/AlbumIcon";
 import FilmIcon from "./icons/FilmIcon";
 import StarEmptyIcon from "./icons/StartEmptyIcon";
@@ -193,28 +194,30 @@ function FiltersData({
                   />
                   <Text>All</Text>
                 </Box>
-                {createMediaKeys("filterMediaType").map((e) => {
-                  const typeActive = mediaTypes.includes(e);
-                  let typeIcon = <FilmIcon />;
-                  if (e === "tv") {
-                    typeIcon = <TvIcon />;
-                  } else if (e === "album") {
-                    typeIcon = <AlbumIcon />;
-                  }
-                  return (
-                    <Box key={`filterMedia_${e}`} textAlign="center">
-                      <IconButton
-                        variant={typeActive ? undefined : "outline"}
-                        colorScheme="purple"
-                        aria-label="Filter by TV"
-                        onClick={() => mediaTypesOnChange(e)}
-                        icon={typeIcon}
-                        size="lg"
-                      />
-                      <Text>{e}</Text>
-                    </Box>
-                  );
-                })}
+                {createMediaKeys("filterMediaType")
+                  .sort()
+                  .map((e) => {
+                    const typeActive = mediaTypes.includes(e);
+                    let typeIcon = <FilmIcon />;
+                    if (e === "tv") {
+                      typeIcon = <TvIcon />;
+                    } else if (e === "album") {
+                      typeIcon = <AlbumIcon />;
+                    }
+                    return (
+                      <Box key={`filterMedia_${e}`} textAlign="center">
+                        <IconButton
+                          variant={typeActive ? undefined : "outline"}
+                          colorScheme="purple"
+                          aria-label="Filter by TV"
+                          onClick={() => mediaTypesOnChange(e)}
+                          icon={typeIcon}
+                          size="lg"
+                        />
+                        <Text>{capFormat(e, { allCaps: e === "tv" })}</Text>
+                      </Box>
+                    );
+                  })}
               </HStack>
             )}
         </Box>

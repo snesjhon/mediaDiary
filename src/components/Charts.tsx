@@ -17,6 +17,7 @@ import type {
   MediaTypes,
 } from "../config/types";
 import { fuegoFiltersAll } from "../interfaces/fuegoFilterActions";
+import { capFormat } from "../utils/helpers";
 import ChartAll from "./chart/ChartAll";
 import ChartYear from "./chart/ChartYear";
 import AlbumIcon from "./icons/AlbumIcon";
@@ -190,7 +191,10 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
                     {dataCounts[e]}
                   </Heading>
                   <Text color={mediaType === e ? "purple.500" : undefined}>
-                    {e}
+                    {capFormat(e, {
+                      allCaps: e === "tv",
+                      isPlural: dataCounts[e] > 1,
+                    })}
                   </Text>
                 </SimpleGrid>
               );
