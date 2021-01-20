@@ -1,11 +1,11 @@
-import type { MediaTypes, DiaryAddWithId } from "../config/types";
+import type { MediaType, DiaryAddWithId } from "../config/types";
 import { fuegoDb } from "./fuego";
 
 export async function fuegoChartYear(
   key: string,
   uid: string,
   diaryYear: number | null,
-  mediaType: MediaTypes | null
+  mediaType: MediaType | null
 ): Promise<DiaryAddWithId[]> {
   let diaryRef = fuegoDb.collection(
     `users/${uid}/diary`

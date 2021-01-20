@@ -1,6 +1,6 @@
 import React from "react";
 import useSWR from "swr";
-import type { DiaryAddWithId, MediaTypes } from "../../config/types";
+import type { DiaryAddWithId, MediaType } from "../../config/types";
 import { fuegoChartYear } from "../../interfaces/fuegoChartActions";
 import MdLoader from "../md/MdLoader";
 import ChartTop from "./ChartTop";
@@ -13,7 +13,7 @@ function ChartYear({
 }: {
   uid: string;
   year: number | null;
-  mediaType: MediaTypes | null;
+  mediaType: MediaType | null;
 }): JSX.Element {
   const { data, error } = useSWR<DiaryAddWithId[]>(
     ["/fuego/chartYear", uid, year, mediaType],
