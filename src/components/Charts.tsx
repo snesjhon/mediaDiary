@@ -14,7 +14,7 @@ import useSWR from "swr";
 import type {
   FilterData,
   FuegoValidatedUser,
-  MediaTypes,
+  MediaType,
 } from "../config/types";
 import { fuegoFiltersAll } from "../interfaces/fuegoFilterActions";
 import { capFormat } from "../utils/helpers";
@@ -30,7 +30,7 @@ import MdStatus from "./md/MdStatus";
 
 function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
   const [yearType, setYearType] = useState<number | null>(null);
-  const [mediaType, setMediaType] = useState<MediaTypes | null>(null);
+  const [mediaType, setMediaType] = useState<MediaType | null>(null);
   const { data, error, isValidating } = useSWR<FilterData>(
     ["fuego/chartCounts", user.uid],
     fuegoFiltersAll,
@@ -174,7 +174,7 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
                   row={2}
                   textAlign="center"
                   cursor="pointer"
-                  onClick={() => setMediaType(e as MediaTypes)}
+                  onClick={() => setMediaType(e as MediaType)}
                   _hover={{
                     color: "purple.500",
                   }}

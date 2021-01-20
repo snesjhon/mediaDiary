@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  CloseButton,
   Divider,
   Drawer,
   DrawerBody,
@@ -25,16 +24,14 @@ import {
 import React, { useState } from "react";
 import useSWR from "swr";
 import { useMDDispatch, useMDState } from "../config/store";
-import type { FilterData, Filters, MediaTypes } from "../config/types";
+import type { FilterData, Filters, MediaType } from "../config/types";
 import { fuegoFiltersAll } from "../interfaces/fuegoFilterActions";
 import useFuegoUser from "../interfaces/useFuegoUser";
 import { capFormat } from "../utils/helpers";
 import AlbumIcon from "./icons/AlbumIcon";
 import FilmIcon from "./icons/FilmIcon";
-import StarEmptyIcon from "./icons/StartEmptyIcon";
 import TvIcon from "./icons/TvIcon";
 import MdLogo from "./md/MdLogo";
-import MdRating from "./md/MdRating";
 import MdStatus from "./md/MdStatus";
 
 function FiltersContainer({
@@ -347,7 +344,7 @@ function FiltersData({
               type: "filter",
               payload: {
                 filterMediaType:
-                  mediaTypes.length === 0 ? null : (mediaTypes as MediaTypes[]),
+                  mediaTypes.length === 0 ? null : (mediaTypes as MediaType[]),
                 filterGenre: genre,
                 filterLoggedBefore: loggedBefore,
                 filterRating:

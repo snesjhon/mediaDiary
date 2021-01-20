@@ -48,50 +48,49 @@ function useFuegoAuth(): FuegoAuth {
 
   // If the user chooses to record Albums, use the spotify API
   useEffect(() => {
-    const now = dayjs();
-    // if (user && preference && preference.mediaType.includes("album")) {
-    if (!spotifyToken || !spotifyTimeOut || now.isAfter(spotifyTimeOut)) {
-      const newTimeout = now.add(1, "hour");
+    if (
+      preference &&
+      typeof preference.mediaTypes["album"] !== "undefined" &&
+      preference.mediaTypes["album"]
+    ) {
+      const now = dayjs();
+      if (!spotifyToken || !spotifyTimeOut || now.isAfter(spotifyTimeOut)) {
+        const newTimeout = now.add(1, "hour");
 
-      fetch("https://accounts.spotify.com/api/token", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          Accept: "application/json",
-          Authorization:
-            "Basic " +
-            Buffer.from(
-              process.env.NEXT_PUBLIC_SPOTIFY_CLIENT +
-                ":" +
-                process.env.NEXT_PUBLIC_SPOTIFY_SECRET
-            ).toString("base64"),
-        },
-        body: "grant_type=client_credentials",
-      })
-        .then((r) => r.json())
-        .then((spotifyResponse) => {
-          dispatch({
-            type: "spotifyToken",
-            payload: {
-              spotifyToken: spotifyResponse.access_token,
-              spotifyTimeOut: newTimeout,
-            },
-          });
+        fetch("https://accounts.spotify.com/api/token", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Accept: "application/json",
+            Authorization:
+              "Basic " +
+              Buffer.from(
+                process.env.NEXT_PUBLIC_SPOTIFY_CLIENT +
+                  ":" +
+                  process.env.NEXT_PUBLIC_SPOTIFY_SECRET
+              ).toString("base64"),
+          },
+          body: "grant_type=client_credentials",
         })
-        .catch((e) => console.error("[SPOTIFY]: failed to refresh token", e));
+          .then((r) => r.json())
+          .then((spotifyResponse) => {
+            dispatch({
+              type: "spotifyToken",
+              payload: {
+                spotifyToken: spotifyResponse.access_token,
+                spotifyTimeOut: newTimeout,
+              },
+            });
+          })
+          .catch((e) => console.error("[SPOTIFY]: failed to refresh token", e));
+      }
     }
-    // }
-    // }, [dispatch, spotifyToken, spotifyTimeOut, user, preference]);
-  }, [dispatch, spotifyToken, spotifyTimeOut]);
+  }, [dispatch, spotifyToken, spotifyTimeOut, preference]);
 
   // Validating requires two states, either we're waiting for SpotifyToken or just waiting for
   // userpreferences to validate
   let userValidating = true;
-  if (
-    preference !== null &&
-    preference
-    // && preference.mediaType.includes("album")
-  ) {
+  if (preference !== null && preference) {
     userValidating = user === null && !spotifyToken;
   } else {
     userValidating = user === null && preference === null;

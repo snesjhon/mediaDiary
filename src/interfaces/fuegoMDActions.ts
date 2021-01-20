@@ -1,5 +1,5 @@
 import type {
-  MediaTypes,
+  MediaType,
   DiaryAddWithId,
   DiaryAdd,
   UserPref,
@@ -15,7 +15,7 @@ export async function fuegoDiaryGet(
   key: string,
   uid: string,
   cursor: string,
-  mediaTypes: MediaTypes[] | null,
+  mediaTypes: MediaType[] | null,
   rating: number | null,
   releasedDecade: number | null,
   diaryYear: number | null,

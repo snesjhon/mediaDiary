@@ -17,7 +17,7 @@ import dayjs from "dayjs";
 import React, { Suspense } from "react";
 import Rating from "react-rating";
 import useSWR from "swr";
-import type { DiaryAdd, MediaTypes } from "../config/types";
+import type { DiaryAdd, MediaType } from "../config/types";
 import { useMDDispatch, useMDState } from "../config/store";
 import useFuegoUser from "../interfaces/useFuegoUser";
 import { fetcher } from "../utils/fetchers";
@@ -304,7 +304,7 @@ function MDBData({
   season,
 }: {
   mediaId: string;
-  type: MediaTypes;
+  type: MediaType;
   season: number | undefined;
 }) {
   const fetchURL = createFetch();

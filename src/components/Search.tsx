@@ -5,13 +5,23 @@ import dayjs from "dayjs";
 import type { RefObject } from "react";
 import React, { useState } from "react";
 import useSWR from "swr";
-import type { MediaSelected, MediaTypes } from "../config/types";
+import type { MediaSelected, MediaType } from "../config/types";
 import { useMDDispatch, useMDState } from "../config/store";
 import useDebounce from "../utils/useDebounce";
 import AlbumIcon from "./icons/AlbumIcon";
 import FilmIcon from "./icons/FilmIcon";
 import TvIcon from "./icons/TvIcon";
 import MdSpinner from "./md/MdSpinner";
+import type {
+  MDbSearch,
+  MDbSearchResult,
+  SpotifySearch,
+  SpotifySearchResult,
+} from "../config/typesSearch";
+
+// This is the root of our search Types. This can be extended for future search queries.
+// We always want to keep a strict returnArr to ensure that we follow the userPref
+type SearchTypes = [MDbSearch | false, SpotifySearch | false];
 
 function Search({
   refInput,
@@ -23,7 +33,7 @@ function Search({
   const [currTv, setCurrTv] = useState(3);
   const [currAlbum, setCurrAlbum] = useState(3);
   const dispatch = useMDDispatch();
-  const { spotifyToken } = useMDState();
+  const { spotifyToken, preference } = useMDState();
   const { colorMode } = useColorMode();
 
   const bouncedSearch = useDebounce(search, 500);
@@ -32,6 +42,10 @@ function Search({
     searchFetcher,
     { revalidateOnFocus: false }
   );
+
+  const showMovie = (preference && preference?.["mediaTypes"]?.movie) ?? false;
+  const showTV = (preference && preference?.["mediaTypes"]?.tv) ?? false;
+  const showAlbum = (preference && preference?.["mediaTypes"]?.album) ?? false;
 
   return (
     <>
@@ -59,55 +73,74 @@ function Search({
     </>
   );
 
-  function createData(data: any) {
+  function createData(data: SearchTypes) {
     const mdbData = data[0];
     const spotifyData = data[1];
-    const albumData = spotifyData.albums.items.map((e: any) =>
-      mediaNormalize(e)
-    );
 
-    const filteredData: MediaSelected[] = mdbData.results
-      .map((e: any) => mediaNormalize(e))
-      .filter((e: any) => e.type !== "person");
+    let albumData;
+    if (showAlbum && spotifyData) {
+      albumData = spotifyData.albums.items.map((e) => mediaNormalize(e));
+    }
 
-    const { movieData, tvData } = filteredData.reduce<{
-      movieData: MediaSelected[];
-      tvData: MediaSelected[];
-    }>(
-      (a, c: MediaSelected) => {
-        if (c.type === "movie") {
-          a["movieData"].push(c);
-        } else if (c.type === "tv") {
-          a["tvData"].push(c);
-        }
-        return a;
-      },
-      { movieData: [], tvData: [] }
-    );
+    let tvData;
+    let movieData;
+    if (mdbData && (showMovie || showTV)) {
+      const filteredData: MediaSelected[] = mdbData.results
+        .map((e) => mediaNormalize(e))
+        // person could also be part of the result, from mdbData
+        .filter((e) => (e.type as MediaType & "person") !== "person");
+
+      const { movieOutput, tvOutput } = filteredData.reduce<{
+        movieOutput: MediaSelected[];
+        tvOutput: MediaSelected[];
+      }>(
+        (a, c: MediaSelected) => {
+          if (c.type === "movie") {
+            a["movieOutput"].push(c);
+          } else if (c.type === "tv") {
+            a["tvOutput"].push(c);
+          }
+          return a;
+        },
+        { movieOutput: [], tvOutput: [] }
+      );
+      if (showMovie) {
+        movieData = movieOutput;
+      }
+      if (showTV) {
+        tvData = tvOutput;
+      }
+    }
 
     return (
       <>
-        <CreateList
-          data={movieData}
-          title="Movie"
-          DataIcon={FilmIcon}
-          seeNumber={currMovie}
-          seeAction={setCurrMovie}
-        />
-        <CreateList
-          data={tvData}
-          title="TV"
-          DataIcon={TvIcon}
-          seeNumber={currTv}
-          seeAction={setCurrTv}
-        />
-        <CreateList
-          data={albumData}
-          title="Album"
-          DataIcon={AlbumIcon}
-          seeNumber={currAlbum}
-          seeAction={setCurrAlbum}
-        />
+        {showMovie && movieData && (
+          <CreateList
+            data={movieData}
+            title="Movie"
+            DataIcon={FilmIcon}
+            seeNumber={currMovie}
+            seeAction={setCurrMovie}
+          />
+        )}
+        {showTV && tvData && (
+          <CreateList
+            data={tvData}
+            title="TV"
+            DataIcon={TvIcon}
+            seeNumber={currTv}
+            seeAction={setCurrTv}
+          />
+        )}
+        {showAlbum && albumData && (
+          <CreateList
+            data={albumData}
+            title="Album"
+            DataIcon={AlbumIcon}
+            seeNumber={currAlbum}
+            seeAction={setCurrAlbum}
+          />
+        )}
       </>
     );
   }
@@ -176,38 +209,49 @@ function Search({
     );
   }
 
-  function mediaNormalize(item: any): MediaSelected {
-    const type: MediaTypes =
-      typeof item?.media_type !== "undefined" ? item.media_type : "album";
+  function mediaNormalize(
+    item: SpotifySearchResult | MDbSearchResult
+  ): MediaSelected {
+    const type =
+      typeof (item as MDbSearchResult)?.media_type !== "undefined"
+        ? (item as MDbSearchResult).media_type
+        : "album";
 
     if (type === "album") {
+      // TODO: This is probably not the best solution, but I haven't figured out TS method yet.
+      const castItem = item as SpotifySearchResult;
       return {
-        mediaId: item.id,
-        poster: item.images[0].url,
-        title: item.name,
-        releasedDate: dayjs(item.release_date).toISOString(),
-        artist: item.artists[0].name,
-        artistId: item.artists[0].id,
+        mediaId: castItem.id,
+        poster: castItem.images[0].url,
+        title: castItem.name,
+        releasedDate: dayjs(castItem.release_date).toISOString(),
+        artist: castItem.artists[0].name,
+        artistId: castItem.artists[0].id,
         genre: "",
         type,
       };
     } else {
       let released;
+      const castItem = item as MDbSearchResult;
       try {
         released = dayjs(
-          type === "movie" ? item.release_date : item.first_air_date
+          type === "movie" ? castItem.release_date : castItem.first_air_date
         ).toISOString();
       } catch {
-        released = type === "movie" ? item.release_date : item.first_air_date;
+        released =
+          type === "movie" ? castItem.release_date : castItem.first_air_date;
       }
       return {
-        mediaId: item.id,
-        poster: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
-        title: type === "movie" ? item.title : item.original_name,
-        releasedDate: released,
+        mediaId: castItem.id.toString(),
+        poster: `https://image.tmdb.org/t/p/w500${castItem.poster_path}`,
+        title:
+          type === "movie"
+            ? castItem.title ?? ""
+            : castItem.original_name ?? "",
+        releasedDate: released ?? "",
         genre: "",
         artist: "",
-        type,
+        type: type as MediaType,
       };
     }
   }
@@ -217,25 +261,33 @@ function Search({
     // separated and reusable.
     const queryString = query.substring(13);
 
-    // We need to conditionally add fetches depending on userPref, but currently (01/21) we're not.
-    const fetchers = [];
+    // We're always going to return two items in this arr. Regardless of the conditional.
+    // The conditional will only allows us to determine the call or now. Empty Arr or not.
+    const fetchers: [
+      Promise<MDbSearch> | false,
+      Promise<SpotifySearch> | false
+    ] = [false, false];
 
-    const mdbFetch = fetch(
-      `https://api.themoviedb.org/3/search/multi?api_key=${
-        process.env.NEXT_PUBLIC_MDBKEY
-      }&query=${encodeURIComponent(queryString)}&include_adult=false&page=1,2,3`
-    ).then((r) => r.json());
-    fetchers.push(mdbFetch);
+    if (showMovie || showTV) {
+      fetchers[0] = fetch(
+        `https://api.themoviedb.org/3/search/multi?api_key=${
+          process.env.NEXT_PUBLIC_MDBKEY
+        }&query=${encodeURIComponent(
+          queryString
+        )}&include_adult=false&page=1,2,3`
+      ).then((r) => r.json());
+    }
 
-    const albumFetch = fetch(
-      `https://api.spotify.com/v1/search?q=${queryString}&type=album&limit=20`,
-      {
-        headers: { Authorization: `Bearer ${spotifyToken}` },
-      }
-    ).then((r) => r.json());
-    fetchers.push(albumFetch);
+    if (showAlbum) {
+      fetchers[1] = fetch(
+        `https://api.spotify.com/v1/search?q=${queryString}&type=album&limit=20`,
+        {
+          headers: { Authorization: `Bearer ${spotifyToken}` },
+        }
+      ).then((r) => r.json());
+    }
 
-    return Promise.all(fetchers)
+    return Promise.all<MDbSearch | false, SpotifySearch | false>(fetchers)
       .then((results) => results)
       .catch((e) => console.error(e));
   }

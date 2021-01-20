@@ -1,7 +1,15 @@
 /**
- * MediaTypes include all of the current available types for mediaDiary
+ * MediaType include all of the current available types for mediaDiary
  */
-export type MediaTypes = "movie" | "album" | "tv";
+export type MediaType = "movie" | "tv" | "album";
+
+/** In Fuego we save the MediaType by key in a boolean because we want to know what options to omit */
+export type MediaTypes = {
+  [key in MediaType]: boolean;
+};
+
+/** In MD Settings, we want an array format to always be of this structure. This is useful for Promise.All fns */
+export type MediaTypesArr = ["movie", "tv", "album"];
 
 /**
  * MediaBase is the structure for a mediaItem.
@@ -15,7 +23,7 @@ export interface MediaBase {
   releasedDate: string;
   releasedYear: number;
   releasedDecade: number;
-  type: MediaTypes;
+  type: MediaType;
   season?: number;
   episodes?: number;
   overview?: string;
@@ -53,7 +61,7 @@ export interface MediaEdit {
 }
 
 export interface Filters {
-  filterMediaType: MediaTypes;
+  filterMediaType: MediaType;
   filterRating: number;
   filterReleasedDecade: number;
   filterReleasedYear: number;
@@ -63,7 +71,7 @@ export interface Filters {
 }
 
 export interface FilterState {
-  filterMediaType: MediaTypes[] | null;
+  filterMediaType: MediaType[] | null;
   filterRating: Filters["filterRating"] | null;
   filterReleasedDecade: Filters["filterReleasedDecade"] | null;
   filterDiaryYear: Filters["filterDiaryYear"] | null;
@@ -99,7 +107,7 @@ export type FuegoValidatedUser = firebase.User;
  */
 export interface UserPref {
   /** User's choice of media to track set during NewUserFlow */
-  mediaType: MediaTypes[];
+  mediaTypes: MediaTypes;
 
   /** User's choice of theme set during NewUserFlow */
   theme: "light" | "dark";

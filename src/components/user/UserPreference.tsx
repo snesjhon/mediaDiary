@@ -15,10 +15,11 @@ import { useMDDispatch, useMDState } from "../../config/store";
 import type {
   FuegoUserPref,
   FuegoValidatedUser,
-  MediaTypes,
+  MediaTypesArr,
   UserPref,
 } from "../../config/types";
 import { fuegoSetPreferences } from "../../interfaces/fuegoMDActions";
+import { createMediaTypes, createMediaTypesArr } from "../../utils/helpers";
 
 function UserPreference({
   user,
@@ -32,7 +33,9 @@ function UserPreference({
   const hasPreference =
     typeof preference !== "undefined" && preference !== null && preference;
   const { setValue, value } = useCheckboxGroup({
-    defaultValue: hasPreference ? hasPreference["mediaType"] : MEDIA_TYPES,
+    defaultValue: hasPreference
+      ? createMediaTypesArr(hasPreference["mediaTypes"])
+      : MEDIA_TYPES,
   });
   const [theme, setTheme] = useState<UserPref["theme"]>(
     hasPreference ? hasPreference["theme"] : "light"
@@ -89,7 +92,7 @@ function UserPreference({
       try {
         dispatch({ type: "saving" });
         const preference = {
-          mediaType: (value as unknown) as MediaTypes[],
+          mediaTypes: createMediaTypes(value as MediaTypesArr),
           theme,
         };
         await fuegoSetPreferences(user.uid, preference);
