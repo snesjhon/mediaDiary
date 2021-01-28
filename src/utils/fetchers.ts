@@ -1,7 +1,4 @@
-export function spotifyFetch(
-  urlString: string,
-  token: string
-): Promise<unknown> {
+export function spotifyFetch<T>(urlString: string, token: string): Promise<T> {
   return fetch(urlString, {
     headers: { Authorization: `Bearer ${token}` },
   }).then((r) => r.json());

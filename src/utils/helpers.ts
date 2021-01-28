@@ -1,5 +1,28 @@
 import type { MediaTypesArr, MediaTypes, MediaType } from "../config/types";
 
+export function getTVUrl(id: string, seasonId?: number): string {
+  if (seasonId) {
+    return `https://api.themoviedb.org/3/tv/${id}/season/${seasonId}?api_key=${process.env.NEXT_PUBLIC_MDBKEY}&append_to_response=credits,videos`;
+  }
+  return `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.NEXT_PUBLIC_MDBKEY}&append_to_response=credits,videos`;
+}
+
+export function getMovieUrl(id: string): string {
+  return `https://api.themoviedb.org/3/movie/${encodeURIComponent(
+    id
+  )}?api_key=${
+    process.env.NEXT_PUBLIC_MDBKEY
+  }&append_to_response=credits,videos`;
+}
+
+export function getArtistUrl(id: string): string {
+  return `https://api.spotify.com/v1/artists/${id}`;
+}
+
+export function getAlbumUrl(id: string): string {
+  return `https://api.spotify.com/v1/albums/${id}`;
+}
+
 export function capFormat(
   item: string,
   options?: {
