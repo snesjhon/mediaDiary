@@ -1,7 +1,6 @@
-import { EditIcon, ExternalLinkIcon, StarIcon } from "@chakra-ui/icons";
+import { EditIcon, StarIcon } from "@chakra-ui/icons";
 import {
   Box,
-  Button,
   Divider,
   DrawerBody,
   Flex,
@@ -9,22 +8,30 @@ import {
   Heading,
   IconButton,
   Image,
-  SimpleGrid,
-  Tag,
   Text,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React, { Suspense } from "react";
 import Rating from "react-rating";
 import useSWR from "swr";
-import type { DiaryAdd, MediaType } from "../config/types";
 import { useMDDispatch, useMDState } from "../config/store";
+import type { DiaryAdd, MediaType } from "../config/types";
+import type { MDbMovie, MDbTV } from "../config/typesMDb";
+import type { SpotifyAlbum, SpotifyArtist } from "../config/typesSpotify";
+import { fuegoDiaryEntry } from "../interfaces/fuegoMDActions";
 import useFuegoUser from "../interfaces/useFuegoUser";
-import { fetcher } from "../utils/fetchers";
+import { fetcher, spotifyFetch } from "../utils/fetchers";
+import {
+  getAlbumUrl,
+  getArtistUrl,
+  getMovieUrl,
+  getTVUrl,
+} from "../utils/helpers";
+import ContentMDb from "./content/ContentMDb";
+import ContentSpotify from "./content/ContentSpotify";
 import Edit from "./Edit";
 import StarEmptyIcon from "./icons/StartEmptyIcon";
 import MdLoader from "./md/MdLoader";
-import { fuegoDiaryEntry } from "../interfaces/fuegoMDActions";
 import MdSpinner from "./md/MdSpinner";
 
 function Day(): JSX.Element | null {
@@ -186,114 +193,30 @@ function SpotifyData({
   token: string;
   artistId: string;
 }) {
-  const { data } = useSWR<any[]>(`/spotify/${mediaId}`, fetchAll, {
-    revalidateOnFocus: false,
-    suspense: true,
-  });
+  const { data } = useSWR<[SpotifyAlbum, SpotifyArtist]>(
+    `/spotify/${mediaId}`,
+    fetchAll,
+    {
+      revalidateOnFocus: false,
+      suspense: true,
+    }
+  );
 
   if (data) {
     const albumInfo = data[0];
     const artistInfo = data[1];
 
-    return (
-      <Box my={4}>
-        <Flex justifyContent="space-between" alignItems="center" mb={3}>
-          <Heading size="lg">Tracks</Heading>
-          <Button
-            href={albumInfo.external_urls.spotify}
-            as="a"
-            target="_blank"
-            variant="outline"
-            size="xs"
-            rightIcon={<ExternalLinkIcon />}
-          >
-            Album Page
-          </Button>
-        </Flex>
-        {albumInfo.tracks.items.map((e: any, i: number) => (
-          <Grid
-            key={e.id}
-            gridTemplateColumns="1fr 0.1fr"
-            gridGap={4}
-            mb={2}
-            borderBottomWidth={
-              i === albumInfo.tracks.items.length - 1 ? undefined : "1px"
-            }
-            pb={i === albumInfo.tracks.items.length - 1 ? undefined : 2}
-          >
-            <Text fontSize={{ base: "sm" }}>{e.name}</Text>
-            <Flex>
-              <Text>{dayjs(e.duration_ms).format("m:ss")}</Text>
-              <IconButton
-                variant="link"
-                icon={<ExternalLinkIcon />}
-                aria-label="Play Track"
-                as="a"
-                href={e.external_urls.spotify}
-                target="_blank"
-                color="gray.500"
-                size="sm"
-              />
-            </Flex>
-          </Grid>
-        ))}
-        <Divider mt={4} mb={4} />
-        <Heading size="lg" mb={3}>
-          About
-        </Heading>
-        <Grid
-          gridTemplateColumns={{ base: "0.5fr 1fr", md: "0.6fr 1fr" }}
-          gridGap={{ base: 4, md: 0 }}
-        >
-          <Box>
-            <Image src={artistInfo.images[2].url} borderRadius="xl" />
-          </Box>
-          <Box>
-            <Heading size="md" mb={4}>
-              {artistInfo.name}
-            </Heading>
-            <Flex wrap="wrap">
-              {artistInfo.genres.slice(0, 4).map((e: string) => (
-                <Tag
-                  key={`${artistInfo.name}_${e}`}
-                  colorScheme="purple"
-                  mr={3}
-                  mb={3}
-                >
-                  {e}
-                </Tag>
-              ))}
-            </Flex>
-            <Box my={3}>
-              <Button
-                as="a"
-                href={artistInfo.external_urls.spotify}
-                target="_blank"
-                size="xs"
-                variant="outline"
-                rightIcon={<ExternalLinkIcon />}
-              >
-                Artist Page
-              </Button>
-            </Box>
-          </Box>
-        </Grid>
-      </Box>
-    );
+    return <ContentSpotify albumInfo={albumInfo} artistInfo={artistInfo} />;
   }
+
   return null;
 
   function fetchAll() {
-    const albumFetch = fetch(`https://api.spotify.com/v1/albums/${mediaId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    }).then((r) => r.json());
-    const artistFetch = fetch(
-      `https://api.spotify.com/v1/artists/${artistId}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    ).then((r) => r.json());
-
+    const albumFetch = spotifyFetch<SpotifyAlbum>(getAlbumUrl(mediaId), token);
+    const artistFetch = spotifyFetch<SpotifyArtist>(
+      getArtistUrl(artistId),
+      token
+    );
     return Promise.all([albumFetch, artistFetch]).then((results) => results);
   }
 }
@@ -308,64 +231,23 @@ function MDBData({
   season: number | undefined;
 }) {
   const fetchURL = createFetch();
-  const { data } = useSWR(fetchURL, fetcher, {
+  const { data } = useSWR<MDbMovie | MDbTV>(fetchURL, fetcher, {
     revalidateOnFocus: false,
     suspense: true,
   });
 
-  return (
-    <Box my={4}>
-      {data && (
-        <>
-          {typeof data.tagline !== "undefined" &&
-            typeof data.overview !== "undefined" && (
-              <>
-                <Heading size="lg" mb={3}>
-                  About
-                </Heading>
-                {typeof data.tagline !== "undefined" && (
-                  <Text
-                    textTransform="uppercase"
-                    pb={2}
-                    fontSize="sm"
-                    fontWeight={400}
-                    color="gray.500"
-                  >
-                    {data.tagline}
-                  </Text>
-                )}
-                {typeof data.overview !== "undefined" && (
-                  <Text>{data.overview}</Text>
-                )}
-                <Divider mt={4} mb={4} />
-              </>
-            )}
-          <Heading size="lg" mb={5}>
-            Cast
-          </Heading>
-          <SimpleGrid columns={{ base: 2, md: 4 }} gap={4}>
-            {data.credits.cast.slice(0, 4).map((e: any) => (
-              <Box key={e.name}>
-                <Image
-                  src={`https://image.tmdb.org/t/p/w300${e.profile_path}`}
-                  borderRadius="lg"
-                  h="150px"
-                />
-                <Text>{e.name}</Text>
-              </Box>
-            ))}
-          </SimpleGrid>
-        </>
-      )}
-    </Box>
-  );
+  if (data) {
+    return <ContentMDb type={type} data={data} />;
+  }
+
+  return null;
 
   function createFetch(): string | null {
     if (type === "movie") {
-      return `https://api.themoviedb.org/3/movie/${mediaId}?api_key=${process.env.NEXT_PUBLIC_MDBKEY}&append_to_response=credits,watch/providers,videos`;
+      return getMovieUrl(mediaId);
     } else if (type === "tv") {
       const idArr = mediaId.split("_");
-      return `https://api.themoviedb.org/3/tv/${idArr[0]}/season/${season}?api_key=${process.env.NEXT_PUBLIC_MDBKEY}&append_to_response=credits,videos`;
+      return getTVUrl(idArr[0], season);
     }
     return null;
   }
