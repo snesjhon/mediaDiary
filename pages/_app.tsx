@@ -27,9 +27,9 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0"
         />
         <link rel="manifest" href="/manifest.json" />
-
         <meta name="theme-color" content="#90cdf4" />
         <meta name="apple-mobile-web-app-status-bar" content="#90cdf4" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <title>MediaDiary</title>
       </Head>
       <FuegoProvider>
