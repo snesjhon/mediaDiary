@@ -12,6 +12,8 @@ import {
   ModalBody,
   VStack,
   Text,
+  Grid,
+  Image,
 } from "@chakra-ui/react";
 import { setCookie } from "nookies";
 import React, { useState } from "react";
@@ -50,20 +52,28 @@ function Welcome(): JSX.Element {
         </Container>
       </Box>
       <Layout>
-        <Box>
-          <Heading>Keep track of your favorite Movies</Heading>
-          <br />
-          <Text fontSize="xl">
-            MediaDiary is a media logging platform that helps you keep track of
-            when you watched or listened to your favorite media.
-          </Text>
-          <Button
-            colorScheme="purple"
-            mt="24px"
-            onClick={() => setShowModal(true)}
-          >
-            Sign Up
-          </Button>
+        <Box mt={10}>
+          <Grid gridTemplateColumns="1fr 0.6fr" gridGap="7rem">
+            <Flex flexDir="column" justifyContent="center">
+              <Heading>Keep track of your favorite Media</Heading>
+              <Text fontSize="xl" my={3}>
+                MediaDiary is a media logging platform that helps you keep track
+                of when you watched or listened to your favorite media.
+              </Text>
+              <Box>
+                <Button
+                  colorScheme="purple"
+                  mt="24px"
+                  onClick={() => setShowModal(true)}
+                >
+                  Sign Up
+                </Button>
+              </Box>
+            </Flex>
+            <Box>
+              <Image src="https://via.placeholder.com/400x500" />
+            </Box>
+          </Grid>
         </Box>
       </Layout>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>

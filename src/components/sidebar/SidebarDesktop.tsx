@@ -46,7 +46,7 @@ function SidebarDesktop(): JSX.Element {
             />
           </Box>
         </VStack>
-        <Flex mt={12}>
+        <Flex mt={12} mr={6}>
           <Button
             colorScheme="purple"
             onClick={() =>
@@ -55,9 +55,10 @@ function SidebarDesktop(): JSX.Element {
                 payload: { key: "view", value: "search" },
               })
             }
+            pr={8}
             leftIcon={<PlusIcon boxSize={5} />}
           >
-            mediaMemory
+            Memory
           </Button>
         </Flex>
       </Box>
