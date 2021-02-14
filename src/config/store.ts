@@ -1,9 +1,9 @@
 import type dayjs from "dayjs";
 import { createContext, useContext } from "react";
 import type {
+  DiaryAddWithId,
   FilterState,
   FuegoUserPref,
-  MediaEdit,
   MediaSelected,
 } from "./types";
 
@@ -12,14 +12,14 @@ export interface MDState extends FilterState {
   spotifyToken?: string;
   spotifyTimeOut?: dayjs.Dayjs;
   isSaving?: boolean;
-  view?: "search" | "log" | "edit" | "day" | "md" | "activity";
+  view?: "search" | "log" | "edit" | "day" | "md" | "activity" | "info";
   selected?: MediaSelected;
-  edit?: MediaEdit;
+  edit?: DiaryAddWithId;
 }
 
 type MDActions =
   | {
-      type: "log";
+      type: "log" | "info" | "selected";
       payload: MDState["selected"];
     }
   | {
@@ -129,6 +129,20 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
         selected: actions.payload,
         view: "log",
         edit: undefined,
+      };
+    }
+    case "info": {
+      return {
+        ...state,
+        selected: actions.payload,
+        view: "info",
+        edit: undefined,
+      };
+    }
+    case "selected": {
+      return {
+        ...state,
+        selected: actions.payload,
       };
     }
     case "day": {

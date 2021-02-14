@@ -40,10 +40,7 @@ function ChartTop({ list }: { list: DiaryAddWithId[] }): JSX.Element {
               onClick={() =>
                 dispatch({
                   type: "day",
-                  payload: {
-                    diaryId: e.id,
-                    diary: e,
-                  },
+                  payload: e,
                 })
               }
               _hover={{

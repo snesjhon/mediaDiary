@@ -3,13 +3,14 @@ import dayjs from "dayjs";
 import React, { useReducer } from "react";
 import { mutate } from "swr";
 import { LogReducer } from "../config/logStore";
-import type { DiaryAdd } from "../config/types";
+import type { LogState } from "../config/logStore";
+import type { DiaryAddWithId } from "../config/types";
 import { useMDDispatch, useMDState } from "../config/store";
 import useFuegoUser from "../interfaces/useFuegoUser";
-import Info from "./Info";
-import LogFields from "./LogFields";
+import InfoFields from "./info/InfoFields";
 import MdSpinner from "./md/MdSpinner";
 import { fuegoEdit, fuegoDelete } from "../interfaces/fuegoMDActions";
+import InfoHeader from "./info/InfoHeader";
 
 function Edit(): JSX.Element {
   const MDState = useMDState();
@@ -17,16 +18,13 @@ function Edit(): JSX.Element {
   const mdDispatch = useMDDispatch();
   const { user } = useFuegoUser();
 
-  let initData = {
+  let initData: LogState = {
     diaryDate: dayjs().toISOString(),
     loggedBefore: false,
     rating: 0,
-    artist: "",
-    genre: "",
-    poster: "",
   };
   if (typeof edit !== "undefined") {
-    initData = edit.diary;
+    initData = edit;
   }
 
   const [state, dispatch] = useReducer(LogReducer, initData);
@@ -40,25 +38,20 @@ function Edit(): JSX.Element {
       ) : (
         <>
           <DrawerBody px={{ base: 6, sm: 8 }}>
-            {typeof edit?.diary !== "undefined" && <Info item={edit.diary} />}
-            {typeof edit?.diary !== "undefined" && (
-              <LogFields
-                dispatch={dispatch}
-                type={edit.diary.type}
-                item={{
-                  diaryDate: state.diaryDate,
-                  loggedBefore: state.loggedBefore,
-                  poster: state.poster,
-                  rating: state.rating,
-                  episodes: state.episodes,
-                  season: state.season,
-                  seenEpisodes: state.seenEpisodes ?? [],
-                }}
-                isEdit
-              />
+            {edit && (
+              <>
+                <InfoHeader {...edit} />
+                <InfoFields
+                  type={edit.type}
+                  fields={state}
+                  dispatch={dispatch}
+                  item={edit}
+                  isEdit
+                />
+              </>
             )}
           </DrawerBody>
-          <DrawerFooter justifyContent="space-between">
+          <DrawerFooter justifyContent="space-between" borderTopWidth="1px">
             <Button
               onClick={deleteData}
               isLoading={isSaving}
@@ -91,12 +84,12 @@ function Edit(): JSX.Element {
       mdDispatch({ type: "saving" });
       const diaryEdit = createEdit();
       if (diaryEdit) {
-        await fuegoEdit(user.uid, edit.diaryId, diaryEdit, edit.diary);
+        await fuegoEdit(user.uid, edit.id, diaryEdit, edit);
         mdDispatch({
           type: "savedEdit",
-          payload: { diaryId: edit.diaryId, diary: diaryEdit },
+          payload: diaryEdit,
         });
-        mutate(["/fuego/diaryDay", user.uid, edit.diaryId]);
+        mutate(["/fuego/diaryDay", user.uid, edit.id]);
       } else {
         console.error("[EDIT] error with diaryEdit");
       }
@@ -105,22 +98,15 @@ function Edit(): JSX.Element {
     }
   }
 
-  function createEdit(): DiaryAdd | false {
+  function createEdit(): DiaryAddWithId | false {
     if (typeof edit !== "undefined") {
       const editItem = {
-        ...edit.diary,
+        ...edit,
         diaryDate: state.diaryDate,
         diaryYear: parseInt(dayjs(state.diaryDate).format("YYYY")),
         loggedBefore: state.loggedBefore,
         rating: state.rating,
-        poster: state.poster,
       };
-      if (typeof state.episodes !== "undefined") {
-        Object.assign(editItem, { episodes: state.episodes });
-      }
-      if (typeof state.season !== "undefined") {
-        Object.assign(editItem, { season: state.season });
-      }
       if (typeof state.seenEpisodes !== "undefined") {
         Object.assign(editItem, { seenEpisodes: state.seenEpisodes });
       }
@@ -138,7 +124,7 @@ function Edit(): JSX.Element {
       user.email !== null
     ) {
       mdDispatch({ type: "saving" });
-      await fuegoDelete(user.uid, edit.diaryId, edit.diary);
+      await fuegoDelete(user.uid, edit.id, edit);
       mdDispatch({ type: "view", payload: "md" });
       mdDispatch({ type: "saved" });
     } else {

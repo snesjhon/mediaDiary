@@ -14,32 +14,32 @@ import dayjs from "dayjs";
 import type { Dispatch } from "react";
 import React, { useState } from "react";
 import Rating from "react-rating";
-import type { LogActions, LogProps } from "../config/logStore";
-import StarEmptyIcon from "./icons/StartEmptyIcon";
-import type { MediaBase } from "../config/types";
-import { MEDIA_LOGGED_BEFORE } from "../config/contants";
+import type { LogActions, LogState } from "../../config/logStore";
+import StarEmptyIcon from "../icons/StartEmptyIcon";
+import type {
+  DiaryAddWithId,
+  MediaSelected,
+  MediaType,
+} from "../../config/types";
+import { MEDIA_LOGGED_BEFORE } from "../../config/contants";
+import { useMDDispatch } from "../../config/store";
 
-function LogFields({
+function InfoFields({
   dispatch,
+  fields,
   item,
   isEdit,
   type,
 }: {
   dispatch: Dispatch<LogActions>;
-  item: LogProps;
-  type: MediaBase["type"];
+  fields: LogState;
+  item: MediaSelected | DiaryAddWithId;
+  type: MediaType;
   isEdit?: boolean;
 }): JSX.Element {
-  const {
-    diaryDate,
-    rating,
-    loggedBefore,
-    poster,
-    externalSeasons,
-    season,
-    episodes,
-    seenEpisodes,
-  } = item;
+  const { diaryDate, rating, loggedBefore, seenEpisodes } = fields;
+  const mdDispatch = useMDDispatch();
+
   const [showEpisodes, setShowEpisodes] = useState(
     typeof seenEpisodes !== "undefined" && seenEpisodes.length > 0
       ? true
@@ -107,11 +107,11 @@ function LogFields({
         />
       </Flex>
       <Divider my={2} />
-      {type === "tv" && (
+      {type === "tv" && item && (
         <>
           <Flex alignItems="center" justifyContent="space-between">
             <Text flex="1">Season</Text>
-            {episodes && (
+            {item.episodes && (
               <Button
                 size="sm"
                 colorScheme="purple"
@@ -123,29 +123,33 @@ function LogFields({
               </Button>
             )}
             <Box w="30%">
-              {isEdit && <div>{season}</div>}
-              {typeof externalSeasons !== "undefined" && (
+              {isEdit && <div>{item.season}</div>}
+              {!isEdit && item?.seasons && item?.seasons !== null && (
                 <Select
                   size="sm"
-                  value={season}
+                  value={item.season}
                   onChange={(valueChange) => {
-                    const seasonIndex = externalSeasons.findIndex(
-                      (e: any) =>
-                        e.season_number === parseInt(valueChange.target.value)
-                    );
-                    return dispatch({
-                      type: "season",
-                      payload: {
-                        externalSeason: externalSeasons[seasonIndex],
-                        poster:
-                          externalSeasons[seasonIndex].poster_path !== null
-                            ? `https://image.tmdb.org/t/p/w500${externalSeasons[seasonIndex].poster_path}`
-                            : poster,
-                      },
-                    });
+                    if (item.seasons) {
+                      const seasonIndex = item.seasons.findIndex(
+                        (e) =>
+                          e.season_number === parseInt(valueChange.target.value)
+                      );
+                      return mdDispatch({
+                        type: "selected",
+                        payload: {
+                          ...item,
+                          season: item.seasons[seasonIndex].season_number,
+                          poster:
+                            item.seasons[seasonIndex].poster_path !== null
+                              ? `https://image.tmdb.org/t/p/w500${item.seasons[seasonIndex].poster_path}`
+                              : item.poster,
+                        },
+                      });
+                    }
+                    return;
                   }}
                 >
-                  {externalSeasons.map((e: any) => (
+                  {item.seasons.map((e) => (
                     <option
                       key={`season_${e.season_number}`}
                       value={e.season_number}
@@ -157,12 +161,12 @@ function LogFields({
               )}
             </Box>
           </Flex>
-          {typeof episodes !== "undefined" && showEpisodes && (
+          {typeof item.episodes !== "undefined" && showEpisodes && (
             <>
               <Divider my={2} />
-              <SimpleGrid columns={Math.floor(episodes / 3)} spacingY={3}>
+              <SimpleGrid columns={Math.floor(item.episodes / 3)} spacingY={3}>
                 {Array.from(
-                  { length: episodes },
+                  { length: item.episodes },
                   (_, episodeNumber: number) => (
                     <Checkbox
                       key={`episode_${episodeNumber + 1}`}
@@ -170,27 +174,29 @@ function LogFields({
                       isChecked={seenEpisodes?.includes(episodeNumber + 1)}
                       colorScheme="purple"
                       onChange={(e) => {
+                        // TODO: prevent empty episode number
+                        let episodeArr: number[] = [];
                         if (typeof seenEpisodes !== "undefined") {
-                          const hasValue = seenEpisodes?.includes(
+                          const hasValue = seenEpisodes.includes(
                             parseInt(e.target.value)
                           );
-                          const episodeArr = hasValue
-                            ? seenEpisodes?.filter(
-                                (filterValue: any) =>
+                          episodeArr = hasValue
+                            ? seenEpisodes.filter(
+                                (filterValue) =>
                                   filterValue !== parseInt(e.target.value)
                               )
                             : [parseInt(e.target.value)].concat(seenEpisodes);
-
-                          return dispatch({
-                            type: "state",
-                            payload: {
-                              key: "seenEpisodes",
-                              value: episodeArr,
-                            },
-                          });
                         } else {
-                          return console.error("no episodes found");
+                          episodeArr = [parseInt(e.target.value)];
                         }
+
+                        return dispatch({
+                          type: "state",
+                          payload: {
+                            key: "seenEpisodes",
+                            value: episodeArr,
+                          },
+                        });
                       }}
                     >
                       <Text fontSize="sm">{episodeNumber + 1}</Text>
@@ -206,4 +212,4 @@ function LogFields({
   );
 }
 
-export default LogFields;
+export default InfoFields;
