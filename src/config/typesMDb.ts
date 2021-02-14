@@ -27,7 +27,7 @@ export interface MDbTV {
   poster_path: string;
   production_companies?: null[] | null;
   production_countries?: null[] | null;
-  seasons?: SeasonsEntity[] | null;
+  seasons?: TVSeason[] | null;
   spoken_languages?: SpokenLanguagesEntity[] | null;
   status: string;
   tagline: string;
@@ -69,7 +69,7 @@ export interface NetworksEntity {
   origin_country: string;
 }
 
-export interface SeasonsEntity {
+export interface TVSeason {
   air_date: string;
   episode_count: number;
   id: number;

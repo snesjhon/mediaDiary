@@ -60,14 +60,16 @@ function ContentMDb({
                   target="_blank"
                   key={e.name}
                 >
-                  <Image
-                    src={`https://image.tmdb.org/t/p/w200${e.profile_path}`}
-                  />
+                  {e.profile_path !== null && (
+                    <Image
+                      src={`https://image.tmdb.org/t/p/w200${e.profile_path}`}
+                    />
+                  )}
                   <Box px={3} py={3}>
                     <Text fontWeight="bold" isTruncated>
                       {e.name}
                     </Text>
-                    <Text>{e.character}</Text>
+                    {e.character && <Text>{e.character}</Text>}
                   </Box>
                 </Box>
               ))}

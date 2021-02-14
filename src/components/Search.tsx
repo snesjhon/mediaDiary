@@ -190,7 +190,7 @@ function Search({
         }}
         onClick={() =>
           dispatch({
-            type: "log",
+            type: "info",
             payload: item,
           })
         }

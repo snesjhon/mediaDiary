@@ -1,3 +1,5 @@
+import type { MDbTV } from "./typesMDb";
+
 /**
  * MediaType include all of the current available types for mediaDiary
  */
@@ -25,6 +27,7 @@ export interface MediaBase {
   releasedDecade: number;
   type: MediaType;
   season?: number;
+  seasons?: MDbTV["seasons"];
   episodes?: number;
   overview?: string;
 }
@@ -41,25 +44,25 @@ export interface DiaryAdd extends MediaBase {
   seenEpisodes?: number[];
 }
 
+/** When we MediaAdd we don't have an id, until AFTER firebase creates one. */
 export interface DiaryAddWithId extends DiaryAdd {
   id: string;
 }
 
 export interface DiaryState {
-  [key: string]: DiaryAdd;
+  [key: string]: DiaryAddWithId;
 }
 
+// TODO: I don't think we need releaseYear in MediaBase
 export interface MediaSelected
   extends Omit<MediaBase, "releasedYear" | "releasedDecade"> {
   mediaId: DiaryAdd["mediaId"];
   artistId?: DiaryAdd["artistId"];
 }
 
-export interface MediaEdit {
-  diaryId: string;
-  diary: DiaryAdd;
-}
-
+/**
+ * FILTERS
+ */
 export interface Filters {
   filterMediaType: MediaType;
   filterRating: number;

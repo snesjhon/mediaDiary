@@ -16,6 +16,7 @@ import React, { useRef } from "react";
 import { useMDDispatch, useMDState } from "../config/store";
 import useIsBreakpoint from "../utils/useIsBreakpoint";
 import Day from "./Day";
+import Info from "./Info";
 import LayoutDrawer from "./layouts/LayoutDrawer";
 import Log from "./Log";
 import MdLogo from "./md/MdLogo";
@@ -48,9 +49,12 @@ function Content(): JSX.Element {
         </ModalOverlay>
       </Modal>
       <LayoutDrawer
-        isOpen={view === "log" || view === "day" || view === "edit"}
+        isOpen={
+          view === "log" || view === "day" || view === "edit" || view === "info"
+        }
         placement="right"
       >
+        {view === "info" && <Info />}
         {view === "log" && <Log />}
         {(view === "day" || view === "edit") && <Day />}
       </LayoutDrawer>

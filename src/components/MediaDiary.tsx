@@ -63,6 +63,8 @@ function MediaDiary({ user }: { user: FuegoValidatedUser }): JSX.Element {
     }
   );
 
+  // Instead of mutating by key in ANY part of the UI, instead whenever "isSaving" is triggered
+  // then mutate this list regardless of the filters
   useEffect(() => {
     if (state.isSaving) {
       mutate();
@@ -177,10 +179,7 @@ function MediaDiary({ user }: { user: FuegoValidatedUser }): JSX.Element {
                       onClick={() =>
                         dispatch({
                           type: "day",
-                          payload: {
-                            diaryId: day,
-                            diary: diaryDates[month][day],
-                          },
+                          payload: diaryDates[month][day],
                         })
                       }
                     >

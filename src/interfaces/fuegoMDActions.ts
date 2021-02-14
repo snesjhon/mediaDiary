@@ -85,7 +85,7 @@ export async function fuegoDiaryAdd(
 export async function fuegoDelete(
   uid: string,
   diaryId: string,
-  data: DiaryAdd
+  data: DiaryAddWithId
 ): Promise<void> {
   const batch = fuegoDb.batch();
 
@@ -113,8 +113,8 @@ export async function fuegoDiaryEntry(
 export async function fuegoEdit(
   uid: string,
   diaryId: string,
-  data: DiaryAdd,
-  prevData: DiaryAdd
+  data: DiaryAddWithId,
+  prevData: DiaryAddWithId
 ): Promise<void> {
   const batch = fuegoDb.batch();
 

@@ -1,169 +1,75 @@
 import { Button, Center, DrawerBody, DrawerFooter } from "@chakra-ui/react";
 import dayjs from "dayjs";
-import React, { useCallback, useEffect, useReducer } from "react";
-import useSWR from "swr";
-import type { LogProps, LogState } from "../config/logStore";
+import React, { useEffect, useReducer, useRef } from "react";
+import type { LogState } from "../config/logStore";
 import { LogReducer } from "../config/logStore";
 import { useMDDispatch, useMDState } from "../config/store";
-import type { DiaryAdd, MediaSelected } from "../config/types";
-import useFuegoUser from "../interfaces/useFuegoUser";
+import type { DiaryAdd } from "../config/types";
 import { fuegoDiaryAdd } from "../interfaces/fuegoMDActions";
-import { fetcher, spotifyFetch } from "../utils/fetchers";
-import Info from "./Info";
-import LogFields from "./LogFields";
+import useFuegoUser from "../interfaces/useFuegoUser";
+import InfoHeader from "./info/InfoHeader";
+import InfoFields from "./info/InfoFields";
 import MdSpinner from "./md/MdSpinner";
 
 function Log(): JSX.Element {
   const mdDispatch = useMDDispatch();
   const { user } = useFuegoUser();
   const MDState = useMDState();
-  const { selected, isSaving, spotifyToken } = MDState;
+  const { selected, isSaving } = MDState;
 
-  const dataUrl = getDataUrl();
-
-  const { data, error } = useSWR(
-    dataUrl,
-    selected?.type === "album" && typeof spotifyToken !== "undefined"
-      ? (url) => spotifyFetch(url, spotifyToken)
-      : fetcher,
-    {
-      revalidateOnFocus: false,
-    }
-  );
-
-  let initData: LogState = {
+  const initData: LogState = {
     diaryDate: dayjs().toISOString(),
     loggedBefore: false,
     rating: 0,
-    isLoading:
-      typeof selected !== "undefined" && selected.type !== "album"
-        ? !data && !error
-        : false,
-    artist: "",
-    poster: "",
-    genre: "",
   };
-
-  if (typeof selected !== "undefined") {
-    initData.artist = selected.artist;
-    initData.poster = selected.poster;
-    initData.genre = selected.genre;
-
-    if (selected.type === "album") {
-      initData.artistId = selected.artistId;
-    }
-
-    // Data can be cached by swr, if so, load initData from cache
-    if (typeof data !== "undefined") {
-      const cachedData = parseData(data, selected);
-      initData = {
-        ...initData,
-        ...cachedData,
-      };
-    }
-  }
 
   const [state, dispatch] = useReducer(LogReducer, initData);
 
-  const {
-    diaryDate,
-    loggedBefore,
-    rating,
-    seenEpisodes,
-    artist,
-    poster,
-    genre,
-    artistId,
-    externalSeason,
-    externalSeasons,
-    isLoading,
-  } = state;
-  const parsedCb = useCallback(parseData, []);
+  const initSeason = useRef(true);
 
+  // This is temporary because I think we should maybe let the user select IF they want to add a season
+  // They could also not want to select a season and just add the show.
   useEffect(() => {
-    if (typeof data !== "undefined" && typeof selected !== "undefined") {
-      const apiData = parsedCb(data, selected);
-
-      if (selected.type === "tv") {
-        dispatch({
-          type: "seasons",
-          payload: apiData as any,
+    if (initSeason.current) {
+      if (
+        selected &&
+        selected.seasons &&
+        selected.seasons[0].poster_path !== null
+      ) {
+        mdDispatch({
+          type: "selected",
+          payload: {
+            ...selected,
+            poster: `https://image.tmdb.org/t/p/w500${selected.seasons[0].poster_path}`,
+          },
         });
-      } else if (selected.type === "movie") {
-        dispatch({
-          type: "credits",
-          payload: apiData as any,
-        });
-      } else if (selected.type === "album" && apiData) {
-        dispatch({
-          type: "genre",
-          payload: apiData as any,
-        });
+        initSeason.current = false;
       }
     }
-  }, [data, selected, parsedCb]);
-
-  // When we select from Search, we have our original values, however if we change season
-  // then we have potentially different information that we need to load to <Info />
-  let mediaInfo = selected;
-  if (typeof selected !== "undefined") {
-    mediaInfo = {
-      ...selected,
-      poster,
-      artist,
-      genre,
-    };
-    if (typeof externalSeasons !== "undefined" && selected.type !== "album") {
-      mediaInfo = {
-        ...mediaInfo,
-        mediaId: `${selected.mediaId}_${externalSeason.id}`,
-      };
-      if (externalSeason.air_date !== null) {
-        mediaInfo = {
-          ...mediaInfo,
-          releasedDate: dayjs(externalSeason.air_date).toISOString(),
-        };
-      }
-    }
-  }
-
-  let logFields: LogProps = {
-    diaryDate,
-    rating,
-    loggedBefore,
-    poster,
-  };
-  if (mediaInfo?.type === "tv" && typeof externalSeason !== "undefined") {
-    logFields = {
-      ...logFields,
-      seenEpisodes,
-      externalSeasons,
-      season: externalSeason.season_number,
-      episodes: externalSeason.episode_count,
-    };
-  }
+  }, [mdDispatch, initSeason, selected]);
 
   return (
     <>
-      {isLoading || isSaving ? (
+      {isSaving ? (
         <Center minH="40vh">
           <MdSpinner />
         </Center>
       ) : (
         <>
           <DrawerBody px={{ base: 6, sm: 8 }}>
-            {typeof mediaInfo !== "undefined" && (
+            {selected && (
               <>
-                <Info item={mediaInfo} />
-                <LogFields
+                <InfoHeader {...selected} />
+                <InfoFields
                   dispatch={dispatch}
-                  type={mediaInfo.type}
-                  item={logFields}
+                  type={selected.type}
+                  fields={state}
+                  item={selected}
                 />
               </>
             )}
           </DrawerBody>
-          <DrawerFooter>
+          <DrawerFooter borderTopWidth="1px">
             <Button
               onClick={addData}
               isLoading={isSaving}
@@ -193,10 +99,24 @@ function Log(): JSX.Element {
   }
 
   function createDiary(): DiaryAdd | false {
-    if (typeof mediaInfo !== "undefined") {
-      const { mediaId, type, releasedDate } = mediaInfo;
+    if (selected) {
+      const {
+        mediaId,
+        type,
+        releasedDate,
+        artistId,
+        artist,
+        title,
+        poster,
+        season,
+        episodes,
+      } = selected;
+      const { diaryDate, loggedBefore, rating, seenEpisodes } = state;
       const releasedYear = parseInt(dayjs(releasedDate).format("YYYY"));
       return {
+        artist,
+        title,
+        poster,
         mediaId,
         diaryDate,
         diaryYear: parseInt(dayjs(diaryDate).format("YYYY")),
@@ -207,81 +127,24 @@ function Log(): JSX.Element {
         releasedDate,
         releasedYear,
         releasedDecade: Math.floor(releasedYear / 10) * 10,
+        genre:
+          typeof selected?.genre !== "undefined"
+            ? selected.genre.toLocaleLowerCase()
+            : "",
         ...(typeof seenEpisodes !== "undefined" && {
           seenEpisodes: seenEpisodes,
         }),
         ...(typeof artistId !== "undefined" && {
           artistId: artistId,
         }),
-        artist: mediaInfo.artist,
-        title: mediaInfo.title,
-        poster: mediaInfo.poster,
-        genre:
-          typeof mediaInfo?.genre !== "undefined"
-            ? mediaInfo.genre.toLocaleLowerCase()
-            : "",
-        ...(typeof externalSeason !== "undefined" && {
-          season: externalSeason.season_number,
-          episodes: externalSeason.episode_count,
+        ...(typeof season !== "undefined" && {
+          season,
+          episodes,
         }),
       };
     } else {
       return false;
     }
-  }
-
-  function parseData(externalData: any, selected: MediaSelected) {
-    const mediaType = selected.type;
-    if (mediaType === "tv") {
-      const filteredSeasons = externalData.seasons.sort((_: any, b: any) =>
-        b.season_number === 0 ? -1 : 1
-      );
-      return {
-        artist:
-          externalData.created_by.length > 0 &&
-          externalData.created_by.map((e: any) => e.name).join(", "),
-        externalSeason: filteredSeasons[0],
-        externalSeasons: filteredSeasons,
-        poster:
-          filteredSeasons[0].poster_path !== null
-            ? `https://image.tmdb.org/t/p/w500${filteredSeasons[0].poster_path}`
-            : selected.poster,
-        genre: externalData.genres[0].name,
-      };
-    } else if (mediaType === "movie") {
-      return {
-        artist: externalData.credits.crew.find((e: any) => e.job === "Director")
-          .name,
-        genre: externalData.genres[0].name,
-      };
-    } else if (mediaType === "album") {
-      if (
-        typeof externalData.genres !== "undefined" &&
-        externalData.genres.length > 0
-      ) {
-        return externalData.genres[0];
-      } else {
-        return "none";
-      }
-    }
-  }
-
-  function getDataUrl() {
-    let returnUrl = null;
-    if (typeof selected !== "undefined") {
-      if (selected.type === "tv") {
-        returnUrl = `https://api.themoviedb.org/3/tv/${selected.mediaId}?api_key=${process.env.NEXT_PUBLIC_MDBKEY}`;
-      } else if (selected.type === "movie") {
-        returnUrl = `https://api.themoviedb.org/3/movie/${encodeURIComponent(
-          selected.mediaId
-        )}?api_key=${
-          process.env.NEXT_PUBLIC_MDBKEY
-        }&append_to_response=credits`;
-      } else if (selected.type === "album") {
-        returnUrl = `https://api.spotify.com/v1/artists/${selected.artistId}`;
-      }
-    }
-    return returnUrl;
   }
 }
 
