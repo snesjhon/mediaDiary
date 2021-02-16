@@ -1,4 +1,3 @@
-import type dayjs from "dayjs";
 import { createContext, useContext } from "react";
 import type {
   DiaryAddWithId,
