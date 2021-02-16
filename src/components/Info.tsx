@@ -11,28 +11,21 @@ import InfoHeader from "./info/InfoHeader";
 import MdLoader from "./md/MdLoader";
 
 function Info(): JSX.Element {
-  const { selected, view, spotifyToken } = useMDState();
+  const { selected, view } = useMDState();
 
   if (selected && view === "info") {
-    return <InfoSelected item={selected} token={spotifyToken} />;
+    return <InfoSelected item={selected} />;
   }
 
   return <MdLoader />;
 }
 
-function InfoSelected({
-  item,
-  token,
-}: {
-  item: MediaSelected;
-  token?: string;
-}): JSX.Element {
+function InfoSelected({ item }: { item: MediaSelected }): JSX.Element {
   const dispatch = useMDDispatch();
   const { data, error, isLoading } = useDataFetch({
     type: item.type,
     firstId: item.mediaId,
     secondId: item.artistId,
-    token,
   });
 
   const parsedItem = parseData();
@@ -47,7 +40,7 @@ function InfoSelected({
     <>
       <DrawerBody px={{ base: 6, sm: 8 }}>
         <InfoHeader {...parsedItem} />
-        <InfoBody selected={parsedItem} token={token} />
+        <InfoBody selected={parsedItem} />
       </DrawerBody>
       <DrawerFooter borderTopWidth="1px">
         <Button

@@ -2,8 +2,9 @@ import useSWR from "swr";
 import type { MediaType } from "../config/types";
 import type { MDbMovie, MDbTV } from "../config/typesMDb";
 import type { SpotifyAlbum, SpotifyArtist } from "../config/typesSpotify";
-import { spotifyFetch } from "./fetchers";
-import { getAlbumUrl, getArtistUrl, getMovieUrl, getTVUrl } from "./helpers";
+import { getAlbumUrl, getArtistUrl, spotifyFetchAll } from "./helperSpotify";
+import { fetcher } from "./helpers";
+import { getMovieUrl, getTVUrl } from "./helperMDb";
 
 export type DataFetchSpotify = [SpotifyAlbum, SpotifyArtist];
 export type DataFetchMDb = MDbMovie | MDbTV;
@@ -14,7 +15,6 @@ interface Props {
   firstId: string;
   secondId?: string;
   season?: number;
-  token?: string;
   isSuspense?: boolean;
 }
 function useDataFetch({
@@ -22,7 +22,6 @@ function useDataFetch({
   firstId,
   secondId,
   season,
-  token,
   isSuspense,
 }: Props): {
   isLoading: boolean;
@@ -38,12 +37,12 @@ function useDataFetch({
     } else if (type === "movie") {
       returnKey = getMovieUrl(firstId);
     } else if (type === "album" && secondId) {
-      returnKey = [getAlbumUrl(firstId), getArtistUrl(secondId), token];
+      returnKey = [getAlbumUrl(firstId), getArtistUrl(secondId)];
     }
   }
   const { data, isValidating, error } = useSWR<DataFetch>(
     returnKey,
-    type !== "album" ? fetcher : fetchAll,
+    type !== "album" ? fetcher : spotifyFetchAll,
     {
       revalidateOnFocus: false,
       suspense: isSuspense ?? undefined,
@@ -55,16 +54,6 @@ function useDataFetch({
     data: data && !isValidating ? data : false,
     error: !data && error,
   };
-
-  function fetcher(key: string) {
-    return fetch(key).then((r) => r.json());
-  }
-
-  function fetchAll(albumId: string, artistId: string, token: string) {
-    const albumFetch = spotifyFetch<SpotifyAlbum>(albumId, token);
-    const artistFetch = spotifyFetch<SpotifyArtist>(artistId, token);
-    return Promise.all([albumFetch, artistFetch]).then((results) => results);
-  }
 }
 
 export default useDataFetch;

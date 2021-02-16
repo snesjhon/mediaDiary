@@ -1,23 +1,24 @@
-import { useColorMode } from "@chakra-ui/react";
 import type { Icon } from "@chakra-ui/react";
-import { Box, Center, Flex, Input, Text } from "@chakra-ui/react";
+import { Box, Center, Flex, Input, Text, useColorMode } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import type { RefObject } from "react";
 import React, { useState } from "react";
 import useSWR from "swr";
-import type { MediaSelected, MediaType } from "../config/types";
 import { useMDDispatch, useMDState } from "../config/store";
-import useDebounce from "../utils/useDebounce";
-import AlbumIcon from "./icons/AlbumIcon";
-import FilmIcon from "./icons/FilmIcon";
-import TvIcon from "./icons/TvIcon";
-import MdSpinner from "./md/MdSpinner";
+import type { MediaSelected, MediaType } from "../config/types";
 import type {
   MDbSearch,
   MDbSearchResult,
   SpotifySearch,
   SpotifySearchResult,
 } from "../config/typesSearch";
+import { fetcher } from "../utils/helpers";
+import { spotifyFetch } from "../utils/helperSpotify";
+import useDebounce from "../utils/useDebounce";
+import AlbumIcon from "./icons/AlbumIcon";
+import FilmIcon from "./icons/FilmIcon";
+import TvIcon from "./icons/TvIcon";
+import MdSpinner from "./md/MdSpinner";
 
 // This is the root of our search Types. This can be extended for future search queries.
 // We always want to keep a strict returnArr to ensure that we follow the userPref
@@ -28,12 +29,12 @@ function Search({
 }: {
   refInput: RefObject<HTMLInputElement>;
 }): JSX.Element {
+  const { preference } = useMDState();
   const [search, setSearch] = useState("");
   const [currMovie, setCurrMovie] = useState(3);
   const [currTv, setCurrTv] = useState(3);
   const [currAlbum, setCurrAlbum] = useState(3);
   const dispatch = useMDDispatch();
-  const { spotifyToken, preference } = useMDState();
   const { colorMode } = useColorMode();
 
   const bouncedSearch = useDebounce(search, 500);
@@ -256,7 +257,7 @@ function Search({
     }
   }
 
-  function searchFetcher(query: string) {
+  async function searchFetcher(query: string) {
     // From my recollection it's better to keep a `/{key}/` when using swr, to make sure that caching is properly
     // separated and reusable.
     const queryString = query.substring(13);
@@ -269,27 +270,30 @@ function Search({
     ] = [false, false];
 
     if (showMovie || showTV) {
-      fetchers[0] = fetch(
+      fetchers[0] = fetcher(
         `https://api.themoviedb.org/3/search/multi?api_key=${
           process.env.NEXT_PUBLIC_MDBKEY
         }&query=${encodeURIComponent(
           queryString
         )}&include_adult=false&page=1,2,3`
-      ).then((r) => r.json());
+      );
     }
 
     if (showAlbum) {
-      fetchers[1] = fetch(
-        `https://api.spotify.com/v1/search?q=${queryString}&type=album&limit=20`,
-        {
-          headers: { Authorization: `Bearer ${spotifyToken}` },
-        }
-      ).then((r) => r.json());
+      fetchers[1] = spotifyFetch(
+        `https://api.spotify.com/v1/search?q=${queryString}&type=album&limit=20`
+      );
     }
 
-    return Promise.all<MDbSearch | false, SpotifySearch | false>(fetchers)
-      .then((results) => results)
-      .catch((e) => console.error(e));
+    try {
+      const results = await Promise.all<
+        MDbSearch | false,
+        SpotifySearch | false
+      >(fetchers);
+      return results;
+    } catch (e) {
+      return console.error(e);
+    }
   }
 }
 
