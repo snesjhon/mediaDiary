@@ -12,7 +12,7 @@ import MdLoader from "./md/MdLoader";
 
 function Day(): JSX.Element | null {
   const { user } = useFuegoUser();
-  const { view, edit, spotifyToken } = useMDState();
+  const { view, edit } = useMDState();
 
   const { data } = useSWR<DiaryAdd | false>(
     user !== null && user && edit
@@ -33,7 +33,7 @@ function Day(): JSX.Element | null {
           <DrawerBody px={{ base: 6, sm: 8 }}>
             <InfoHeader {...data} />
             <Divider mt={3} mb={2} />
-            <InfoBody selected={data} token={spotifyToken} />
+            <InfoBody selected={data} />
           </DrawerBody>
         )}
       </>

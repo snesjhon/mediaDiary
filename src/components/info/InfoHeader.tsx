@@ -21,6 +21,7 @@ interface Props {
   poster: MediaSelected["poster"];
   genre: MediaSelected["genre"];
   releasedDate: MediaSelected["releasedDate"];
+  type: MediaSelected["type"];
   diaryDate?: DiaryAdd["diaryDate"];
   rating?: DiaryAdd["rating"];
 }
@@ -33,6 +34,7 @@ function InfoHeader({
   releasedDate,
   diaryDate,
   rating,
+  type,
 }: Props): JSX.Element {
   const dispatch = useMDDispatch();
   const { view } = useMDState();
@@ -68,7 +70,7 @@ function InfoHeader({
           <Image
             src={poster}
             w="13rem"
-            h="20rem"
+            h={type === "album" ? "13rem" : "20rem"}
             borderRadius="5px"
             border="1px solid"
             borderColor="gray.300"

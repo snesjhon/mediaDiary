@@ -8,24 +8,22 @@ import MdSpinner from "../md/MdSpinner";
 
 interface Props {
   selected: MediaSelected;
-  token: string | undefined;
 }
-function InfoBody({ selected, token }: Props): JSX.Element {
+function InfoBody({ selected }: Props): JSX.Element {
   return (
     <Suspense fallback={<MdSpinner />}>
-      <InfoSuspense selected={selected} token={token} />
+      <InfoSuspense selected={selected} />
     </Suspense>
   );
 }
 
-function InfoSuspense({ selected, token }: Props) {
+function InfoSuspense({ selected }: Props) {
   const { type, artistId, mediaId, season } = selected;
   const { data, error, isLoading } = useDataFetch({
     type,
     isSuspense: true,
     firstId: mediaId,
     secondId: artistId,
-    token,
     season,
   });
 

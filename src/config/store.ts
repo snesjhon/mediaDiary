@@ -1,4 +1,3 @@
-import type dayjs from "dayjs";
 import { createContext, useContext } from "react";
 import type {
   DiaryAddWithId,
@@ -9,8 +8,6 @@ import type {
 
 export interface MDState extends FilterState {
   preference: FuegoUserPref;
-  spotifyToken?: string;
-  spotifyTimeOut?: dayjs.Dayjs;
   isSaving?: boolean;
   view?: "search" | "log" | "edit" | "day" | "md" | "activity" | "info";
   selected?: MediaSelected;
@@ -50,13 +47,6 @@ type MDActions =
         filterDiaryYear: MDState["filterDiaryYear"];
         filterLoggedBefore: MDState["filterLoggedBefore"];
         filterGenre: MDState["filterGenre"];
-      };
-    }
-  | {
-      type: "spotifyToken";
-      payload: {
-        spotifyToken: MDState["spotifyToken"];
-        spotifyTimeOut: MDState["spotifyTimeOut"];
       };
     }
   | {
@@ -151,13 +141,6 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
         view: "day",
         selected: undefined,
         edit: actions.payload,
-      };
-    }
-    case "spotifyToken": {
-      return {
-        ...state,
-        spotifyToken: actions.payload.spotifyToken,
-        spotifyTimeOut: actions.payload.spotifyTimeOut,
       };
     }
     case "edit": {
