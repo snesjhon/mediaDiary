@@ -1,10 +1,6 @@
 import { createContext, useContext } from "react";
-import type {
-  DiaryAddWithId,
-  FilterState,
-  FuegoUserPref,
-  MediaSelected,
-} from "./types";
+import type { DiaryAddWithId, FuegoUserPref, MediaSelected } from "./types";
+import type { FilterState } from "./typesFilters";
 
 export interface MDState extends FilterState {
   preference: FuegoUserPref;
@@ -41,12 +37,12 @@ type MDActions =
   | {
       type: "filter";
       payload: {
-        filterMediaType: MDState["filterMediaType"];
-        filterRating: MDState["filterRating"];
-        filterReleasedDecade: MDState["filterReleasedDecade"];
-        filterDiaryYear: MDState["filterDiaryYear"];
-        filterLoggedBefore: MDState["filterLoggedBefore"];
-        filterGenre: MDState["filterGenre"];
+        mediaType: MDState["mediaType"];
+        rating: MDState["rating"];
+        releasedDecade: MDState["releasedDecade"];
+        diaryYear: MDState["diaryYear"];
+        loggedBefore: MDState["loggedBefore"];
+        genre: MDState["genre"];
       };
     }
   | {
@@ -69,12 +65,12 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
       return {
         ...state,
         view: "md",
-        filterMediaType: actions.payload.filterMediaType,
-        filterRating: actions.payload.filterRating,
-        filterDiaryYear: actions.payload.filterDiaryYear,
-        filterReleasedDecade: actions.payload.filterReleasedDecade,
-        filterLoggedBefore: actions.payload.filterLoggedBefore,
-        filterGenre: actions.payload.filterGenre,
+        mediaType: actions.payload.mediaType,
+        rating: actions.payload.rating,
+        diaryYear: actions.payload.diaryYear,
+        releasedDecade: actions.payload.releasedDecade,
+        loggedBefore: actions.payload.loggedBefore,
+        genre: actions.payload.genre,
       };
     }
     case "saving": {
@@ -156,12 +152,12 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
 
 export const ContextState = createContext<MDState>({
   preference: null,
-  filterGenre: null,
-  filterLoggedBefore: null,
-  filterMediaType: null,
-  filterRating: null,
-  filterDiaryYear: null,
-  filterReleasedDecade: null,
+  genre: null,
+  loggedBefore: null,
+  mediaType: null,
+  rating: null,
+  diaryYear: null,
+  releasedDecade: null,
 });
 
 export const ContextDispatch = createContext<(props: MDActions) => void>(

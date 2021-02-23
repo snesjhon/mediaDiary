@@ -24,7 +24,8 @@ import {
 import React, { useState } from "react";
 import useSWR from "swr";
 import { useMDDispatch, useMDState } from "../config/store";
-import type { FilterData, Filters, MediaType } from "../config/types";
+import type { MediaType } from "../config/types";
+import type { FilterData, Filters } from "../config/typesFilters";
 import { fuegoFiltersAll } from "../interfaces/fuegoFilterActions";
 import useFuegoUser from "../interfaces/useFuegoUser";
 import { capFormat } from "../utils/helpers";
@@ -98,38 +99,34 @@ function FiltersData({
   onClose: () => void;
 }) {
   const {
-    filterMediaType,
-    filterRating,
-    filterDiaryYear,
-    filterReleasedDecade,
-    filterLoggedBefore,
-    filterGenre,
+    mediaType,
+    rating,
+    diaryYear,
+    releasedDecade,
+    loggedBefore,
+    genre,
   } = useMDState();
   const dispatch = useMDDispatch();
 
   const { colorMode } = useColorMode();
 
-  const [diaryYear, setDiaryYear] = useState(filterDiaryYear);
+  const [localDiaryYear, setDiaryYear] = useState(diaryYear);
   const {
-    value: mediaTypes,
+    value: localMediaTypes,
     onChange: mediaTypesOnChange,
     setValue,
   } = useCheckboxGroup({
-    defaultValue: filterMediaType ?? [],
+    defaultValue: mediaType ?? [],
   });
-  const [rating, setRating] = useState(
-    filterRating !== null
-      ? filterRating === 0
-        ? "no"
-        : ratingSelect[filterRating * 2]
-      : null
+  const [localRating, setRating] = useState(
+    rating !== null ? (rating === 0 ? "no" : ratingSelect[rating * 2]) : null
   );
-  const [releasedDecade, setReleasedDecade] = useState(filterReleasedDecade);
-  const [loggedBefore, setLoggedBefore] = useState(filterLoggedBefore);
-  const [genre, setGenre] = useState(filterGenre);
+  const [localReleasedDecade, setReleasedDecade] = useState(releasedDecade);
+  const [localLoggedBefore, setLoggedBefore] = useState(loggedBefore);
+  const [localGenre, setGenre] = useState(genre);
 
   const ratingKey = Object.keys(ratingSelect).find(
-    (key) => ratingSelect[key] === rating
+    (key) => ratingSelect[key] === localRating
   );
   return (
     <>
@@ -137,13 +134,13 @@ function FiltersData({
         <Box bg={colorMode === "light" ? "gray.50" : "gray.600"} p={4}>
           <Heading size="md">Diary Year</Heading>
           <Divider mt={2} mb={4} />
-          {typeof data.filterDiaryYear !== "undefined" &&
-            Object.keys(data.filterDiaryYear).length > 0 && (
+          {typeof data.diaryYear !== "undefined" &&
+            Object.keys(data.diaryYear).length > 0 && (
               <Select
                 onChange={(e) => {
                   const value = parseInt(e.target.value);
-                  if (diaryYear !== null) {
-                    if (value !== diaryYear) {
+                  if (localDiaryYear !== null) {
+                    if (value !== localDiaryYear) {
                       setValue([]);
                       setRating(null);
                       setReleasedDecade(null);
@@ -160,11 +157,11 @@ function FiltersData({
                     setDiaryYear(value);
                   }
                 }}
-                value={diaryYear ?? 0}
+                value={localDiaryYear ?? 0}
               >
                 <option value={0}>All</option>
-                {Object.keys(data.filterDiaryYear)
-                  .filter((f) => data.filterDiaryYear[f] !== 0)
+                {Object.keys(data.diaryYear)
+                  .filter((f) => data.diaryYear[f] !== 0)
                   .reverse()
                   .map((e) => (
                     <option key={`genres_${e}`} value={e}>
@@ -177,12 +174,14 @@ function FiltersData({
         <Box p={4}>
           <Heading size="md">Media Types</Heading>
           <Divider mt={2} mb={4} />
-          {typeof data.filterMediaType !== "undefined" &&
-            Object.keys(data.filterMediaType).length > 0 && (
+          {typeof data.mediaType !== "undefined" &&
+            Object.keys(data.mediaType).length > 0 && (
               <HStack spacing={6}>
                 <Box textAlign="center">
                   <IconButton
-                    variant={mediaTypes.length === 0 ? undefined : "outline"}
+                    variant={
+                      localMediaTypes.length === 0 ? undefined : "outline"
+                    }
                     colorScheme="purple"
                     aria-label="Filter by All"
                     size="lg"
@@ -191,10 +190,10 @@ function FiltersData({
                   />
                   <Text>All</Text>
                 </Box>
-                {createMediaKeys("filterMediaType")
+                {createMediaKeys("mediaType")
                   .sort()
                   .map((e) => {
-                    const typeActive = mediaTypes.includes(e);
+                    const typeActive = localMediaTypes.includes(e);
                     let typeIcon = <FilmIcon />;
                     if (e === "tv") {
                       typeIcon = <TvIcon />;
@@ -227,9 +226,11 @@ function FiltersData({
                 setRating(e.target.value === "all" ? null : e.target.value)
               }
               color={
-                rating === null || rating === "no" ? undefined : "purple.500"
+                localRating === null || localRating === "no"
+                  ? undefined
+                  : "purple.500"
               }
-              value={rating === null ? "all" : rating}
+              value={localRating === null ? "all" : localRating}
             >
               <option value="all">All Ratings</option>
               {[...Array(10)]
@@ -246,8 +247,8 @@ function FiltersData({
         <Box p={4}>
           <Heading size="md">Decade</Heading>
           <Divider mt={2} mb={4} />
-          {typeof data.filterReleasedDecade !== "undefined" &&
-            Object.keys(data.filterReleasedDecade).length > 0 && (
+          {typeof data.releasedDecade !== "undefined" &&
+            Object.keys(data.releasedDecade).length > 0 && (
               <Select
                 onChange={(e) =>
                   setReleasedDecade(
@@ -259,7 +260,7 @@ function FiltersData({
                 }
               >
                 <option value="all">All</option>
-                {createMediaKeys("filterReleasedDecade")
+                {createMediaKeys("releasedDecade")
                   .reverse()
                   .map((e) => (
                     <option key={`releasedDate_${e}`} value={e}>
@@ -292,8 +293,8 @@ function FiltersData({
         <Box p={4}>
           <Heading size="md">Genre</Heading>
           <Divider mt={2} mb={4} />
-          {typeof data.filterGenre !== "undefined" &&
-            Object.keys(data.filterGenre).length > 0 && (
+          {typeof data.genre !== "undefined" &&
+            Object.keys(data.genre).length > 0 && (
               <Select
                 onChange={(e) =>
                   setGenre(e.target.value === "all" ? null : e.target.value)
@@ -301,7 +302,7 @@ function FiltersData({
                 value={genre ?? "all"}
               >
                 <option value="all">All</option>
-                {createMediaKeys("filterGenre")
+                {createMediaKeys("genre")
                   .sort()
                   .map((e) => (
                     <option key={`genres_${e}`} value={e}>
@@ -313,7 +314,7 @@ function FiltersData({
         </Box>
       </DrawerBody>
       <DrawerFooter borderTopWidth="1px">
-        {(mediaTypes.length !== 0 ||
+        {(localMediaTypes.length !== 0 ||
           rating !== null ||
           releasedDecade !== null ||
           loggedBefore !== null ||
@@ -343,18 +344,20 @@ function FiltersData({
             return dispatch({
               type: "filter",
               payload: {
-                filterMediaType:
-                  mediaTypes.length === 0 ? null : (mediaTypes as MediaType[]),
-                filterGenre: genre,
-                filterLoggedBefore: loggedBefore,
-                filterRating:
-                  rating === "no"
+                mediaType:
+                  localMediaTypes.length === 0
+                    ? null
+                    : (localMediaTypes as MediaType[]),
+                genre: localGenre,
+                loggedBefore: localLoggedBefore,
+                rating:
+                  localRating === "no"
                     ? 0
                     : typeof ratingKey !== "undefined"
                     ? parseInt(ratingKey) / 2
                     : null,
-                filterReleasedDecade: releasedDecade,
-                filterDiaryYear: diaryYear,
+                releasedDecade: localReleasedDecade,
+                diaryYear: localDiaryYear,
               },
             });
           }}
@@ -365,11 +368,11 @@ function FiltersData({
     </>
   );
 
-  function createMediaKeys(
-    type: keyof Omit<Filters, "filterDiaryYear">
-  ): string[] {
+  function createMediaKeys(type: keyof Omit<Filters, "diaryYear">): string[] {
     return Object.keys(data[type])
-      .filter((e) => (diaryYear === null ? e : parseInt(e) === diaryYear))
+      .filter((e) =>
+        localDiaryYear === null ? e : parseInt(e) === localDiaryYear
+      )
       .reduce<string[]>((a, c) => {
         Object.keys(data[type][c]).map((e) => {
           if (data[type][c][e] > 0) {

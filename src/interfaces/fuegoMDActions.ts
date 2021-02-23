@@ -5,6 +5,7 @@ import type {
   UserPref,
 } from "../config/types";
 import { fuegoDb } from "./fuego";
+import type fuego from "./fuego";
 import {
   createFilterKeys,
   createFilterSet,
@@ -24,7 +25,7 @@ export async function fuegoDiaryGet(
 ): Promise<DiaryAddWithId[]> {
   let diaryRef = fuegoDb.collection(
     `users/${uid}/diary`
-  ) as firebase.firestore.Query;
+  ) as fuego.firestore.Query;
 
   if (mediaTypes !== null) {
     diaryRef = diaryRef.where("type", "in", mediaTypes);
@@ -76,7 +77,7 @@ export async function fuegoDiaryAdd(
 
   const filtersKeys = createFilterKeys(data);
   const filtersSetObj = createFilterSet(filtersKeys, 1);
-  const filtersRef = fuegoDb.collection("users").doc(uid);
+  const filtersRef = fuegoDb.collection(`/users/${uid}/filters`).doc("diary");
   filtersRef.set(filtersSetObj, { merge: true });
 
   return batch.commit();
@@ -92,7 +93,7 @@ export async function fuegoDelete(
   const diaryRef = fuegoDb.collection(`users/${uid}/diary`).doc(diaryId);
   batch.delete(diaryRef);
 
-  const filtersRef = fuegoDb.collection("users").doc(uid);
+  const filtersRef = fuegoDb.collection(`/users/${uid}/filters`).doc("diary");
   const filtersKeys = createFilterKeys(data);
   const filtersSetObj = createFilterSet(filtersKeys, -1);
   filtersRef.set(filtersSetObj, { merge: true });
@@ -121,14 +122,14 @@ export async function fuegoEdit(
   const diaryRef = fuegoDb.collection(`users/${uid}/diary`).doc(diaryId);
   batch.update(diaryRef, data);
 
-  const userRef = fuegoDb.collection("users").doc(uid);
+  const userRef = fuegoDb.collection(`/users/${uid}/filters`).doc("diary");
 
   const fitlerEditSet = createFilterEditSet(data, prevData, [
-    "filterRating",
-    "filterReleasedDecade",
-    "filterLoggedBefore",
-    "filterDiaryYear",
-    "filterReleasedYear",
+    "rating",
+    "releasedDecade",
+    "loggedBefore",
+    "diaryYear",
+    "releasedYear",
   ]);
 
   userRef.set(fitlerEditSet, { merge: true });

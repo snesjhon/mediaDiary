@@ -11,11 +11,8 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import useSWR from "swr";
-import type {
-  FilterData,
-  FuegoValidatedUser,
-  MediaType,
-} from "../config/types";
+import type { FuegoValidatedUser, MediaType } from "../config/types";
+import type { FilterData } from "../config/typesFilters";
 import { fuegoFiltersAll } from "../interfaces/fuegoFilterActions";
 import { capFormat } from "../utils/helpers";
 import ChartAll from "./chart/ChartAll";
@@ -30,7 +27,7 @@ import MdStatus from "./md/MdStatus";
 
 function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
   const [yearType, setYearType] = useState<number | null>(null);
-  const [mediaType, setMediaType] = useState<MediaType | null>(null);
+  const [localMediaType, setMediaType] = useState<MediaType | null>(null);
   const { data, error, isValidating } = useSWR<FilterData>(
     ["fuego/chartCounts", user.uid],
     fuegoFiltersAll,
@@ -52,26 +49,26 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
     // We either have a no items in our list, or the user has removed all items in the list. But we've
     // kept all of the keys. Thus needing to reduce to a single count
     const isEmpty =
-      Object.keys(data.filterDiaryYear).length === 0
+      Object.keys(data.diaryYear).length === 0
         ? true
-        : Object.keys(data.filterDiaryYear).reduce(
-            (a, c) => (a += data.filterDiaryYear[c]),
+        : Object.keys(data.diaryYear).reduce(
+            (a, c) => (a += data.diaryYear[c]),
             0
           ) === 0;
     if (isEmpty) {
       return <MdEmpty />;
     }
 
-    const { filterDiaryYear, filterMediaType } = data;
-    const dataCounts = Object.keys(filterMediaType)
+    const { diaryYear, mediaType } = data;
+    const dataCounts = Object.keys(mediaType)
       .filter((e) => (yearType === null ? e : parseInt(e) === yearType))
       .reduce<{ [key: string]: number }>((a, c) => {
-        Object.keys(filterMediaType[c]).map((e) => {
-          if (filterMediaType[c][e] > 0) {
+        Object.keys(mediaType[c]).map((e) => {
+          if (mediaType[c][e] > 0) {
             if (typeof a[e] !== "undefined") {
-              a[e] += filterMediaType[c][e];
+              a[e] += mediaType[c][e];
             } else {
-              a[e] = filterMediaType[c][e];
+              a[e] = mediaType[c][e];
             }
           }
         });
@@ -86,7 +83,7 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
         px={{ md: 8 }}
       >
         <Center>
-          {Object.keys(filterDiaryYear).length > 0 ? (
+          {Object.keys(diaryYear).length > 0 ? (
             <Flex alignItems="flex-end">
               <Heading
                 size={yearType === null ? "4xl" : undefined}
@@ -99,7 +96,7 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
               >
                 All
               </Heading>
-              {Object.keys(filterDiaryYear)
+              {Object.keys(diaryYear)
                 .reverse()
                 .map((e) => {
                   const yearInt = parseInt(e);
@@ -151,7 +148,7 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
           >
             <Heading
               size="md"
-              color={mediaType === null ? "purple.500" : undefined}
+              color={localMediaType === null ? "purple.500" : undefined}
             >
               <LayersIcon mr={2} boxSize={4} mb={1} />
               {Object.keys(dataCounts).reduce(
@@ -159,7 +156,7 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
                 0
               )}
             </Heading>
-            <Text color={mediaType === null ? "purple.500" : undefined}>
+            <Text color={localMediaType === null ? "purple.500" : undefined}>
               Memories
             </Text>
           </SimpleGrid>
@@ -181,16 +178,16 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
                 >
                   <Heading
                     size="md"
-                    color={mediaType === e ? "purple.500" : undefined}
+                    color={localMediaType === e ? "purple.500" : undefined}
                   >
                     <StatIcon
                       boxSize={4}
                       mb={1}
-                      color={mediaType === e ? "purple.500" : undefined}
+                      color={localMediaType === e ? "purple.500" : undefined}
                     />{" "}
                     {dataCounts[e]}
                   </Heading>
-                  <Text color={mediaType === e ? "purple.500" : undefined}>
+                  <Text color={localMediaType === e ? "purple.500" : undefined}>
                     {capFormat(e, {
                       allCaps: e === "tv",
                       isPlural: dataCounts[e] > 1,
@@ -201,14 +198,18 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
             })}
         </Grid>
         <Divider my={10} />
-        {yearType === null && mediaType === null && (
+        {yearType === null && localMediaType === null && (
           <ChartAll uid={user.uid} list={data} />
         )}
-        {yearType === null && mediaType !== null && (
-          <ChartYear uid={user.uid} mediaType={mediaType} year={null} />
+        {yearType === null && localMediaType !== null && (
+          <ChartYear uid={user.uid} mediaType={localMediaType} year={null} />
         )}
         {yearType !== null && (
-          <ChartYear uid={user.uid} mediaType={mediaType} year={yearType} />
+          <ChartYear
+            uid={user.uid}
+            mediaType={localMediaType}
+            year={yearType}
+          />
         )}
       </Box>
     );

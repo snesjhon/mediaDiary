@@ -1,6 +1,6 @@
 import React from "react";
 import useSWR from "swr";
-import type { FilterData } from "../../config/types";
+import type { FilterData } from "../../config/typesFilters";
 import { fuegoChartTop6 } from "../../interfaces/fuegoChartActions";
 import ChartTop from "./ChartTop";
 import { ChartVizGenre, ChartVizRating, ChartVizReleased } from "./ChartViz";
@@ -16,31 +16,31 @@ function ChartAll({
     revalidateOnFocus: false,
   });
 
-  const { filterRating, filterReleasedYear, filterGenre } = list;
+  const { rating, releasedYear, genre } = list;
 
-  const ratingCount = Object.keys(filterRating).reduce<number[]>((a, c) => {
-    Object.keys(filterRating[c]).forEach((i) => {
-      a[parseInt(i)] += filterRating[c][i];
+  const ratingCount = Object.keys(rating).reduce<number[]>((a, c) => {
+    Object.keys(rating[c]).forEach((i) => {
+      a[parseInt(i)] += rating[c][i];
     });
     return a;
   }, Array(11).fill(0));
 
-  const yearList = Object.keys(filterReleasedYear).reduce<{
+  const yearList = Object.keys(releasedYear).reduce<{
     [key: string]: number;
   }>((a, c) => {
-    Object.keys(filterReleasedYear[c]).forEach((i) => {
-      if (filterReleasedYear[c][i] > 0) {
-        a[i] = filterReleasedYear[c][i];
+    Object.keys(releasedYear[c]).forEach((i) => {
+      if (releasedYear[c][i] > 0) {
+        a[i] = releasedYear[c][i];
       }
     });
     return a;
   }, {});
 
-  const genreCondensed = Object.keys(filterGenre).reduce<{
+  const genreCondensed = Object.keys(genre).reduce<{
     [key: string]: number;
   }>((a, c) => {
-    Object.keys(filterGenre[c]).forEach((i) => {
-      const itemCount = filterGenre[c][i];
+    Object.keys(genre[c]).forEach((i) => {
+      const itemCount = genre[c][i];
       if (itemCount > 0) {
         if (i.includes("hip hop") || i.includes("rap")) {
           a["hip hop"] =
@@ -61,8 +61,7 @@ function ChartAll({
               ? a["alternative"] + itemCount
               : itemCount;
         } else {
-          a[i] =
-            typeof a[i] !== "undefined" ? a[i] + itemCount : filterGenre[c][i];
+          a[i] = typeof a[i] !== "undefined" ? a[i] + itemCount : genre[c][i];
         }
       }
     });
