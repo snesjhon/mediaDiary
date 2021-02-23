@@ -1,20 +1,24 @@
 import firebase from "firebase/app";
-import type { FilterData, Filters, DiaryAdd } from "../config/types";
+import type { DiaryAdd } from "../config/types";
+import type { FilterData, Filters } from "../config/typesFilters";
 import { fuegoDb } from "./fuego";
 
 export async function fuegoFiltersAll(
   key: string,
   uid: string
 ): Promise<FilterData> {
-  const filterKeys = await fuegoDb.collection("users").doc(uid).get();
+  const filterKeys = await fuegoDb
+    .collection(`/users/${uid}/filters`)
+    .doc("diary")
+    .get();
   return {
-    filterMediaType: filterKeys.get("filterMediaType") ?? {},
-    filterDiaryYear: filterKeys.get("filterDiaryYear") ?? {},
-    filterGenre: filterKeys.get("filterGenre") ?? {},
-    filterLoggedBefore: filterKeys.get("filterLoggedBefore") ?? {},
-    filterRating: filterKeys.get("filterRating") ?? {},
-    filterReleasedDecade: filterKeys.get("filterReleasedDecade") ?? {},
-    filterReleasedYear: filterKeys.get("filterReleasedYear") ?? {},
+    mediaType: filterKeys.get("mediaType") ?? {},
+    diaryYear: filterKeys.get("diaryYear") ?? {},
+    genre: filterKeys.get("genre") ?? {},
+    loggedBefore: filterKeys.get("loggedBefore") ?? {},
+    rating: filterKeys.get("rating") ?? {},
+    releasedDecade: filterKeys.get("releasedDecade") ?? {},
+    releasedYear: filterKeys.get("releasedYear") ?? {},
   };
 }
 
@@ -24,13 +28,13 @@ export function createFilterSet(
 ): Partial<firebase.firestore.DocumentData> {
   const setObj: Partial<firebase.firestore.DocumentData> = {};
   (Object.keys(filters) as Array<keyof Filters>).forEach((e) => {
-    if (e === "filterDiaryYear" && filters[e] !== null) {
+    if (e === "diaryYear" && filters[e] !== null) {
       setObj[e] = {
         [`${filters[e]}`]: firebase.firestore.FieldValue.increment(incrementor),
       };
     } else if (filters[e] !== null) {
       setObj[e] = {
-        [`${filters.filterDiaryYear}`]: {
+        [`${filters.diaryYear}`]: {
           [`${filters[e]}`]: firebase.firestore.FieldValue.increment(
             incrementor
           ),
@@ -52,19 +56,19 @@ export function createFilterEditSet(
   // if the years are different then go through all of the keys,
   // if not then go through just the comparisons.
   const setObj: Partial<firebase.firestore.DocumentData> = {};
-  if (newKeys.filterDiaryYear !== oldKeys.filterDiaryYear) {
+  if (newKeys.diaryYear !== oldKeys.diaryYear) {
     (Object.keys(newKeys) as Array<keyof Filters>).forEach((e) => {
-      if (e === "filterDiaryYear") {
+      if (e === "diaryYear") {
         setObj[e] = {
           [`${oldKeys[e]}`]: firebase.firestore.FieldValue.increment(-1),
           [`${newKeys[e]}`]: firebase.firestore.FieldValue.increment(1),
         };
       } else {
         setObj[e] = {
-          [`${oldKeys.filterDiaryYear}`]: {
+          [`${oldKeys.diaryYear}`]: {
             [`${oldKeys[e]}`]: firebase.firestore.FieldValue.increment(-1),
           },
-          [`${newKeys.filterDiaryYear}`]: {
+          [`${newKeys.diaryYear}`]: {
             [`${newKeys[e]}`]: firebase.firestore.FieldValue.increment(1),
           },
         };
@@ -73,14 +77,14 @@ export function createFilterEditSet(
   } else {
     comparison.forEach((e) => {
       if (newKeys[e] !== oldKeys[e]) {
-        if (e === "filterDiaryYear") {
+        if (e === "diaryYear") {
           setObj[e] = {
             [`${oldKeys[e]}`]: firebase.firestore.FieldValue.increment(-1),
             [`${newKeys[e]}`]: firebase.firestore.FieldValue.increment(1),
           };
         } else {
           setObj[e] = {
-            [`${newKeys.filterDiaryYear}`]: {
+            [`${newKeys.diaryYear}`]: {
               [`${oldKeys[e]}`]: firebase.firestore.FieldValue.increment(-1),
               [`${newKeys[e]}`]: firebase.firestore.FieldValue.increment(1),
             },
@@ -102,12 +106,12 @@ export function createFilterKeys(data: DiaryAdd): Filters {
   const rating = data.rating * 2;
   const loggedBefore = data.loggedBefore;
   return {
-    filterReleasedDecade: releasedDecade,
-    filterReleasedYear: releasedYear,
-    filterDiaryYear: diaryYear,
-    filterMediaType: mediaType,
-    filterGenre: genreType,
-    filterRating: rating,
-    filterLoggedBefore: loggedBefore,
+    releasedDecade,
+    releasedYear,
+    diaryYear,
+    mediaType,
+    genre: genreType,
+    rating,
+    loggedBefore,
   };
 }

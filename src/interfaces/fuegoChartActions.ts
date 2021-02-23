@@ -1,5 +1,6 @@
 import type { MediaType, DiaryAddWithId } from "../config/types";
 import { fuegoDb } from "./fuego";
+import type fuego from "./fuego";
 
 export async function fuegoChartYear(
   key: string,
@@ -9,7 +10,7 @@ export async function fuegoChartYear(
 ): Promise<DiaryAddWithId[]> {
   let diaryRef = fuegoDb.collection(
     `users/${uid}/diary`
-  ) as firebase.firestore.Query;
+  ) as fuego.firestore.Query;
 
   if (diaryYear !== null) {
     diaryRef = diaryRef.where("diaryYear", "==", diaryYear);
@@ -37,7 +38,7 @@ export async function fuegoChartTop6(
 ): Promise<DiaryAddWithId[]> {
   let diaryRef = fuegoDb.collection(
     `users/${uid}/diary`
-  ) as firebase.firestore.Query;
+  ) as fuego.firestore.Query;
 
   diaryRef = diaryRef.orderBy("rating", "desc");
 

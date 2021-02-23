@@ -1,3 +1,4 @@
+import type fuego from "../interfaces/fuego";
 import type { MDbTV } from "./typesMDb";
 
 /**
@@ -60,50 +61,8 @@ export interface MediaSelected
   artistId?: DiaryAdd["artistId"];
 }
 
-/**
- * FILTERS
- */
-export interface Filters {
-  filterMediaType: MediaType;
-  filterRating: number;
-  filterReleasedDecade: number;
-  filterReleasedYear: number;
-  filterDiaryYear: number;
-  filterLoggedBefore: boolean;
-  filterGenre: string;
-}
-
-export interface FilterState {
-  filterMediaType: MediaType[] | null;
-  filterRating: Filters["filterRating"] | null;
-  filterReleasedDecade: Filters["filterReleasedDecade"] | null;
-  filterDiaryYear: Filters["filterDiaryYear"] | null;
-  filterLoggedBefore: Filters["filterLoggedBefore"] | null;
-  filterGenre: Filters["filterGenre"] | null;
-}
-
-export type FilterDataNoYear = {
-  [K in keyof Omit<Filters, "filterDiaryYear">]: {
-    [key: string]: {
-      [key: string]: number;
-    };
-  };
-};
-
-export type FilterData = {
-  filterDiaryYear: {
-    [key: string]: number;
-  };
-} & {
-  [K in keyof Omit<Filters, "filterDiaryYear">]: {
-    [key: string]: {
-      [key: string]: number;
-    };
-  };
-};
-
-export type FuegoUser = firebase.User | null | false;
-export type FuegoValidatedUser = firebase.User;
+export type FuegoUser = fuego.User | null | false;
+export type FuegoValidatedUser = fuego.User;
 
 /**
  * Structure for a user's preference set during NewUserFlow
