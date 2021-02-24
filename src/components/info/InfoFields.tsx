@@ -23,6 +23,7 @@ import type {
 } from "../../config/types";
 import { MEDIA_LOGGED_BEFORE } from "../../config/contants";
 import { useMDDispatch } from "../../config/store";
+import { parsePosterUrl } from "../../utils/helpers";
 
 function InfoFields({
   dispatch,
@@ -134,14 +135,16 @@ function InfoFields({
                         (e) =>
                           e.season_number === parseInt(valueChange.target.value)
                       );
+                      const currentSeason = item.seasons[seasonIndex];
                       return mdDispatch({
                         type: "selected",
                         payload: {
                           ...item,
-                          season: item.seasons[seasonIndex].season_number,
+                          season: currentSeason.season_number,
                           poster:
-                            item.seasons[seasonIndex].poster_path !== null
-                              ? `https://image.tmdb.org/t/p/w500${item.seasons[seasonIndex].poster_path}`
+                            currentSeason.poster_path &&
+                            currentSeason.poster_path !== null
+                              ? parsePosterUrl(currentSeason.poster_path, "tv")
                               : item.poster,
                         },
                       });

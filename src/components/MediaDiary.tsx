@@ -22,6 +22,7 @@ import type {
   FuegoValidatedUser,
 } from "../config/types";
 import { fuegoDiaryGet } from "../interfaces/fuegoMDActions";
+import { createPosterURL } from "../utils/helpers";
 import AlbumIcon from "./icons/AlbumIcon";
 import FilmIcon from "./icons/FilmIcon";
 import LogoIcon from "./icons/LogoIcon";
@@ -199,7 +200,7 @@ function MediaDiary({ user }: { user: FuegoValidatedUser }): JSX.Element {
                       </Box>
                       <Box>
                         <Image
-                          src={poster}
+                          src={createPosterURL(poster, type)}
                           ignoreFallback
                           borderRadius="5px"
                           border="1px solid"

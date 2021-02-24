@@ -10,6 +10,7 @@ import useFuegoUser from "../interfaces/useFuegoUser";
 import InfoHeader from "./info/InfoHeader";
 import InfoFields from "./info/InfoFields";
 import MdSpinner from "./md/MdSpinner";
+import { createPosterURL, parsePosterUrl } from "../utils/helpers";
 
 function Log(): JSX.Element {
   const mdDispatch = useMDDispatch();
@@ -34,13 +35,14 @@ function Log(): JSX.Element {
       if (
         selected &&
         selected.seasons &&
+        selected.seasons[0].poster_path &&
         selected.seasons[0].poster_path !== null
       ) {
         mdDispatch({
           type: "selected",
           payload: {
             ...selected,
-            poster: `https://image.tmdb.org/t/p/w500${selected.seasons[0].poster_path}`,
+            poster: parsePosterUrl(selected.seasons[0].poster_path, "tv"),
           },
         });
         initSeason.current = false;

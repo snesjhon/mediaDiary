@@ -12,7 +12,7 @@ import type {
   SpotifySearch,
   SpotifySearchResult,
 } from "../config/typesSearch";
-import { fetcher } from "../utils/helpers";
+import { fetcher, parsePosterUrl } from "../utils/helpers";
 import { spotifyFetch } from "../utils/helperSpotify";
 import useDebounce from "../utils/useDebounce";
 import AlbumIcon from "./icons/AlbumIcon";
@@ -223,7 +223,7 @@ function Search({
       const castItem = item as SpotifySearchResult;
       return {
         mediaId: castItem.id,
-        poster: castItem.images[0].url,
+        poster: parsePosterUrl(castItem.images[0].url, type),
         title: castItem.name,
         releasedDate: dayjs(castItem.release_date).toISOString(),
         artist: castItem.artists[0].name,
@@ -244,7 +244,9 @@ function Search({
       }
       return {
         mediaId: castItem.id.toString(),
-        poster: `https://image.tmdb.org/t/p/w500${castItem.poster_path}`,
+        poster: castItem.poster_path
+          ? parsePosterUrl(castItem.poster_path, type as MediaType)
+          : "",
         title:
           type === "movie"
             ? castItem.title ?? ""

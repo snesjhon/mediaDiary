@@ -1,3 +1,4 @@
+import { MDB_IMGURL, SPOTIFY_IMGURL } from "../config/contants";
 import type { MediaTypesArr, MediaTypes, MediaType } from "../config/types";
 
 export async function fetcher<T>(key: string): Promise<T> {
@@ -36,4 +37,31 @@ export function createMediaTypes(mediaTypesArr: MediaTypesArr): MediaTypes {
     tv: mediaTypesArr.includes("tv") ? true : false,
     album: mediaTypesArr.includes("album") ? true : false,
   };
+}
+
+/** We only save the ID for poster Urls and thus we need to create the full Url */
+export function createPosterURL(
+  url: string,
+  type: MediaType,
+  width?: number
+): string {
+  if (type === "album") {
+    return `${SPOTIFY_IMGURL}${url}`;
+  } else {
+    if (width) {
+      return `${MDB_IMGURL}w${width}/${url}.jpg`;
+    }
+    return `${MDB_IMGURL}w500/${url}.jpg`;
+  }
+}
+
+/** We don't want to save the full URL to Fuego, rather just save the ID  */
+export function parsePosterUrl(url: string, type: MediaType): string {
+  if (type === "album") {
+    const item = url.split("/");
+    return item[item.length - 1];
+  } else {
+    const item = url.replace(".jpg", "").split("/");
+    return item[item.length - 1];
+  }
 }

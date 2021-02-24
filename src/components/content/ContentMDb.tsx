@@ -7,6 +7,7 @@ import {
   Image,
 } from "@chakra-ui/react";
 import React from "react";
+import { MDB_IMGURL } from "../../config/contants";
 import type { MediaType } from "../../config/types";
 import type { MDbMovie, MDbTV } from "../../config/typesMDb";
 
@@ -61,9 +62,7 @@ function ContentMDb({
                   key={e.name}
                 >
                   {e.profile_path !== null && (
-                    <Image
-                      src={`https://image.tmdb.org/t/p/w200${e.profile_path}`}
-                    />
+                    <Image src={`${MDB_IMGURL}w200${e.profile_path}`} />
                   )}
                   <Box px={3} py={3}>
                     <Text fontWeight="bold" isTruncated>
