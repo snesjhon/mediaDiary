@@ -5,6 +5,7 @@ import { useMDDispatch, useMDState } from "../config/store";
 import type { MediaSelected } from "../config/types";
 import type { MDbMovie, MDbTV } from "../config/typesMDb";
 import type { SpotifyAlbum, SpotifyArtist } from "../config/typesSpotify";
+import { parsePosterUrl } from "../utils/helpers";
 import useDataFetch from "../utils/useDataFetch";
 import InfoBody from "./info/InfoBody";
 import InfoHeader from "./info/InfoHeader";
@@ -76,7 +77,7 @@ function InfoSelected({ item }: { item: MediaSelected }): JSX.Element {
             episodes: seasonItem.episode_count,
             poster:
               castItem.poster_path !== null
-                ? `https://image.tmdb.org/t/p/w500${castItem.poster_path}`
+                ? parsePosterUrl(castItem.poster_path, item.type)
                 : "",
             releasedDate: dayjs(seasonItem.air_date).toISOString(),
           };

@@ -13,6 +13,7 @@ import React from "react";
 import Rating from "react-rating";
 import { useMDDispatch } from "../../config/store";
 import type { DiaryAddWithId } from "../../config/types";
+import { createPosterURL } from "../../utils/helpers";
 import StarEmptyIcon from "../icons/StartEmptyIcon";
 
 function ChartTop({ list }: { list: DiaryAddWithId[] }): JSX.Element {
@@ -33,7 +34,7 @@ function ChartTop({ list }: { list: DiaryAddWithId[] }): JSX.Element {
             alignItems="flex-end"
           >
             <Image
-              src={e.poster}
+              src={createPosterURL(e.poster, e.type)}
               borderRadius="5px"
               border="1px solid"
               borderColor="gray.300"

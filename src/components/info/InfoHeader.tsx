@@ -13,6 +13,7 @@ import React from "react";
 import Rating from "react-rating";
 import { useMDDispatch, useMDState } from "../../config/store";
 import type { DiaryAdd, MediaSelected } from "../../config/types";
+import { createPosterURL } from "../../utils/helpers";
 import StarEmptyIcon from "../icons/StartEmptyIcon";
 
 interface Props {
@@ -68,7 +69,7 @@ function InfoHeader({
       >
         <Box ml="auto">
           <Image
-            src={poster}
+            src={createPosterURL(poster, type)}
             w="13rem"
             h={type === "album" ? "13rem" : "20rem"}
             borderRadius="5px"

@@ -31,9 +31,7 @@ function useDataFetch({
   let returnKey = null;
   if (firstId) {
     if (type === "tv") {
-      // TODO: remove this after database migration
-      const idArr = firstId.split("_");
-      returnKey = getTVUrl(idArr[0], season);
+      returnKey = getTVUrl(firstId, season);
     } else if (type === "movie") {
       returnKey = getMovieUrl(firstId);
     } else if (type === "album" && secondId) {
