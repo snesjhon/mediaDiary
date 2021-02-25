@@ -2,17 +2,17 @@ import { Button, Center, DrawerBody, DrawerFooter } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React, { useReducer } from "react";
 import { mutate } from "swr";
-import { LogReducer } from "../config/logStore";
-import type { LogState } from "../config/logStore";
-import type { DiaryAddWithId } from "../config/types";
-import { useMDDispatch, useMDState } from "../config/store";
-import useFuegoUser from "../interfaces/useFuegoUser";
-import InfoFields from "./info/InfoFields";
-import MdSpinner from "./md/MdSpinner";
-import { fuegoEdit, fuegoDelete } from "../interfaces/fuegoMDActions";
-import InfoHeader from "./info/InfoHeader";
+import { useMDDispatch, useMDState } from "../../config/store";
+import type { LogState } from "../../config/storeLog";
+import { LogReducer } from "../../config/storeLog";
+import { fuegoDelete, fuegoEdit } from "../../fuego/fuegoMDActions";
+import useFuegoUser from "../../fuego/useFuegoUser";
+import type { DiaryAddWithId } from "../../types/typesMedia";
+import InfoFields from "../info/InfoFields";
+import InfoHeader from "../info/InfoHeader";
+import MdSpinner from "../md/MdSpinner";
 
-function Edit(): JSX.Element {
+function ContentEdit(): JSX.Element {
   const MDState = useMDState();
   const { edit, isSaving } = MDState;
   const mdDispatch = useMDDispatch();
@@ -133,4 +133,4 @@ function Edit(): JSX.Element {
   }
 }
 
-export default Edit;
+export default ContentEdit;

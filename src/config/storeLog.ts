@@ -1,4 +1,4 @@
-import type { DiaryAdd } from "./types";
+import type { DiaryAdd } from "../types/typesMedia";
 
 export interface LogState {
   diaryDate: string;

@@ -12,7 +12,7 @@ import {
 import React from "react";
 import Rating from "react-rating";
 import { useMDDispatch } from "../../config/store";
-import type { DiaryAddWithId } from "../../config/types";
+import type { DiaryAddWithId } from "../../types/typesMedia";
 import { createPosterURL } from "../../utils/helpers";
 import StarEmptyIcon from "../icons/StartEmptyIcon";
 

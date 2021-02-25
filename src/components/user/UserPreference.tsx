@@ -12,13 +12,13 @@ import {
 import React, { useEffect, useState } from "react";
 import { MEDIA_TYPES } from "../../config/contants";
 import { useMDDispatch, useMDState } from "../../config/store";
+import { fuegoSetPreferences } from "../../fuego/fuegoMDActions";
 import type {
   FuegoUserPref,
   FuegoValidatedUser,
   MediaTypesArr,
   UserPref,
-} from "../../config/types";
-import { fuegoSetPreferences } from "../../interfaces/fuegoMDActions";
+} from "../../types/typesMedia";
 import { createMediaTypes, createMediaTypesArr } from "../../utils/helpers";
 
 function UserPreference({

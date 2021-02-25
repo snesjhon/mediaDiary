@@ -1,16 +1,16 @@
 import { Divider, DrawerBody } from "@chakra-ui/react";
 import React from "react";
 import useSWR from "swr";
-import { useMDState } from "../config/store";
-import type { DiaryAdd } from "../config/types";
-import { fuegoDiaryEntry } from "../interfaces/fuegoMDActions";
-import useFuegoUser from "../interfaces/useFuegoUser";
-import Edit from "./Edit";
-import InfoBody from "./info/InfoBody";
-import InfoHeader from "./info/InfoHeader";
-import MdLoader from "./md/MdLoader";
+import { useMDState } from "../../config/store";
+import { fuegoDiaryEntry } from "../../fuego/fuegoMDActions";
+import useFuegoUser from "../../fuego/useFuegoUser";
+import type { DiaryAdd } from "../../types/typesMedia";
+import InfoBody from "../info/InfoBody";
+import InfoHeader from "../info/InfoHeader";
+import MdLoader from "../md/MdLoader";
+import Edit from "./ContentEdit";
 
-function Day(): JSX.Element | null {
+function ContentDay(): JSX.Element | null {
   const { user } = useFuegoUser();
   const { view, edit } = useMDState();
 
@@ -42,4 +42,4 @@ function Day(): JSX.Element | null {
   return <MdLoader />;
 }
 
-export default Day;
+export default ContentDay;

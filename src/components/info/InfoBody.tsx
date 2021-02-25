@@ -1,10 +1,10 @@
 import React, { Suspense } from "react";
-import type { MediaSelected } from "../../config/types";
-import useDataFetch from "../../utils/useDataFetch";
-import type { DataFetchMDb, DataFetchSpotify } from "../../utils/useDataFetch";
-import ContentMDb from "../content/ContentMDb";
-import ContentSpotify from "../content/ContentSpotify";
+import type { DataFetchMDb, DataFetchSpotify } from "../../config/useDataFetch";
+import useDataFetch from "../../config/useDataFetch";
+import type { MediaSelected } from "../../types/typesMedia";
 import MdSpinner from "../md/MdSpinner";
+import InfoMDb from "./InfoMDb";
+import InfoSpotify from "./InfoSpotify";
 
 interface Props {
   selected: MediaSelected;
@@ -33,12 +33,12 @@ function InfoSuspense({ selected }: Props) {
 
   if (data && !isLoading) {
     return type === "album" ? (
-      <ContentSpotify
+      <InfoSpotify
         artistInfo={(data as DataFetchSpotify)[1]}
         albumInfo={(data as DataFetchSpotify)[0]}
       />
     ) : (
-      <ContentMDb type={type} data={data as DataFetchMDb} />
+      <InfoMDb type={type} data={data as DataFetchMDb} />
     );
   }
   return null;

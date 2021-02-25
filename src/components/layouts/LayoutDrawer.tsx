@@ -1,14 +1,12 @@
+import type { DrawerProps } from "@chakra-ui/react";
 import {
   Drawer,
-  DrawerBody,
   DrawerCloseButton,
   DrawerContent,
   DrawerHeader,
   DrawerOverlay,
-  Flex,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import type { DrawerProps } from "@chakra-ui/react";
 import type { PropsWithChildren, RefObject } from "react";
 import React from "react";
 import { useSwipeable } from "react-swipeable";

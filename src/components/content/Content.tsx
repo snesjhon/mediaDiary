@@ -4,14 +4,14 @@ import { Router } from "next/router";
 import type { PropsWithChildren } from "react";
 import React, { useEffect } from "react";
 import useIsBreakpoint from "../../utils/useIsBreakpoint";
-import Content from "../Content";
-import Header from "../Header";
+import ContentController from "./ContentController";
+import Header from "./ContentToolbar";
 import MdLoader from "../md/MdLoader";
 import Sidebar from "../sidebar/Sidebar";
 import SidebarDesktop from "../sidebar/SidebarDesktop";
-import Layout from "./Layout";
+import Layout from "../layouts/Layout";
 
-function LayoutMain({
+function Content({
   children,
   title = "MediaDiary",
 }: PropsWithChildren<unknown> & { title: string }): JSX.Element {
@@ -54,9 +54,9 @@ function LayoutMain({
         )}
         <Box>{loading ? <MdLoader /> : children}</Box>
       </Grid>
-      <Content />
+      <ContentController />
     </Layout>
   );
 }
 
-export default LayoutMain;
+export default Content;

@@ -1,18 +1,18 @@
-import { StarIcon, EditIcon } from "@chakra-ui/icons";
+import { EditIcon, StarIcon } from "@chakra-ui/icons";
 import {
-  Flex,
-  Heading,
-  Grid,
   Box,
+  Flex,
+  Grid,
+  Heading,
   IconButton,
-  Text,
   Image,
+  Text,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React from "react";
 import Rating from "react-rating";
 import { useMDDispatch, useMDState } from "../../config/store";
-import type { DiaryAdd, MediaSelected } from "../../config/types";
+import type { DiaryAdd, MediaSelected } from "../../types/typesMedia";
 import { createPosterURL } from "../../utils/helpers";
 import StarEmptyIcon from "../icons/StartEmptyIcon";
 

@@ -1,16 +1,16 @@
 import { useRouter } from "next/router";
 import React from "react";
-import LayoutMain from "../src/components/layouts/LayoutMain";
+import LayoutMain from "../src/components/content/Content";
 import MdLoader from "../src/components/md/MdLoader";
-import MediaDiary from "../src/components/MediaDiary";
+import Home from "../src/components/Home";
 import UserNew from "../src/components/user/UserNew";
-import useFuegoAuth from "../src/interfaces/useFuegoAuth";
+import useFuegoAuth from "../src/fuego/useFuegoAuth";
 
 /**
  * Home Route is our initial entrance portal to MD which will also redirect if not
  * validated, and show NewUserFlow depending on Preference validity
  */
-function Home(): JSX.Element {
+function HomePage(): JSX.Element {
   const {
     userValid,
     userValidHasPreference,
@@ -30,11 +30,11 @@ function Home(): JSX.Element {
   } else if (userValidHasPreference) {
     return (
       <LayoutMain title="Home">
-        <MediaDiary user={userValidHasPreference} />
+        <Home user={userValidHasPreference} />
       </LayoutMain>
     );
   }
   return <MdLoader />;
 }
 
-export default Home;
+export default HomePage;

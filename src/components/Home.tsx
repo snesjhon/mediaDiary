@@ -16,12 +16,12 @@ import React, { useEffect } from "react";
 import Rating from "react-rating";
 import { cache, useSWRInfinite } from "swr";
 import { useMDDispatch, useMDState } from "../config/store";
+import { fuegoDiaryGet } from "../fuego/fuegoMDActions";
 import type {
   DiaryAddWithId,
   DiaryState,
   FuegoValidatedUser,
-} from "../config/types";
-import { fuegoDiaryGet } from "../interfaces/fuegoMDActions";
+} from "../types/typesMedia";
 import { createPosterURL } from "../utils/helpers";
 import AlbumIcon from "./icons/AlbumIcon";
 import FilmIcon from "./icons/FilmIcon";
@@ -34,7 +34,7 @@ interface ListState {
   [key: string]: DiaryState;
 }
 
-function MediaDiary({ user }: { user: FuegoValidatedUser }): JSX.Element {
+function Home({ user }: { user: FuegoValidatedUser }): JSX.Element {
   const state = useMDState();
   const dispatch = useMDDispatch();
   const { colorMode } = useColorMode();
@@ -314,4 +314,4 @@ function MediaDiary({ user }: { user: FuegoValidatedUser }): JSX.Element {
   return <MdLoader />;
 }
 
-export default MediaDiary;
+export default Home;

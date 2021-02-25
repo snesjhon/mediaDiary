@@ -1,18 +1,18 @@
 import { Button, Center, DrawerBody, DrawerFooter } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React, { useEffect, useReducer, useRef } from "react";
-import type { LogState } from "../config/logStore";
-import { LogReducer } from "../config/logStore";
-import { useMDDispatch, useMDState } from "../config/store";
-import type { DiaryAdd } from "../config/types";
-import { fuegoDiaryAdd } from "../interfaces/fuegoMDActions";
-import useFuegoUser from "../interfaces/useFuegoUser";
-import InfoHeader from "./info/InfoHeader";
-import InfoFields from "./info/InfoFields";
-import MdSpinner from "./md/MdSpinner";
-import { createPosterURL, parsePosterUrl } from "../utils/helpers";
+import { useMDDispatch, useMDState } from "../../config/store";
+import type { LogState } from "../../config/storeLog";
+import { LogReducer } from "../../config/storeLog";
+import { fuegoDiaryAdd } from "../../fuego/fuegoMDActions";
+import useFuegoUser from "../../fuego/useFuegoUser";
+import type { DiaryAdd } from "../../types/typesMedia";
+import { parsePosterUrl } from "../../utils/helpers";
+import InfoFields from "../info/InfoFields";
+import InfoHeader from "../info/InfoHeader";
+import MdSpinner from "../md/MdSpinner";
 
-function Log(): JSX.Element {
+function ContentLog(): JSX.Element {
   const mdDispatch = useMDDispatch();
   const { user } = useFuegoUser();
   const MDState = useMDState();
@@ -150,4 +150,4 @@ function Log(): JSX.Element {
   }
 }
 
-export default Log;
+export default ContentLog;

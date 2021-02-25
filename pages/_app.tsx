@@ -6,7 +6,7 @@ import Head from "next/head";
 import React, { useReducer } from "react";
 import type { MDState } from "../src/config/store";
 import { ContextDispatch, ContextState, Reducer } from "../src/config/store";
-import { FuegoProvider } from "../src/interfaces/fuegoProvider";
+import { FuegoProvider } from "../src/fuego/fuegoProvider";
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const [state, dispatch] = useReducer(Reducer, {

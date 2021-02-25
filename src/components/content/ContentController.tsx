@@ -1,9 +1,3 @@
-/**
- * Content
- * ---
- * This has all of the interactive between each "view"
- */
-
 import {
   Modal,
   ModalBody,
@@ -13,16 +7,16 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import React, { useRef } from "react";
-import { useMDDispatch, useMDState } from "../config/store";
-import useIsBreakpoint from "../utils/useIsBreakpoint";
-import Day from "./Day";
-import Info from "./Info";
-import LayoutDrawer from "./layouts/LayoutDrawer";
-import Log from "./Log";
-import MdLogo from "./md/MdLogo";
-import Search from "./Search";
+import { useMDDispatch, useMDState } from "../../config/store";
+import useIsBreakpoint from "../../utils/useIsBreakpoint";
+import LayoutDrawer from "../layouts/LayoutDrawer";
+import MdLogo from "../md/MdLogo";
+import ContentDay from "./ContentDay";
+import ContentInfo from "./ContentInfo";
+import ContentLog from "./ContentLog";
+import ContentSearch from "./ContentSearch";
 
-function Content(): JSX.Element {
+function ContentController(): JSX.Element {
   const { view } = useMDState();
   const dispatch = useMDDispatch();
   const refInput = useRef<HTMLInputElement>(null);
@@ -43,7 +37,7 @@ function Content(): JSX.Element {
               <MdLogo title="Search" />
             </ModalHeader>
             <ModalBody pt={0} pb={6}>
-              {view === "search" && <Search refInput={refInput} />}
+              {view === "search" && <ContentSearch refInput={refInput} />}
             </ModalBody>
           </ModalContent>
         </ModalOverlay>
@@ -54,12 +48,12 @@ function Content(): JSX.Element {
         }
         placement="right"
       >
-        {view === "info" && <Info />}
-        {view === "log" && <Log />}
-        {(view === "day" || view === "edit") && <Day />}
+        {view === "info" && <ContentInfo />}
+        {view === "log" && <ContentLog />}
+        {(view === "day" || view === "edit") && <ContentDay />}
       </LayoutDrawer>
     </>
   );
 }
 
-export default Content;
+export default ContentController;

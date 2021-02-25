@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useMDDispatch, useMDState } from "../config/store";
-import type { FuegoValidatedUser } from "../config/types";
+import type { FuegoValidatedUser } from "../types/typesMedia";
 import { fuegoDb } from "./fuego";
 import useFuegoUser from "./useFuegoUser";
 
