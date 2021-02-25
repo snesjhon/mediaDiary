@@ -1,4 +1,4 @@
-import type { DiaryAddWithId, MediaType } from "../types/typesMedia";
+import type { MediaDiaryWithId, MediaType } from "../types/typesMedia";
 import type fuego from "./fuego";
 import { fuegoDb } from "./fuego";
 
@@ -7,7 +7,7 @@ export async function fuegoChartYear(
   uid: string,
   diaryYear: number | null,
   mediaType: MediaType | null
-): Promise<DiaryAddWithId[]> {
+): Promise<MediaDiaryWithId[]> {
   let diaryRef = fuegoDb.collection(
     `users/${uid}/diary`
   ) as fuego.firestore.Query;
@@ -24,9 +24,9 @@ export async function fuegoChartYear(
 
   const diaryItems = await diaryRef.get();
 
-  const items: DiaryAddWithId[] = [];
+  const items: MediaDiaryWithId[] = [];
   diaryItems.forEach((item) => {
-    items.push(item.data() as DiaryAddWithId);
+    items.push(item.data() as MediaDiaryWithId);
   });
 
   return items;
@@ -35,7 +35,7 @@ export async function fuegoChartYear(
 export async function fuegoChartTop6(
   key: string,
   uid: string
-): Promise<DiaryAddWithId[]> {
+): Promise<MediaDiaryWithId[]> {
   let diaryRef = fuegoDb.collection(
     `users/${uid}/diary`
   ) as fuego.firestore.Query;
@@ -44,9 +44,9 @@ export async function fuegoChartTop6(
 
   const diaryItems = await diaryRef.limit(6).get();
 
-  const items: DiaryAddWithId[] = [];
+  const items: MediaDiaryWithId[] = [];
   diaryItems.forEach((item) => {
-    items.push(item.data() as DiaryAddWithId);
+    items.push(item.data() as MediaDiaryWithId);
   });
   return items;
 }

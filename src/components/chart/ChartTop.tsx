@@ -12,11 +12,11 @@ import {
 import React from "react";
 import Rating from "react-rating";
 import { useMDDispatch } from "../../config/store";
-import type { DiaryAddWithId } from "../../types/typesMedia";
+import type { MediaDiaryWithId } from "../../types/typesMedia";
 import { createPosterURL } from "../../utils/helpers";
 import StarEmptyIcon from "../icons/StartEmptyIcon";
 
-function ChartTop({ list }: { list: DiaryAddWithId[] }): JSX.Element {
+function ChartTop({ list }: { list: MediaDiaryWithId[] }): JSX.Element {
   const dispatch = useMDDispatch();
   const [purple700] = useToken("colors", ["purple.700"]);
   return (

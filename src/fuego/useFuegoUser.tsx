@@ -1,9 +1,9 @@
 import { useContext } from "react";
-import type { FuegoUser } from "../types/typesMedia";
+import type { UserFuego } from "../types/typesUser";
 import { FuegoContext } from "./fuegoProvider";
 
 function useFuegoUser(): {
-  user: FuegoUser;
+  user: UserFuego;
   isValidating: boolean;
 } {
   return useContext(FuegoContext);

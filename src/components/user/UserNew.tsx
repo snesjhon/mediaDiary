@@ -1,11 +1,11 @@
 import { Box, Flex, Heading, Square, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import type { FuegoValidatedUser } from "../../types/typesMedia";
+import type { UserFuegoValidated } from "../../types/typesUser";
 import LogoIcon from "../icons/LogoIcon";
 import UserPreference from "./UserPreference";
 
-function UserNew({ user }: { user: FuegoValidatedUser }): JSX.Element {
+function UserNew({ user }: { user: UserFuegoValidated }): JSX.Element {
   const router = useRouter();
   const [isRedirecting, setIsRedirecting] = useState(false);
   useEffect(() => {

@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
 import type { FilterData, Filters } from "../types/typesFilters";
-import type { DiaryAdd } from "../types/typesMedia";
+import type { MediaDiary } from "../types/typesMedia";
 import { fuegoDb } from "./fuego";
 
 export async function fuegoFiltersAll(
@@ -46,8 +46,8 @@ export function createFilterSet(
 }
 
 export function createFilterEditSet(
-  data: DiaryAdd,
-  prevData: DiaryAdd,
+  data: MediaDiary,
+  prevData: MediaDiary,
   comparison: Array<keyof Filters>
 ): Partial<firebase.firestore.DocumentData> {
   const newKeys = createFilterKeys(data);
@@ -97,7 +97,7 @@ export function createFilterEditSet(
   return setObj;
 }
 
-export function createFilterKeys(data: DiaryAdd): Filters {
+export function createFilterKeys(data: MediaDiary): Filters {
   const releasedDecade = data.releasedDecade;
   const releasedYear = data.releasedYear;
   const diaryYear = data.diaryYear;

@@ -7,7 +7,7 @@ import type { LogState } from "../../config/storeLog";
 import { LogReducer } from "../../config/storeLog";
 import { fuegoDelete, fuegoEdit } from "../../fuego/fuegoMDActions";
 import useFuegoUser from "../../fuego/useFuegoUser";
-import type { DiaryAddWithId } from "../../types/typesMedia";
+import type { MediaDiaryWithId } from "../../types/typesMedia";
 import InfoFields from "../info/InfoFields";
 import InfoHeader from "../info/InfoHeader";
 import MdSpinner from "../md/MdSpinner";
@@ -98,7 +98,7 @@ function ContentEdit(): JSX.Element {
     }
   }
 
-  function createEdit(): DiaryAddWithId | false {
+  function createEdit(): MediaDiaryWithId | false {
     if (typeof edit !== "undefined") {
       const editItem = {
         ...edit,

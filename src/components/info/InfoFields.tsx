@@ -18,7 +18,7 @@ import { MEDIA_LOGGED_BEFORE } from "../../config/contants";
 import { useMDDispatch } from "../../config/store";
 import type { LogActions, LogState } from "../../config/storeLog";
 import type {
-  DiaryAddWithId,
+  MediaDiaryWithId,
   MediaSelected,
   MediaType,
 } from "../../types/typesMedia";
@@ -34,7 +34,7 @@ function InfoFields({
 }: {
   dispatch: Dispatch<LogActions>;
   fields: LogState;
-  item: MediaSelected | DiaryAddWithId;
+  item: MediaSelected | MediaDiaryWithId;
   type: MediaType;
   isEdit?: boolean;
 }): JSX.Element {
