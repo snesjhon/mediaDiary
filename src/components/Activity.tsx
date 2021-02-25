@@ -13,7 +13,8 @@ import React, { useState } from "react";
 import useSWR from "swr";
 import { fuegoFiltersAll } from "../fuego/fuegoFilterActions";
 import type { FilterData } from "../types/typesFilters";
-import type { FuegoValidatedUser, MediaType } from "../types/typesMedia";
+import type { MediaType } from "../types/typesMedia";
+import type { UserFuegoValidated } from "../types/typesUser";
 import { capFormat } from "../utils/helpers";
 import ChartAll from "./chart/ChartAll";
 import ChartYear from "./chart/ChartYear";
@@ -25,7 +26,7 @@ import MdEmpty from "./md/MdEmpty";
 import MdLoader from "./md/MdLoader";
 import MdStatus from "./md/MdStatus";
 
-function Activity({ user }: { user: FuegoValidatedUser }): JSX.Element {
+function Activity({ user }: { user: UserFuegoValidated }): JSX.Element {
   const [yearType, setYearType] = useState<number | null>(null);
   const [localMediaType, setMediaType] = useState<MediaType | null>(null);
   const { data, error, isValidating } = useSWR<FilterData>(

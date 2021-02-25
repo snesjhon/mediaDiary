@@ -1,10 +1,10 @@
-import type { DiaryAdd } from "../types/typesMedia";
+import type { MediaDiary } from "../types/typesMedia";
 
 export interface LogState {
   diaryDate: string;
-  rating: DiaryAdd["rating"];
-  loggedBefore: DiaryAdd["loggedBefore"];
-  seenEpisodes?: DiaryAdd["seenEpisodes"];
+  rating: MediaDiary["rating"];
+  loggedBefore: MediaDiary["loggedBefore"];
+  seenEpisodes?: MediaDiary["seenEpisodes"];
 }
 
 export type LogActions = {

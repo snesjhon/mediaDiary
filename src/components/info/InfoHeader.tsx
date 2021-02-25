@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 import React from "react";
 import Rating from "react-rating";
 import { useMDDispatch, useMDState } from "../../config/store";
-import type { DiaryAdd, MediaSelected } from "../../types/typesMedia";
+import type { MediaDiary, MediaSelected } from "../../types/typesMedia";
 import { createPosterURL } from "../../utils/helpers";
 import StarEmptyIcon from "../icons/StartEmptyIcon";
 
@@ -23,8 +23,8 @@ interface Props {
   genre: MediaSelected["genre"];
   releasedDate: MediaSelected["releasedDate"];
   type: MediaSelected["type"];
-  diaryDate?: DiaryAdd["diaryDate"];
-  rating?: DiaryAdd["rating"];
+  diaryDate?: MediaDiary["diaryDate"];
+  rating?: MediaDiary["rating"];
 }
 
 function InfoHeader({

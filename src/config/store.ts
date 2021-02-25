@@ -1,17 +1,14 @@
 import { createContext, useContext } from "react";
 import type { FilterState } from "../types/typesFilters";
-import type {
-  DiaryAddWithId,
-  FuegoUserPref,
-  MediaSelected,
-} from "../types/typesMedia";
+import type { MediaDiaryWithId, MediaSelected } from "../types/typesMedia";
+import type { UserFuegoPref } from "../types/typesUser";
 
 export interface MDState extends FilterState {
-  preference: FuegoUserPref;
+  preference: UserFuegoPref;
   isSaving?: boolean;
   view?: "search" | "log" | "edit" | "day" | "md" | "activity" | "info";
   selected?: MediaSelected;
-  edit?: DiaryAddWithId;
+  edit?: MediaDiaryWithId;
 }
 
 type MDActions =

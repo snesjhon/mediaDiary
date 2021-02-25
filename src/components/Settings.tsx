@@ -14,11 +14,11 @@ import dayjs from "dayjs";
 import React, { useState } from "react";
 import { useMDState } from "../config/store";
 import useFuegoDelete from "../fuego/useFuegoDelete";
-import type { FuegoValidatedUser } from "../types/typesMedia";
+import type { UserFuegoValidated } from "../types/typesUser";
 import LayoutModal from "./layouts/LayoutModal";
 import UserPreference from "./user/UserPreference";
 
-function Settings({ user }: { user: FuegoValidatedUser }): JSX.Element {
+function Settings({ user }: { user: UserFuegoValidated }): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { preference } = useMDState();
 
@@ -92,7 +92,7 @@ function DeleteContent({
   user,
   onClose,
 }: {
-  user: FuegoValidatedUser;
+  user: UserFuegoValidated;
   onClose: () => void;
 }) {
   const [value, setValue] = useState("");

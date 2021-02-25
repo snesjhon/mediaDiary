@@ -4,7 +4,7 @@ import useSWR from "swr";
 import { useMDState } from "../../config/store";
 import { fuegoDiaryEntry } from "../../fuego/fuegoMDActions";
 import useFuegoUser from "../../fuego/useFuegoUser";
-import type { DiaryAdd } from "../../types/typesMedia";
+import type { MediaDiary } from "../../types/typesMedia";
 import InfoBody from "../info/InfoBody";
 import InfoHeader from "../info/InfoHeader";
 import MdLoader from "../md/MdLoader";
@@ -14,7 +14,7 @@ function ContentDay(): JSX.Element | null {
   const { user } = useFuegoUser();
   const { view, edit } = useMDState();
 
-  const { data } = useSWR<DiaryAdd | false>(
+  const { data } = useSWR<MediaDiary | false>(
     user !== null && user && edit
       ? ["/fuego/diaryDay", user.uid, edit.id]
       : null,

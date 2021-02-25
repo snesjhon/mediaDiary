@@ -1,9 +1,9 @@
 import React, { createContext, useEffect, useRef, useState } from "react";
-import type { FuegoUser } from "../types/typesMedia";
+import type { UserFuego } from "../types/typesUser";
 import fuego from "./fuego";
 
 export const FuegoContext = createContext<{
-  user: FuegoUser;
+  user: UserFuego;
   isValidating: boolean;
 }>({
   user: null,
@@ -15,7 +15,7 @@ export function FuegoProvider({
 }: {
   children: JSX.Element;
 }): JSX.Element {
-  const [user, setUser] = useState<FuegoUser>(null);
+  const [user, setUser] = useState<UserFuego>(null);
   const isValidating = useRef(true);
 
   useEffect(() => {

@@ -17,11 +17,8 @@ import Rating from "react-rating";
 import { cache, useSWRInfinite } from "swr";
 import { useMDDispatch, useMDState } from "../config/store";
 import { fuegoDiaryGet } from "../fuego/fuegoMDActions";
-import type {
-  DiaryAddWithId,
-  DiaryState,
-  FuegoValidatedUser,
-} from "../types/typesMedia";
+import type { MediaDiaryState, MediaDiaryWithId } from "../types/typesMedia";
+import type { UserFuegoValidated } from "../types/typesUser";
 import { createPosterURL } from "../utils/helpers";
 import AlbumIcon from "./icons/AlbumIcon";
 import FilmIcon from "./icons/FilmIcon";
@@ -31,16 +28,16 @@ import TvIcon from "./icons/TvIcon";
 import MdLoader from "./md/MdLoader";
 
 interface ListState {
-  [key: string]: DiaryState;
+  [key: string]: MediaDiaryState;
 }
 
-function Home({ user }: { user: FuegoValidatedUser }): JSX.Element {
+function Home({ user }: { user: UserFuegoValidated }): JSX.Element {
   const state = useMDState();
   const dispatch = useMDDispatch();
   const { colorMode } = useColorMode();
 
   const { data, error, size, setSize, mutate } = useSWRInfinite<
-    DiaryAddWithId[]
+    MediaDiaryWithId[]
   >(
     (_, prev) => {
       // We've reached the end of the list since we got < 30, don't call again
@@ -106,7 +103,7 @@ function Home({ user }: { user: FuegoValidatedUser }): JSX.Element {
   }
 
   if (data) {
-    const allData = data ? ([] as DiaryAddWithId[]).concat(...data) : [];
+    const allData = data ? ([] as MediaDiaryWithId[]).concat(...data) : [];
 
     const diaryDates: ListState = allData.reduce<ListState>((a, c) => {
       const dateString = dayjs(c.diaryDate).format("YYYY-MM");

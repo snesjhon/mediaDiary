@@ -6,7 +6,7 @@ import type { LogState } from "../../config/storeLog";
 import { LogReducer } from "../../config/storeLog";
 import { fuegoDiaryAdd } from "../../fuego/fuegoMDActions";
 import useFuegoUser from "../../fuego/useFuegoUser";
-import type { DiaryAdd } from "../../types/typesMedia";
+import type { MediaDiary } from "../../types/typesMedia";
 import { parsePosterUrl } from "../../utils/helpers";
 import InfoFields from "../info/InfoFields";
 import InfoHeader from "../info/InfoHeader";
@@ -100,7 +100,7 @@ function ContentLog(): JSX.Element {
     }
   }
 
-  function createDiary(): DiaryAdd | false {
+  function createDiary(): MediaDiary | false {
     if (selected) {
       const {
         mediaId,

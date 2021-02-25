@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useMDDispatch, useMDState } from "../config/store";
-import type { FuegoValidatedUser } from "../types/typesMedia";
+import type { UserFuegoValidated } from "../types/typesUser";
 import { fuegoDb } from "./fuego";
 import useFuegoUser from "./useFuegoUser";
 
@@ -12,9 +12,9 @@ interface FuegoAuth {
   /** Validating user, show loaders */
   userValidating: boolean;
   /** User is valid, but might not have Preference */
-  userValid: FuegoValidatedUser | false;
+  userValid: UserFuegoValidated | false;
   /** User is valid and has preference, show MediaDiary */
-  userValidHasPreference: FuegoValidatedUser | false;
+  userValidHasPreference: UserFuegoValidated | false;
 }
 
 /**
@@ -45,8 +45,6 @@ function useFuegoAuth(): FuegoAuth {
     }
   }, [dispatch, user, preference]);
 
-  // Validating requires two states, either we're waiting for SpotifyToken or just waiting for
-  // userpreferences to validate
   let userValidating = true;
   if (preference !== null && preference) {
     userValidating = user === null;
