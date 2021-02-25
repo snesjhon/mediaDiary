@@ -11,13 +11,13 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
-import { useMDDispatch } from "../config/store";
-import useIsBreakpoint from "../utils/useIsBreakpoint";
-import Filters from "./Filters";
-import FiltersIcon from "./icons/FiltersIcon";
-import MdLogo from "./md/MdLogo";
+import { useMDDispatch } from "../../config/store";
+import useIsBreakpoint from "../../utils/useIsBreakpoint";
+import FiltersIcon from "../icons/FiltersIcon";
+import MdLogo from "../md/MdLogo";
+import Filters from "./ContentFilters";
 
-function Header({ onOpen }: { onOpen: () => void }): JSX.Element {
+function ContentToolbar({ onOpen }: { onOpen: () => void }): JSX.Element {
   const isMd = useIsBreakpoint("md");
   const router = useRouter();
   const { colorMode, toggleColorMode } = useColorMode();
@@ -112,4 +112,4 @@ function Header({ onOpen }: { onOpen: () => void }): JSX.Element {
   );
 }
 
-export default Header;
+export default ContentToolbar;

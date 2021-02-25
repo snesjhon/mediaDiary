@@ -11,9 +11,9 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import useSWR from "swr";
-import type { FuegoValidatedUser, MediaType } from "../config/types";
-import type { FilterData } from "../config/typesFilters";
-import { fuegoFiltersAll } from "../interfaces/fuegoFilterActions";
+import { fuegoFiltersAll } from "../fuego/fuegoFilterActions";
+import type { FilterData } from "../types/typesFilters";
+import type { FuegoValidatedUser, MediaType } from "../types/typesMedia";
 import { capFormat } from "../utils/helpers";
 import ChartAll from "./chart/ChartAll";
 import ChartYear from "./chart/ChartYear";
@@ -25,7 +25,7 @@ import MdEmpty from "./md/MdEmpty";
 import MdLoader from "./md/MdLoader";
 import MdStatus from "./md/MdStatus";
 
-function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
+function Activity({ user }: { user: FuegoValidatedUser }): JSX.Element {
   const [yearType, setYearType] = useState<number | null>(null);
   const [localMediaType, setMediaType] = useState<MediaType | null>(null);
   const { data, error, isValidating } = useSWR<FilterData>(
@@ -223,4 +223,4 @@ function Charts({ user }: { user: FuegoValidatedUser }): JSX.Element {
   }
 }
 
-export default Charts;
+export default Activity;

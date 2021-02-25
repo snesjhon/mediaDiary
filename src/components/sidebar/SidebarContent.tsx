@@ -14,8 +14,8 @@ import {
 import { useRouter } from "next/router";
 import type { FunctionComponent } from "react";
 import React from "react";
-import useFuegoUser from "../../interfaces/useFuegoUser";
-import useFuegoLogout from "../../interfaces/useFuegoLogout";
+import useFuegoLogout from "../../fuego/useFuegoLogout";
+import useFuegoUser from "../../fuego/useFuegoUser";
 
 export function SidebarButton({
   title,

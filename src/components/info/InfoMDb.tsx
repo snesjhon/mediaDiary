@@ -8,8 +8,8 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { MDB_IMGURL } from "../../config/contants";
-import type { MediaType } from "../../config/types";
-import type { MDbMovie, MDbTV } from "../../config/typesMDb";
+import type { MDbMovie, MDbTV } from "../../types/typesMDb";
+import type { MediaType } from "../../types/typesMedia";
 
 function ContentMDb({
   data,

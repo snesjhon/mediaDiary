@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useRef, useState } from "react";
-import type { FuegoUser } from "../config/types";
+import type { FuegoUser } from "../types/typesMedia";
 import fuego from "./fuego";
 
 export const FuegoContext = createContext<{

@@ -13,12 +13,12 @@ import {
 import dayjs from "dayjs";
 import React, { useState } from "react";
 import { useMDState } from "../config/store";
-import type { FuegoValidatedUser } from "../config/types";
-import useFuegoDelete from "../interfaces/useFuegoDelete";
+import useFuegoDelete from "../fuego/useFuegoDelete";
+import type { FuegoValidatedUser } from "../types/typesMedia";
 import LayoutModal from "./layouts/LayoutModal";
 import UserPreference from "./user/UserPreference";
 
-function Preferences({ user }: { user: FuegoValidatedUser }): JSX.Element {
+function Settings({ user }: { user: FuegoValidatedUser }): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { preference } = useMDState();
 
@@ -134,4 +134,4 @@ function DeleteContent({
     return setValue(event.target.value);
   }
 }
-export default Preferences;
+export default Settings;

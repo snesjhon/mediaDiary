@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React from "react";
-import type { SpotifyAlbum, SpotifyArtist } from "../../config/typesSpotify";
+import type { SpotifyAlbum, SpotifyArtist } from "../../types/typesSpotify";
 
 function ContentSpotify({
   albumInfo,

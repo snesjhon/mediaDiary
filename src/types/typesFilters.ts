@@ -1,4 +1,4 @@
-import type { MediaType } from "./types";
+import type { MediaType } from "./typesMedia";
 
 export interface Filters {
   mediaType: MediaType;

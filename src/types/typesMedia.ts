@@ -1,4 +1,4 @@
-import type fuego from "../interfaces/fuego";
+import type fuego from "../fuego/fuego";
 import type { MDbTV } from "./typesMDb";
 
 /**

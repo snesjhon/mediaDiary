@@ -1,3 +1,4 @@
+import { StarIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -9,21 +10,20 @@ import {
   SimpleGrid,
   Text,
 } from "@chakra-ui/react";
-import { StarIcon } from "@chakra-ui/icons";
 import dayjs from "dayjs";
 import type { Dispatch } from "react";
 import React, { useState } from "react";
 import Rating from "react-rating";
-import type { LogActions, LogState } from "../../config/logStore";
-import StarEmptyIcon from "../icons/StartEmptyIcon";
+import { MEDIA_LOGGED_BEFORE } from "../../config/contants";
+import { useMDDispatch } from "../../config/store";
+import type { LogActions, LogState } from "../../config/storeLog";
 import type {
   DiaryAddWithId,
   MediaSelected,
   MediaType,
-} from "../../config/types";
-import { MEDIA_LOGGED_BEFORE } from "../../config/contants";
-import { useMDDispatch } from "../../config/store";
+} from "../../types/typesMedia";
 import { parsePosterUrl } from "../../utils/helpers";
+import StarEmptyIcon from "../icons/StartEmptyIcon";
 
 function InfoFields({
   dispatch,

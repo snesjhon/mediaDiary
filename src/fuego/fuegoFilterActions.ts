@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
-import type { DiaryAdd } from "../config/types";
-import type { FilterData, Filters } from "../config/typesFilters";
+import type { FilterData, Filters } from "../types/typesFilters";
+import type { DiaryAdd } from "../types/typesMedia";
 import { fuegoDb } from "./fuego";
 
 export async function fuegoFiltersAll(

@@ -1,10 +1,14 @@
 import useSWR from "swr";
-import type { MediaType } from "../config/types";
-import type { MDbMovie, MDbTV } from "../config/typesMDb";
-import type { SpotifyAlbum, SpotifyArtist } from "../config/typesSpotify";
-import { getAlbumUrl, getArtistUrl, spotifyFetchAll } from "./helperSpotify";
-import { fetcher } from "./helpers";
-import { getMovieUrl, getTVUrl } from "./helperMDb";
+import type { MDbMovie, MDbTV } from "../types/typesMDb";
+import type { MediaType } from "../types/typesMedia";
+import type { SpotifyAlbum, SpotifyArtist } from "../types/typesSpotify";
+import { getMovieUrl, getTVUrl } from "../utils/helperMDb";
+import { fetcher } from "../utils/helpers";
+import {
+  getAlbumUrl,
+  getArtistUrl,
+  spotifyFetchAll,
+} from "../utils/helperSpotify";
 
 export type DataFetchSpotify = [SpotifyAlbum, SpotifyArtist];
 export type DataFetchMDb = MDbMovie | MDbTV;

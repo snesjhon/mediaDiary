@@ -1,17 +1,17 @@
 import { Button, DrawerBody, DrawerFooter } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React from "react";
-import { useMDDispatch, useMDState } from "../config/store";
-import type { MediaSelected } from "../config/types";
-import type { MDbMovie, MDbTV } from "../config/typesMDb";
-import type { SpotifyAlbum, SpotifyArtist } from "../config/typesSpotify";
-import { parsePosterUrl } from "../utils/helpers";
-import useDataFetch from "../utils/useDataFetch";
-import InfoBody from "./info/InfoBody";
-import InfoHeader from "./info/InfoHeader";
-import MdLoader from "./md/MdLoader";
+import { useMDDispatch, useMDState } from "../../config/store";
+import useDataFetch from "../../config/useDataFetch";
+import type { MDbMovie, MDbTV } from "../../types/typesMDb";
+import type { MediaSelected } from "../../types/typesMedia";
+import type { SpotifyAlbum, SpotifyArtist } from "../../types/typesSpotify";
+import { parsePosterUrl } from "../../utils/helpers";
+import InfoBody from "../info/InfoBody";
+import InfoHeader from "../info/InfoHeader";
+import MdLoader from "../md/MdLoader";
 
-function Info(): JSX.Element {
+function ContentInfo(): JSX.Element {
   const { selected, view } = useMDState();
 
   if (selected && view === "info") {
@@ -128,4 +128,4 @@ function InfoSelected({ item }: { item: MediaSelected }): JSX.Element {
   }
 }
 
-export default Info;
+export default ContentInfo;

@@ -1,24 +1,24 @@
 import {
   Box,
+  Button,
   Container,
   Flex,
-  Button,
-  Heading,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalCloseButton,
-  ModalHeader,
-  ModalBody,
-  VStack,
-  Text,
   Grid,
+  Heading,
   Image,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  VStack,
 } from "@chakra-ui/react";
+import Link from "next/link";
 import { setCookie } from "nookies";
 import React, { useState } from "react";
-import Link from "next/link";
-import fuego from "../interfaces/fuego";
+import fuego from "../fuego/fuego";
 import LogoIcon from "./icons/LogoIcon";
 import Layout from "./layouts/Layout";
 

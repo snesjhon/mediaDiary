@@ -1,5 +1,5 @@
 import { MDB_IMGURL, SPOTIFY_IMGURL } from "../config/contants";
-import type { MediaTypesArr, MediaTypes, MediaType } from "../config/types";
+import type { MediaTypesArr, MediaTypes, MediaType } from "../types/typesMedia";
 
 export async function fetcher<T>(key: string): Promise<T> {
   const result = await fetch(key);

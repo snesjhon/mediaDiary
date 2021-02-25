@@ -1,7 +1,7 @@
 import { Box, Flex, Heading, Square, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import type { FuegoValidatedUser } from "../../config/types";
+import type { FuegoValidatedUser } from "../../types/typesMedia";
 import LogoIcon from "../icons/LogoIcon";
 import UserPreference from "./UserPreference";
 

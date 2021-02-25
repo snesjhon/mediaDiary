@@ -13,8 +13,8 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { useMDDispatch } from "../../config/store";
-import useFuegoUser from "../../interfaces/useFuegoUser";
-import useFuegoLogout from "../../interfaces/useFuegoLogout";
+import useFuegoUser from "../../fuego/useFuegoUser";
+import useFuegoLogout from "../../fuego/useFuegoLogout";
 import ActivityIcon from "../icons/ActivityIcon";
 import HomeIcon from "../icons/HomeIcon";
 import { SidebarButton } from "./SidebarContent";

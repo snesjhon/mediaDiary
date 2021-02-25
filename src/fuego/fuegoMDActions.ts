@@ -3,7 +3,7 @@ import type {
   DiaryAddWithId,
   DiaryAdd,
   UserPref,
-} from "../config/types";
+} from "../types/typesMedia";
 import { fuegoDb } from "./fuego";
 import type fuego from "./fuego";
 import {

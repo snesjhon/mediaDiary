@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import type { FuegoUser } from "../config/types";
+import type { FuegoUser } from "../types/typesMedia";
 import { FuegoContext } from "./fuegoProvider";
 
 function useFuegoUser(): {

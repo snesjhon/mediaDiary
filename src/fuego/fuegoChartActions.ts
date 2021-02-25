@@ -1,6 +1,6 @@
-import type { MediaType, DiaryAddWithId } from "../config/types";
-import { fuegoDb } from "./fuego";
+import type { DiaryAddWithId, MediaType } from "../types/typesMedia";
 import type fuego from "./fuego";
+import { fuegoDb } from "./fuego";
 
 export async function fuegoChartYear(
   key: string,

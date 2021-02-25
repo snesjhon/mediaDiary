@@ -1,6 +1,10 @@
 import { createContext, useContext } from "react";
-import type { DiaryAddWithId, FuegoUserPref, MediaSelected } from "./types";
-import type { FilterState } from "./typesFilters";
+import type { FilterState } from "../types/typesFilters";
+import type {
+  DiaryAddWithId,
+  FuegoUserPref,
+  MediaSelected,
+} from "../types/typesMedia";
 
 export interface MDState extends FilterState {
   preference: FuegoUserPref;
