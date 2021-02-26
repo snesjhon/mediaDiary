@@ -11,7 +11,7 @@ export interface MDState extends FilterState {
   edit?: MediaDiaryWithId;
 }
 
-type MDActions =
+export type MDActions =
   | {
       type: "log" | "info" | "selected";
       payload: MDState["selected"];
@@ -159,6 +159,7 @@ export const ContextState = createContext<MDState>({
   rating: null,
   diaryYear: null,
   releasedDecade: null,
+  releasedYear: null,
 });
 
 export const ContextDispatch = createContext<(props: MDActions) => void>(

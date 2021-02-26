@@ -1,30 +1,38 @@
 import type { MediaType } from "./typesMedia";
 
-export interface Filters {
+export interface FilterBase {
   mediaType: MediaType;
-  rating: number;
   releasedDecade: number;
   releasedYear: number;
-  diaryYear: number;
-  loggedBefore: boolean;
   genre: string;
 }
 
-export interface FilterState {
-  mediaType: MediaType[] | null;
-  rating: Filters["rating"] | null;
-  releasedDecade: Filters["releasedDecade"] | null;
-  diaryYear: Filters["diaryYear"] | null;
-  loggedBefore: Filters["loggedBefore"] | null;
-  genre: Filters["genre"] | null;
+export interface FilterBookmark extends FilterBase {
+  addedDate: string;
 }
 
-export type FilterDataNoYear = {
-  [K in keyof Omit<Filters, "diaryYear">]: {
-    [key: string]: {
-      [key: string]: number;
-    };
-  };
+export interface FilterMemory extends FilterBase {
+  rating: number;
+}
+
+export interface FilterDiary extends FilterMemory {
+  diaryYear: number;
+  loggedBefore: boolean;
+}
+
+// export interface FilterState {
+//   mediaType: MediaType[] | null;
+//   rating: FilterMemory["rating"] | null;
+//   releasedDecade: FilterBase["releasedDecade"] | null;
+//   diaryYear: FilterDiary["diaryYear"] | null;
+//   loggedBefore: FilterDiary["loggedBefore"] | null;
+//   genre: FilterBase["genre"] | null;
+// }
+
+export type FilterState = {
+  mediaType: MediaType[] | null;
+} & {
+  [K in keyof Omit<FilterDiary, "mediaType">]: FilterDiary[K] | null;
 };
 
 export type FilterData = {
@@ -32,9 +40,13 @@ export type FilterData = {
     [key: string]: number;
   };
 } & {
-  [K in keyof Omit<Filters, "diaryYear">]: {
+  [K in keyof Omit<FilterDiary, "diaryYear">]: {
     [key: string]: {
       [key: string]: number;
     };
   };
+};
+
+export type FilterBookmarkState = {
+  [K in keyof FilterBookmark]: FilterBookmark[K] | null;
 };

@@ -16,6 +16,7 @@ import React, { useState } from "react";
 import Rating from "react-rating";
 import { MEDIA_LOGGED_BEFORE } from "../../config/contants";
 import { useMDDispatch } from "../../config/store";
+import type { MDActions } from "../../config/store";
 import type { LogActions, LogState } from "../../config/storeLog";
 import type {
   MediaDiaryWithId,
@@ -125,42 +126,11 @@ function InfoFields({
             )}
             <Box w="30%">
               {isEdit && <div>{item.season}</div>}
-              {!isEdit && item?.seasons && item?.seasons !== null && (
-                <Select
-                  size="sm"
-                  value={item.season}
-                  onChange={(valueChange) => {
-                    if (item.seasons) {
-                      const seasonIndex = item.seasons.findIndex(
-                        (e) =>
-                          e.season_number === parseInt(valueChange.target.value)
-                      );
-                      const currentSeason = item.seasons[seasonIndex];
-                      return mdDispatch({
-                        type: "selected",
-                        payload: {
-                          ...item,
-                          season: currentSeason.season_number,
-                          poster:
-                            currentSeason.poster_path &&
-                            currentSeason.poster_path !== null
-                              ? parsePosterUrl(currentSeason.poster_path, "tv")
-                              : item.poster,
-                        },
-                      });
-                    }
-                    return;
-                  }}
-                >
-                  {item.seasons.map((e) => (
-                    <option
-                      key={`season_${e.season_number}`}
-                      value={e.season_number}
-                    >
-                      {e.season_number}
-                    </option>
-                  ))}
-                </Select>
+              {!isEdit && (
+                <SelectSeason
+                  item={item as MediaSelected}
+                  dispatch={mdDispatch}
+                />
               )}
             </Box>
           </Flex>
@@ -213,6 +183,50 @@ function InfoFields({
       )}
     </>
   );
+}
+function SelectSeason({
+  item,
+  dispatch,
+}: {
+  item: MediaSelected;
+  dispatch: (props: MDActions) => void;
+}) {
+  if (item.seasons && item.seasons !== null) {
+    return (
+      <Select
+        size="sm"
+        value={item.season}
+        onChange={(valueChange) => {
+          if (item.seasons) {
+            const seasonIndex = item.seasons.findIndex(
+              (e) => e.season_number === parseInt(valueChange.target.value)
+            );
+            const currentSeason = item.seasons[seasonIndex];
+            return dispatch({
+              type: "selected",
+              payload: {
+                ...item,
+                season: currentSeason.season_number,
+                poster:
+                  currentSeason.poster_path &&
+                  currentSeason.poster_path !== null
+                    ? parsePosterUrl(currentSeason.poster_path, "tv")
+                    : item.poster,
+              },
+            });
+          }
+          return;
+        }}
+      >
+        {item.seasons.map((e) => (
+          <option key={`season_${e.season_number}`} value={e.season_number}>
+            {e.season_number}
+          </option>
+        ))}
+      </Select>
+    );
+  }
+  return null;
 }
 
 export default InfoFields;

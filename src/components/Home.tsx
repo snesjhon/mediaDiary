@@ -103,6 +103,7 @@ function Home({ user }: { user: UserFuegoValidated }): JSX.Element {
   }
 
   if (data) {
+    // TODO: Refactor.. Something about SWRInfinite throws a TS error
     const allData = data ? ([] as MediaDiaryWithId[]).concat(...data) : [];
 
     const diaryDates: ListState = allData.reduce<ListState>((a, c) => {

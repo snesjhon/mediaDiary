@@ -26,7 +26,7 @@ import useSWR from "swr";
 import { useMDDispatch, useMDState } from "../../config/store";
 import { fuegoFiltersAll } from "../../fuego/fuegoFilterActions";
 import useFuegoUser from "../../fuego/useFuegoUser";
-import type { FilterData, Filters } from "../../types/typesFilters";
+import type { FilterData, FilterDiary } from "../../types/typesFilters";
 import type { MediaType } from "../../types/typesMedia";
 import { capFormat } from "../../utils/helpers";
 import AlbumIcon from "../icons/AlbumIcon";
@@ -368,7 +368,9 @@ function FiltersData({
     </>
   );
 
-  function createMediaKeys(type: keyof Omit<Filters, "diaryYear">): string[] {
+  function createMediaKeys(
+    type: keyof Omit<FilterDiary, "diaryYear">
+  ): string[] {
     return Object.keys(data[type])
       .filter((e) =>
         localDiaryYear === null ? e : parseInt(e) === localDiaryYear
