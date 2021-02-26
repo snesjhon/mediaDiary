@@ -33,6 +33,7 @@ function Bookmarks({ user }: { user: UserFuegoValidated }): JSX.Element {
       revalidateOnFocus: false,
     }
   );
+  console.log(data);
   return <div>something </div>;
 }
 export default Bookmarks;
