@@ -22,10 +22,10 @@ function Bookmarks({ user }: { user: UserFuegoValidated }): JSX.Element {
         "/fuego/diary",
         user.uid,
         prev !== null ? prev[prev.length - 1].addedDate : null,
-        state.mediaType,
-        state.releasedDecade,
-        state.diaryYear, // TODO: This is not right
-        state.genre,
+        state.bookmarkFilters.mediaType,
+        state.bookmarkFilters.releasedDecade,
+        state.bookmarkFilters.addedDate,
+        state.bookmarkFilters.genre,
       ];
     },
     fuegoBookmarkGet,

@@ -29,11 +29,14 @@ export interface FilterDiary extends FilterMemory {
 //   genre: FilterBase["genre"] | null;
 // }
 
-export type FilterState = {
+type FilterMediaType = {
   mediaType: MediaType[] | null;
-} & {
-  [K in keyof Omit<FilterDiary, "mediaType">]: FilterDiary[K] | null;
 };
+
+export type FilterState = FilterMediaType &
+  {
+    [K in keyof Omit<FilterDiary, "mediaType">]: FilterDiary[K] | null;
+  };
 
 export type FilterData = {
   diaryYear: {
@@ -47,6 +50,7 @@ export type FilterData = {
   };
 };
 
-export type FilterBookmarkState = {
-  [K in keyof FilterBookmark]: FilterBookmark[K] | null;
-};
+export type FilterBookmarkState = FilterMediaType &
+  {
+    [K in keyof FilterBookmark]: FilterBookmark[K] | null;
+  };

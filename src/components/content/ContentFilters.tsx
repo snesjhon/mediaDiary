@@ -98,6 +98,7 @@ function FiltersData({
   data: FilterData;
   onClose: () => void;
 }) {
+  const { diaryFilters } = useMDState();
   const {
     mediaType,
     rating,
@@ -105,7 +106,8 @@ function FiltersData({
     releasedDecade,
     loggedBefore,
     genre,
-  } = useMDState();
+  } = diaryFilters;
+
   const dispatch = useMDDispatch();
 
   const { colorMode } = useColorMode();
@@ -357,6 +359,7 @@ function FiltersData({
                     ? parseInt(ratingKey) / 2
                     : null,
                 releasedDecade: localReleasedDecade,
+                releasedYear: null,
                 diaryYear: localDiaryYear,
               },
             });
