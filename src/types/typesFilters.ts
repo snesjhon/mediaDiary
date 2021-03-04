@@ -1,42 +1,19 @@
 import type { MediaType } from "./typesMedia";
 
-export interface FilterBase {
+export interface FilterDiary {
   mediaType: MediaType;
   releasedDecade: number;
   releasedYear: number;
   genre: string;
-}
-
-export interface FilterBookmark extends FilterBase {
-  addedDate: string;
-}
-
-export interface FilterMemory extends FilterBase {
   rating: number;
-}
-
-export interface FilterDiary extends FilterMemory {
   diaryYear: number;
   loggedBefore: boolean;
 }
 
-// export interface FilterState {
-//   mediaType: MediaType[] | null;
-//   rating: FilterMemory["rating"] | null;
-//   releasedDecade: FilterBase["releasedDecade"] | null;
-//   diaryYear: FilterDiary["diaryYear"] | null;
-//   loggedBefore: FilterDiary["loggedBefore"] | null;
-//   genre: FilterBase["genre"] | null;
-// }
-
-type FilterMediaType = {
-  mediaType: MediaType[] | null;
-};
-
-export type FilterState = FilterMediaType &
-  {
-    [K in keyof Omit<FilterDiary, "mediaType">]: FilterDiary[K] | null;
-  };
+export interface FilterBookmark
+  extends Omit<FilterDiary, "rating" | "diaryYear" | "loggedBefore"> {
+  addedDate: string;
+}
 
 export type FilterData = {
   diaryYear: {
@@ -49,6 +26,15 @@ export type FilterData = {
     };
   };
 };
+
+interface FilterMediaType {
+  mediaType: MediaType[] | null;
+}
+
+export type FilterState = FilterMediaType &
+  {
+    [K in keyof Omit<FilterDiary, "mediaType">]: FilterDiary[K] | null;
+  };
 
 export type FilterBookmarkState = FilterMediaType &
   {

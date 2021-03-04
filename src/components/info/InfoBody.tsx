@@ -7,17 +7,20 @@ import InfoMDb from "./InfoMDb";
 import InfoSpotify from "./InfoSpotify";
 
 interface Props {
-  selected: MediaSelected;
+  type: MediaSelected["type"];
+  artistId: MediaSelected["artistId"];
+  mediaId: MediaSelected["mediaId"];
+  season?: MediaSelected["season"];
 }
-function InfoBody({ selected }: Props): JSX.Element {
+function InfoBody({ type, artistId, mediaId, season }: Props): JSX.Element {
   return (
     <Suspense fallback={<MdSpinner />}>
-      <InfoSuspense selected={selected} />
+      <InfoSuspense selected={{ type, artistId, mediaId, season }} />
     </Suspense>
   );
 }
 
-function InfoSuspense({ selected }: Props) {
+function InfoSuspense({ selected }: { selected: Props }) {
   const { type, artistId, mediaId, season } = selected;
   const { data, error, isLoading } = useDataFetch({
     type,

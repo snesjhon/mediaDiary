@@ -3,6 +3,9 @@ import type { MDbTV } from "./typesMDb";
 /** MediaType include all of the current available types for mediaDiary */
 export type MediaType = "movie" | "tv" | "album";
 
+/** MediaLogType includes all the types of media that we can filter by based on the user's preference */
+export type MediaLogType = "bookmark" | "memory" | "diary";
+
 /** In Fuego we save the MediaType by key in a boolean because we want to know what options to omit */
 export type MediaTypes = {
   [key in MediaType]: boolean;
@@ -39,49 +42,62 @@ export interface MediaBase {
 export interface MediaSelected extends MediaBase {
   /** MovieDB or MovieDB_TV or SpotifyID */
   mediaId: string;
+  /** Bookmark is designated here because the "Selection" process between Info > Log | Edit requires
+   * that we _CAN_ have a previous diary item. If we have selected a previous item, then it MIGHT be
+   * true, if it's selected through a search or a new item, then bookmark is always false.
+   */
+  bookmark: boolean;
   /** For SpotifyAPI we require an artistId */
   artistId?: string;
 }
 
-/** A bookmark aren't full diaryItems, so they only need a few additions*/
-export interface MediaBookmark extends MediaSelected {
+/** A diaryItem that we add towards Fuego, we don't have "seasons" */
+export interface MediaDiary extends MediaSelected {
   /** When the mediaItem was added to Fuego */
   addedDate: string;
   /** Year of the mediaItem, this is calculated and not from the API */
   releasedYear: number;
   /** Decade of the mediaItem, this is calculated and not from the API */
   releasedDecade: number;
-}
-
-/** When we add a bookmark, we don't have an Id, but when we Get then we do! */
-export interface MediaBookmarkWithId extends MediaBookmark {
-  id: string;
-}
-
-/** A memory is a sort of like a diaryItem, but only require a rating*/
-export interface MediaMemory extends MediaBookmark {
-  /** Rating 0-10 */
+  /** Rating -1-10 */
   rating: number;
-}
-
-/** A diaryItem that we add towards Fuego, we don't have "seasons" */
-export interface MediaDiary extends Omit<MediaMemory, "seasons"> {
   /** What date the user recorded this memory */
-  diaryDate: string;
+  diaryDate: string | null;
   /** What year the user recorded this memory (calculated) */
-  diaryYear: number;
+  diaryYear: number | null;
   /** Whether the user has logged this media before or not */
   loggedBefore: boolean;
   /** MediaType TV - what episodes did the user see */
   seenEpisodes?: number[];
 }
 
-/** When we MediaAdd we don't have an id, until AFTER firebase creates one. */
-export interface MediaDiaryWithId extends MediaDiary {
+/** For bookmark route, these are items we should have*/
+export interface MediaBookmark extends MediaDiary {
+  diaryDate: null;
+  diaryYear: null;
+  bookmark: true;
+}
+
+export interface MediaBookmarkWithId extends MediaDiary {
   id: string;
 }
+
+/** For logged items which include a date, we must make them non-optional or non-null */
+export interface MediaDiaryDate extends MediaDiary {
+  diaryDate: string;
+  diaryYear: number;
+}
+
+/** When we MediaAdd we don't have an id, until AFTER firebase creates one. */
+export type MediaDiaryWithId = MediaDiary & {
+  id: string;
+};
 
 /** A list of diaryItems with ids */
 export interface MediaDiaryState {
   [key: string]: MediaDiaryWithId;
+}
+
+export interface MediaBookmarkState {
+  [key: string]: MediaBookmark;
 }

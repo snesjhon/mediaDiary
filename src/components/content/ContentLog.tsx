@@ -6,7 +6,7 @@ import type { LogState } from "../../config/storeLog";
 import { LogReducer } from "../../config/storeLog";
 import { fuegoDiaryAdd } from "../../fuego/fuegoMDActions";
 import useFuegoUser from "../../fuego/useFuegoUser";
-import type { MediaDiary } from "../../types/typesMedia";
+import type { MediaDiaryDate } from "../../types/typesMedia";
 import { parsePosterUrl } from "../../utils/helpers";
 import InfoFields from "../info/InfoFields";
 import InfoHeader from "../info/InfoHeader";
@@ -100,7 +100,7 @@ function ContentLog(): JSX.Element {
     }
   }
 
-  function createDiary(): MediaDiary | false {
+  function createDiary(): MediaDiaryDate | false {
     if (selected) {
       const {
         mediaId,
@@ -112,6 +112,7 @@ function ContentLog(): JSX.Element {
         poster,
         season,
         episodes,
+        bookmark,
       } = selected;
       const { diaryDate, loggedBefore, rating, seenEpisodes } = state;
       const releasedYear = parseInt(dayjs(releasedDate).format("YYYY"));
@@ -121,6 +122,7 @@ function ContentLog(): JSX.Element {
         poster,
         mediaId,
         diaryDate,
+        bookmark,
         diaryYear: parseInt(dayjs(diaryDate).format("YYYY")),
         addedDate: dayjs().toISOString(),
         loggedBefore,

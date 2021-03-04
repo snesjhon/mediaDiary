@@ -33,7 +33,12 @@ function ContentDay(): JSX.Element | null {
           <DrawerBody px={{ base: 6, sm: 8 }}>
             <InfoHeader {...data} />
             <Divider mt={3} mb={2} />
-            <InfoBody selected={data} />
+            <InfoBody
+              type={data.type}
+              artistId={data?.artistId}
+              mediaId={data.mediaId}
+              season={data?.season}
+            />
           </DrawerBody>
         )}
       </>

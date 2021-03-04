@@ -1,7 +1,8 @@
 import type { FilterBookmark } from "../types/typesFilters";
 import type {
-  MediaBookmark,
   MediaBookmarkWithId,
+  MediaDiary,
+  MediaDiaryWithId,
   MediaType,
 } from "../types/typesMedia";
 import fuego, { fuegoDb } from "./fuego";
@@ -35,6 +36,7 @@ export async function fuegoBookmarkGet(
     diaryRef = diaryRef.where("genre", "==", genre);
   }
 
+  diaryRef = diaryRef.where("bookmark", "==", true);
   diaryRef = diaryRef.orderBy("addedDate", "desc");
 
   if (cursor !== null) {
@@ -53,10 +55,10 @@ export async function fuegoBookmarkGet(
 
 export async function fuegoBookmarkAdd(
   uid: string,
-  data: MediaBookmark
+  data: MediaDiary
 ): Promise<void> {
   const batch = fuegoDb.batch();
-  const diaryRef = fuegoDb.collection(`users/${uid}/bookmarks`).doc();
+  const diaryRef = fuegoDb.collection(`users/${uid}/diary`).doc();
   diaryRef.set({ id: diaryRef.id, ...data }, { merge: true });
 
   const filtersKeys = bookmarkFilterKeys(data);
@@ -67,6 +69,38 @@ export async function fuegoBookmarkAdd(
   filtersRef.set(filtersSetObj, { merge: true });
 
   return batch.commit();
+}
+
+export async function fuegoBookmarkDelete(
+  uid: string,
+  diaryId: string,
+  data: MediaDiary
+): Promise<void> {
+  const batch = fuegoDb.batch();
+
+  const diaryRef = fuegoDb.collection(`users/${uid}/diary`).doc(diaryId);
+  batch.delete(diaryRef);
+
+  const filtersKeys = bookmarkFilterKeys(data);
+  const filtersSetObj = bookmarkFilterSet(filtersKeys, -1);
+  const filtersRef = fuegoDb
+    .collection(`/users/${uid}/filters`)
+    .doc("bookmarks");
+  filtersRef.set(filtersSetObj, { merge: true });
+
+  return batch.commit();
+}
+
+function bookmarkFilterKeys(
+  data: Omit<MediaDiary, "rating" | "diaryDate" | "diaryYear" | "loggedBefore">
+): FilterBookmark {
+  return {
+    releasedDecade: data.releasedDecade,
+    releasedYear: data.releasedYear,
+    mediaType: data.type,
+    genre: data.genre,
+    addedDate: data.addedDate,
+  };
 }
 
 function bookmarkFilterSet(
@@ -82,14 +116,4 @@ function bookmarkFilterSet(
     };
   });
   return setObj;
-}
-
-function bookmarkFilterKeys(data: MediaBookmark): FilterBookmark {
-  return {
-    releasedDecade: data.releasedDecade,
-    releasedYear: data.releasedYear,
-    mediaType: data.type,
-    genre: data.genre,
-    addedDate: data.addedDate,
-  };
 }

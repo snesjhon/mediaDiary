@@ -228,6 +228,7 @@ function ContentSearch({
         releasedDate: dayjs(castItem.release_date).toISOString(),
         artist: castItem.artists[0].name,
         artistId: castItem.artists[0].id,
+        bookmark: false,
         genre: "",
         type,
       };
@@ -254,6 +255,7 @@ function ContentSearch({
         releasedDate: released ?? "",
         genre: "",
         artist: "",
+        bookmark: false,
         type: type as MediaType,
       };
     }

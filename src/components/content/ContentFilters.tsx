@@ -99,14 +99,13 @@ function FiltersData({
   onClose: () => void;
 }) {
   const { diaryFilters } = useMDState();
-  const {
-    mediaType,
-    rating,
-    diaryYear,
-    releasedDecade,
-    loggedBefore,
-    genre,
-  } = diaryFilters;
+  // Using optional chaining and nullish because I want to ALWAYS return null if diaryFilters undefined
+  const mediaType = diaryFilters?.mediaType ?? null;
+  const rating = diaryFilters?.rating ?? null;
+  const diaryYear = diaryFilters?.diaryYear ?? null;
+  const releasedDecade = diaryFilters?.releasedDecade ?? null;
+  const loggedBefore = diaryFilters?.loggedBefore ?? null;
+  const genre = diaryFilters?.genre ?? null;
 
   const dispatch = useMDDispatch();
 
@@ -359,7 +358,7 @@ function FiltersData({
                     ? parseInt(ratingKey) / 2
                     : null,
                 releasedDecade: localReleasedDecade,
-                releasedYear: null,
+                releasedYear: null, // TODO: This isn't implemented, but needed for the Type
                 diaryYear: localDiaryYear,
               },
             });

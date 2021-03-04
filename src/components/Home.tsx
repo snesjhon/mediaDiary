@@ -47,12 +47,12 @@ function Home({ user }: { user: UserFuegoValidated }): JSX.Element {
         "/fuego/diary",
         user.uid,
         prev !== null ? prev[prev.length - 1].diaryDate : null,
-        state.diaryFilters.mediaType,
-        state.diaryFilters.rating,
-        state.diaryFilters.releasedDecade,
-        state.diaryFilters.diaryYear,
-        state.diaryFilters.loggedBefore,
-        state.diaryFilters.genre,
+        state.diaryFilters?.mediaType ?? null,
+        state.diaryFilters?.rating ?? null,
+        state.diaryFilters?.releasedDecade ?? null,
+        state.diaryFilters?.diaryYear ?? null,
+        state.diaryFilters?.loggedBefore ?? null,
+        state.diaryFilters?.genre ?? null,
       ];
     },
     fuegoDiaryGet,
@@ -107,8 +107,10 @@ function Home({ user }: { user: UserFuegoValidated }): JSX.Element {
     const allData = data ? ([] as MediaDiaryWithId[]).concat(...data) : [];
 
     const diaryDates: ListState = allData.reduce<ListState>((a, c) => {
-      const dateString = dayjs(c.diaryDate).format("YYYY-MM");
-      a[dateString] = Object.assign({ ...a[dateString] }, { [c.id]: c });
+      if (c.diaryDate) {
+        const dateString = dayjs(c.diaryDate).format("YYYY-MM");
+        a[dateString] = Object.assign({ ...a[dateString] }, { [c.id]: c });
+      }
       return a;
     }, {});
 
@@ -160,6 +162,7 @@ function Home({ user }: { user: UserFuegoValidated }): JSX.Element {
                     season,
                     seenEpisodes,
                   } = diaryDates[month][day];
+                  const diaryDate = diaryDates[month][day].diaryDate;
                   return (
                     <Grid
                       gridTemplateColumns={{
@@ -189,11 +192,11 @@ function Home({ user }: { user: UserFuegoValidated }): JSX.Element {
                             colorMode === "light" ? "gray.500" : "gray.300"
                           }
                         >
-                          {new Date(
-                            diaryDates[month][day].diaryDate
-                          ).toLocaleDateString("en-us", {
-                            day: "numeric",
-                          })}
+                          {diaryDate !== null
+                            ? new Date(diaryDate).toLocaleDateString("en-us", {
+                                day: "numeric",
+                              })
+                            : "No Date"}
                         </Text>
                       </Box>
                       <Box>

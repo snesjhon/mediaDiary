@@ -31,7 +31,7 @@ function BookmarksPage(): JSX.Element {
   } else if (userValidHasPreference) {
     return (
       <LayoutMain title="Bookmarks">
-        <BookmarksPage />
+        <Bookmarks user={userValidHasPreference} />
       </LayoutMain>
     );
   }

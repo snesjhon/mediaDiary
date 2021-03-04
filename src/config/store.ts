@@ -9,8 +9,8 @@ export interface MDState {
   view?: "search" | "log" | "edit" | "day" | "md" | "activity" | "info";
   selected?: MediaSelected;
   edit?: MediaDiaryWithId;
-  diaryFilters: FilterState;
-  bookmarkFilters: FilterBookmarkState;
+  diaryFilters: FilterState | null;
+  bookmarkFilters: FilterBookmarkState | null;
 }
 
 export type MDActions =
@@ -35,7 +35,7 @@ export type MDActions =
       payload: MDState["preference"];
     }
   | {
-      type: "saved" | "saving" | "dayClose";
+      type: "saved" | "savedd" | "saving" | "dayClose";
     }
   | {
       type: "filter";
@@ -62,18 +62,18 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
         ...state,
         view: "md",
         diaryFilters: actions.payload,
-        // mediaType: actions.payload.mediaType,
-        // rating: actions.payload.rating,
-        // diaryYear: actions.payload.diaryYear,
-        // releasedDecade: actions.payload.releasedDecade,
-        // loggedBefore: actions.payload.loggedBefore,
-        // genre: actions.payload.genre,
       };
     }
     case "saving": {
       return {
         ...state,
         isSaving: true,
+      };
+    }
+    case "savedd": {
+      return {
+        ...state,
+        isSaving: false,
       };
     }
     case "savedEdit": {
@@ -149,22 +149,8 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
 
 export const ContextState = createContext<MDState>({
   preference: null,
-  diaryFilters: {
-    genre: null,
-    loggedBefore: null,
-    mediaType: null,
-    rating: null,
-    diaryYear: null,
-    releasedDecade: null,
-    releasedYear: null,
-  },
-  bookmarkFilters: {
-    addedDate: null,
-    genre: null,
-    mediaType: null,
-    releasedDecade: null,
-    releasedYear: null,
-  },
+  diaryFilters: null,
+  bookmarkFilters: null,
 });
 
 export const ContextDispatch = createContext<(props: MDActions) => void>(

@@ -1,4 +1,4 @@
-import { SettingsIcon } from "@chakra-ui/icons";
+import { SearchIcon, SettingsIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Box,
@@ -18,18 +18,33 @@ import useFuegoLogout from "../../fuego/useFuegoLogout";
 import ActivityIcon from "../icons/ActivityIcon";
 import HomeIcon from "../icons/HomeIcon";
 import { SidebarButton } from "./SidebarContent";
-import PlusIcon from "../icons/PlusIcon";
+import BookmarkIcon from "../icons/BookmarkIcon";
 
 function SidebarDesktop(): JSX.Element {
   const { user } = useFuegoUser();
   const logout = useFuegoLogout();
   const dispatch = useMDDispatch();
+
   return (
     <Box pr={8}>
       <Box position="sticky" top="3rem" pt={6}>
         <VStack spacing={6} align="flex-start">
           <Box>
             <SidebarButton title="Home" Icon={HomeIcon} route="/home" />
+          </Box>
+          <Box>
+            <SidebarButton
+              title="Memories"
+              Icon={BookmarkIcon}
+              route="/memories"
+            />
+          </Box>
+          <Box>
+            <SidebarButton
+              title="Bookmarks"
+              Icon={BookmarkIcon}
+              route="/bookmarks"
+            />
           </Box>
           <Box>
             <SidebarButton
@@ -55,10 +70,10 @@ function SidebarDesktop(): JSX.Element {
                 payload: { key: "view", value: "search" },
               })
             }
-            pr={8}
-            leftIcon={<PlusIcon boxSize={5} />}
+            px={8}
+            leftIcon={<SearchIcon boxSize={4} />}
           >
-            Memory
+            Search
           </Button>
         </Flex>
       </Box>

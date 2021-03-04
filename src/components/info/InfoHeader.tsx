@@ -78,7 +78,7 @@ function InfoHeader({
             loading="eager"
           />
         </Box>
-        {showDiary && (
+        {showDiary && diaryDate && (
           <Flex flexDirection="column" justifyContent="space-around">
             <Box>
               <Text fontWeight={500} fontSize="sm">

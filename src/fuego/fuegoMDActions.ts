@@ -7,6 +7,7 @@ import {
 } from "./fuegoFilterActions";
 import type {
   MediaDiary,
+  MediaDiaryDate,
   MediaDiaryWithId,
   MediaType,
 } from "../types/typesMedia";
@@ -23,6 +24,7 @@ export async function fuegoDiaryGet(
   loggedBefore: boolean | null,
   genre: string | null
 ): Promise<MediaDiaryWithId[]> {
+  // using this I'm able to filter based on this type and then I'll able to manipulate how they're displayed?
   let diaryRef = fuegoDb.collection(
     `users/${uid}/diary`
   ) as fuego.firestore.Query;
@@ -51,6 +53,7 @@ export async function fuegoDiaryGet(
     diaryRef = diaryRef.where("genre", "==", genre);
   }
 
+  diaryRef = diaryRef.where("diaryDate", "!=", null);
   diaryRef = diaryRef.orderBy("diaryDate", "desc");
 
   if (cursor !== null) {
@@ -69,11 +72,11 @@ export async function fuegoDiaryGet(
 
 export async function fuegoDiaryAdd(
   uid: string,
-  data: MediaDiary
+  data: MediaDiaryDate
 ): Promise<void> {
   const batch = fuegoDb.batch();
   const diaryRef = fuegoDb.collection(`users/${uid}/diary`).doc();
-  diaryRef.set({ id: diaryRef.id, ...data }, { merge: true });
+  diaryRef.set({ id: diaryRef.id, typeLog: "diary", ...data }, { merge: true });
 
   const filtersKeys = createFilterKeys(data);
   const filtersSetObj = createFilterSet(filtersKeys, 1);
@@ -86,7 +89,7 @@ export async function fuegoDiaryAdd(
 export async function fuegoDelete(
   uid: string,
   diaryId: string,
-  data: MediaDiaryWithId
+  data: MediaDiaryDate
 ): Promise<void> {
   const batch = fuegoDb.batch();
 
@@ -111,11 +114,30 @@ export async function fuegoDiaryEntry(
   return (diaryItem.data() as MediaDiary) ?? false;
 }
 
+export async function fuegoDiaryById(
+  key: string,
+  uid: string,
+  mediaId: string
+): Promise<Partial<MediaDiaryWithId> | false> {
+  const diaryRef = fuegoDb
+    .collection(`users/${uid}/diary`)
+    .where("mediaId", "==", mediaId);
+
+  const diaryItems = await diaryRef.limit(1).get();
+
+  const items: MediaDiaryWithId[] = [];
+  diaryItems.forEach((item) => {
+    items.push(item.data() as MediaDiaryWithId);
+  });
+
+  return items.length > 0 ? items[0] : false;
+}
+
 export async function fuegoEdit(
   uid: string,
   diaryId: string,
-  data: MediaDiaryWithId,
-  prevData: MediaDiaryWithId
+  data: MediaDiaryDate,
+  prevData: MediaDiaryDate
 ): Promise<void> {
   const batch = fuegoDb.batch();
 
