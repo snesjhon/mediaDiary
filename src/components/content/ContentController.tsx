@@ -11,7 +11,6 @@ import { useMDDispatch, useMDState } from "../../config/store";
 import useIsBreakpoint from "../../utils/useIsBreakpoint";
 import LayoutDrawer from "../layouts/LayoutDrawer";
 import MdLogo from "../md/MdLogo";
-import ContentDay from "./ContentDay";
 import ContentInfo from "./ContentInfo";
 import ContentLog from "./ContentLog";
 import ContentSearch from "./ContentSearch";
@@ -43,14 +42,11 @@ function ContentController(): JSX.Element {
         </ModalOverlay>
       </Modal>
       <LayoutDrawer
-        isOpen={
-          view === "log" || view === "day" || view === "edit" || view === "info"
-        }
+        isOpen={view === "log" || view === "edit" || view === "info"}
         placement="right"
       >
         {view === "info" && <ContentInfo />}
         {view === "log" && <ContentLog />}
-        {(view === "day" || view === "edit") && <ContentDay />}
       </LayoutDrawer>
     </>
   );

@@ -117,9 +117,10 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
     case "info": {
       return {
         ...state,
-        selected: actions.payload,
         view: "info",
+        selected: actions.payload,
         edit: undefined,
+        isSaving: false,
       };
     }
     case "selected": {
@@ -131,7 +132,7 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
     case "day": {
       return {
         ...state,
-        view: "day",
+        view: "info",
         selected: undefined,
         edit: actions.payload,
       };

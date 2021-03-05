@@ -78,10 +78,6 @@ export interface MediaBookmark extends MediaDiary {
   bookmark: true;
 }
 
-export interface MediaBookmarkWithId extends MediaDiary {
-  id: string;
-}
-
 /** For logged items which include a date, we must make them non-optional or non-null */
 export interface MediaDiaryDate extends MediaDiary {
   diaryDate: string;
@@ -89,9 +85,9 @@ export interface MediaDiaryDate extends MediaDiary {
 }
 
 /** When we MediaAdd we don't have an id, until AFTER firebase creates one. */
-export type MediaDiaryWithId = MediaDiary & {
+export interface MediaDiaryWithId extends MediaDiary {
   id: string;
-};
+}
 
 /** A list of diaryItems with ids */
 export interface MediaDiaryState {

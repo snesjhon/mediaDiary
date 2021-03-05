@@ -1,8 +1,8 @@
+import dayjs from "dayjs";
 import type { FilterBookmark } from "../types/typesFilters";
 import type {
-  MediaBookmarkWithId,
-  MediaDiary,
   MediaDiaryWithId,
+  MediaDiary,
   MediaType,
 } from "../types/typesMedia";
 import fuego, { fuegoDb } from "./fuego";
@@ -15,7 +15,7 @@ export async function fuegoBookmarkGet(
   releasedDecade: number | null,
   addedDate: number | null,
   genre: string | null
-): Promise<MediaBookmarkWithId[]> {
+): Promise<MediaDiaryWithId[]> {
   let diaryRef = fuegoDb.collection(
     `users/${uid}/diary`
   ) as fuego.firestore.Query;
@@ -45,21 +45,28 @@ export async function fuegoBookmarkGet(
 
   const diaryItems = await diaryRef.limit(30).get();
 
-  const items: MediaBookmarkWithId[] = [];
+  const items: MediaDiaryWithId[] = [];
   diaryItems.forEach((item) => {
-    items.push(item.data() as MediaBookmarkWithId);
+    items.push(item.data() as MediaDiaryWithId);
   });
 
   return items;
 }
 
+/** This assumes this is to add an item as a bookmark ONLY,  */
 export async function fuegoBookmarkAdd(
   uid: string,
   data: MediaDiary
 ): Promise<void> {
   const batch = fuegoDb.batch();
   const diaryRef = fuegoDb.collection(`users/${uid}/diary`).doc();
-  diaryRef.set({ id: diaryRef.id, ...data }, { merge: true });
+  diaryRef.set(
+    {
+      id: diaryRef.id,
+      ...data,
+    },
+    { merge: true }
+  );
 
   const filtersKeys = bookmarkFilterKeys(data);
   const filtersSetObj = bookmarkFilterSet(filtersKeys, 1);
@@ -71,10 +78,17 @@ export async function fuegoBookmarkAdd(
   return batch.commit();
 }
 
+interface BookmarkKeys {
+  releasedDecade: MediaDiary["releasedDecade"];
+  releasedYear: MediaDiary["releasedYear"];
+  type: MediaDiary["type"];
+  genre: MediaDiary["genre"];
+  addedDate: MediaDiary["addedDate"];
+}
 export async function fuegoBookmarkDelete(
   uid: string,
   diaryId: string,
-  data: MediaDiary
+  data: BookmarkKeys
 ): Promise<void> {
   const batch = fuegoDb.batch();
 
@@ -91,9 +105,7 @@ export async function fuegoBookmarkDelete(
   return batch.commit();
 }
 
-function bookmarkFilterKeys(
-  data: Omit<MediaDiary, "rating" | "diaryDate" | "diaryYear" | "loggedBefore">
-): FilterBookmark {
+function bookmarkFilterKeys(data: BookmarkKeys): FilterBookmark {
   return {
     releasedDecade: data.releasedDecade,
     releasedYear: data.releasedYear,
@@ -109,11 +121,18 @@ function bookmarkFilterSet(
 ): Partial<fuego.firestore.DocumentData> {
   const setObj: Partial<fuego.firestore.DocumentData> = {};
   (Object.keys(filters) as Array<keyof FilterBookmark>).forEach((e) => {
-    setObj[e] = {
-      [`${filters.addedDate}`]: {
-        [`${filters[e]}`]: fuego.firestore.FieldValue.increment(incrementor),
-      },
-    };
+    const addedYear = `${dayjs(filters.addedDate).year()}`;
+    if (e === "addedDate" && filters[e] !== null) {
+      setObj[e] = {
+        [addedYear]: fuego.firestore.FieldValue.increment(incrementor),
+      };
+    } else {
+      setObj[e] = {
+        [addedYear]: {
+          [`${filters[e]}`]: fuego.firestore.FieldValue.increment(incrementor),
+        },
+      };
+    }
   });
   return setObj;
 }

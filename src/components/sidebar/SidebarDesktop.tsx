@@ -19,6 +19,7 @@ import ActivityIcon from "../icons/ActivityIcon";
 import HomeIcon from "../icons/HomeIcon";
 import { SidebarButton } from "./SidebarContent";
 import BookmarkIcon from "../icons/BookmarkIcon";
+import MemoryIcon from "../icons/MemoryIcon";
 
 function SidebarDesktop(): JSX.Element {
   const { user } = useFuegoUser();
@@ -35,7 +36,7 @@ function SidebarDesktop(): JSX.Element {
           <Box>
             <SidebarButton
               title="Memories"
-              Icon={BookmarkIcon}
+              Icon={MemoryIcon}
               route="/memories"
             />
           </Box>

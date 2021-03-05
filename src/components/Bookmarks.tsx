@@ -19,7 +19,6 @@ import { useMDDispatch, useMDState } from "../config/store";
 import { fuegoBookmarkGet } from "../fuego/fuegoBookmarks";
 import type {
   MediaBookmarkState,
-  MediaBookmarkWithId,
   MediaDiaryState,
   MediaDiaryWithId,
 } from "../types/typesMedia";
@@ -42,7 +41,7 @@ function Bookmarks({ user }: { user: UserFuegoValidated }): JSX.Element {
   const { colorMode } = useColorMode();
 
   const { data, error, size, setSize, mutate } = useSWRInfinite<
-    MediaBookmarkWithId[]
+    MediaDiaryWithId[]
   >(
     (_, prev) => {
       // We've reached the end of the list since we got < 30, don't call again
@@ -104,7 +103,6 @@ function Bookmarks({ user }: { user: UserFuegoValidated }): JSX.Element {
       </Square>
     );
   }
-  console.log(data);
 
   if (data) {
     const allData = data.flat();
@@ -123,7 +121,17 @@ function Bookmarks({ user }: { user: UserFuegoValidated }): JSX.Element {
           px={{ md: 8 }}
         >
           {allData.map((e, i) => (
-            <Grid key={e.title + i} gridTemplateRows="1fr 4rem" gridGap={3}>
+            <Grid
+              key={e.title + i}
+              gridTemplateRows="1fr 2rem"
+              gridGap={3}
+              onClick={() =>
+                dispatch({
+                  type: "day",
+                  payload: e,
+                })
+              }
+            >
               <Image
                 src={createPosterURL(e.poster, e.type)}
                 ignoreFallback
@@ -131,7 +139,9 @@ function Bookmarks({ user }: { user: UserFuegoValidated }): JSX.Element {
                 border="1px solid"
                 borderColor="gray.300"
               />
-              <Text fontSize="sm">{e.title}</Text>
+              <Text fontSize="sm" isTruncated>
+                {e.title}
+              </Text>
             </Grid>
           ))}
         </Grid>
@@ -194,12 +204,12 @@ function Bookmarks({ user }: { user: UserFuegoValidated }): JSX.Element {
                         bg: colorMode === "light" ? "purple.50" : "gray.700",
                         cursor: "pointer",
                       }}
-                      // onClick={() =>
-                      //   dispatch({
-                      //     type: "day",
-                      //     payload: diaryDates[month][day],
-                      //   })
-                      // }
+                      onClick={() =>
+                        dispatch({
+                          type: "day",
+                          payload: diaryDates[month][day],
+                        })
+                      }
                     >
                       <Box>
                         <Text

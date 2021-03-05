@@ -86,6 +86,20 @@ export async function fuegoDiaryAdd(
   return batch.commit();
 }
 
+export async function fuegoDiaryFieldEdit(
+  uid: string,
+  mediaId: string,
+  field: string,
+  data: string | boolean | number
+): Promise<void> {
+  const diaryRef = fuegoDb.collection(`users/${uid}/diary`).doc(mediaId);
+  try {
+    await diaryRef.set({ [field]: data }, { merge: true });
+  } catch (e) {
+    throw `[fuegoSetPreferences]: Failed to set, ${e}`;
+  }
+}
+
 export async function fuegoDelete(
   uid: string,
   diaryId: string,
@@ -108,17 +122,17 @@ export async function fuegoDiaryEntry(
   key: string,
   uid: string,
   diaryId: string
-): Promise<MediaDiary | false> {
+): Promise<MediaDiaryWithId | false> {
   const diaryRef = fuegoDb.collection(`users/${uid}/diary`).doc(diaryId);
   const diaryItem = await diaryRef.get();
-  return (diaryItem.data() as MediaDiary) ?? false;
+  return (diaryItem.data() as MediaDiaryWithId) ?? false;
 }
 
 export async function fuegoDiaryById(
   key: string,
   uid: string,
   mediaId: string
-): Promise<Partial<MediaDiaryWithId> | false> {
+): Promise<MediaDiaryWithId | false> {
   const diaryRef = fuegoDb
     .collection(`users/${uid}/diary`)
     .where("mediaId", "==", mediaId);

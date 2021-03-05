@@ -37,7 +37,7 @@ function InfoHeader({
   rating,
   type,
 }: Props): JSX.Element {
-  const dispatch = useMDDispatch();
+  // const dispatch = useMDDispatch();
   const { view } = useMDState();
   const showDiary =
     diaryDate && typeof rating !== "undefined" && view !== "edit";
@@ -104,7 +104,7 @@ function InfoHeader({
                 />
               </Text>
             </Box>
-            <Box>
+            {/* <Box>
               <Text fontWeight={500} fontSize="sm">
                 Edit
               </Text>
@@ -117,7 +117,7 @@ function InfoHeader({
                 isRound
                 onClick={() => dispatch({ type: "view", payload: "edit" })}
               />
-            </Box>
+            </Box> */}
           </Flex>
         )}
       </Grid>
