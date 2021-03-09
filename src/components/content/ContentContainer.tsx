@@ -15,7 +15,7 @@ import ContentInfo from "./ContentInfo";
 import ContentLog from "./ContentLog";
 import ContentSearch from "./ContentSearch";
 
-function ContentController(): JSX.Element {
+function ContentContainer(): JSX.Element {
   const { view } = useMDState();
   const dispatch = useMDDispatch();
   const refInput = useRef<HTMLInputElement>(null);
@@ -52,4 +52,4 @@ function ContentController(): JSX.Element {
   );
 }
 
-export default ContentController;
+export default ContentContainer;

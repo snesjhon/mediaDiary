@@ -15,7 +15,7 @@ export type MediaTypes = {
 export type MediaTypesArr = ["movie", "tv", "album"];
 
 /** MediaBase is the structure for a mediaItem. */
-export interface MediaBase {
+export interface MediaSelected {
   /** Artist for the selected media  */
   artist: string;
   /** Title for the selected media */
@@ -28,31 +28,24 @@ export interface MediaBase {
   releasedDate: string;
   /** Add the type as this expands */
   type: MediaType;
+  /** MovieDB or MovieDB_TV or SpotifyID */
+  mediaId: string;
+  /** If an item has been bookmarked, default to `false` in new items */
+  bookmark: boolean;
   /** Optional season number */
   season?: number;
   /** All of the seasons for the current TV item, this isn't saved  */
   seasons?: MDbTV["seasons"];
   /** All of the episodes for the current TV Season, this is saved */
   episodes?: number;
-  /** Overview is optional because it's not always provided by the APIs */
+  /** Overview is optional because it's not always provided by the APIs - this is not saved */
   overview?: string;
-}
-
-/** An item that's been selected after being searched and clicked on */
-export interface MediaSelected extends MediaBase {
-  /** MovieDB or MovieDB_TV or SpotifyID */
-  mediaId: string;
-  /** Bookmark is designated here because the "Selection" process between Info > Log | Edit requires
-   * that we _CAN_ have a previous diary item. If we have selected a previous item, then it MIGHT be
-   * true, if it's selected through a search or a new item, then bookmark is always false.
-   */
-  bookmark: boolean;
-  /** For SpotifyAPI we require an artistId */
+  /** For SpotifyAPI we require an artistId -this is saved*/
   artistId?: string;
 }
 
 /** A diaryItem that we add towards Fuego, we don't have "seasons" */
-export interface MediaDiary extends MediaSelected {
+export interface MediaDiary extends Omit<MediaSelected, "seasons"> {
   /** When the mediaItem was added to Fuego */
   addedDate: string;
   /** Year of the mediaItem, this is calculated and not from the API */

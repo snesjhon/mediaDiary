@@ -4,7 +4,7 @@ import { Router } from "next/router";
 import type { PropsWithChildren } from "react";
 import React, { useEffect } from "react";
 import useIsBreakpoint from "../../utils/useIsBreakpoint";
-import ContentController from "./ContentController";
+import ContentContainer from "./ContentContainer";
 import Header from "./ContentToolbar";
 import MdLoader from "../md/MdLoader";
 import Sidebar from "../sidebar/Sidebar";
@@ -54,7 +54,7 @@ function Content({
         )}
         <Box>{loading ? <MdLoader /> : children}</Box>
       </Grid>
-      <ContentController />
+      <ContentContainer />
     </Layout>
   );
 }
