@@ -112,7 +112,6 @@ function ContentLog(): JSX.Element {
         poster,
         season,
         episodes,
-        bookmark,
       } = selected;
       const { diaryDate, loggedBefore, rating, seenEpisodes } = state;
       const releasedYear = parseInt(dayjs(releasedDate).format("YYYY"));
@@ -122,7 +121,9 @@ function ContentLog(): JSX.Element {
         poster,
         mediaId,
         diaryDate,
-        bookmark,
+        // this is because regardless of whether this is true or not, an item is no longer
+        // bookmarked whenever we add it as an diaryItem
+        bookmark: false,
         diaryYear: parseInt(dayjs(diaryDate).format("YYYY")),
         addedDate: dayjs().toISOString(),
         loggedBefore,

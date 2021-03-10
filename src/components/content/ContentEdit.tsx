@@ -108,6 +108,9 @@ function ContentEdit(): JSX.Element {
     if (typeof edit !== "undefined") {
       const editItem = {
         ...edit,
+        // this is because regardless of whether this is true or not, an item is no longer
+        // bookmarked whenever we add it as an diaryItem
+        bookmark: false,
         diaryDate: state.diaryDate,
         diaryYear: parseInt(dayjs(state.diaryDate).format("YYYY")),
         loggedBefore: state.loggedBefore,

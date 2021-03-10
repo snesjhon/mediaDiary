@@ -30,8 +30,12 @@ function ContentWithId(): JSX.Element {
       revalidateOnFocus: false,
     }
   );
+  if (error) {
+    console.error(error);
+    return <div>{error}</div>;
+  }
 
-  if (data) {
+  if (data && !isValidating) {
     const {
       artist,
       addedDate,
@@ -48,7 +52,6 @@ function ContentWithId(): JSX.Element {
       season,
       id,
     } = data;
-    console.log(data);
 
     const isEditable = addedDate === null || rating !== -1;
 

@@ -87,9 +87,7 @@ function Home({ user }: { user: UserFuegoValidated }): JSX.Element {
 
   // There's an error on the list, or the list is empty
   if (error) {
-    if (error) {
-      console.error(error);
-    }
+    console.error(error);
     return <div>An Error Happened</div>;
   }
 
