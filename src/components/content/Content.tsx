@@ -1,21 +1,41 @@
-import { Box, Grid, useDisclosure } from "@chakra-ui/react";
+import {
+  Box,
+  Grid,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+} from "@chakra-ui/react";
 import Head from "next/head";
 import { Router } from "next/router";
 import type { PropsWithChildren } from "react";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+import { useMDDispatch, useMDState } from "../../config/store";
 import useIsBreakpoint from "../../utils/useIsBreakpoint";
-import ContentContainer from "./ContentContainer";
-import Header from "./ContentToolbar";
+import Layout from "../layouts/Layout";
+import LayoutDrawer from "../layouts/LayoutDrawer";
 import MdLoader from "../md/MdLoader";
+import MdLogo from "../md/MdLogo";
 import Sidebar from "../sidebar/Sidebar";
 import SidebarDesktop from "../sidebar/SidebarDesktop";
-import Layout from "../layouts/Layout";
+import ContentEdit from "./ContentEdit";
+import ContentLog from "./ContentLog";
+import ContentSearch from "./ContentSearch";
+import ContentSelected from "./ContentSelected";
+import Header from "./ContentToolbar";
+import ContentWithId from "./ContentWithId";
 
 function Content({
   children,
   title = "MediaDiary",
 }: PropsWithChildren<unknown> & { title: string }): JSX.Element {
+  const { view } = useMDState();
+  const dispatch = useMDDispatch();
   const isMd = useIsBreakpoint("md");
+  const refInput = useRef<HTMLInputElement>(null);
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [loading, setLoading] = React.useState(false);
   // route transition - in order to prevent bad UX because of SSR props
@@ -54,7 +74,43 @@ function Content({
         )}
         <Box>{loading ? <MdLoader /> : children}</Box>
       </Grid>
-      <ContentContainer />
+      {!loading && (
+        <>
+          <LayoutDrawer
+            isOpen={
+              view === "log" ||
+              view === "edit" ||
+              view === "selected" ||
+              view === "selectedWithId"
+            }
+            placement="right"
+          >
+            {view === "selected" && <ContentSelected />}
+            {view === "selectedWithId" && <ContentWithId />}
+            {view === "log" && <ContentLog />}
+            {view === "edit" && <ContentEdit />}
+          </LayoutDrawer>
+          <Modal
+            isOpen={view === "search"}
+            onClose={() => dispatch({ type: "dayClose" })}
+            scrollBehavior="inside"
+            size={isMd ? "xl" : "sm"}
+            initialFocusRef={refInput}
+          >
+            <ModalOverlay sx={{ zIndex: 2 }}>
+              <ModalContent maxHeight="50vh" my={{ base: 2, sm: "3.75rem" }}>
+                <ModalCloseButton />
+                <ModalHeader>
+                  <MdLogo title="Search" />
+                </ModalHeader>
+                <ModalBody pt={0} pb={6}>
+                  {view === "search" && <ContentSearch refInput={refInput} />}
+                </ModalBody>
+              </ModalContent>
+            </ModalOverlay>
+          </Modal>
+        </>
+      )}
     </Layout>
   );
 }

@@ -191,7 +191,7 @@ function ContentSearch({
         }}
         onClick={() =>
           dispatch({
-            type: "info",
+            type: "selected",
             payload: item,
           })
         }

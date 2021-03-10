@@ -203,7 +203,7 @@ function SelectSeason({
             );
             const currentSeason = item.seasons[seasonIndex];
             return dispatch({
-              type: "selected",
+              type: "selectedReplace",
               payload: {
                 ...item,
                 season: currentSeason.season_number,

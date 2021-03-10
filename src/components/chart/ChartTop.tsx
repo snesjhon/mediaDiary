@@ -40,7 +40,7 @@ function ChartTop({ list }: { list: MediaDiaryWithId[] }): JSX.Element {
               borderColor="gray.300"
               onClick={() =>
                 dispatch({
-                  type: "day",
+                  type: "selectedWithId",
                   payload: e,
                 })
               }

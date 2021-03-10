@@ -6,7 +6,14 @@ import type { UserFuegoPref } from "../types/typesUser";
 export interface MDState {
   preference: UserFuegoPref;
   isSaving?: boolean;
-  view?: "search" | "log" | "edit" | "day" | "md" | "activity" | "info";
+  view?:
+    | "search"
+    | "log"
+    | "edit"
+    | "md"
+    | "activity"
+    | "selected"
+    | "selectedWithId";
   selected?: MediaSelected;
   edit?: MediaDiaryWithId;
   diaryFilters: FilterState | null;
@@ -15,7 +22,7 @@ export interface MDState {
 
 export type MDActions =
   | {
-      type: "log" | "info" | "selected";
+      type: "log" | "selected" | "selectedReplace";
       payload: MDState["selected"];
     }
   | {
@@ -27,7 +34,7 @@ export type MDActions =
       payload: MDState["view"];
     }
   | {
-      type: "day" | "savedEdit";
+      type: "selectedWithId" | "savedEdit";
       payload: MDState["edit"];
     }
   | {
@@ -80,7 +87,7 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
       return {
         ...state,
         isSaving: false,
-        view: "day",
+        view: "selectedWithId",
         edit: actions.payload,
       };
     }
@@ -114,33 +121,35 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
         edit: undefined,
       };
     }
-    case "info": {
+    case "selected": {
       return {
         ...state,
-        view: "info",
+        view: "selected",
         selected: actions.payload,
         edit: undefined,
         isSaving: false,
       };
     }
-    case "selected": {
+    case "selectedWithId": {
+      return {
+        ...state,
+        view: "selectedWithId",
+        selected: undefined,
+        edit: actions.payload,
+      };
+    }
+    case "selectedReplace": {
       return {
         ...state,
         selected: actions.payload,
-      };
-    }
-    case "day": {
-      return {
-        ...state,
-        view: "info",
-        selected: undefined,
-        edit: actions.payload,
       };
     }
     case "edit": {
       return {
         ...state,
         view: "edit",
+        selected: undefined,
+        edit: actions.payload,
       };
     }
     default:

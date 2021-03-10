@@ -39,7 +39,7 @@ function ContentLog(): JSX.Element {
         selected.seasons[0].poster_path !== null
       ) {
         mdDispatch({
-          type: "selected",
+          type: "selectedReplace",
           payload: {
             ...selected,
             poster: parsePosterUrl(selected.seasons[0].poster_path, "tv"),

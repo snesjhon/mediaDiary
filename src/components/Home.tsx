@@ -180,7 +180,7 @@ function Home({ user }: { user: UserFuegoValidated }): JSX.Element {
                       }}
                       onClick={() =>
                         dispatch({
-                          type: "day",
+                          type: "selectedWithId",
                           payload: diaryDates[month][day],
                         })
                       }

@@ -76,7 +76,7 @@ export async function fuegoDiaryAdd(
 ): Promise<void> {
   const batch = fuegoDb.batch();
   const diaryRef = fuegoDb.collection(`users/${uid}/diary`).doc();
-  diaryRef.set({ id: diaryRef.id, typeLog: "diary", ...data }, { merge: true });
+  diaryRef.set({ id: diaryRef.id, ...data }, { merge: true });
 
   const filtersKeys = createFilterKeys(data);
   const filtersSetObj = createFilterSet(filtersKeys, 1);

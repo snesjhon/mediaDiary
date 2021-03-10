@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
-import LayoutMain from "../src/components/content/Content";
+import Content from "../src/components/content/Content";
 import MdLoader from "../src/components/md/MdLoader";
 import Preferences from "../src/components/Settings";
 import NewUser from "../src/components/user/UserNew";
@@ -29,9 +29,9 @@ function SettingsPage(): JSX.Element {
     return <NewUser user={userValid} />;
   } else if (userValidHasPreference) {
     return (
-      <LayoutMain title="Settings">
+      <Content title="Settings">
         <Preferences user={userValidHasPreference} />
-      </LayoutMain>
+      </Content>
     );
   }
   return <MdLoader />;

@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 import Bookmarks from "../src/components/Bookmarks";
-import LayoutMain from "../src/components/content/Content";
+import Content from "../src/components/content/Content";
 import MdLoader from "../src/components/md/MdLoader";
 import UserNew from "../src/components/user/UserNew";
 import useFuegoAuth from "../src/fuego/useFuegoAuth";
@@ -30,9 +30,9 @@ function BookmarksPage(): JSX.Element {
     return <UserNew user={userValid} />;
   } else if (userValidHasPreference) {
     return (
-      <LayoutMain title="Bookmarks">
+      <Content title="Bookmarks">
         <Bookmarks user={userValidHasPreference} />
-      </LayoutMain>
+      </Content>
     );
   }
   return <MdLoader />;

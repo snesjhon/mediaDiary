@@ -1,32 +1,59 @@
 import { CalendarIcon } from "@chakra-ui/icons";
-import { DrawerBody, DrawerFooter, Button } from "@chakra-ui/react";
+import { Button, DrawerBody, DrawerFooter } from "@chakra-ui/react";
 import dayjs from "dayjs";
-import { type } from "os";
-import { title } from "process";
 import React from "react";
-import { useMDDispatch } from "../../config/store";
+import useSWR from "swr";
+import { useMDDispatch, useMDState } from "../../config/store";
 import useDataFetch from "../../config/useDataFetch";
 import { fuegoBookmarkAdd } from "../../fuego/fuegoBookmarks";
-import type { MDbTV, MDbMovie } from "../../types/typesMDb";
-import type { MediaSelected } from "../../types/typesMedia";
+import { fuegoDiaryById } from "../../fuego/fuegoMDActions";
+import useFuegoUser from "../../fuego/useFuegoUser";
+import type { MDbMovie, MDbTV } from "../../types/typesMDb";
+import type { MediaDiaryWithId, MediaSelected } from "../../types/typesMedia";
 import type { SpotifyAlbum, SpotifyArtist } from "../../types/typesSpotify";
-import type { UserFuego } from "../../types/typesUser";
 import { parsePosterUrl } from "../../utils/helpers";
 import BookmarkIcon from "../icons/BookmarkIcon";
-import StarEmptyIcon from "../icons/StartEmptyIcon";
 import InfoBody from "../info/InfoBody";
 import InfoHeader from "../info/InfoHeader";
 import MdLoader from "../md/MdLoader";
-import ContentData from "./ContentData";
 
-function ContentSelected({
+function ContentSelected(): JSX.Element {
+  const { user } = useFuegoUser();
+  const { selected } = useMDState();
+  const dispatch = useMDDispatch();
+
+  const { data, isValidating, error, mutate } = useSWR<
+    MediaDiaryWithId | false
+  >(
+    user && selected ? ["/fuego/diaryById", user.uid, selected.mediaId] : null,
+    fuegoDiaryById,
+    {
+      revalidateOnFocus: false,
+    }
+  );
+
+  if (!isValidating) {
+    if (data) {
+      // If we find this search has given us a result, then push to "SelectedWithId"
+      dispatch({ type: "selectedWithId", payload: data });
+      return <MdLoader />;
+    } else if (selected) {
+      return <ContentSelectedFetch item={selected} mutate={mutate} />;
+    }
+  }
+
+  return <MdLoader />;
+}
+
+function ContentSelectedFetch({
   item,
-  user,
+  mutate,
 }: {
   item: MediaSelected;
-  user: UserFuego;
-}): JSX.Element {
+  mutate: () => void;
+}) {
   const dispatch = useMDDispatch();
+  const { user } = useFuegoUser();
   const { data, error, isLoading } = useDataFetch({
     type: item.type,
     firstId: item.mediaId,
@@ -42,7 +69,6 @@ function ContentSelected({
   return isLoading || !parsedItem ? (
     <MdLoader />
   ) : (
-    // <ContentData user={user} {...parsedItem} />
     <>
       <DrawerBody px={{ base: 6, sm: 8 }}>
         <InfoHeader
@@ -52,8 +78,6 @@ function ContentSelected({
           releasedDate={parsedItem.releasedDate}
           title={parsedItem.title}
           type={parsedItem.type}
-          // rating={parsedItem.rating}
-          // diaryDate={parsedItem.diaryDate}
         />
         <InfoBody
           artistId={parsedItem.artistId}
@@ -65,127 +89,23 @@ function ContentSelected({
       <DrawerFooter borderTopWidth="1px" justifyContent="space-between">
         <Button
           onClick={addBookmark}
-          // onClick={bookmark ? removeBookmark : addBookmark}
           leftIcon={<BookmarkIcon />}
           colorScheme="orange"
           variant="outline"
         >
           Bookmark
-          {/* {bookmark ? "Bookmarked" : "Bookmark"} */}
         </Button>
         <Button
-          // onClick={addBookmark}
-          leftIcon={<StarEmptyIcon color="blue" />}
-          colorScheme="blue"
-          variant="outline"
-        >
-          Rate
-        </Button>
-        <Button
-          onClick={
-            () => {
-              console.log("no good");
-            }
-            // hasId && id && addedDate
-            //   ? dispatch({
-            //       type: "day",
-            //       // TODO: I'm convoluting too many things. Although it'd be great to have this
-            //       // as a single component. I think it'd be better if we separate MediaSelected & MediaDiaryWithId
-            //       payload: { id, ...selected, addedDate },
-            //     })
-            //   : dispatch({
-            //       type: "log",
-            //       payload: selected,
-            //     })
-          }
+          onClick={() => dispatch({ type: "log", payload: parsedItem })}
           colorScheme="purple"
           variant="outline"
           leftIcon={<CalendarIcon />}
         >
           Log
-          {/* {parsedItem.diaryDate ? "Edit Log" : "Log"} */}
         </Button>
       </DrawerFooter>
     </>
   );
-
-  // async function removeBookmark() {
-  //   if (user !== null && user && user.email !== null && id) {
-  //     dispatch({ type: "saving" });
-  //     if (diaryDate || rating !== -1) {
-  //       console.log("removed bookmark, but NOT the entry");
-  //       await fuegoDiaryFieldEdit(user.uid, id, "bookmark", false);
-  //       dispatch({ type: "savedd" });
-  //     } else if (addedDate) {
-  //       // remove bookmark, and entry, and MOVE information to Selected!
-  //       const releasedYear = parseInt(dayjs(releasedDate).format("YYYY"));
-  //       const releasedDecade = Math.floor(releasedYear / 10) * 10;
-  //       await fuegoBookmarkDelete(user.uid, id, {
-  //         releasedDecade,
-  //         releasedYear,
-  //         type,
-  //         genre,
-  //         addedDate,
-  //       });
-  //       dispatch({
-  //         type: "info",
-  //         payload: {
-  //           artist,
-  //           releasedDate,
-  //           bookmark: false,
-  //           genre,
-  //           mediaId,
-  //           poster,
-  //           title,
-  //           type,
-  //           artistId,
-  //         },
-  //       });
-  //     }
-  //   } else {
-  //     console.error("[EDIT]: Missing delete params");
-  //   }
-  // }
-
-  async function addBookmark() {
-    if (user && parsedItem) {
-      const {
-        releasedDate,
-        genre,
-        mediaId,
-        poster,
-        artist,
-        artistId,
-        season,
-        type,
-      } = parsedItem;
-
-      const releasedYear = parseInt(dayjs(releasedDate).format("YYYY"));
-      await fuegoBookmarkAdd(user.uid, {
-        releasedYear,
-        releasedDecade: Math.floor(releasedYear / 10) * 10,
-        addedDate: dayjs().toISOString(),
-        type,
-        genre,
-        mediaId,
-        poster,
-        artist,
-        title,
-        releasedDate,
-        bookmark: true,
-        rating: -1,
-        diaryDate: null,
-        diaryYear: null,
-        loggedBefore: false,
-        ...(typeof artistId !== "undefined" && { artistId }),
-        ...(typeof season !== "undefined" && { season }),
-      });
-      // }
-      dispatch({ type: "savedd" });
-    } else {
-      console.error("[SELECTED]: No user");
-    }
-  }
 
   function parseData(): MediaSelected | false {
     if (data) {
@@ -253,5 +173,48 @@ function ContentSelected({
     }
     return false;
   }
+
+  async function addBookmark() {
+    if (user && parsedItem) {
+      const {
+        releasedDate,
+        genre,
+        mediaId,
+        poster,
+        artist,
+        artistId,
+        season,
+        type,
+        title,
+      } = parsedItem;
+
+      const releasedYear = parseInt(dayjs(releasedDate).format("YYYY"));
+      await fuegoBookmarkAdd(user.uid, {
+        releasedYear,
+        releasedDecade: Math.floor(releasedYear / 10) * 10,
+        addedDate: dayjs().toISOString(),
+        type,
+        genre,
+        mediaId,
+        poster,
+        artist,
+        title,
+        releasedDate,
+        bookmark: true,
+        rating: -1,
+        diaryDate: null,
+        diaryYear: null,
+        loggedBefore: false,
+        ...(typeof artistId !== "undefined" && { artistId }),
+        ...(typeof season !== "undefined" && { season }),
+      });
+      dispatch({ type: "saving" });
+      dispatch({ type: "savedd" });
+      mutate();
+    } else {
+      console.error("[SELECTED]: No user");
+    }
+  }
 }
+
 export default ContentSelected;

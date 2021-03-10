@@ -127,7 +127,7 @@ function Bookmarks({ user }: { user: UserFuegoValidated }): JSX.Element {
               gridGap={3}
               onClick={() =>
                 dispatch({
-                  type: "day",
+                  type: "selectedWithId",
                   payload: e,
                 })
               }

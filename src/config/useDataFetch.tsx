@@ -15,9 +15,9 @@ export type DataFetchMDb = MDbMovie | MDbTV;
 export type DataFetch = DataFetchMDb | DataFetchSpotify | false;
 
 interface Props {
-  type: MediaType;
-  firstId: string;
-  secondId?: string;
+  type: MediaType | false;
+  firstId: string | false;
+  secondId?: string | false;
   season?: number;
   isSuspense?: boolean;
 }
