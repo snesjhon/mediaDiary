@@ -133,13 +133,10 @@ function ContentSelectedFetch({
           parsedObj = {
             seasons,
             season: -1,
-            // season: seasonItem.season_number,
-            // episodes: seasonItem.episode_count,
             poster:
               castItem.poster_path !== null
                 ? parsePosterUrl(castItem.poster_path, item.type)
                 : "",
-            // releasedDate: dayjs(seasonItem.air_date).toISOString(),
           };
         }
 

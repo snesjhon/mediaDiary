@@ -1,17 +1,9 @@
-import { EditIcon, StarIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Flex,
-  Grid,
-  Heading,
-  IconButton,
-  Image,
-  Text,
-} from "@chakra-ui/react";
+import { StarIcon } from "@chakra-ui/icons";
+import { Box, Flex, Grid, Heading, Image, Text } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React from "react";
 import Rating from "react-rating";
-import { useMDDispatch, useMDState } from "../../config/store";
+import { useMDState } from "../../config/store";
 import type { MediaDiary, MediaSelected } from "../../types/typesMedia";
 import { createPosterURL } from "../../utils/helpers";
 import StarEmptyIcon from "../icons/StartEmptyIcon";
@@ -37,7 +29,6 @@ function InfoHeader({
   rating,
   type,
 }: Props): JSX.Element {
-  // const dispatch = useMDDispatch();
   const { view } = useMDState();
   const showDiary =
     diaryDate && typeof rating !== "undefined" && view !== "edit";
@@ -104,20 +95,6 @@ function InfoHeader({
                 />
               </Text>
             </Box>
-            {/* <Box>
-              <Text fontWeight={500} fontSize="sm">
-                Edit
-              </Text>
-              <IconButton
-                icon={<EditIcon />}
-                aria-label="edit"
-                variant="outline"
-                size="sm"
-                colorScheme="green"
-                isRound
-                onClick={() => dispatch({ type: "view", payload: "edit" })}
-              />
-            </Box> */}
           </Flex>
         )}
       </Grid>

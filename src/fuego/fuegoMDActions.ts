@@ -142,13 +142,6 @@ export async function fuegoDiaryById(
     diaryRef = diaryRef.where("season", "==", season);
   }
 
-  // const diaryRef = fuegoDb
-  //   .collection(`users/${uid}/diary`)
-  //   .where("mediaId", "==", mediaId);
-  // if(type === "tv"){
-  //   diaryRef
-  // }
-
   const diaryItems = await diaryRef.limit(1).get();
 
   const items: MediaDiaryWithId[] = [];

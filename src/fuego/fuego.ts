@@ -20,7 +20,7 @@ const fbDb = fuego.firestore();
 
 // Use this for local testing;
 // if (location.hostname === "localhost") {
-fbDb.useEmulator("localhost", 8080);
+// fbDb.useEmulator("localhost", 8080);
 // }
 
 export const fuegoDb = fbDb;
