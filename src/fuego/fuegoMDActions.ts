@@ -1,16 +1,17 @@
-import { fuegoDb } from "./fuego";
-import type fuego from "./fuego";
-import {
-  createFilterKeys,
-  createFilterSet,
-  createFilterEditSet,
-} from "./fuegoFilterActions";
 import type {
   MediaDiaryDate,
   MediaDiaryWithId,
   MediaType,
 } from "../types/typesMedia";
 import type { UserPref } from "../types/typesUser";
+import type fuego from "./fuego";
+import { fuegoDb } from "./fuego";
+import { bookmarkFilterKeys, bookmarkFilterSet } from "./fuegoBookmarks";
+import {
+  createFilterEditSet,
+  createFilterKeys,
+  createFilterSet,
+} from "./fuegoFilterActions";
 
 export async function fuegoDiaryGet(
   key: string,
@@ -114,6 +115,15 @@ export async function fuegoDelete(
   const filtersSetObj = createFilterSet(filtersKeys, -1);
   filtersRef.set(filtersSetObj, { merge: true });
 
+  if (data.bookmark) {
+    const bookmarkKeys = bookmarkFilterKeys(data);
+    const bookmarkObj = bookmarkFilterSet(bookmarkKeys, -1);
+    const bookmarkRef = fuegoDb
+      .collection(`/users/${uid}/filters`)
+      .doc("bookmarks");
+    bookmarkRef.set(bookmarkObj, { merge: true });
+  }
+
   return batch.commit();
 }
 
@@ -161,9 +171,10 @@ export async function fuegoEdit(
   const batch = fuegoDb.batch();
 
   const diaryRef = fuegoDb.collection(`users/${uid}/diary`).doc(diaryId);
-  batch.update(diaryRef, data);
 
-  const userRef = fuegoDb.collection(`/users/${uid}/filters`).doc("diary");
+  // this is because regardless of whether this is true or not, an item is no longer
+  // bookmarked whenever we add it as an diaryItem
+  batch.update(diaryRef, { ...data, bookmark: false });
 
   const fitlerEditSet = createFilterEditSet(data, prevData, [
     "rating",
@@ -172,8 +183,17 @@ export async function fuegoEdit(
     "diaryYear",
     "releasedYear",
   ]);
-
+  const userRef = fuegoDb.collection(`/users/${uid}/filters`).doc("diary");
   userRef.set(fitlerEditSet, { merge: true });
+
+  if (data.bookmark) {
+    const bookmarkKeys = bookmarkFilterKeys(data);
+    const bookmarkObj = bookmarkFilterSet(bookmarkKeys, -1);
+    const bookmarkRef = fuegoDb
+      .collection(`/users/${uid}/filters`)
+      .doc("bookmarks");
+    bookmarkRef.set(bookmarkObj, { merge: true });
+  }
 
   return batch.commit();
 }

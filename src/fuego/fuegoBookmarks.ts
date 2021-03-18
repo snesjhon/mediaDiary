@@ -156,7 +156,7 @@ export async function fuegoBookmarkDeleteWithId(
   }
 }
 
-function bookmarkFilterKeys(data: BookmarkKeys): FilterBookmark {
+export function bookmarkFilterKeys(data: BookmarkKeys): FilterBookmark {
   return {
     releasedDecade: data.releasedDecade,
     releasedYear: data.releasedYear,
@@ -166,7 +166,7 @@ function bookmarkFilterKeys(data: BookmarkKeys): FilterBookmark {
   };
 }
 
-function bookmarkFilterSet(
+export function bookmarkFilterSet(
   filters: FilterBookmark,
   incrementor: number
 ): Partial<fuego.firestore.DocumentData> {
