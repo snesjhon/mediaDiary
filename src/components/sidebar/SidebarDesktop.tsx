@@ -35,13 +35,6 @@ function SidebarDesktop(): JSX.Element {
           </Box>
           <Box>
             <SidebarButton
-              title="Memories"
-              Icon={MemoryIcon}
-              route="/memories"
-            />
-          </Box>
-          <Box>
-            <SidebarButton
               title="Bookmarks"
               Icon={BookmarkIcon}
               route="/bookmarks"
