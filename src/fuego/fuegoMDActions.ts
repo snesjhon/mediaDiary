@@ -6,7 +6,6 @@ import {
   createFilterEditSet,
 } from "./fuegoFilterActions";
 import type {
-  MediaDiary,
   MediaDiaryDate,
   MediaDiaryWithId,
   MediaType,
@@ -131,11 +130,24 @@ export async function fuegoDiaryEntry(
 export async function fuegoDiaryById(
   key: string,
   uid: string,
-  mediaId: string
+  type: MediaType,
+  mediaId: string,
+  season: number
 ): Promise<MediaDiaryWithId | false> {
-  const diaryRef = fuegoDb
-    .collection(`users/${uid}/diary`)
-    .where("mediaId", "==", mediaId);
+  let diaryRef = fuegoDb.collection(
+    `users/${uid}/diary`
+  ) as fuego.firestore.Query;
+  diaryRef = diaryRef.where("mediaId", "==", mediaId);
+  if (type === "tv") {
+    diaryRef = diaryRef.where("season", "==", season);
+  }
+
+  // const diaryRef = fuegoDb
+  //   .collection(`users/${uid}/diary`)
+  //   .where("mediaId", "==", mediaId);
+  // if(type === "tv"){
+  //   diaryRef
+  // }
 
   const diaryItems = await diaryRef.limit(1).get();
 

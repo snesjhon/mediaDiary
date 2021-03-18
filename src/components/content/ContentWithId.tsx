@@ -87,6 +87,9 @@ function ContentWithId(): JSX.Element {
             {bookmark ? "Bookmarked" : "Bookmark"}
           </Button>
           <Button
+            // TODO: At the current moment there isn't a good way of adding SEASON support
+            // AFTER you've bookmarked TV. That is inconvenient because I'd want to refecth
+            // the seasons because we would want to have that dropdown. 03/17/21
             onClick={() => dispatch({ type: "edit", payload: data })}
             colorScheme="purple"
             variant="outline"
@@ -135,7 +138,13 @@ function ContentWithId(): JSX.Element {
           .finally(() => {
             // In the case where we're deleting the item completely, we need to assure that our PREVIOUS
             // fetch case is refetched, the easiest way to assure this is to clear the cache.
-            cache.delete(["/fuego/diaryById", user.uid, mediaData.mediaId]);
+            cache.delete([
+              "/fuego/diaryById",
+              user.uid,
+              mediaData.type,
+              mediaData.mediaId,
+              mediaData.season ? mediaData.season : -1,
+            ]);
             // TODO: might just want to roll this into a single dispatch, I believe i did this before because of
             // styling and FOUC issues.
             dispatch({ type: "view", payload: "md" });

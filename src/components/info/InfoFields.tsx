@@ -111,29 +111,31 @@ function InfoFields({
       <Divider my={2} />
       {type === "tv" && item && (
         <>
-          <Flex alignItems="center" justifyContent="space-between">
-            <Text flex="1">Season</Text>
-            {item.episodes && (
-              <Button
-                size="sm"
-                colorScheme="purple"
-                mr={3}
-                variant="link"
-                onClick={() => setShowEpisodes(!showEpisodes)}
-              >
-                + Episodes
-              </Button>
-            )}
-            <Box w="30%">
-              {isEdit && <div>{item.season}</div>}
-              {!isEdit && (
-                <SelectSeason
-                  item={item as MediaSelected}
-                  dispatch={mdDispatch}
-                />
+          {item.season !== -1 && (
+            <Flex alignItems="center" justifyContent="space-between">
+              <Text flex="1">Season</Text>
+              {item.episodes && (
+                <Button
+                  size="sm"
+                  colorScheme="purple"
+                  mr={3}
+                  variant="link"
+                  onClick={() => setShowEpisodes(!showEpisodes)}
+                >
+                  + Episodes
+                </Button>
               )}
-            </Box>
-          </Flex>
+              <Box w="30%">
+                {isEdit && <div>{item.season}</div>}
+                {!isEdit && (
+                  <SelectSeason
+                    item={item as MediaSelected}
+                    dispatch={mdDispatch}
+                  />
+                )}
+              </Box>
+            </Flex>
+          )}
           {typeof item.episodes !== "undefined" && showEpisodes && (
             <>
               <Divider my={2} />

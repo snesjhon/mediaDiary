@@ -1,7 +1,7 @@
 import { Button, Center, DrawerBody, DrawerFooter } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React, { useReducer } from "react";
-import { mutate } from "swr";
+import { cache, mutate } from "swr";
 import { useMDDispatch, useMDState } from "../../config/store";
 import type { LogState } from "../../config/storeLog";
 import { LogReducer } from "../../config/storeLog";
@@ -133,6 +133,15 @@ function ContentEdit(): JSX.Element {
       user.email !== null
     ) {
       mdDispatch({ type: "saving" });
+      // In the case where we're deleting the item completely, we need to assure that our PREVIOUS
+      // fetch case is refetched, the easiest way to assure this is to clear the cache.
+      cache.delete([
+        "/fuego/diaryById",
+        user.uid,
+        edit.type,
+        edit.mediaId,
+        edit.season ? edit.season : -1,
+      ]);
       // TODO: we have to assure to breakup the "edit" types, to assure we're editing the types correctly
       await fuegoDelete(user.uid, edit.id, edit as MediaDiaryDate);
       mdDispatch({ type: "view", payload: "md" });

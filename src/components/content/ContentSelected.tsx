@@ -25,7 +25,15 @@ function ContentSelected(): JSX.Element {
   const { data, isValidating, error, mutate } = useSWR<
     MediaDiaryWithId | false
   >(
-    user && selected ? ["/fuego/diaryById", user.uid, selected.mediaId] : null,
+    user && selected
+      ? [
+          "/fuego/diaryById",
+          user.uid,
+          selected.type,
+          selected.mediaId,
+          selected.season ? selected.season : -1,
+        ]
+      : null,
     fuegoDiaryById,
     {
       revalidateOnFocus: false,
@@ -33,6 +41,8 @@ function ContentSelected(): JSX.Element {
   );
 
   if (!isValidating) {
+    // if its TV then we have a problem, because if there IS a previous Item, then we have to realize
+    // that we NEED to go search for a further season information.
     if (data) {
       // If we find this search has given us a result, then push to "SelectedWithId"
       dispatch({ type: "selectedWithId", payload: data });
@@ -117,16 +127,19 @@ function ContentSelectedFetch({
           const seasons = castItem.seasons.sort((_, b) =>
             b.season_number === 0 ? -1 : 1
           );
-          const seasonItem = seasons[0];
+
+          // By default right now we want to save a season as -1, UNLESS the user chooses a specific season
+          // const seasonItem = seasons[0];
           parsedObj = {
             seasons,
-            season: seasonItem.season_number,
-            episodes: seasonItem.episode_count,
+            season: -1,
+            // season: seasonItem.season_number,
+            // episodes: seasonItem.episode_count,
             poster:
               castItem.poster_path !== null
                 ? parsePosterUrl(castItem.poster_path, item.type)
                 : "",
-            releasedDate: dayjs(seasonItem.air_date).toISOString(),
+            // releasedDate: dayjs(seasonItem.air_date).toISOString(),
           };
         }
 

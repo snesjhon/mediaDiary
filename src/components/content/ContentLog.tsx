@@ -42,6 +42,8 @@ function ContentLog(): JSX.Element {
           type: "selectedReplace",
           payload: {
             ...selected,
+            season: selected.seasons[0].season_number,
+            episodes: selected.seasons[0].episode_count,
             poster: parsePosterUrl(selected.seasons[0].poster_path, "tv"),
           },
         });
