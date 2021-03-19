@@ -108,7 +108,6 @@ function ContentEdit(): JSX.Element {
     if (typeof edit !== "undefined") {
       const editItem = {
         ...edit,
-        // bookmark: false,
         diaryDate: state.diaryDate,
         diaryYear: parseInt(dayjs(state.diaryDate).format("YYYY")),
         loggedBefore: state.loggedBefore,

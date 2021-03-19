@@ -171,20 +171,32 @@ export async function fuegoEdit(
   const batch = fuegoDb.batch();
 
   const diaryRef = fuegoDb.collection(`users/${uid}/diary`).doc(diaryId);
-
-  // this is because regardless of whether this is true or not, an item is no longer
-  // bookmarked whenever we add it as an diaryItem
   batch.update(diaryRef, { ...data, bookmark: false });
 
-  const fitlerEditSet = createFilterEditSet(data, prevData, [
-    "rating",
-    "releasedDecade",
-    "loggedBefore",
-    "diaryYear",
-    "releasedYear",
-  ]);
-  const userRef = fuegoDb.collection(`/users/${uid}/filters`).doc("diary");
-  userRef.set(fitlerEditSet, { merge: true });
+  // We have the following cases
+  // Bookmark -> New Diary
+  // Old Diary -> New Diary
+  const filtersRef = fuegoDb.collection(`/users/${uid}/filters`).doc("diary");
+  let setObj: Partial<fuego.firestore.DocumentData>;
+
+  // TODO: This works for now, because we don't have the MEMORIES, feature. But
+  // We'll have to come back to this because when we add it, we'll have a weird
+  // state where this WILL be null for PREV and CURRENT
+  if (prevData.diaryYear === null && data.diaryYear !== null) {
+    const filtersKeys = createFilterKeys(data);
+    setObj = createFilterSet(filtersKeys, 1);
+  } else {
+    setObj = createFilterEditSet(data, prevData, [
+      "rating",
+      "releasedDecade",
+      "loggedBefore",
+      "diaryYear",
+      "releasedYear",
+    ]);
+  }
+  if (setObj) {
+    filtersRef.set(setObj, { merge: true });
+  }
 
   if (data.bookmark) {
     const bookmarkKeys = bookmarkFilterKeys(data);
