@@ -1,19 +1,28 @@
 import { createContext, useContext } from "react";
-import type { FilterState } from "../types/typesFilters";
+import type { FilterBookmarkState, FilterState } from "../types/typesFilters";
 import type { MediaDiaryWithId, MediaSelected } from "../types/typesMedia";
 import type { UserFuegoPref } from "../types/typesUser";
 
-export interface MDState extends FilterState {
+export interface MDState {
   preference: UserFuegoPref;
   isSaving?: boolean;
-  view?: "search" | "log" | "edit" | "day" | "md" | "activity" | "info";
+  view?:
+    | "search"
+    | "log"
+    | "edit"
+    | "md"
+    | "activity"
+    | "selected"
+    | "selectedWithId";
   selected?: MediaSelected;
   edit?: MediaDiaryWithId;
+  diaryFilters: FilterState | null;
+  bookmarkFilters: FilterBookmarkState | null;
 }
 
-type MDActions =
+export type MDActions =
   | {
-      type: "log" | "info" | "selected";
+      type: "log" | "selected" | "selectedReplace";
       payload: MDState["selected"];
     }
   | {
@@ -25,7 +34,7 @@ type MDActions =
       payload: MDState["view"];
     }
   | {
-      type: "day" | "savedEdit";
+      type: "selectedWithId" | "savedEdit";
       payload: MDState["edit"];
     }
   | {
@@ -33,18 +42,11 @@ type MDActions =
       payload: MDState["preference"];
     }
   | {
-      type: "saved" | "saving" | "dayClose";
+      type: "saved" | "savedd" | "saving" | "dayClose";
     }
   | {
       type: "filter";
-      payload: {
-        mediaType: MDState["mediaType"];
-        rating: MDState["rating"];
-        releasedDecade: MDState["releasedDecade"];
-        diaryYear: MDState["diaryYear"];
-        loggedBefore: MDState["loggedBefore"];
-        genre: MDState["genre"];
-      };
+      payload: FilterState;
     }
   | {
       type: "state";
@@ -66,12 +68,7 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
       return {
         ...state,
         view: "md",
-        mediaType: actions.payload.mediaType,
-        rating: actions.payload.rating,
-        diaryYear: actions.payload.diaryYear,
-        releasedDecade: actions.payload.releasedDecade,
-        loggedBefore: actions.payload.loggedBefore,
-        genre: actions.payload.genre,
+        diaryFilters: actions.payload,
       };
     }
     case "saving": {
@@ -80,11 +77,17 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
         isSaving: true,
       };
     }
+    case "savedd": {
+      return {
+        ...state,
+        isSaving: false,
+      };
+    }
     case "savedEdit": {
       return {
         ...state,
         isSaving: false,
-        view: "day",
+        view: "selectedWithId",
         edit: actions.payload,
       };
     }
@@ -118,32 +121,35 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
         edit: undefined,
       };
     }
-    case "info": {
-      return {
-        ...state,
-        selected: actions.payload,
-        view: "info",
-        edit: undefined,
-      };
-    }
     case "selected": {
       return {
         ...state,
+        view: "selected",
         selected: actions.payload,
+        edit: undefined,
+        isSaving: false,
       };
     }
-    case "day": {
+    case "selectedWithId": {
       return {
         ...state,
-        view: "day",
+        view: "selectedWithId",
         selected: undefined,
         edit: actions.payload,
+      };
+    }
+    case "selectedReplace": {
+      return {
+        ...state,
+        selected: actions.payload,
       };
     }
     case "edit": {
       return {
         ...state,
         view: "edit",
+        selected: undefined,
+        edit: actions.payload,
       };
     }
     default:
@@ -153,12 +159,8 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
 
 export const ContextState = createContext<MDState>({
   preference: null,
-  genre: null,
-  loggedBefore: null,
-  mediaType: null,
-  rating: null,
-  diaryYear: null,
-  releasedDecade: null,
+  diaryFilters: null,
+  bookmarkFilters: null,
 });
 
 export const ContextDispatch = createContext<(props: MDActions) => void>(

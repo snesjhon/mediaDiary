@@ -6,7 +6,7 @@ import type { LogState } from "../../config/storeLog";
 import { LogReducer } from "../../config/storeLog";
 import { fuegoDiaryAdd } from "../../fuego/fuegoMDActions";
 import useFuegoUser from "../../fuego/useFuegoUser";
-import type { MediaDiary } from "../../types/typesMedia";
+import type { MediaDiaryDate } from "../../types/typesMedia";
 import { parsePosterUrl } from "../../utils/helpers";
 import InfoFields from "../info/InfoFields";
 import InfoHeader from "../info/InfoHeader";
@@ -39,9 +39,11 @@ function ContentLog(): JSX.Element {
         selected.seasons[0].poster_path !== null
       ) {
         mdDispatch({
-          type: "selected",
+          type: "selectedReplace",
           payload: {
             ...selected,
+            season: selected.seasons[0].season_number,
+            episodes: selected.seasons[0].episode_count,
             poster: parsePosterUrl(selected.seasons[0].poster_path, "tv"),
           },
         });
@@ -100,7 +102,7 @@ function ContentLog(): JSX.Element {
     }
   }
 
-  function createDiary(): MediaDiary | false {
+  function createDiary(): MediaDiaryDate | false {
     if (selected) {
       const {
         mediaId,
@@ -121,6 +123,9 @@ function ContentLog(): JSX.Element {
         poster,
         mediaId,
         diaryDate,
+        // this is because regardless of whether this is true or not, an item is no longer
+        // bookmarked whenever we add it as an diaryItem
+        bookmark: false,
         diaryYear: parseInt(dayjs(diaryDate).format("YYYY")),
         addedDate: dayjs().toISOString(),
         loggedBefore,

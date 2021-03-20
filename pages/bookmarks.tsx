@@ -1,16 +1,17 @@
 import { useRouter } from "next/router";
 import React from "react";
+import Bookmarks from "../src/components/Bookmarks";
 import Content from "../src/components/content/Content";
 import MdLoader from "../src/components/md/MdLoader";
-import Home from "../src/components/Home";
 import UserNew from "../src/components/user/UserNew";
 import useFuegoAuth from "../src/fuego/useFuegoAuth";
 
 /**
- * Home Route is our initial entrance portal to MD which will also redirect if not
- * validated, and show NewUserFlow depending on Preference validity
+ * Activity Route presents the user with the Charting interface for their
+ * MediaDiary memories. In case there's no preferences, there's also a
+ * NewUserFlow available.
  */
-function HomePage(): JSX.Element {
+function BookmarksPage(): JSX.Element {
   const {
     userValid,
     userValidHasPreference,
@@ -29,12 +30,12 @@ function HomePage(): JSX.Element {
     return <UserNew user={userValid} />;
   } else if (userValidHasPreference) {
     return (
-      <Content title="Home">
-        <Home user={userValidHasPreference} />
+      <Content title="Bookmarks">
+        <Bookmarks user={userValidHasPreference} />
       </Content>
     );
   }
   return <MdLoader />;
 }
 
-export default HomePage;
+export default BookmarksPage;

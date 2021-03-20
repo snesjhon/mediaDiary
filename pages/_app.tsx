@@ -12,12 +12,8 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const [state, dispatch] = useReducer(Reducer, {
     preference: null,
     view: "md",
-    mediaType: null,
-    genre: null,
-    loggedBefore: null,
-    rating: null,
-    diaryYear: null,
-    releasedDecade: null,
+    diaryFilters: null,
+    bookmarkFilters: null,
   } as MDState);
   return (
     <>

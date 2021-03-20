@@ -47,12 +47,12 @@ function Home({ user }: { user: UserFuegoValidated }): JSX.Element {
         "/fuego/diary",
         user.uid,
         prev !== null ? prev[prev.length - 1].diaryDate : null,
-        state.mediaType,
-        state.rating,
-        state.releasedDecade,
-        state.diaryYear,
-        state.loggedBefore,
-        state.genre,
+        state.diaryFilters?.mediaType ?? null,
+        state.diaryFilters?.rating ?? null,
+        state.diaryFilters?.releasedDecade ?? null,
+        state.diaryFilters?.diaryYear ?? null,
+        state.diaryFilters?.loggedBefore ?? null,
+        state.diaryFilters?.genre ?? null,
       ];
     },
     fuegoDiaryGet,
@@ -87,9 +87,7 @@ function Home({ user }: { user: UserFuegoValidated }): JSX.Element {
 
   // There's an error on the list, or the list is empty
   if (error) {
-    if (error) {
-      console.error(error);
-    }
+    console.error(error);
     return <div>An Error Happened</div>;
   }
 
@@ -103,11 +101,14 @@ function Home({ user }: { user: UserFuegoValidated }): JSX.Element {
   }
 
   if (data) {
+    // TODO: Refactor.. Something about SWRInfinite throws a TS error
     const allData = data ? ([] as MediaDiaryWithId[]).concat(...data) : [];
 
     const diaryDates: ListState = allData.reduce<ListState>((a, c) => {
-      const dateString = dayjs(c.diaryDate).format("YYYY-MM");
-      a[dateString] = Object.assign({ ...a[dateString] }, { [c.id]: c });
+      if (c.diaryDate) {
+        const dateString = dayjs(c.diaryDate).format("YYYY-MM");
+        a[dateString] = Object.assign({ ...a[dateString] }, { [c.id]: c });
+      }
       return a;
     }, {});
 
@@ -159,6 +160,7 @@ function Home({ user }: { user: UserFuegoValidated }): JSX.Element {
                     season,
                     seenEpisodes,
                   } = diaryDates[month][day];
+                  const diaryDate = diaryDates[month][day].diaryDate;
                   return (
                     <Grid
                       gridTemplateColumns={{
@@ -176,7 +178,7 @@ function Home({ user }: { user: UserFuegoValidated }): JSX.Element {
                       }}
                       onClick={() =>
                         dispatch({
-                          type: "day",
+                          type: "selectedWithId",
                           payload: diaryDates[month][day],
                         })
                       }
@@ -188,11 +190,11 @@ function Home({ user }: { user: UserFuegoValidated }): JSX.Element {
                             colorMode === "light" ? "gray.500" : "gray.300"
                           }
                         >
-                          {new Date(
-                            diaryDates[month][day].diaryDate
-                          ).toLocaleDateString("en-us", {
-                            day: "numeric",
-                          })}
+                          {diaryDate !== null
+                            ? new Date(diaryDate).toLocaleDateString("en-us", {
+                                day: "numeric",
+                              })
+                            : "No Date"}
                         </Text>
                       </Box>
                       <Box>

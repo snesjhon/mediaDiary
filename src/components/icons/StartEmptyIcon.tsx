@@ -4,7 +4,16 @@ import { Icon } from "@chakra-ui/react";
 
 function StarEmptyIcon(props: IconProps): JSX.Element {
   return (
-    <Icon viewBox="0 0 11 11" fill="none" strokeMiterlimit="10" {...props}>
+    <Icon
+      viewBox="0 0 11 11"
+      fill="none"
+      strokeMiterlimit="10"
+      stroke="currentColor"
+      strokeWidth="1"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
       <path
         d="M10.5,4.1c-0.1-0.3-0.3-0.4-0.6-0.4H7.2C7.2,3.7,7.1,3.6,7,3.5L6.1,0.9C6,0.6,5.6,0.4,5.3,0.5
 	C5.1,0.6,5,0.7,4.9,0.9l0,0L4,3.5c0,0.1-0.1,0.1-0.2,0.1H1.1C0.8,3.7,0.5,4,0.5,4.3c0,0.2,0.1,0.4,0.2,0.5L3,6.6
