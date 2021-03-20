@@ -26,7 +26,7 @@ import useSWR from "swr";
 import { useMDDispatch, useMDState } from "../../config/store";
 import { fuegoFiltersAll } from "../../fuego/fuegoFilterActions";
 import useFuegoUser from "../../fuego/useFuegoUser";
-import type { FilterData, Filters } from "../../types/typesFilters";
+import type { FilterData, FilterDiary } from "../../types/typesFilters";
 import type { MediaType } from "../../types/typesMedia";
 import { capFormat } from "../../utils/helpers";
 import AlbumIcon from "../icons/AlbumIcon";
@@ -98,14 +98,15 @@ function FiltersData({
   data: FilterData;
   onClose: () => void;
 }) {
-  const {
-    mediaType,
-    rating,
-    diaryYear,
-    releasedDecade,
-    loggedBefore,
-    genre,
-  } = useMDState();
+  const { diaryFilters } = useMDState();
+  // Using optional chaining and nullish because I want to ALWAYS return null if diaryFilters undefined
+  const mediaType = diaryFilters?.mediaType ?? null;
+  const rating = diaryFilters?.rating ?? null;
+  const diaryYear = diaryFilters?.diaryYear ?? null;
+  const releasedDecade = diaryFilters?.releasedDecade ?? null;
+  const loggedBefore = diaryFilters?.loggedBefore ?? null;
+  const genre = diaryFilters?.genre ?? null;
+
   const dispatch = useMDDispatch();
 
   const { colorMode } = useColorMode();
@@ -357,6 +358,7 @@ function FiltersData({
                     ? parseInt(ratingKey) / 2
                     : null,
                 releasedDecade: localReleasedDecade,
+                releasedYear: null, // TODO: This isn't implemented, but needed for the Type
                 diaryYear: localDiaryYear,
               },
             });
@@ -368,7 +370,9 @@ function FiltersData({
     </>
   );
 
-  function createMediaKeys(type: keyof Omit<Filters, "diaryYear">): string[] {
+  function createMediaKeys(
+    type: keyof Omit<FilterDiary, "diaryYear">
+  ): string[] {
     return Object.keys(data[type])
       .filter((e) =>
         localDiaryYear === null ? e : parseInt(e) === localDiaryYear

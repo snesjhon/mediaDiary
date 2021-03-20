@@ -1,13 +1,13 @@
 import { Button, Center, DrawerBody, DrawerFooter } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React, { useReducer } from "react";
-import { mutate } from "swr";
+import { cache, mutate } from "swr";
 import { useMDDispatch, useMDState } from "../../config/store";
 import type { LogState } from "../../config/storeLog";
 import { LogReducer } from "../../config/storeLog";
 import { fuegoDelete, fuegoEdit } from "../../fuego/fuegoMDActions";
 import useFuegoUser from "../../fuego/useFuegoUser";
-import type { MediaDiaryWithId } from "../../types/typesMedia";
+import type { MediaDiaryDate, MediaDiaryWithId } from "../../types/typesMedia";
 import InfoFields from "../info/InfoFields";
 import InfoHeader from "../info/InfoHeader";
 import MdSpinner from "../md/MdSpinner";
@@ -24,7 +24,13 @@ function ContentEdit(): JSX.Element {
     rating: 0,
   };
   if (typeof edit !== "undefined") {
-    initData = edit;
+    // TODO: edit date shouldn't HAVE to be null
+    if (edit.diaryDate !== null) {
+      initData = {
+        ...edit,
+        diaryDate: edit.diaryDate,
+      };
+    }
   }
 
   const [state, dispatch] = useReducer(LogReducer, initData);
@@ -84,10 +90,10 @@ function ContentEdit(): JSX.Element {
       mdDispatch({ type: "saving" });
       const diaryEdit = createEdit();
       if (diaryEdit) {
-        await fuegoEdit(user.uid, edit.id, diaryEdit, edit);
+        await fuegoEdit(user.uid, edit.id, diaryEdit, edit as MediaDiaryDate);
         mdDispatch({
           type: "savedEdit",
-          payload: diaryEdit,
+          payload: diaryEdit as MediaDiaryWithId,
         });
         mutate(["/fuego/diaryDay", user.uid, edit.id]);
       } else {
@@ -98,7 +104,7 @@ function ContentEdit(): JSX.Element {
     }
   }
 
-  function createEdit(): MediaDiaryWithId | false {
+  function createEdit(): MediaDiaryDate | false {
     if (typeof edit !== "undefined") {
       const editItem = {
         ...edit,
@@ -124,7 +130,17 @@ function ContentEdit(): JSX.Element {
       user.email !== null
     ) {
       mdDispatch({ type: "saving" });
-      await fuegoDelete(user.uid, edit.id, edit);
+      // In the case where we're deleting the item completely, we need to assure that our PREVIOUS
+      // fetch case is refetched, the easiest way to assure this is to clear the cache.
+      cache.delete([
+        "/fuego/diaryById",
+        user.uid,
+        edit.type,
+        edit.mediaId,
+        edit.season ? edit.season : -1,
+      ]);
+      // TODO: we have to assure to breakup the "edit" types, to assure we're editing the types correctly
+      await fuegoDelete(user.uid, edit.id, edit as MediaDiaryDate);
       mdDispatch({ type: "view", payload: "md" });
       mdDispatch({ type: "saved" });
     } else {

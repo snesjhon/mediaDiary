@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
-import type { FilterData, Filters } from "../types/typesFilters";
-import type { MediaDiary } from "../types/typesMedia";
+import type { FilterData, FilterDiary } from "../types/typesFilters";
+import type { MediaDiaryDate } from "../types/typesMedia";
 import { fuegoDb } from "./fuego";
 
 export async function fuegoFiltersAll(
@@ -23,11 +23,11 @@ export async function fuegoFiltersAll(
 }
 
 export function createFilterSet(
-  filters: Filters,
+  filters: FilterDiary,
   incrementor: number
 ): Partial<firebase.firestore.DocumentData> {
   const setObj: Partial<firebase.firestore.DocumentData> = {};
-  (Object.keys(filters) as Array<keyof Filters>).forEach((e) => {
+  (Object.keys(filters) as Array<keyof FilterDiary>).forEach((e) => {
     if (e === "diaryYear" && filters[e] !== null) {
       setObj[e] = {
         [`${filters[e]}`]: firebase.firestore.FieldValue.increment(incrementor),
@@ -46,9 +46,9 @@ export function createFilterSet(
 }
 
 export function createFilterEditSet(
-  data: MediaDiary,
-  prevData: MediaDiary,
-  comparison: Array<keyof Filters>
+  data: MediaDiaryDate,
+  prevData: MediaDiaryDate,
+  comparison: Array<keyof FilterDiary>
 ): Partial<firebase.firestore.DocumentData> {
   const newKeys = createFilterKeys(data);
   const oldKeys = createFilterKeys(prevData);
@@ -57,7 +57,7 @@ export function createFilterEditSet(
   // if not then go through just the comparisons.
   const setObj: Partial<firebase.firestore.DocumentData> = {};
   if (newKeys.diaryYear !== oldKeys.diaryYear) {
-    (Object.keys(newKeys) as Array<keyof Filters>).forEach((e) => {
+    (Object.keys(newKeys) as Array<keyof FilterDiary>).forEach((e) => {
       if (e === "diaryYear") {
         setObj[e] = {
           [`${oldKeys[e]}`]: firebase.firestore.FieldValue.increment(-1),
@@ -97,7 +97,7 @@ export function createFilterEditSet(
   return setObj;
 }
 
-export function createFilterKeys(data: MediaDiary): Filters {
+export function createFilterKeys(data: MediaDiaryDate): FilterDiary {
   const releasedDecade = data.releasedDecade;
   const releasedYear = data.releasedYear;
   const diaryYear = data.diaryYear;
