@@ -15,7 +15,7 @@ function MdLogo({
     <Flex align="center">
       <LogoIcon boxSize={5} mr={1} color={mdPurple} />
       {typeof href !== "undefined" ? (
-        <Link href="/home">
+        <Link href={href}>
           <Text
             fontSize={{ base: "md", md: "xl" }}
             color={mdPurple}
