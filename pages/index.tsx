@@ -8,6 +8,7 @@ import UserNew from "../src/components/user/UserNew";
 import Welcome from "../src/components/Welcome";
 import useFuegoUser from "../src/fuego/useFuegoUser";
 import fuego from "../src/fuego/fuego";
+import useSupaUser from "../src/supa/useSupaUser";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const cookies = parseCookies(context);
@@ -26,37 +27,44 @@ function App({
   fuegoPending,
   fuegoNewUser,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
-  const [isNewUser, setIsNewUser] = useState(fuegoNewUser);
+  // const [isNewUser, setIsNewUser] = useState(fuegoNewUser);
   const router = useRouter();
-  const { user, isValidating } = useFuegoUser();
+  const { user } = useSupaUser();
+  console.log(user, fuegoPending);
+  // const { user, isValidating } = useFuegoUser();
 
   useEffect(() => {
     if (fuegoPending) {
       destroyCookie(undefined, "fuegoPending");
-      fuego
-        .auth()
-        .getRedirectResult()
-        .then(async ({ additionalUserInfo, user }) => {
-          if (user !== null) {
-            if (additionalUserInfo?.isNewUser) {
-              setCookie(null, "fuegoNewUser", "true", {
-                maxAge: 60 * 60,
-                path: "/",
-              });
-              setIsNewUser(user);
-            } else {
-              router.push("/home");
-            }
-          }
-        });
     }
-  }, [fuegoPending, router]);
+  }, [fuegoPending]);
+  // useEffect(() => {
+  //   if (fuegoPending) {
+  //     destroyCookie(undefined, "fuegoPending");
+  //     fuego
+  //       .auth()
+  //       .getRedirectResult()
+  //       .then(async ({ additionalUserInfo, user }) => {
+  //         if (user !== null) {
+  //           if (additionalUserInfo?.isNewUser) {
+  //             setCookie(null, "fuegoNewUser", "true", {
+  //               maxAge: 60 * 60,
+  //               path: "/",
+  //             });
+  //             setIsNewUser(user);
+  //           } else {
+  //             router.push("/home");
+  //           }
+  //         }
+  //       });
+  //   }
+  // }, [fuegoPending, router]);
 
-  if ((fuegoPending && user === null) || isValidating) {
+  if (fuegoPending && user === null) {
     return <MdLoader />;
-  } else if ((fuegoPending || fuegoNewUser) && user && isNewUser) {
-    destroyCookie(null, "fuegoNewUser");
-    return <UserNew user={user} />;
+    // } else if ((fuegoPending || fuegoNewUser) && user && isNewUser) {
+    //   destroyCookie(null, "fuegoNewUser");
+    //   return <UserNew user={user} />;
   } else if (user) {
     router.push("/home");
     return <MdLoader />;

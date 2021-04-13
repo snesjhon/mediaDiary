@@ -19,6 +19,7 @@ import Link from "next/link";
 import { setCookie } from "nookies";
 import React, { useState } from "react";
 import fuego from "../fuego/fuego";
+import supa from "../supa";
 import LogoIcon from "./icons/LogoIcon";
 import Layout from "./layouts/Layout";
 
@@ -99,16 +100,19 @@ function Welcome(): JSX.Element {
     </>
   );
 
-  function login() {
-    const provider = new fuego.auth.GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: "select_account" });
-    fuego
-      .auth()
-      .setPersistence(fuego.auth.Auth.Persistence.LOCAL)
-      .then(() => {
-        setCookie(null, "fuegoPending", "true", {});
-        fuego.auth().signInWithRedirect(provider);
-      });
+  async function login() {
+    setCookie(null, "fuegoPending", "true", {});
+    await supa.auth.signIn({
+      provider: "google",
+    });
+    // const provider = new fuego.auth.GoogleAuthProvider();
+    // provider.setCustomParameters({ prompt: "select_account" });
+    // fuego
+    //   .auth()
+    //   .setPersistence(fuego.auth.Auth.Persistence.LOCAL)
+    //   .then(() => {
+    //     fuego.auth().signInWithRedirect(provider);
+    //   });
   }
 }
 export default Welcome;
