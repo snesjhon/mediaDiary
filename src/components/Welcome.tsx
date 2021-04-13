@@ -16,14 +16,20 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { setCookie } from "nookies";
+import { useRouter } from "next/router";
+// import { setCookie } from "nookies";
 import React, { useState } from "react";
-import fuego from "../fuego/fuego";
+import { useSupaAuth } from "../supa/supaProvider";
+// import fuego from "../fuego/fuego";
+// import supabase from "../fuego/fuego";
 import LogoIcon from "./icons/LogoIcon";
 import Layout from "./layouts/Layout";
 
 function Welcome(): JSX.Element {
-  const [showModal, setShowModal] = useState(false);
+  // const [showModal, setShowModal] = useState(false);
+
+  const router = useRouter();
+  // const { signIn } = useSupaAuth();
   return (
     <>
       <Box as="header" bg="white" width="full">
@@ -43,7 +49,8 @@ function Welcome(): JSX.Element {
                 size="sm"
                 colorScheme="purple"
                 variant="outline"
-                onClick={() => setShowModal(true)}
+                // onClick={() => setShowModal(true)}
+                onClick={() => router.push("/signin")}
               >
                 Sign In
               </Button>
@@ -64,7 +71,8 @@ function Welcome(): JSX.Element {
                 <Button
                   colorScheme="purple"
                   mt="24px"
-                  onClick={() => setShowModal(true)}
+                  // onClick={() => setShowModal(true)}
+                  onClick={() => router.push("/signin")}
                 >
                   Sign Up
                 </Button>
@@ -76,7 +84,7 @@ function Welcome(): JSX.Element {
           </Grid>
         </Box>
       </Layout>
-      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+      {/* <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         <ModalOverlay>
           <ModalContent>
             <ModalCloseButton />
@@ -88,27 +96,31 @@ function Welcome(): JSX.Element {
                 Signin
               </Heading>
               <VStack align="stretch" spacing={4}>
-                <Button onClick={login}>Sign In with Google</Button>
+                <Button onClick={signIn}>Sign In with Google</Button>
                 <Button>Sign In with Twitter</Button>
               </VStack>
               <br />
             </ModalBody>
           </ModalContent>
         </ModalOverlay>
-      </Modal>
+      </Modal> */}
     </>
   );
 
-  function login() {
-    const provider = new fuego.auth.GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: "select_account" });
-    fuego
-      .auth()
-      .setPersistence(fuego.auth.Auth.Persistence.LOCAL)
-      .then(() => {
-        setCookie(null, "fuegoPending", "true", {});
-        fuego.auth().signInWithRedirect(provider);
-      });
-  }
+  // async function login() {
+  //   await supabase.auth.signIn({
+  //     provider: "google",
+  //   });
+  // console.log("user", user, session, error);
+  // const provider = new fuego.auth.GoogleAuthProvider();
+  // provider.setCustomParameters({ prompt: "select_account" });
+  // fuego
+  //   .auth()
+  //   .setPersistence(fuego.auth.Auth.Persistence.LOCAL)
+  //   .then(() => {
+  //     setCookie(null, "fuegoPending", "true", {});
+  //     fuego.auth().signInWithRedirect(provider);
+  //   });
+  // }
 }
 export default Welcome;

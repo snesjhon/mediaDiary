@@ -6,7 +6,8 @@ import Head from "next/head";
 import React, { useReducer } from "react";
 import type { MDState } from "../src/config/store";
 import { ContextDispatch, ContextState, Reducer } from "../src/config/store";
-import { FuegoProvider } from "../src/fuego/fuegoProvider";
+import SupaProvider from "../src/supa/supaProvider";
+// import { FuegoProvider } from "../src/fuego/fuegoProvider";
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const [state, dispatch] = useReducer(Reducer, {
@@ -28,7 +29,8 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <title>MediaDiary</title>
       </Head>
-      <FuegoProvider>
+      {/* <FuegoProvider> */}
+      <SupaProvider>
         <ContextState.Provider value={state}>
           <ContextDispatch.Provider value={dispatch}>
             <ChakraProvider resetCSS>
@@ -36,7 +38,8 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
             </ChakraProvider>
           </ContextDispatch.Provider>
         </ContextState.Provider>
-      </FuegoProvider>
+      </SupaProvider>
+      {/* </FuegoProvider> */}
     </>
   );
 }

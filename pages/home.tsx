@@ -11,29 +11,29 @@ import useFuegoAuth from "../src/fuego/useFuegoAuth";
  * validated, and show NewUserFlow depending on Preference validity
  */
 function HomePage(): JSX.Element {
-  const {
-    userValid,
-    userValidHasPreference,
-    userNoPreference,
-    userNotValid,
-    userValidating,
-  } = useFuegoAuth();
-  const router = useRouter();
+  // const {
+  //   userValid,
+  //   userValidHasPreference,
+  //   userNoPreference,
+  //   userNotValid,
+  //   userValidating,
+  // } = useFuegoAuth();
+  // const router = useRouter();
 
-  if (userNotValid) {
-    if (typeof window !== "undefined") {
-      router.push("/");
-    }
-    return <MdLoader />;
-  } else if (!userValidating && userValid && userNoPreference) {
-    return <UserNew user={userValid} />;
-  } else if (userValidHasPreference) {
-    return (
-      <Content title="Home">
-        <Home user={userValidHasPreference} />
-      </Content>
-    );
-  }
+  // if (userNotValid) {
+  //   if (typeof window !== "undefined") {
+  //     router.push("/");
+  //   }
+  //   return <MdLoader />;
+  // } else if (!userValidating && userValid && userNoPreference) {
+  //   return <UserNew user={userValid} />;
+  // } else if (userValidHasPreference) {
+  //   return (
+  //     <Content title="Home">
+  //       <Home user={userValidHasPreference} />
+  //     </Content>
+  //   );
+  // }
   return <MdLoader />;
 }
 
