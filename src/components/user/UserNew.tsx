@@ -1,11 +1,11 @@
 import { Box, Flex, Heading, Square, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import type { UserFuegoValidated } from "../../types/typesUser";
+import type { UserSupaValidated } from "../../types/typesUser";
 import LogoIcon from "../icons/LogoIcon";
 import UserPreference from "./UserPreference";
 
-function UserNew({ user }: { user: UserFuegoValidated }): JSX.Element {
+function UserNew({ user }: { user: UserSupaValidated }): JSX.Element {
   const router = useRouter();
   const [isRedirecting, setIsRedirecting] = useState(false);
   useEffect(() => {
@@ -18,7 +18,7 @@ function UserNew({ user }: { user: UserFuegoValidated }): JSX.Element {
       <Box>
         <Flex alignItems="center" mb={2}>
           <LogoIcon boxSize={8} color="purple.700" />
-          <Heading ml={2}>Hi, {user.displayName}</Heading>
+          <Heading ml={2}>Hi, {user.email}</Heading>
         </Flex>
         <Text fontSize="2xl" fontWeight="semibold">
           Welcome to mediaDiary

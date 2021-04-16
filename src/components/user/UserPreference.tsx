@@ -13,11 +13,14 @@ import React, { useEffect, useState } from "react";
 import { MEDIA_TYPES } from "../../config/contants";
 import { useMDDispatch, useMDState } from "../../config/store";
 import { fuegoSetPreferences } from "../../fuego/fuegoMDActions";
+import supa from "../../supa";
 import type { MediaTypesArr } from "../../types/typesMedia";
 import type {
   UserFuegoPref,
   UserFuegoValidated,
   UserPref,
+  UserSupaPref,
+  UserSupaValidated,
 } from "../../types/typesUser";
 import { createMediaTypes, createMediaTypesArr } from "../../utils/helpers";
 
@@ -26,8 +29,8 @@ function UserPreference({
   preference,
   cb,
 }: {
-  user: UserFuegoValidated;
-  preference?: UserFuegoPref;
+  user: UserSupaValidated;
+  preference?: UserSupaPref;
   cb?: () => void;
 }): JSX.Element {
   const hasPreference =
@@ -91,11 +94,13 @@ function UserPreference({
     if (value.length >= 1) {
       try {
         dispatch({ type: "saving" });
+        // const mediaTypes = createMediaTypes(value as MediaTypesArr);
         const preference = {
           mediaTypes: createMediaTypes(value as MediaTypesArr),
           theme,
         };
-        await fuegoSetPreferences(user.uid, preference);
+        // await fuegoSetPreferences(user.id, preference);
+        await supa.from("users").insert([{ uuid: user.id, ...preference }]);
         if (cb) {
           cb();
         }

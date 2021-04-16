@@ -1,12 +1,15 @@
+import type { User } from "@supabase/gotrue-js";
 import React, { createContext, useEffect, useRef, useState } from "react";
 import supa from ".";
 
-export const SupaContext = createContext<{
-  user: any;
-  // isValidating: boolean;
-}>({
+export interface SupaUser {
+  user: User | null;
+  isValidating: boolean;
+}
+
+export const SupaContext = createContext<SupaUser>({
   user: null,
-  // isValidating: true,
+  isValidating: true,
 });
 
 export function SupaProvider({
@@ -14,7 +17,7 @@ export function SupaProvider({
 }: {
   children: JSX.Element;
 }): JSX.Element {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<SupaUser["user"]>(null);
   const [isLoading, setIsLoading] = useState(true);
   // const isValidating = useRef(true);
 
@@ -36,7 +39,7 @@ export function SupaProvider({
   }, []);
 
   return (
-    <SupaContext.Provider value={{ user }}>
+    <SupaContext.Provider value={{ user, isValidating: isLoading }}>
       {!isLoading && children}
     </SupaContext.Provider>
   );

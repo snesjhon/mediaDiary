@@ -1,10 +1,8 @@
 import { useContext } from "react";
-import type { UserFuego } from "../types/typesUser";
 import { SupaContext } from "./supaProvider";
+import type { SupaUser } from "./supaProvider";
 
-function useSupaUser(): {
-  user: UserFuego;
-} {
+function useSupaUser(): SupaUser {
   return useContext(SupaContext);
 }
 

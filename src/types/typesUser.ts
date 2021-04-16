@@ -1,3 +1,4 @@
+import type { User } from "@supabase/gotrue-js";
 import type fuego from "../fuego/fuego";
 import type { MediaTypes } from "./typesMedia";
 
@@ -18,3 +19,7 @@ export type UserFuegoValidated = fuego.User;
 
 /** User's preferences */
 export type UserFuegoPref = UserPref | null | false;
+
+export type UserSupa = User | null | false;
+export type UserSupaValidated = User;
+export type UserSupaPref = UserPref | null | false;

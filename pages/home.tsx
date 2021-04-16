@@ -5,6 +5,7 @@ import MdLoader from "../src/components/md/MdLoader";
 import Home from "../src/components/Home";
 import UserNew from "../src/components/user/UserNew";
 import useFuegoAuth from "../src/fuego/useFuegoAuth";
+import useSupaAuth from "../src/supa/useSupaAuth";
 
 /**
  * Home Route is our initial entrance portal to MD which will also redirect if not
@@ -17,7 +18,7 @@ function HomePage(): JSX.Element {
     userNoPreference,
     userNotValid,
     userValidating,
-  } = useFuegoAuth();
+  } = useSupaAuth();
   const router = useRouter();
 
   if (userNotValid) {
@@ -30,7 +31,8 @@ function HomePage(): JSX.Element {
   } else if (userValidHasPreference) {
     return (
       <Content title="Home">
-        <Home user={userValidHasPreference} />
+        <div>asd</div>
+        {/* <Home user={userValidHasPreference} /> */}
       </Content>
     );
   }
