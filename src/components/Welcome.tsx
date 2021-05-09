@@ -25,12 +25,18 @@ import {
 } from "@chakra-ui/react";
 import { setCookie } from "nookies";
 import React, { useState } from "react";
+import type { IconProps } from "@chakra-ui/react";
+import type { ComponentType } from "react";
 import fuego from "../fuego/fuego";
 import ActivityIcon from "./icons/ActivityIcon";
 import BookmarkIcon from "./icons/BookmarkIcon";
 import LogoIcon from "./icons/LogoIcon";
 import Layout from "./layouts/Layout";
+import LayoutFooter from "./layouts/LayoutFooter";
 import MdLogo from "./md/MdLogo";
+import TvIcon from "./icons/TvIcon";
+import FilmIcon from "./icons/FilmIcon";
+import AlbumIcon from "./icons/AlbumIcon";
 
 const fade = keyframes`
      0%,50% {
@@ -68,7 +74,7 @@ const features: FeaturesObj = {
     image: "something ",
   },
   memories: {
-    title: "memories",
+    title: "Mobile",
     description:
       "The more you record the better your stats get. Over the year or years. Your data drives these charts. Find out what works for you.",
     image: "something ",
@@ -107,14 +113,19 @@ function Welcome(): JSX.Element {
                 <MdLogo title="mediaDiary" href="/" />
               </Flex>
               <Flex maxW="720px" align="center">
-                <HStack spacing="2">
+                <HStack spacing={3}>
                   <IconButton
                     onClick={toggleColorMode}
                     aria-label="Theme Switcher"
                     icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-                    size="sm"
-                    variant="outline"
+                    variant="ghost"
                   />
+                  <Button colorScheme="purple" variant="ghost">
+                    Login
+                  </Button>
+                  <Button colorScheme="purple" variant="outline">
+                    Sign Up
+                  </Button>
                 </HStack>
               </Flex>
             </Flex>
@@ -171,21 +182,51 @@ function Welcome(): JSX.Element {
             <Flex justifyContent="center">
               <Image
                 w={{ base: "1rem", sm: "20rem", lg: "100%" }}
-                src="/home_d.png"
+                src={colorMode === "light" ? "/home_w.png" : "/home_d.png"}
               />
             </Flex>
           </Grid>
         </Box>
-        <Divider my={10} />
-        <Center>
-          <Heading size="md">mediaDiary is much simpler to use</Heading>
-        </Center>
-        <Grid gridTemplateColumns="1fr 1fr" gridGap="7rem" pt={20} pb={10}>
+        <Divider mt={10} />
+        <Grid
+          gridTemplateColumns="1fr 1fr"
+          gridGap="7rem"
+          pt={10}
+          pb={10}
+          alignItems="center"
+        >
           <Box>
             <Heading size="lg">Track Everything</Heading>
             <Text>
               Are you tired of only being able to track a single piece of media?{" "}
+              Start tracking any of these with mediaDiary:
             </Text>
+            <Box pt={5}>
+              <Flex alignItems="center">
+                <FilmIcon boxSize={4} color={mdPurple} />
+                <Text ml={3} fontWeight="semibold">
+                  Movies
+                </Text>
+              </Flex>
+              <Flex alignItems="center" py={2}>
+                <TvIcon boxSize={4} color={mdPurple} />
+                <Text ml={3} fontWeight="semibold">
+                  TV
+                </Text>
+              </Flex>
+              <Flex alignItems="center">
+                <AlbumIcon boxSize={4} color={mdPurple} />
+                <Text ml={3} fontWeight="semibold">
+                  Albums
+                </Text>
+              </Flex>
+              <Flex alignItems="center" py={2}>
+                <FilmIcon boxSize={4} color={mdPurple} />
+                <Text ml={3} fontWeight="semibold">
+                  More to come...
+                </Text>
+              </Flex>
+            </Box>
           </Box>
           <Box>
             <Image src="/welcome1.png" />
@@ -193,49 +234,25 @@ function Welcome(): JSX.Element {
         </Grid>
         <Divider my={10} />
         <Grid gridTemplateColumns="1fr 1fr 1fr" gridGap={7}>
-          <Box>
-            <ActivityIcon boxSize={8} />
-            <Text fontSize="lg" color="purple.500" fontWeight="bold">
-              Analytics
-            </Text>
-            <Text>
-              A complete overview of all of your media as you start adding and
-              viewing data
-            </Text>
-          </Box>
-          <Box>
-            <BookmarkIcon boxSize={8} />
-            <Text fontSize="lg" color="purple.500" fontWeight="bold" py={3}>
-              Bookmarks
-            </Text>
-            <Text>
-              A complete overview of all of your media as you start adding and
-              viewing data
-            </Text>
-          </Box>
-          <Box>
-            <SunIcon boxSize={8} />
-            <Text fontSize="lg" color="purple.500" fontWeight="bold">
-              Dark Mode
-            </Text>
-            <Text>
-              A complete overview of all of your media as you start adding and
-              viewing data
-            </Text>
-          </Box>
+          <WelcomeItem
+            Icon={ActivityIcon}
+            title="Analytics"
+            content="A complete overview of all of your media as you start adding and viewing data"
+          />
+          <WelcomeItem
+            Icon={BookmarkIcon}
+            title="Bookmarks"
+            content="A complete overview of all of your media as you start adding and viewing data"
+          />
+          <WelcomeItem
+            Icon={SunIcon}
+            title="Dark Mode"
+            content="A complete overview of all of your media as you start adding and viewing data"
+          />
         </Grid>
         <Divider my={10} />
-        <Center>
-          <Box textAlign="center">
-            <Heading>Mobile Ready</Heading>
-            <Text py={10} color="gray.500">
-              The mediaDiary app is a Progressive Web App, so youll be able to
-              install it on any OS
-            </Text>
-          </Box>
-        </Center>
         <Grid gridTemplateColumns="1fr 1fr" bg="gray.200" py={20}>
-          <div>asd</div>
+          <Image src="https://via.placeholder.com/500x600" />
           <Box>
             {Object.keys(features).map((e, i) => {
               const { title, description } = features[e];
@@ -260,22 +277,23 @@ function Welcome(): JSX.Element {
             })}
           </Box>
         </Grid>
-        <Grid gridTemplateColumns="1fr 1fr " py={20}>
-          <Flex align="center">
-            <LogoIcon boxSize={8} mr={1} color={mdPurple} />
-            <Text
-              fontSize={{ base: "md", md: "2xl" }}
-              color={mdPurple}
-              fontWeight="medium"
-            >
-              mediaDiary
-            </Text>
-          </Flex>
-          <HStack spacing={8}>
-            <Text>2021 RedOak Studios</Text>
-            <Text>Privacy Policy</Text>
-          </HStack>
-        </Grid>
+        <Divider my={10} />
+        <Center>
+          <Heading>mediaDiary is open-source</Heading>
+        </Center>
+        <Flex flexDirection="column" alignItems="center" textAlign="center">
+          <Heading size="md" color="gray.500" pt={6} fontWeight="normal">
+            mediaDiary is all open-source. You can contribute to its
+          </Heading>
+          <Heading size="md" color="gray.500" pb={8} pt={2} fontWeight="normal">
+            development, thoughts and ideas are welcomed.
+          </Heading>
+          <Box>
+            <Button colorScheme="purple">Contribute</Button>
+          </Box>
+        </Flex>
+
+        <LayoutFooter />
       </Layout>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         <ModalOverlay>
@@ -312,4 +330,25 @@ function Welcome(): JSX.Element {
       });
   }
 }
+
+function WelcomeItem({
+  Icon,
+  title,
+  content,
+}: {
+  Icon: ComponentType<IconProps>;
+  title: string;
+  content: string;
+}) {
+  return (
+    <Box>
+      <Icon boxSize={8} />
+      <Text fontSize="lg" color="purple.500" fontWeight="bold" py={3}>
+        {title}
+      </Text>
+      <Text>{content}</Text>
+    </Box>
+  );
+}
+
 export default Welcome;
