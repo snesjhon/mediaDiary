@@ -21,7 +21,6 @@ import {
   Text,
   useColorMode,
   useColorModeValue,
-  useToken,
   VStack,
 } from "@chakra-ui/react";
 import { setCookie } from "nookies";
@@ -42,10 +41,44 @@ const fade = keyframes`
   }
 `;
 
+interface FeaturesObj {
+  [key: string]: {
+    title: string;
+    description: string;
+    image: string;
+  };
+}
+const features: FeaturesObj = {
+  diary: {
+    title: "Diary",
+    description:
+      "mediaDiary revolves around your media. Both positive and negative. Add a diary.",
+    image: "something",
+  },
+  analyze: {
+    title: "Analyze",
+    description:
+      "The more you record the better your stats get. Over the year or years. Your data drives these charts. Find out what works for you.",
+    image: "something ",
+  },
+  bookmarks: {
+    title: "bookmarks",
+    description:
+      "The more you record the better your stats get. Over the year or years. Your data drives these charts. Find out what works for you.",
+    image: "something ",
+  },
+  memories: {
+    title: "memories",
+    description:
+      "The more you record the better your stats get. Over the year or years. Your data drives these charts. Find out what works for you.",
+    image: "something ",
+  },
+};
+
 function Welcome(): JSX.Element {
   const [showModal, setShowModal] = useState(false);
+  const [active, setActive] = useState<keyof typeof features>("diary");
   const { colorMode, toggleColorMode } = useColorMode();
-  const [purple700] = useToken("colors", ["purple.700"]);
 
   const mdPurple = useColorModeValue("purple.700", "purple.200");
   return (
@@ -87,9 +120,14 @@ function Welcome(): JSX.Element {
             </Flex>
           </Container>
         </Box>
-        <Box my={32}>
-          <Grid gridTemplateColumns="1fr 0.6fr" gridGap="7rem">
-            <Flex flexDir="column" justifyContent="center">
+        <Box my={{ base: 20 }}>
+          <Grid
+            display={{ base: "flex", lg: "grid" }}
+            flexDirection={{ base: "column-reverse", lg: "initial" }}
+            gridTemplateColumns={{ lg: "1fr 0.8fr" }}
+            gridGap={{ lg: "7rem" }}
+          >
+            <Flex flexDir="column" justifyContent="center" mt={10}>
               <Heading pos="relative">
                 Remember when you
                 <Box as="span" pl={2}>
@@ -99,7 +137,7 @@ function Welcome(): JSX.Element {
                     color="purple.500"
                     animation={`${fade} 3s alternate-reverse infinite`}
                   >
-                    saw
+                    watched
                   </Text>
                   <Text
                     as="span"
@@ -108,7 +146,6 @@ function Welcome(): JSX.Element {
                   >
                     heard
                   </Text>
-                  {/* <Text>Read</Text> */}
                 </Box>
                 <br />
                 <Text>your favorite media?</Text>
@@ -131,38 +168,12 @@ function Welcome(): JSX.Element {
                 </Button>
               </Box>
             </Flex>
-            <Box position="relative">
+            <Flex justifyContent="center">
               <Image
-                maxW={60}
-                borderRadius="5px"
-                border="1px solid"
-                borderColor="purple.500"
-                boxShadow={`2px 2px 1px ${purple700}`}
-                src="https://image.tmdb.org/t/p/w500/2RBNHQxWwTDBTmShhdanYvbuS6x.jpg"
+                w={{ base: "1rem", sm: "20rem", lg: "100%" }}
+                src="/home_d.png"
               />
-              <Image
-                pos="absolute"
-                top={-10}
-                right={-10}
-                w={40}
-                borderRadius="5px"
-                border="1px solid"
-                borderColor="purple.500"
-                boxShadow={`2px 2px 1px ${purple700}`}
-                src="https://image.tmdb.org/t/p/w500/y89kFMNYXNKMdlZjR2yg7nQtcQH.jpg"
-              />
-              <Image
-                pos="absolute"
-                bottom={-10}
-                w={40}
-                left={-16}
-                borderRadius="5px"
-                border="1px solid"
-                borderColor="purple.500"
-                boxShadow={`2px 2px 1px ${purple700}`}
-                src="https://i.scdn.co/image/ab67616d0000b2734a04593b7c149dc7b725683e"
-              />
-            </Box>
+            </Flex>
           </Grid>
         </Box>
         <Divider my={10} />
@@ -224,40 +235,29 @@ function Welcome(): JSX.Element {
           </Box>
         </Center>
         <Grid gridTemplateColumns="1fr 1fr" bg="gray.200" py={20}>
+          <div>asd</div>
           <Box>
-            <Text>Something else </Text>
-          </Box>
-          <Box>
-            <Box borderLeft="5px solid" borderColor="gray.600" p={4}>
-              <Heading size="lg" color="black">
-                Diary
-              </Heading>
-              <Text color="gray.500">
-                mediaDiary revolves around your media. Both positive and
-                negative. Add a diary.
-              </Text>
-            </Box>
-            <Box p={4} my={4}>
-              <Heading size="lg" color="gray.400">
-                Analyze
-              </Heading>
-              <Text>
-                The more you record the better your stats get. Over the year or
-                years. Your data drives these charts. Find out what works for
-                you.
-              </Text>
-            </Box>
-            <Box p={4} my={4}>
-              <Heading size="lg" color="gray.400">
-                Memories
-              </Heading>
-              <Text></Text>
-            </Box>
-            <Box p={4} my={4}>
-              <Heading size="lg" color="gray.400">
-                Bookmarks
-              </Heading>
-            </Box>
+            {Object.keys(features).map((e, i) => {
+              const { title, description } = features[e];
+              const current = active === e;
+              return (
+                <Box
+                  key={title + i}
+                  borderLeft={current ? "5px solid" : undefined}
+                  borderColor={current ? "gray.600" : undefined}
+                  p={4}
+                >
+                  <Heading
+                    size="lg"
+                    color={current ? "black" : "gray.400"}
+                    onClick={() => (current ? {} : setActive(e))}
+                  >
+                    {title}
+                  </Heading>
+                  {current && <Text color="gray.500">{description}</Text>}
+                </Box>
+              );
+            })}
           </Box>
         </Grid>
         <Grid gridTemplateColumns="1fr 1fr " py={20}>
