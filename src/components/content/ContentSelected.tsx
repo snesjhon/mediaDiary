@@ -1,8 +1,9 @@
 import { CalendarIcon } from "@chakra-ui/icons";
 import { Button, DrawerBody, DrawerFooter } from "@chakra-ui/react";
 import dayjs from "dayjs";
-import React from "react";
+import React, { Suspense } from "react";
 import useSWR from "swr";
+import type { responseInterface } from "swr";
 import { useMDDispatch, useMDState } from "../../config/store";
 import useDataFetch from "../../config/useDataFetch";
 import { fuegoBookmarkAdd } from "../../fuego/fuegoBookmarks";
@@ -48,7 +49,11 @@ function ContentSelected(): JSX.Element {
       dispatch({ type: "selectedWithId", payload: data });
       return <MdLoader />;
     } else if (selected) {
-      return <ContentSelectedFetch item={selected} mutate={mutate} />;
+      return (
+        <Suspense fallback={<MdLoader />}>
+          <ContentSelectedFetch item={selected} mutate={mutate} />;
+        </Suspense>
+      );
     }
   }
 
@@ -60,7 +65,7 @@ function ContentSelectedFetch({
   mutate,
 }: {
   item: MediaSelected;
-  mutate: () => void;
+  mutate: responseInterface<MediaDiaryWithId | false, any>["mutate"];
 }) {
   const dispatch = useMDDispatch();
   const { user } = useFuegoUser();
@@ -68,9 +73,13 @@ function ContentSelectedFetch({
     type: item.type,
     firstId: item.mediaId,
     secondId: item.artistId,
+    isSuspense: true,
+    season: item.season,
   });
 
   const parsedItem = parseData();
+
+  console.log(data);
 
   if (error) {
     return <div>{error}</div>;
@@ -81,7 +90,7 @@ function ContentSelectedFetch({
   ) : (
     <>
       <DrawerBody px={{ base: 6, sm: 8 }}>
-        <InfoHeader
+        {/* <InfoHeader
           artist={parsedItem.artist}
           genre={parsedItem.genre}
           poster={parsedItem.poster}
@@ -94,7 +103,7 @@ function ContentSelectedFetch({
           mediaId={parsedItem.mediaId}
           type={parsedItem.type}
           season={parsedItem.season}
-        />
+        /> */}
       </DrawerBody>
       <DrawerFooter borderTopWidth="1px" justifyContent="space-between">
         <Button
