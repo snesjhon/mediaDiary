@@ -101,7 +101,7 @@ function Welcome(): JSX.Element {
           borderBottomWidth="1px"
           width="full"
         >
-          <Container maxWidth={{ base: "xl", md: "lg" }}>
+          <Container maxWidth={{ md: "container.lg" }}>
             <Flex
               w="100%"
               h="100%"
