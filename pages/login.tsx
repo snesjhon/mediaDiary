@@ -5,9 +5,9 @@ import { destroyCookie, parseCookies, setCookie } from "nookies";
 import React, { useEffect, useState } from "react";
 import MdLoader from "../src/components/md/MdLoader";
 import UserNew from "../src/components/user/UserNew";
-import Welcome from "../src/components/Welcome";
 import useFuegoUser from "../src/fuego/useFuegoUser";
 import fuego from "../src/fuego/fuego";
+import Login from "../src/components/Login";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const cookies = parseCookies(context);
@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 
-function App({
+function LoginPage({
   fuegoPending,
   fuegoNewUser,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
@@ -61,8 +61,8 @@ function App({
     router.push("/home");
     return <MdLoader />;
   } else {
-    return <Welcome />;
+    return <Login />;
   }
 }
 
-export default App;
+export default LoginPage;
