@@ -1,4 +1,4 @@
-import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+import { ExternalLinkIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -68,7 +68,7 @@ const features: FeaturesObj = {
     image: "something ",
   },
   bookmarks: {
-    title: "bookmarks",
+    title: "Bookmarks",
     description:
       "The more you record the better your stats get. Over the year or years. Your data drives these charts. Find out what works for you.",
     image: "something ",
@@ -251,7 +251,11 @@ function Welcome(): JSX.Element {
           />
         </Grid>
         <Divider my={10} />
-        <Grid gridTemplateColumns="1fr 1fr" bg="gray.200" py={20}>
+        <Center>
+          <Heading>Mobile Ready</Heading>
+        </Center>
+
+        <Grid gridTemplateColumns="1fr 1fr" bg="gray.200" py={10} mt={10}>
           <Image src="https://via.placeholder.com/500x600" />
           <Box>
             {Object.keys(features).map((e, i) => {
@@ -263,6 +267,7 @@ function Welcome(): JSX.Element {
                   borderLeft={current ? "5px solid" : undefined}
                   borderColor={current ? "gray.600" : undefined}
                   p={4}
+                  _hover={{ cursor: "pointer" }}
                 >
                   <Heading
                     size="lg"
@@ -289,7 +294,15 @@ function Welcome(): JSX.Element {
             development, thoughts and ideas are welcomed.
           </Heading>
           <Box>
-            <Button colorScheme="purple">Contribute</Button>
+            <Button
+              as="a"
+              colorScheme="purple"
+              href="https://github.com/snesjhon/mediaDiary"
+              target="_blank"
+              rightIcon={<ExternalLinkIcon />}
+            >
+              Contribute
+            </Button>
           </Box>
         </Flex>
 
