@@ -25,7 +25,7 @@ import ContentEdit from "./ContentEdit";
 import ContentLog from "./ContentLog";
 import ContentSearch from "./ContentSearch";
 import ContentSelected from "./ContentSelected";
-import Header from "./ContentToolbar";
+import ContentToolbar from "./ContentToolbar";
 import ContentWithId from "./ContentWithId";
 
 function Content({
@@ -65,7 +65,7 @@ function Content({
       <Head>
         <title>{title} / MediaDiary</title>
       </Head>
-      <Header onOpen={onOpen} />
+      <ContentToolbar onOpen={onOpen} />
       <Grid mt={12} gridTemplateColumns={{ base: "1fr", md: "0.2fr 1fr" }}>
         {isMd ? (
           <SidebarDesktop />
