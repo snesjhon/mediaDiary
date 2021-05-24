@@ -40,7 +40,7 @@ function ContentToolbar({ onOpen }: { onOpen: () => void }): JSX.Element {
         borderBottomWidth="1px"
         width="full"
       >
-        <Container maxWidth={{ base: "xl", md: "lg" }}>
+        <Container maxWidth={{ md: "container.lg" }}>
           <Flex w="100%" h="100%" py={2} align="center" justify="space-between">
             <Flex align="center" pl={isMd ? 4 : undefined}>
               {!isMd && (
