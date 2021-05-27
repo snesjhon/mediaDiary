@@ -73,6 +73,8 @@ function Login(): JSX.Element {
   function login() {
     const provider = new fuego.auth.GoogleAuthProvider();
     provider.setCustomParameters({ prompt: "select_account" });
+    const providerTwitter = new fuego.auth.TwitterAuthProvider();
+    providerTwitter.setCustomParameters({prompt: })
     fuego
       .auth()
       .setPersistence(fuego.auth.Auth.Persistence.LOCAL)
