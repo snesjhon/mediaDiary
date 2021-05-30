@@ -1,4 +1,5 @@
 import { ExternalLinkIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
+import type { IconProps } from "@chakra-ui/react";
 import {
   Box,
   Button,
@@ -12,33 +13,21 @@ import {
   IconButton,
   Image,
   keyframes,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Text,
   useColorMode,
   useColorModeValue,
-  VStack,
 } from "@chakra-ui/react";
-import { setCookie } from "nookies";
-import React, { useState } from "react";
-import type { IconProps } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import type { ComponentType } from "react";
-import fuego from "../fuego/fuego";
+import React, { useState } from "react";
 import ActivityIcon from "./icons/ActivityIcon";
+import AlbumIcon from "./icons/AlbumIcon";
 import BookmarkIcon from "./icons/BookmarkIcon";
-import LogoIcon from "./icons/LogoIcon";
+import FilmIcon from "./icons/FilmIcon";
+import TvIcon from "./icons/TvIcon";
 import Layout from "./layouts/Layout";
 import LayoutFooter from "./layouts/LayoutFooter";
 import MdLogo from "./md/MdLogo";
-import TvIcon from "./icons/TvIcon";
-import FilmIcon from "./icons/FilmIcon";
-import AlbumIcon from "./icons/AlbumIcon";
-import Link from "next/link";
-import { useRouter } from "next/router";
 
 const fade = keyframes`
      0%,50% {
