@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 
-function LoginPage({
+export default function SignUpPage({
   fuegoPending,
   fuegoNewUser,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
@@ -61,8 +61,6 @@ function LoginPage({
     router.push("/home");
     return <MdLoader />;
   } else {
-    return <Register type="login" />;
+    return <Register type="signup" />;
   }
 }
-
-export default LoginPage;
