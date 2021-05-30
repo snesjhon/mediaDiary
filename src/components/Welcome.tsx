@@ -1,4 +1,5 @@
 import { ExternalLinkIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
+import { Spacer } from "@chakra-ui/react";
 import type { IconProps } from "@chakra-ui/react";
 import {
   Box,
@@ -20,6 +21,7 @@ import {
 import { useRouter } from "next/router";
 import type { ComponentType } from "react";
 import React, { useState } from "react";
+import useIsBreakpoint from "../utils/useIsBreakpoint";
 import ActivityIcon from "./icons/ActivityIcon";
 import AlbumIcon from "./icons/AlbumIcon";
 import BookmarkIcon from "./icons/BookmarkIcon";
@@ -78,6 +80,8 @@ function Welcome(): JSX.Element {
   const router = useRouter();
 
   const mdPurple = useColorModeValue("purple.700", "purple.200");
+  const isMd = useIsBreakpoint("md");
+
   return (
     <Layout>
       <Box
@@ -97,7 +101,7 @@ function Welcome(): JSX.Element {
               <MdLogo title="mediaDiary" href="/" />
             </Flex>
             <Flex maxW="720px" align="center">
-              <HStack spacing={3}>
+              <HStack spacing={{ base: 0, sm: 3 }}>
                 <IconButton
                   onClick={toggleColorMode}
                   aria-label="Theme Switcher"
@@ -131,7 +135,7 @@ function Welcome(): JSX.Element {
           gridGap={{ lg: "7rem" }}
         >
           <Flex flexDir="column" justifyContent="center" mt={10}>
-            <Heading pos="relative">
+            <Heading pos="relative" size="lg">
               Remember when you
               <Box as="span" pl={2}>
                 <Text
@@ -153,7 +157,7 @@ function Welcome(): JSX.Element {
               <br />
               <Text>your favorite media?</Text>
             </Heading>
-            <Text fontSize="xl" my={3}>
+            <Text fontSize={{ base: "md", sm: "xl" }} my={3}>
               mediaDiary is a logging platform that helps you keep track of
               <Text as="span" fontWeight="bold">
                 {" "}
@@ -173,7 +177,7 @@ function Welcome(): JSX.Element {
           </Flex>
           <Flex justifyContent="center">
             <Image
-              w={{ base: "1rem", sm: "20rem", lg: "100%" }}
+              w={{ base: "15rem", sm: "20rem", lg: "100%" }}
               src={colorMode === "light" ? "/home_w.png" : "/home_d.png"}
             />
           </Flex>
@@ -181,14 +185,16 @@ function Welcome(): JSX.Element {
       </Box>
       <Divider mt={10} />
       <Grid
-        gridTemplateColumns="1fr 1fr"
-        gridGap="7rem"
+        gridTemplateColumns={{ base: "1fr", sm: "1fr 1fr" }}
+        gridGap={{ base: "2rem", sm: "7rem" }}
         pt={10}
         pb={10}
         alignItems="center"
       >
         <Box>
-          <Heading size="lg">Track Everything</Heading>
+          <Heading size={isMd ? undefined : "lg"} mb={3}>
+            Track Everything
+          </Heading>
           <Text>
             Are you tired of only being able to track a single piece of media?{" "}
             Start tracking any of these with mediaDiary:
@@ -225,7 +231,10 @@ function Welcome(): JSX.Element {
         </Box>
       </Grid>
       <Divider my={10} />
-      <Grid gridTemplateColumns="1fr 1fr 1fr" gridGap={7}>
+      <Grid
+        gridTemplateColumns={{ base: "1fr", sm: "1fr 1fr 1fr" }}
+        gridGap={7}
+      >
         <WelcomeItem
           Icon={ActivityIcon}
           title="Analytics"
@@ -247,7 +256,12 @@ function Welcome(): JSX.Element {
         <Heading>Mobile Ready</Heading>
       </Center>
 
-      <Grid gridTemplateColumns="1fr 1fr" bg="gray.200" py={10} mt={10}>
+      <Grid
+        gridTemplateColumns={{ base: "1fr", sm: "1fr 1fr" }}
+        bg="gray.200"
+        py={10}
+        mt={10}
+      >
         <Image src="https://via.placeholder.com/500x600" />
         <Box>
           {Object.keys(features).map((e, i) => {
@@ -276,16 +290,22 @@ function Welcome(): JSX.Element {
       </Grid>
       <Divider my={10} />
       <Center>
-        <Heading>mediaDiary is open-source</Heading>
+        <Heading size={isMd ? undefined : "lg"}>
+          mediaDiary is open-source
+        </Heading>
       </Center>
-      <Flex flexDirection="column" alignItems="center" textAlign="center">
-        <Heading size="md" color="gray.500" pt={6} fontWeight="normal">
-          mediaDiary is all open-source. You can contribute to its
-        </Heading>
-        <Heading size="md" color="gray.500" pb={8} pt={2} fontWeight="normal">
+      <Flex
+        flexDirection="column"
+        alignItems="center"
+        textAlign="center"
+        pt={3}
+      >
+        <Text fontSize={{ md: "2xl" }} color="gray.500">
+          mediaDiary is all open-source. You can contribute to its{" "}
+          {isMd ? <Spacer /> : undefined}
           development, thoughts and ideas are welcomed.
-        </Heading>
-        <Box>
+        </Text>
+        <Box pt={4}>
           <Button
             as="a"
             colorScheme="purple"
@@ -297,7 +317,6 @@ function Welcome(): JSX.Element {
           </Button>
         </Box>
       </Flex>
-
       <LayoutFooter />
     </Layout>
   );
