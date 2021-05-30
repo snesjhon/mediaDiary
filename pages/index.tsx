@@ -1,13 +1,12 @@
 import "firebase/auth";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
-import { destroyCookie, parseCookies, setCookie } from "nookies";
-import React, { useEffect, useState } from "react";
+import { destroyCookie, parseCookies } from "nookies";
+import React from "react";
 import MdLoader from "../src/components/md/MdLoader";
 import UserNew from "../src/components/user/UserNew";
 import Welcome from "../src/components/Welcome";
 import useFuegoUser from "../src/fuego/useFuegoUser";
-import fuego from "../src/fuego/fuego";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const cookies = parseCookies(context);

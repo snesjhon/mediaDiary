@@ -115,10 +115,18 @@ function Welcome(): JSX.Element {
                   icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
                   variant="ghost"
                 />
-                <Button colorScheme="purple" variant="ghost">
+                <Button
+                  colorScheme="purple"
+                  variant="ghost"
+                  onClick={() => router.push("/login")}
+                >
                   Login
                 </Button>
-                <Button colorScheme="purple" variant="outline">
+                <Button
+                  colorScheme="purple"
+                  variant="outline"
+                  onClick={() => router.push("/signup")}
+                >
                   Sign Up
                 </Button>
               </HStack>
@@ -168,7 +176,7 @@ function Welcome(): JSX.Element {
               <Button
                 colorScheme="purple"
                 mt="24px"
-                onClick={() => router.push("/login")}
+                onClick={() => router.push("/signup")}
               >
                 Create an Account
               </Button>

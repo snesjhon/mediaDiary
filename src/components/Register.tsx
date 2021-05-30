@@ -14,11 +14,13 @@ import React from "react";
 import fuego from "../fuego/fuego";
 import GoogleIcon from "./icons/GoogleIcon";
 import LogoIcon from "./icons/LogoIcon";
-import TwitterIcon from "./icons/TwitterIcon";
-import MdLogo from "./md/MdLogo";
 
-function Login(): JSX.Element {
+interface Props {
+  type: "login" | "signup";
+}
+export default function Register({ type }: Props): JSX.Element {
   const mdPurple = useColorModeValue("purple.700", "purple.200");
+  const typeText = type === "login" ? "Login in" : "Sign Up";
   return (
     <Square
       h="100vh"
@@ -51,11 +53,12 @@ function Login(): JSX.Element {
           </Flex>
         </Box>
         <VStack align="stretch" spacing={4}>
-          <Button onClick={login} variant="outline" leftIcon={<GoogleIcon />}>
-            Log in with Google
-          </Button>
-          <Button variant="outline" leftIcon={<TwitterIcon />}>
-            Log in with Twitter
+          <Button
+            onClick={handleLogin}
+            variant="outline"
+            leftIcon={<GoogleIcon />}
+          >
+            {typeText} with Google
           </Button>
         </VStack>
         <Box textAlign="center" mt={10}>
@@ -70,11 +73,9 @@ function Login(): JSX.Element {
     </Square>
   );
 
-  function login() {
+  function handleLogin() {
     const provider = new fuego.auth.GoogleAuthProvider();
     provider.setCustomParameters({ prompt: "select_account" });
-    const providerTwitter = new fuego.auth.TwitterAuthProvider();
-    providerTwitter.setCustomParameters({prompt: })
     fuego
       .auth()
       .setPersistence(fuego.auth.Auth.Persistence.LOCAL)
@@ -84,5 +85,3 @@ function Login(): JSX.Element {
       });
   }
 }
-
-export default Login;
