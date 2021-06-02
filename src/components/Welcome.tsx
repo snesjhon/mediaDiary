@@ -111,14 +111,14 @@ function Welcome(): JSX.Element {
                 <Button
                   colorScheme="purple"
                   variant="ghost"
-                  onClick={() => router.push("/login")}
+                  onClick={() => router.push("/register?type=login")}
                 >
                   Login
                 </Button>
                 <Button
                   colorScheme="purple"
                   variant="outline"
-                  onClick={() => router.push("/signup")}
+                  onClick={() => router.push("/register?type=signup")}
                 >
                   Sign Up
                 </Button>
@@ -169,7 +169,7 @@ function Welcome(): JSX.Element {
               <Button
                 colorScheme="purple"
                 mt="24px"
-                onClick={() => router.push("/signup")}
+                onClick={() => router.push("/register?type=signup")}
               >
                 Create an Account
               </Button>
@@ -302,7 +302,7 @@ function Welcome(): JSX.Element {
       >
         <Text fontSize={{ md: "2xl" }} color="gray.500">
           mediaDiary is all open-source. You can contribute to its{" "}
-          {isMd ? <Spacer /> : undefined}
+          {isMd ? <Spacer as="span" display="block" /> : undefined}
           development, thoughts and ideas are welcomed.
         </Text>
         <Box pt={4}>
