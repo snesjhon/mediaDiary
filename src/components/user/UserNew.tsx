@@ -1,5 +1,6 @@
-import { Box, Flex, Heading, Square, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { destroyCookie } from "nookies";
 import React, { useEffect, useState } from "react";
 import type { UserFuegoValidated } from "../../types/typesUser";
 import LogoIcon from "../icons/LogoIcon";
@@ -10,27 +11,32 @@ function UserNew({ user }: { user: UserFuegoValidated }): JSX.Element {
   const [isRedirecting, setIsRedirecting] = useState(false);
   useEffect(() => {
     if (isRedirecting) {
+      destroyCookie(null, "fuegoNewUser");
       router.push("/home");
     }
   }, [isRedirecting, router]);
   return (
-    <Square h="80vh">
-      <Box>
-        <Flex alignItems="center" mb={2}>
-          <LogoIcon boxSize={8} color="purple.700" />
-          <Heading ml={2}>Hi, {user.displayName}</Heading>
-        </Flex>
-        <Text fontSize="2xl" fontWeight="semibold">
-          Welcome to mediaDiary
-        </Text>
-        <br />
-        {isRedirecting ? (
-          <Text>Loading your experience</Text>
-        ) : (
-          <UserPreference user={user} cb={() => setIsRedirecting(true)} />
-        )}
-      </Box>
-    </Square>
+    <Box
+      p="10"
+      border="1px solid"
+      borderColor="gray.500"
+      borderRadius="md"
+      bg="white"
+    >
+      <Flex alignItems="center" mb={2}>
+        <LogoIcon boxSize={8} color="purple.700" />
+        <Heading ml={2}>Hi, {user.displayName}</Heading>
+      </Flex>
+      <Text fontSize="2xl" fontWeight="semibold">
+        Welcome to mediaDiary
+      </Text>
+      <br />
+      {isRedirecting ? (
+        <Text>Loading your experience</Text>
+      ) : (
+        <UserPreference user={user} cb={() => setIsRedirecting(true)} />
+      )}
+    </Box>
   );
 }
 

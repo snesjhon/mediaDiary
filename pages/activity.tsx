@@ -3,7 +3,6 @@ import React from "react";
 import Charts from "../src/components/Activity";
 import Content from "../src/components/content/Content";
 import MdLoader from "../src/components/md/MdLoader";
-import UserNew from "../src/components/user/UserNew";
 import useFuegoAuth from "../src/fuego/useFuegoAuth";
 
 /**
@@ -27,7 +26,8 @@ function ActivityPage(): JSX.Element {
     }
     return <MdLoader />;
   } else if (!userValidating && userValid && userNoPreference) {
-    return <UserNew user={userValid} />;
+    router.push("/new");
+    return <MdLoader />;
   } else if (userValidHasPreference) {
     return (
       <Content title="Activity">
