@@ -50,7 +50,7 @@ function ContentMDb({
             <Heading size="lg" mb={5}>
               Cast
             </Heading>
-            <SimpleGrid columns={4} gap={4}>
+            <SimpleGrid columns={{ base: 2, sm: 4 }} gap={{ base: 10, sm: 4 }}>
               {data.credits.cast.slice(0, 4).map((e) => (
                 <Box
                   maxW="sm"
