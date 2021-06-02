@@ -1,16 +1,11 @@
 import { useRouter } from "next/router";
 import React from "react";
-import Bookmarks from "../src/components/Bookmarks";
-import Content from "../src/components/content/Content";
+import LayoutGradient from "../src/components/layouts/LayoutGradient";
 import MdLoader from "../src/components/md/MdLoader";
+import UserNew from "../src/components/user/UserNew";
 import useFuegoAuth from "../src/fuego/useFuegoAuth";
 
-/**
- * Activity Route presents the user with the Charting interface for their
- * MediaDiary memories. In case there's no preferences, there's also a
- * NewUserFlow available.
- */
-function BookmarksPage(): JSX.Element {
+export default function NewUserPage(): JSX.Element {
   const {
     userValid,
     userValidHasPreference,
@@ -26,16 +21,14 @@ function BookmarksPage(): JSX.Element {
     }
     return <MdLoader />;
   } else if (!userValidating && userValid && userNoPreference) {
-    router.push("/new");
-    return <MdLoader />;
-  } else if (userValidHasPreference) {
     return (
-      <Content title="Bookmarks">
-        <Bookmarks user={userValidHasPreference} />
-      </Content>
+      <LayoutGradient>
+        <UserNew user={userValid} />;
+      </LayoutGradient>
     );
+  } else if (userValidHasPreference) {
+    router.push("/home");
+    return <MdLoader />;
   }
   return <MdLoader />;
 }
-
-export default BookmarksPage;
