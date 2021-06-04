@@ -52,7 +52,7 @@ export default function SignUpPage(): JSX.Element {
   } else {
     return (
       <LayoutGradient>
-        <UserRegister type={type === "login" ? "login" : "signup"} />;
+        <UserRegister type={type === "login" ? "login" : "signup"} />
       </LayoutGradient>
     );
   }
