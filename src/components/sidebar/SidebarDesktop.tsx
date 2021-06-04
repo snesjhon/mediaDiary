@@ -1,29 +1,15 @@
 import { SearchIcon, SettingsIcon } from "@chakra-ui/icons";
-import {
-  Avatar,
-  Box,
-  Button,
-  Flex,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, VStack } from "@chakra-ui/react";
 import React from "react";
 import { useMDDispatch } from "../../config/store";
 import useFuegoUser from "../../fuego/useFuegoUser";
-import useFuegoLogout from "../../fuego/useFuegoLogout";
 import ActivityIcon from "../icons/ActivityIcon";
-import HomeIcon from "../icons/HomeIcon";
-import { SidebarButton } from "./SidebarContent";
 import BookmarkIcon from "../icons/BookmarkIcon";
-import MemoryIcon from "../icons/MemoryIcon";
+import HomeIcon from "../icons/HomeIcon";
+import { SidebarButton, SidebarFooter } from "./SidebarContent";
 
 function SidebarDesktop(): JSX.Element {
   const { user } = useFuegoUser();
-  const logout = useFuegoLogout();
   const dispatch = useMDDispatch();
 
   return (
@@ -72,32 +58,7 @@ function SidebarDesktop(): JSX.Element {
         </Flex>
       </Box>
       <Box position="fixed" bottom="2rem">
-        {user && (
-          <Menu autoSelect={false}>
-            <MenuButton _hover={{ bg: "purple.100" }} p={2} rounded="md">
-              <Flex alignItems="center">
-                {user.photoURL !== null && (
-                  <Avatar src={user.photoURL} size="sm" />
-                )}
-                <Box pl={2}>
-                  {user.displayName !== null && (
-                    <Text fontSize="sm" fontWeight="semibold">
-                      {user.displayName}
-                    </Text>
-                  )}
-                  {user.email !== null && (
-                    <Text fontSize="xs" color="gray.600">
-                      {user.email}
-                    </Text>
-                  )}
-                </Box>
-              </Flex>
-            </MenuButton>
-            <MenuList>
-              <MenuItem onClick={() => logout()}>Logout</MenuItem>
-            </MenuList>
-          </Menu>
-        )}
+        {user && <SidebarFooter />}
       </Box>
     </Box>
   );

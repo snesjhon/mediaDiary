@@ -52,6 +52,7 @@ export function SidebarButton({
 export function SidebarFooter(): JSX.Element | null {
   const { user } = useFuegoUser();
   const logout = useFuegoLogout();
+  // const router = useRouter();
   return user ? (
     <Menu autoSelect={false}>
       <MenuButton _hover={{ bg: "purple.100" }} p={2} rounded="md">
@@ -72,6 +73,7 @@ export function SidebarFooter(): JSX.Element | null {
         </Flex>
       </MenuButton>
       <MenuList>
+        {/* <MenuItem onClick={() => router.push("/about")}>About</MenuItem> */}
         <MenuItem onClick={() => logout()}>Logout</MenuItem>
       </MenuList>
     </Menu>
