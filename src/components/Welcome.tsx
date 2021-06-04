@@ -1,19 +1,16 @@
-import { ExternalLinkIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { Spacer } from "@chakra-ui/react";
+import { ExternalLinkIcon, SunIcon } from "@chakra-ui/icons";
 import type { IconProps } from "@chakra-ui/react";
 import {
   Box,
   Button,
   Center,
-  Container,
   Divider,
   Flex,
   Grid,
   Heading,
-  HStack,
-  IconButton,
   Image,
   keyframes,
+  Spacer,
   Text,
   useColorMode,
   useColorModeValue,
@@ -29,7 +26,7 @@ import FilmIcon from "./icons/FilmIcon";
 import TvIcon from "./icons/TvIcon";
 import Layout from "./layouts/Layout";
 import LayoutFooter from "./layouts/LayoutFooter";
-import MdLogo from "./md/MdLogo";
+import LayoutHeader from "./layouts/LayoutHeader";
 
 const fade = keyframes`
      0%,50% {
@@ -76,7 +73,7 @@ const features: FeaturesObj = {
 
 function Welcome(): JSX.Element {
   const [active, setActive] = useState<keyof typeof features>("diary");
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { colorMode } = useColorMode();
   const router = useRouter();
 
   const mdPurple = useColorModeValue("purple.700", "purple.200");
@@ -84,49 +81,7 @@ function Welcome(): JSX.Element {
 
   return (
     <Layout>
-      <Box
-        as="header"
-        pos="fixed"
-        top="0"
-        zIndex="1"
-        bg={colorMode === "light" ? "white" : "gray.800"}
-        left="0"
-        right="0"
-        borderBottomWidth="1px"
-        width="full"
-      >
-        <Container maxWidth={{ md: "container.lg" }}>
-          <Flex w="100%" h="100%" py={2} align="center" justify="space-between">
-            <Flex align="center">
-              <MdLogo title="mediaDiary" href="/" />
-            </Flex>
-            <Flex maxW="720px" align="center">
-              <HStack spacing={{ base: 0, sm: 3 }}>
-                <IconButton
-                  onClick={toggleColorMode}
-                  aria-label="Theme Switcher"
-                  icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-                  variant="ghost"
-                />
-                <Button
-                  colorScheme="purple"
-                  variant="ghost"
-                  onClick={() => router.push("/register?type=login")}
-                >
-                  Login
-                </Button>
-                <Button
-                  colorScheme="purple"
-                  variant="outline"
-                  onClick={() => router.push("/register?type=signup")}
-                >
-                  Sign Up
-                </Button>
-              </HStack>
-            </Flex>
-          </Flex>
-        </Container>
-      </Box>
+      <LayoutHeader />
       <Box my={{ base: 20 }}>
         <Grid
           display={{ base: "flex", lg: "grid" }}
@@ -135,26 +90,27 @@ function Welcome(): JSX.Element {
           gridGap={{ lg: "7rem" }}
         >
           <Flex flexDir="column" justifyContent="center" mt={10}>
-            <Heading pos="relative" size="lg">
-              Remember when you
-              <Box as="span" pl={2}>
-                <Text
-                  as="span"
-                  position="absolute"
-                  color="purple.500"
-                  animation={`${fade} 3s alternate-reverse infinite`}
-                >
-                  watched
-                </Text>
-                <Text
-                  as="span"
-                  color="purple.500"
-                  animation={`${fade} 3s alternate infinite`}
-                >
-                  heard
-                </Text>
-              </Box>
-              <br />
+            <Heading pos="relative" size={isMd ? undefined : "lg"}>
+              <Text display="flex">
+                Remember when you
+                <Box as="span" pl={2}>
+                  <Text
+                    as="span"
+                    position="absolute"
+                    color="purple.500"
+                    animation={`${fade} 3s alternate-reverse infinite`}
+                  >
+                    watched
+                  </Text>
+                  <Text
+                    as="span"
+                    color="purple.500"
+                    animation={`${fade} 3s alternate infinite`}
+                  >
+                    heard
+                  </Text>
+                </Box>
+              </Text>
               <Text>your favorite media?</Text>
             </Heading>
             <Text fontSize={{ base: "md", sm: "xl" }} my={3}>
@@ -252,10 +208,6 @@ function Welcome(): JSX.Element {
         />
       </Grid>
       <Divider my={10} />
-      <Center>
-        <Heading>Mobile Ready</Heading>
-      </Center>
-
       <Grid
         gridTemplateColumns={{ base: "1fr", sm: "1fr 1fr" }}
         bg="gray.200"
@@ -289,34 +241,36 @@ function Welcome(): JSX.Element {
         </Box>
       </Grid>
       <Divider my={10} />
-      <Center>
-        <Heading size={isMd ? undefined : "lg"}>
-          mediaDiary is open-source
-        </Heading>
-      </Center>
-      <Flex
-        flexDirection="column"
-        alignItems="center"
-        textAlign="center"
-        pt={3}
-      >
-        <Text fontSize={{ md: "2xl" }} color="gray.500">
-          mediaDiary is all open-source. You can contribute to its{" "}
-          {isMd ? <Spacer as="span" display="block" /> : undefined}
-          development, thoughts and ideas are welcomed.
-        </Text>
-        <Box pt={4}>
-          <Button
-            as="a"
-            colorScheme="purple"
-            href="https://github.com/snesjhon/mediaDiary"
-            target="_blank"
-            rightIcon={<ExternalLinkIcon />}
-          >
-            Contribute
-          </Button>
-        </Box>
-      </Flex>
+      <Box my={20}>
+        <Center>
+          <Heading size={isMd ? undefined : "lg"}>
+            mediaDiary is open-source
+          </Heading>
+        </Center>
+        <Flex
+          flexDirection="column"
+          alignItems="center"
+          textAlign="center"
+          pt={3}
+        >
+          <Text fontSize={{ md: "2xl" }} color="gray.500">
+            mediaDiary is all open-source. You can contribute to its{" "}
+            {isMd ? <Spacer as="span" display="block" /> : undefined}
+            development, thoughts and ideas are welcomed.
+          </Text>
+          <Box pt={12}>
+            <Button
+              as="a"
+              colorScheme="purple"
+              href="https://github.com/snesjhon/mediaDiary"
+              target="_blank"
+              rightIcon={<ExternalLinkIcon />}
+            >
+              Contribute
+            </Button>
+          </Box>
+        </Flex>
+      </Box>
       <LayoutFooter />
     </Layout>
   );
