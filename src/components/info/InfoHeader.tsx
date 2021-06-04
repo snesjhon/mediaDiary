@@ -32,6 +32,7 @@ function InfoHeader({
   const { view } = useMDState();
   const showDiary =
     diaryDate && typeof rating !== "undefined" && view !== "edit";
+
   return (
     <>
       <Flex
@@ -58,11 +59,9 @@ function InfoHeader({
         justifyContent="center"
         mt={6}
       >
-        <Box ml="auto">
+        <Box ml={{ base: 0, sm: 12 }} mx={showDiary ? undefined : 20}>
           <Image
             src={createPosterURL(poster, type)}
-            w="13rem"
-            h={type === "album" ? "13rem" : "20rem"}
             borderRadius="5px"
             border="1px solid"
             borderColor="gray.300"
