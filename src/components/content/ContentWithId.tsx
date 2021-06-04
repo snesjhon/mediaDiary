@@ -75,7 +75,11 @@ function ContentWithId(): JSX.Element {
             season={season}
           />
         </DrawerBody>
-        <DrawerFooter borderTopWidth="1px" justifyContent="space-between">
+        <DrawerFooter
+          borderTopWidth="1px"
+          justifyContent="space-between"
+          pb={{ base: 8, sm: 4 }}
+        >
           <Button
             onClick={() =>
               bookmark ? removeBookmark(data, id) : addBookmark(data, id)

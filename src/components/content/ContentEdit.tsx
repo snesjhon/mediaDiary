@@ -57,7 +57,11 @@ function ContentEdit(): JSX.Element {
               </>
             )}
           </DrawerBody>
-          <DrawerFooter justifyContent="space-between" borderTopWidth="1px">
+          <DrawerFooter
+            justifyContent="space-between"
+            borderTopWidth="1px"
+            pb={{ base: 8, sm: 4 }}
+          >
             <Button
               onClick={deleteData}
               isLoading={isSaving}
