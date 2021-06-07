@@ -105,7 +105,11 @@ function ContentSelectedFetch({
           season={parsedItem.season}
         /> */}
       </DrawerBody>
-      <DrawerFooter borderTopWidth="1px" justifyContent="space-between">
+      <DrawerFooter
+        borderTopWidth="1px"
+        justifyContent="space-between"
+        pb={{ base: 8, sm: 4 }}
+      >
         <Button
           onClick={addBookmark}
           leftIcon={<BookmarkIcon />}
