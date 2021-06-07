@@ -24,7 +24,7 @@ import SidebarDesktop from "../sidebar/SidebarDesktop";
 import ContentEdit from "./ContentEdit";
 import ContentLog from "./ContentLog";
 import ContentSearch from "./ContentSearch";
-import ContentSelected from "./ContentSelected";
+import Selected from "../selected/Selected";
 import ContentToolbar from "./ContentToolbar";
 import ContentWithId from "./ContentWithId";
 
@@ -85,7 +85,7 @@ function Content({
             }
             placement="right"
           >
-            {view === "selected" && <ContentSelected />}
+            {view === "selected" && <Selected />}
             {view === "selectedWithId" && <ContentWithId />}
             {view === "log" && <ContentLog />}
             {view === "edit" && <ContentEdit />}

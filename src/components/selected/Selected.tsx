@@ -3,9 +3,9 @@ import { Button, DrawerBody, DrawerFooter } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React, { Suspense } from "react";
 import useSWR from "swr";
-import type { responseInterface } from "swr";
 import { useMDDispatch, useMDState } from "../../config/store";
 import useDataFetch from "../../config/useDataFetch";
+import type { DataFetchSpotify } from "../../config/useDataFetch";
 import { fuegoBookmarkAdd } from "../../fuego/fuegoBookmarks";
 import { fuegoDiaryById } from "../../fuego/fuegoMDActions";
 import useFuegoUser from "../../fuego/useFuegoUser";
@@ -17,8 +17,11 @@ import BookmarkIcon from "../icons/BookmarkIcon";
 import InfoBody from "../info/InfoBody";
 import InfoHeader from "../info/InfoHeader";
 import MdLoader from "../md/MdLoader";
+import SelectedDrawerSpotify from "./components/SelectedDrawerSpotify";
+import SelectedDrawerBody from "./components/SelectedDrawerSpotify";
+import SelectedMovie from "./components/SelectedMovie";
 
-function ContentSelected(): JSX.Element {
+export default function Selected(): JSX.Element {
   const { user } = useFuegoUser();
   const { selected } = useMDState();
   const dispatch = useMDDispatch();
@@ -51,7 +54,7 @@ function ContentSelected(): JSX.Element {
     } else if (selected) {
       return (
         <Suspense fallback={<MdLoader />}>
-          <ContentSelectedFetch item={selected} mutate={mutate} />;
+          <SelectedSuspense item={selected} mutate={mutate} />;
         </Suspense>
       );
     }
@@ -60,12 +63,12 @@ function ContentSelected(): JSX.Element {
   return <MdLoader />;
 }
 
-function ContentSelectedFetch({
+function SelectedSuspense({
   item,
   mutate,
 }: {
   item: MediaSelected;
-  mutate: responseInterface<MediaDiaryWithId | false, any>["mutate"];
+  mutate: () => void;
 }) {
   const dispatch = useMDDispatch();
   const { user } = useFuegoUser();
@@ -79,8 +82,6 @@ function ContentSelectedFetch({
 
   const parsedItem = parseData();
 
-  console.log(data);
-
   if (error) {
     return <div>{error}</div>;
   }
@@ -90,25 +91,18 @@ function ContentSelectedFetch({
   ) : (
     <>
       <DrawerBody px={{ base: 6, sm: 8 }}>
-        {/* <InfoHeader
-          artist={parsedItem.artist}
-          genre={parsedItem.genre}
-          poster={parsedItem.poster}
-          releasedDate={parsedItem.releasedDate}
-          title={parsedItem.title}
-          type={parsedItem.type}
-        />
-        <InfoBody
-          artistId={parsedItem.artistId}
-          mediaId={parsedItem.mediaId}
-          type={parsedItem.type}
-          season={parsedItem.season}
-        /> */}
+        {item.type === "album" && (
+          <SelectedDrawerSpotify
+            artistInfo={(data as DataFetchSpotify)[1]}
+            albumInfo={(data as DataFetchSpotify)[0]}
+          />
+        )}
+        {item.type === "movie" && <SelectedMovie data={data as MDbMovie} />}
       </DrawerBody>
       <DrawerFooter
         borderTopWidth="1px"
         justifyContent="space-between"
-        pb={{ base: 8, sm: 4 }}
+        pb={{ base: 8, sm: 0 }}
       >
         <Button
           onClick={addBookmark}
@@ -239,5 +233,3 @@ function ContentSelectedFetch({
     }
   }
 }
-
-export default ContentSelected;
