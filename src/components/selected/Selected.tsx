@@ -1,10 +1,11 @@
 import { CalendarIcon } from "@chakra-ui/icons";
 import { Button, DrawerBody, DrawerFooter } from "@chakra-ui/react";
 import dayjs from "dayjs";
-import React from "react";
+import React, { Suspense } from "react";
 import useSWR from "swr";
 import { useMDDispatch, useMDState } from "../../config/store";
 import useDataFetch from "../../config/useDataFetch";
+import type { DataFetchSpotify } from "../../config/useDataFetch";
 import { fuegoBookmarkAdd } from "../../fuego/fuegoBookmarks";
 import { fuegoDiaryById } from "../../fuego/fuegoMDActions";
 import useFuegoUser from "../../fuego/useFuegoUser";
@@ -13,11 +14,12 @@ import type { MediaDiaryWithId, MediaSelected } from "../../types/typesMedia";
 import type { SpotifyAlbum, SpotifyArtist } from "../../types/typesSpotify";
 import { parsePosterUrl } from "../../utils/helpers";
 import BookmarkIcon from "../icons/BookmarkIcon";
-import InfoBody from "../info/InfoBody";
-import InfoHeader from "../info/InfoHeader";
 import MdLoader from "../md/MdLoader";
+import SelectedMovie from "./components/SelectedMovie";
+import SelectedSpotify from "./components/SelectedSpotify";
+import SelectedTV from "./components/SelectedTV";
 
-function ContentSelected(): JSX.Element {
+export default function Selected(): JSX.Element {
   const { user } = useFuegoUser();
   const { selected } = useMDState();
   const dispatch = useMDDispatch();
@@ -48,14 +50,18 @@ function ContentSelected(): JSX.Element {
       dispatch({ type: "selectedWithId", payload: data });
       return <MdLoader />;
     } else if (selected) {
-      return <ContentSelectedFetch item={selected} mutate={mutate} />;
+      return (
+        <Suspense fallback={<MdLoader />}>
+          <SelectedSuspense item={selected} mutate={mutate} />;
+        </Suspense>
+      );
     }
   }
 
   return <MdLoader />;
 }
 
-function ContentSelectedFetch({
+function SelectedSuspense({
   item,
   mutate,
 }: {
@@ -68,6 +74,8 @@ function ContentSelectedFetch({
     type: item.type,
     firstId: item.mediaId,
     secondId: item.artistId,
+    isSuspense: true,
+    season: item.season,
   });
 
   const parsedItem = parseData();
@@ -81,25 +89,19 @@ function ContentSelectedFetch({
   ) : (
     <>
       <DrawerBody px={{ base: 6, sm: 8 }}>
-        <InfoHeader
-          artist={parsedItem.artist}
-          genre={parsedItem.genre}
-          poster={parsedItem.poster}
-          releasedDate={parsedItem.releasedDate}
-          title={parsedItem.title}
-          type={parsedItem.type}
-        />
-        <InfoBody
-          artistId={parsedItem.artistId}
-          mediaId={parsedItem.mediaId}
-          type={parsedItem.type}
-          season={parsedItem.season}
-        />
+        {item.type === "album" && (
+          <SelectedSpotify
+            artistInfo={(data as DataFetchSpotify)[1]}
+            albumInfo={(data as DataFetchSpotify)[0]}
+          />
+        )}
+        {item.type === "movie" && <SelectedMovie data={data as MDbMovie} />}
+        {item.type === "tv" && <SelectedTV data={data as MDbTV} />}
       </DrawerBody>
       <DrawerFooter
         borderTopWidth="1px"
         justifyContent="space-between"
-        pb={{ base: 8, sm: 4 }}
+        pb={{ base: 8, sm: 0 }}
       >
         <Button
           onClick={addBookmark}
@@ -133,7 +135,6 @@ function ContentSelectedFetch({
           );
 
           // By default right now we want to save a season as -1, UNLESS the user chooses a specific season
-          // const seasonItem = seasons[0];
           parsedObj = {
             seasons,
             season: -1,
@@ -230,5 +231,3 @@ function ContentSelectedFetch({
     }
   }
 }
-
-export default ContentSelected;

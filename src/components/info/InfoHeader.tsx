@@ -59,7 +59,10 @@ function InfoHeader({
         justifyContent="center"
         mt={6}
       >
-        <Box ml={{ base: 0, sm: 12 }} mx={showDiary ? undefined : 20}>
+        <Box
+          ml={showDiary ? { base: 0, sm: 12 } : undefined}
+          mx={showDiary ? undefined : "44"}
+        >
           <Image
             src={createPosterURL(poster, type)}
             borderRadius="5px"

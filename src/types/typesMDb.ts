@@ -34,6 +34,7 @@ export interface MDbTV {
   type: string;
   vote_average: number;
   vote_count: number;
+  ["watch/providers"]: WatchProviders;
 }
 
 export interface CreatedByEntity {
@@ -148,7 +149,7 @@ export interface MDbMovie {
   vote_average: number;
   vote_count: number;
   credits: MovieCredits;
-  ["watch/providers"]: MovieWatchproviders;
+  ["watch/providers"]: WatchProviders;
   videos: MovieVideos;
 }
 
@@ -209,22 +210,22 @@ export interface MovieCrewEntity {
   job: string;
 }
 
-export interface MovieWatchproviders {
-  results: MovieWatchCountries;
+export interface WatchProviders {
+  results: WatchCountries;
 }
 
-export interface MovieWatchCountries {
-  [key: string]: MovieWatchItem;
+export interface WatchCountries {
+  [key: string]: WatchItems;
 }
 
-export interface MovieWatchItem {
+export interface WatchItems {
   link: string;
-  flatrate?: MovieWatchPurchase[] | null;
-  rent?: MovieWatchPurchase[] | null;
-  buy?: MovieWatchPurchase[] | null;
+  flatrate?: WatchPurchase[] | null;
+  rent?: WatchPurchase[] | null;
+  buy?: WatchPurchase[] | null;
 }
 
-export interface MovieWatchPurchase {
+export interface WatchPurchase {
   display_priority: number;
   logo_path: string;
   provider_id: number;

@@ -2,9 +2,9 @@ import {
   Box,
   Divider,
   Heading,
+  Image,
   SimpleGrid,
   Text,
-  Image,
 } from "@chakra-ui/react";
 import React from "react";
 import { MDB_IMGURL } from "../../config/contants";
@@ -73,10 +73,12 @@ function ContentMDb({
                 </Box>
               ))}
             </SimpleGrid>
+            <Divider mt={4} mb={4} />
           </>
         )}
       </>
     </Box>
   );
 }
+
 export default ContentMDb;

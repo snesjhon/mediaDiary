@@ -12,7 +12,7 @@ import InfoFields from "../info/InfoFields";
 import InfoHeader from "../info/InfoHeader";
 import MdSpinner from "../md/MdSpinner";
 
-function ContentLog(): JSX.Element {
+export default function Log(): JSX.Element {
   const mdDispatch = useMDDispatch();
   const { user } = useFuegoUser();
   const MDState = useMDState();
@@ -154,5 +154,3 @@ function ContentLog(): JSX.Element {
     }
   }
 }
-
-export default ContentLog;
