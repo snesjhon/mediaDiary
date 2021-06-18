@@ -2,11 +2,9 @@ import {
   Box,
   Divider,
   Heading,
+  Image,
   SimpleGrid,
   Text,
-  Image,
-  Flex,
-  Link,
 } from "@chakra-ui/react";
 import React from "react";
 import { MDB_IMGURL } from "../../config/contants";
@@ -78,48 +76,9 @@ function ContentMDb({
             <Divider mt={4} mb={4} />
           </>
         )}
-        {castMovie && (
-          <>
-            <Heading size="lg" mb={5}>
-              Where to Watch
-            </Heading>
-            <WatchProvider movie={castMovie} />
-          </>
-        )}
       </>
     </Box>
   );
-}
-
-function WatchProvider({ movie }: { movie: MDbMovie }) {
-  const movieFlatRate = movie["watch/providers"]?.results["US"]?.flatrate;
-  // const hasProviders = typeof movieProvider?.flatrate !== "undefined" && movieProvider?.flatrate !== null;
-  if (typeof movieFlatRate !== "undefined" && movieFlatRate !== null) {
-    return (
-      <div>
-        <Heading size="md" fontWeight="normal">
-          Stream
-        </Heading>
-        <Flex mt={3}>
-          {movieFlatRate.length > 0 &&
-            movieFlatRate.map((e) => (
-              <Link
-                key={e.provider_name + e.provider_id}
-                target="_blank"
-                href={movie["watch/providers"].results["US"].link}
-              >
-                <Image
-                  src={`https://image.tmdb.org/t/p/w200${e.logo_path}`}
-                  w={10}
-                  mr={8}
-                />
-              </Link>
-            ))}
-        </Flex>
-      </div>
-    );
-  }
-  return null;
 }
 
 export default ContentMDb;

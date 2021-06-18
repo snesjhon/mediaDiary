@@ -21,7 +21,7 @@ interface Props {
   artistInfo: SpotifyArtist;
 }
 
-export default function SelectedDrawerSpotify({
+export default function SelectedSpotify({
   albumInfo,
   artistInfo,
 }: Props): JSX.Element {

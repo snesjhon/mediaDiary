@@ -14,12 +14,10 @@ import type { MediaDiaryWithId, MediaSelected } from "../../types/typesMedia";
 import type { SpotifyAlbum, SpotifyArtist } from "../../types/typesSpotify";
 import { parsePosterUrl } from "../../utils/helpers";
 import BookmarkIcon from "../icons/BookmarkIcon";
-import InfoBody from "../info/InfoBody";
-import InfoHeader from "../info/InfoHeader";
 import MdLoader from "../md/MdLoader";
-import SelectedDrawerSpotify from "./components/SelectedDrawerSpotify";
-import SelectedDrawerBody from "./components/SelectedDrawerSpotify";
 import SelectedMovie from "./components/SelectedMovie";
+import SelectedSpotify from "./components/SelectedSpotify";
+import SelectedTV from "./components/SelectedTV";
 
 export default function Selected(): JSX.Element {
   const { user } = useFuegoUser();
@@ -92,12 +90,13 @@ function SelectedSuspense({
     <>
       <DrawerBody px={{ base: 6, sm: 8 }}>
         {item.type === "album" && (
-          <SelectedDrawerSpotify
+          <SelectedSpotify
             artistInfo={(data as DataFetchSpotify)[1]}
             albumInfo={(data as DataFetchSpotify)[0]}
           />
         )}
         {item.type === "movie" && <SelectedMovie data={data as MDbMovie} />}
+        {item.type === "tv" && <SelectedTV data={data as MDbTV} />}
       </DrawerBody>
       <DrawerFooter
         borderTopWidth="1px"
@@ -136,7 +135,6 @@ function SelectedSuspense({
           );
 
           // By default right now we want to save a season as -1, UNLESS the user chooses a specific season
-          // const seasonItem = seasons[0];
           parsedObj = {
             seasons,
             season: -1,

@@ -22,11 +22,11 @@ import MdLogo from "../md/MdLogo";
 import Sidebar from "../sidebar/Sidebar";
 import SidebarDesktop from "../sidebar/SidebarDesktop";
 import ContentEdit from "./ContentEdit";
-import ContentLog from "./ContentLog";
 import ContentSearch from "./ContentSearch";
 import Selected from "../selected/Selected";
 import ContentToolbar from "./ContentToolbar";
 import ContentWithId from "./ContentWithId";
+import Log from "../Log";
 
 function Content({
   children,
@@ -87,7 +87,7 @@ function Content({
           >
             {view === "selected" && <Selected />}
             {view === "selectedWithId" && <ContentWithId />}
-            {view === "log" && <ContentLog />}
+            {view === "log" && <Log />}
             {view === "edit" && <ContentEdit />}
           </LayoutDrawer>
           <Modal

@@ -14,23 +14,23 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { MDB_IMGURL } from "../../../config/contants";
-import type { MDbMovie } from "../../../types/typesMDb";
+import type { MDbTV } from "../../../types/typesMDb";
 import { createPosterURL, parsePosterUrl } from "../../../utils/helpers";
 
 interface Props {
-  data: MDbMovie;
+  data: MDbTV;
 }
 
-export default function SelectedMovie({ data }: Props): JSX.Element {
+export default function SelectedTV({ data }: Props): JSX.Element {
   const {
     credits,
     genres,
-    title,
     poster_path,
-    release_date,
     tagline,
     overview,
     homepage,
+    original_name,
+    first_air_date,
   } = data;
 
   const whereToWatch = data["watch/providers"].results["US"].link;
@@ -55,7 +55,7 @@ export default function SelectedMovie({ data }: Props): JSX.Element {
           size="lg"
           lineHeight={1.3}
         >
-          {title}
+          {original_name}
         </Heading>
       </Flex>
       <Grid
@@ -79,8 +79,8 @@ export default function SelectedMovie({ data }: Props): JSX.Element {
               Released
             </Text>
             <Text fontWeight="bold" fontSize="lg">
-              {typeof release_date !== "undefined" &&
-                `${new Date(release_date).toLocaleDateString("en-us", {
+              {typeof first_air_date !== "undefined" &&
+                `${new Date(first_air_date).toLocaleDateString("en-us", {
                   year: "numeric",
                 })}`}
             </Text>
