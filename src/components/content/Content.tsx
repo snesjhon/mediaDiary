@@ -22,11 +22,11 @@ import MdLogo from "../md/MdLogo";
 import Sidebar from "../sidebar/Sidebar";
 import SidebarDesktop from "../sidebar/SidebarDesktop";
 import ContentSearch from "./ContentSearch";
-import Selected from "../Selected/Selected";
 import ContentToolbar from "./ContentToolbar";
 import Log from "../Log";
 import { Edit } from "../Edit";
 import { Day } from "../Day";
+import { Selected } from "../Selected";
 
 function Content({
   children,
