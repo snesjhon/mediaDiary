@@ -21,12 +21,12 @@ import MdLoader from "../md/MdLoader";
 import MdLogo from "../md/MdLogo";
 import Sidebar from "../sidebar/Sidebar";
 import SidebarDesktop from "../sidebar/SidebarDesktop";
-import ContentEdit from "./ContentEdit";
 import ContentSearch from "./ContentSearch";
-import Selected from "../selected/Selected";
+import Selected from "../Selected/Selected";
 import ContentToolbar from "./ContentToolbar";
-import ContentWithId from "./ContentWithId";
 import Log from "../Log";
+import { Edit } from "../Edit";
+import { Day } from "../Day";
 
 function Content({
   children,
@@ -86,9 +86,9 @@ function Content({
             placement="right"
           >
             {view === "selected" && <Selected />}
-            {view === "selectedWithId" && <ContentWithId />}
+            {view === "selectedWithId" && <Day />}
             {view === "log" && <Log />}
-            {view === "edit" && <ContentEdit />}
+            {view === "edit" && <Edit />}
           </LayoutDrawer>
           <Modal
             isOpen={view === "search"}

@@ -8,13 +8,12 @@ import { LogReducer } from "../../config/storeLog";
 import { fuegoDelete, fuegoEdit } from "../../fuego/fuegoMDActions";
 import useFuegoUser from "../../fuego/useFuegoUser";
 import type { MediaDiaryDate, MediaDiaryWithId } from "../../types/typesMedia";
-import InfoFields from "../info/InfoFields";
-import InfoHeader from "../info/InfoHeader";
 import MdSpinner from "../md/MdSpinner";
+import { EditMovie, EditSpotify, EditTV } from "./components";
 
-function ContentEdit(): JSX.Element {
+export default function Edit(): JSX.Element {
   const MDState = useMDState();
-  const { edit, isSaving } = MDState;
+  const { edit, editMovie, editSpotify, editTV, isSaving } = MDState;
   const mdDispatch = useMDDispatch();
   const { user } = useFuegoUser();
 
@@ -46,14 +45,31 @@ function ContentEdit(): JSX.Element {
           <DrawerBody px={{ base: 6, sm: 8 }}>
             {edit && (
               <>
-                <InfoHeader {...edit} />
-                <InfoFields
-                  type={edit.type}
-                  fields={state}
-                  dispatch={dispatch}
-                  item={edit}
-                  isEdit
-                />
+                {editMovie && (
+                  <EditMovie
+                    data={editMovie}
+                    fields={state}
+                    dispatch={dispatch}
+                  />
+                )}
+                {editTV && (
+                  <EditTV
+                    data={editTV}
+                    fields={state}
+                    dispatch={dispatch}
+                    poster={edit?.poster ?? editTV.poster_path}
+                    episodes={edit?.episodes}
+                    season={edit?.season}
+                  />
+                )}
+                {editSpotify && (
+                  <EditSpotify
+                    artist={editSpotify.artist}
+                    album={editSpotify.album}
+                    fields={state}
+                    dispatch={dispatch}
+                  />
+                )}
               </>
             )}
           </DrawerBody>
@@ -152,5 +168,3 @@ function ContentEdit(): JSX.Element {
     }
   }
 }
-
-export default ContentEdit;
