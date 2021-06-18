@@ -24,6 +24,12 @@ export interface MDState {
     album: SpotifyAlbum;
   };
   edit?: MediaDiaryWithId;
+  editMovie?: MDbMovie;
+  editTV?: MDbTV;
+  editSpotify?: {
+    artist: SpotifyArtist;
+    album: SpotifyAlbum;
+  };
   diaryFilters: FilterState | null;
   bookmarkFilters: FilterBookmarkState | null;
 }
@@ -44,7 +50,12 @@ export type MDActions =
     }
   | {
       type: "edit";
-      payload: MDState["edit"];
+      payload: {
+        edit: MDState["edit"];
+        editMovie: MDState["editMovie"];
+        editTV: MDState["editTV"];
+        editSpotify: MDState["editSpotify"];
+      };
     }
   | {
       type: "view";
@@ -169,7 +180,10 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
         ...state,
         view: "edit",
         selected: undefined,
-        edit: actions.payload,
+        edit: actions.payload.edit,
+        editMovie: actions.payload.editMovie,
+        editTV: actions.payload.editTV,
+        editSpotify: actions.payload.editSpotify,
       };
     }
     default:

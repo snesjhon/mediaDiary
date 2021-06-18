@@ -1,4 +1,4 @@
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { ExternalLinkIcon, StarIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -12,16 +12,31 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import dayjs from "dayjs";
 import React from "react";
+import Rating from "react-rating";
 import { MDB_IMGURL } from "../../../config/contants";
 import type { MDbTV } from "../../../types/typesMDb";
 import { createPosterURL, parsePosterUrl } from "../../../utils/helpers";
+import StarEmptyIcon from "../../icons/StartEmptyIcon";
 
 interface Props {
   data: MDbTV;
+  diaryDate: string | null;
+  rating: number;
+  releasedDate: string;
+  poster: string;
+  season?: number;
 }
 
-export default function SelectedTV({ data }: Props): JSX.Element {
+export default function DayTV({
+  data,
+  diaryDate,
+  rating,
+  poster,
+  releasedDate,
+  season,
+}: Props): JSX.Element {
   const {
     credits,
     genres,
@@ -33,7 +48,7 @@ export default function SelectedTV({ data }: Props): JSX.Element {
     first_air_date,
   } = data;
 
-  const whereToWatch = data["watch/providers"].results["US"].link;
+  const whereToWatch = data["watch/providers"]?.results["US"]?.link;
 
   const artist =
     credits &&
@@ -66,7 +81,10 @@ export default function SelectedTV({ data }: Props): JSX.Element {
       >
         <Box ml={{ base: 0, sm: 12 }}>
           <Image
-            src={createPosterURL(parsePosterUrl(poster_path, "movie"), "movie")}
+            src={createPosterURL(
+              parsePosterUrl(poster ?? poster_path, "tv"),
+              "tv"
+            )}
             borderRadius="5px"
             border="1px solid"
             borderColor="gray.300"
@@ -74,15 +92,43 @@ export default function SelectedTV({ data }: Props): JSX.Element {
           />
         </Box>
         <VStack spacing="6" justify="center" align="left">
+          {diaryDate && (
+            <Box>
+              <Text fontWeight={500} fontSize="sm">
+                Date
+              </Text>
+              <Text fontWeight="bold" fontSize="lg">
+                {dayjs(diaryDate).format("MMM D, YYYY")}
+              </Text>
+            </Box>
+          )}
+          <Box>
+            <Text fontWeight={500} fontSize="sm">
+              Rating
+            </Text>
+            <Text fontWeight="bold">
+              <Rating
+                fractions={2}
+                readonly
+                initialRating={rating}
+                fullSymbol={<StarIcon color="purple.400" w="20px" h="20px" />}
+                emptySymbol={
+                  <StarEmptyIcon stroke="purple.400" w="20px" h="20px" />
+                }
+              />
+            </Text>
+          </Box>
           <Box>
             <Text fontWeight={500} fontSize="sm">
               Released
             </Text>
             <Text fontWeight="bold" fontSize="lg">
-              {typeof first_air_date !== "undefined" &&
-                `${new Date(first_air_date).toLocaleDateString("en-us", {
+              {new Date(releasedDate ?? first_air_date).toLocaleDateString(
+                "en-us",
+                {
                   year: "numeric",
-                })}`}
+                }
+              )}
             </Text>
           </Box>
           <Box>

@@ -15,9 +15,7 @@ import type { SpotifyAlbum, SpotifyArtist } from "../../types/typesSpotify";
 import { parsePosterUrl } from "../../utils/helpers";
 import BookmarkIcon from "../icons/BookmarkIcon";
 import MdLoader from "../md/MdLoader";
-import SelectedMovie from "./components/SelectedMovie";
-import SelectedSpotify from "./components/SelectedSpotify";
-import SelectedTV from "./components/SelectedTV";
+import { SelectedSpotify, SelectedMovie, SelectedTV } from "./components";
 
 export default function Selected(): JSX.Element {
   const { user } = useFuegoUser();

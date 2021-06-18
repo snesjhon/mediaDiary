@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import type { MDbMovie, MDbTV } from "../types/typesMDb";
+import type { MDbTVSeason } from "../types/typesMDbTVSeason";
 import type { MediaType } from "../types/typesMedia";
 import type { SpotifyAlbum, SpotifyArtist } from "../types/typesSpotify";
 import { getMovieUrl, getTVUrl } from "../utils/helperMDb";
@@ -11,7 +12,7 @@ import {
 } from "../utils/helperSpotify";
 
 export type DataFetchSpotify = [SpotifyAlbum, SpotifyArtist];
-export type DataFetchMDb = MDbMovie | MDbTV;
+export type DataFetchMDb = MDbMovie | MDbTV | MDbTVSeason;
 export type DataFetch = DataFetchMDb | DataFetchSpotify | false;
 
 interface Props {
@@ -21,13 +22,7 @@ interface Props {
   season?: number;
   isSuspense?: boolean;
 }
-function useDataFetch({
-  type,
-  firstId,
-  secondId,
-  season,
-  isSuspense,
-}: Props): {
+function useDataFetch({ type, firstId, secondId, season, isSuspense }: Props): {
   isLoading: boolean;
   data: DataFetch;
   error: string;
