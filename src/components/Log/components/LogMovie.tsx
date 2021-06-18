@@ -1,37 +1,41 @@
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { ExternalLinkIcon, StarIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
+  Checkbox,
   Divider,
   Flex,
   Grid,
   Heading,
   Image,
+  Input,
   Link,
-  SimpleGrid,
   Text,
   VStack,
 } from "@chakra-ui/react";
+import dayjs from "dayjs";
+import type { Dispatch } from "react";
 import React from "react";
-import { MDB_IMGURL } from "../../../config/contants";
+import Rating from "react-rating";
+import { MEDIA_LOGGED_BEFORE } from "../../../config/contants";
+import type { LogActions, LogState } from "../../../config/storeLog";
 import type { MDbMovie } from "../../../types/typesMDb";
 import { createPosterURL, parsePosterUrl } from "../../../utils/helpers";
+import StarEmptyIcon from "../../icons/StartEmptyIcon";
 
 interface Props {
   data: MDbMovie;
+  dispatch: Dispatch<LogActions>;
+  fields: LogState;
 }
 
-export default function SelectedMovie({ data }: Props): JSX.Element {
-  const {
-    credits,
-    genres,
-    title,
-    poster_path,
-    release_date,
-    tagline,
-    overview,
-    homepage,
-  } = data;
+export default function LogMovie({
+  data,
+  dispatch,
+  fields,
+}: Props): JSX.Element {
+  const { credits, genres, title, poster_path, release_date, homepage } = data;
+  const { diaryDate, loggedBefore, rating } = fields;
 
   const whereToWatch = data["watch/providers"]?.results["US"]?.link;
 
@@ -121,57 +125,65 @@ export default function SelectedMovie({ data }: Props): JSX.Element {
           )}
         </VStack>
       </Grid>
-      {overview && (
-        <>
-          <Heading size="lg" mb={3}>
-            About
-          </Heading>
-          <Text
-            textTransform="uppercase"
-            pb={2}
-            fontSize="sm"
-            fontWeight={400}
-            color="gray.500"
-          >
-            {tagline}
-          </Text>
-          <Text>{overview}</Text>
-          <Divider mt={4} mb={4} />
-        </>
-      )}
-      {data.credits && data.credits.cast && (
-        <>
-          <Heading size="lg" mb={5}>
-            Cast
-          </Heading>
-          <SimpleGrid columns={{ base: 2, sm: 4 }} gap={{ base: 10, sm: 4 }}>
-            {data.credits.cast.slice(0, 4).map((e) => (
-              <Box
-                maxW="sm"
-                boxShadow="md"
-                borderWidth="1px"
-                borderRadius="lg"
-                overflow="hidden"
-                as="a"
-                href={`https://www.themoviedb.org/person/${e.id}`}
-                target="_blank"
-                key={e.name}
-              >
-                {e.profile_path !== null && (
-                  <Image src={`${MDB_IMGURL}w200${e.profile_path}`} />
-                )}
-                <Box px={3} py={3}>
-                  <Text fontWeight="bold" isTruncated>
-                    {e.name}
-                  </Text>
-                  {e.character && <Text>{e.character}</Text>}
-                </Box>
-              </Box>
-            ))}
-          </SimpleGrid>
-          <Divider mt={4} mb={4} />
-        </>
-      )}
+      <Divider mt={4} mb={2} />
+      <Flex alignItems="center" justifyContent="space-between">
+        <Text>Date</Text>
+        <Box>
+          <Input
+            size="sm"
+            type="date"
+            required
+            value={dayjs(diaryDate).format("YYYY-MM-DD")}
+            max={dayjs().format("YYYY-MM-DD")}
+            onChange={(e) =>
+              dispatch({
+                type: "state",
+                payload: {
+                  key: "diaryDate",
+                  value: dayjs(e.target.value).toISOString(),
+                },
+              })
+            }
+          />
+        </Box>
+      </Flex>
+      <Divider my={2} />
+      <Flex alignItems="center" justifyContent="space-between">
+        <Text>Rate</Text>
+        <Box mt="-4px">
+          <Rating
+            fractions={2}
+            initialRating={rating}
+            fullSymbol={<StarIcon h="20px" w="20px" color="purple.500" />}
+            emptySymbol={
+              <StarEmptyIcon h="20px" w="20px" stroke="purple.500" />
+            }
+            onChange={(value) =>
+              dispatch({
+                type: "state",
+                payload: {
+                  key: "rating",
+                  value,
+                },
+              })
+            }
+          />
+        </Box>
+      </Flex>
+      <Divider my={2} />
+      <Flex alignItems="center" justifyContent="space-between">
+        <Text>{MEDIA_LOGGED_BEFORE["movie"]}</Text>
+        <Checkbox
+          colorScheme="purple"
+          isChecked={loggedBefore}
+          onChange={() =>
+            dispatch({
+              type: "state",
+              payload: { key: "loggedBefore", value: !loggedBefore },
+            })
+          }
+        />
+      </Flex>
     </>
   );
 }
