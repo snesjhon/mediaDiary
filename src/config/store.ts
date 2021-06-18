@@ -1,6 +1,8 @@
 import { createContext, useContext } from "react";
 import type { FilterBookmarkState, FilterState } from "../types/typesFilters";
+import type { MDbMovie, MDbTV } from "../types/typesMDb";
 import type { MediaDiaryWithId, MediaSelected } from "../types/typesMedia";
+import type { SpotifyAlbum, SpotifyArtist } from "../types/typesSpotify";
 import type { UserFuegoPref } from "../types/typesUser";
 
 export interface MDState {
@@ -15,6 +17,12 @@ export interface MDState {
     | "selected"
     | "selectedWithId";
   selected?: MediaSelected;
+  selectedTV?: MDbTV;
+  selectedMovie?: MDbMovie;
+  selectedSpotify?: {
+    artist: SpotifyArtist;
+    album: SpotifyAlbum;
+  };
   edit?: MediaDiaryWithId;
   diaryFilters: FilterState | null;
   bookmarkFilters: FilterBookmarkState | null;
@@ -22,8 +30,17 @@ export interface MDState {
 
 export type MDActions =
   | {
-      type: "log" | "selected" | "selectedReplace";
+      type: "selected" | "selectedReplace";
       payload: MDState["selected"];
+    }
+  | {
+      type: "log";
+      payload: {
+        selected: MDState["selected"];
+        selectedTV: MDState["selectedTV"];
+        selectedMovie: MDState["selectedMovie"];
+        selectedSpotify: MDState["selectedSpotify"];
+      };
     }
   | {
       type: "edit";
@@ -116,7 +133,10 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
     case "log": {
       return {
         ...state,
-        selected: actions.payload,
+        selected: actions.payload.selected,
+        selectedMovie: actions.payload.selectedMovie,
+        selectedTV: actions.payload.selectedTV,
+        selectedSpotify: actions.payload.selectedSpotify,
         view: "log",
         edit: undefined,
       };

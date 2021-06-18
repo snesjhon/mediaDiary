@@ -112,7 +112,24 @@ function SelectedSuspense({
           Bookmark
         </Button>
         <Button
-          onClick={() => dispatch({ type: "log", payload: parsedItem })}
+          onClick={() =>
+            dispatch({
+              type: "log",
+              payload: {
+                selected: parsedItem,
+                selectedMovie:
+                  item.type === "movie" ? (data as MDbMovie) : undefined,
+                selectedTV: item.type === "tv" ? (data as MDbTV) : undefined,
+                selectedSpotify:
+                  item.type === "album"
+                    ? {
+                        artist: (data as DataFetchSpotify)[1],
+                        album: (data as DataFetchSpotify)[0],
+                      }
+                    : undefined,
+              },
+            })
+          }
           colorScheme="purple"
           variant="outline"
           leftIcon={<CalendarIcon />}
