@@ -9,7 +9,7 @@ import { fuegoDelete, fuegoEdit } from "../../fuego/fuegoMDActions";
 import useFuegoUser from "../../fuego/useFuegoUser";
 import type { MediaDiaryDate, MediaDiaryWithId } from "../../types/typesMedia";
 import MdSpinner from "../md/MdSpinner";
-import { EditMovie, EditSpotify, EditTV } from "./components";
+import { MediaMovie, MediaSpotify, MediaTV } from "../Media";
 
 export default function Edit(): JSX.Element {
   const MDState = useMDState();
@@ -43,34 +43,32 @@ export default function Edit(): JSX.Element {
       ) : (
         <>
           <DrawerBody px={{ base: 6, sm: 8 }}>
-            {edit && (
-              <>
-                {editMovie && (
-                  <EditMovie
-                    data={editMovie}
-                    fields={state}
-                    dispatch={dispatch}
-                  />
-                )}
-                {editTV && (
-                  <EditTV
-                    data={editTV}
-                    fields={state}
-                    dispatch={dispatch}
-                    poster={edit?.poster ?? editTV.poster_path}
-                    episodes={edit?.episodes}
-                    season={edit?.season}
-                  />
-                )}
-                {editSpotify && (
-                  <EditSpotify
-                    artist={editSpotify.artist}
-                    album={editSpotify.album}
-                    fields={state}
-                    dispatch={dispatch}
-                  />
-                )}
-              </>
+            {editMovie && (
+              <MediaMovie data={editMovie} edit={{ fields: state, dispatch }} />
+            )}
+            {editTV && (
+              <MediaTV
+                data={editTV}
+                poster={edit?.poster ?? editTV.poster_path}
+                edit={{
+                  fields: state,
+                  dispatch,
+                }}
+                seasonInfo={{
+                  season: edit?.season,
+                  episodes: edit?.episodes,
+                }}
+              />
+            )}
+            {editSpotify && (
+              <MediaSpotify
+                artistInfo={editSpotify.artist}
+                albumInfo={editSpotify.album}
+                edit={{
+                  fields: state,
+                  dispatch,
+                }}
+              />
             )}
           </DrawerBody>
           <DrawerFooter
