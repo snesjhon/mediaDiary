@@ -1,14 +1,15 @@
 import { Button, Center, DrawerBody, DrawerFooter } from "@chakra-ui/react";
 import dayjs from "dayjs";
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer, useRef } from "react";
 import { useMDDispatch, useMDState } from "../../config/store";
 import type { LogState } from "../../config/storeLog";
 import { LogReducer } from "../../config/storeLog";
 import { fuegoDiaryAdd } from "../../fuego/fuegoMDActions";
 import useFuegoUser from "../../fuego/useFuegoUser";
 import type { MediaDiaryDate } from "../../types/typesMedia";
+import { parsePosterUrl } from "../../utils/helpers";
 import MdSpinner from "../md/MdSpinner";
-import { LogMovie, LogSpotify, LogTV } from "./components";
+import { MediaMovie, MediaSpotify, MediaTV } from "../Media";
 
 export interface LogTVSeason {
   season?: number;
@@ -30,6 +31,30 @@ export default function Log(): JSX.Element {
   };
 
   const [state, dispatch] = useReducer(LogReducer, initData);
+  const initSeason = useRef(true);
+
+  // // This is temporary because I think we should maybe let the user select IF they want to add a season
+  // // They could also not want to select a season and just add the show.
+  useEffect(() => {
+    if (initSeason.current) {
+      if (
+        selected?.seasons &&
+        selected?.seasons[0].poster_path &&
+        selected?.seasons[0].poster_path !== null
+      ) {
+        mdDispatch({
+          type: "selectedReplace",
+          payload: {
+            ...selected,
+            season: selected?.seasons[0].season_number,
+            episodes: selected?.seasons[0].episode_count,
+            poster: parsePosterUrl(selected?.seasons[0].poster_path, "tv"),
+          },
+        });
+        initSeason.current = false;
+      }
+    }
+  }, [selected, mdDispatch]);
 
   return (
     <>
@@ -41,29 +66,37 @@ export default function Log(): JSX.Element {
         <>
           <DrawerBody px={{ base: 6, sm: 8 }}>
             {selectedMovie && (
-              <LogMovie
+              <MediaMovie
                 data={selectedMovie}
-                fields={state}
-                dispatch={dispatch}
+                edit={{
+                  fields: state,
+                  dispatch,
+                }}
               />
             )}
             {selectedTV && (
-              <LogTV
+              <MediaTV
                 data={selectedTV}
-                fields={state}
-                dispatch={dispatch}
-                handleSeasonSelected={handleSeasonSelected}
-                season={selected?.season}
-                episodes={selected?.episodes}
                 poster={selected?.poster ?? selectedTV.poster_path}
+                edit={{
+                  fields: state,
+                  dispatch,
+                }}
+                seasonInfo={{
+                  season: selected?.season,
+                  episodes: selected?.episodes,
+                }}
+                handleSeasonSelected={handleSeasonSelected}
               />
             )}
             {selectedSpotify && (
-              <LogSpotify
-                artist={selectedSpotify.artist}
-                album={selectedSpotify.album}
-                fields={state}
-                dispatch={dispatch}
+              <MediaSpotify
+                artistInfo={selectedSpotify.artist}
+                albumInfo={selectedSpotify.album}
+                edit={{
+                  fields: state,
+                  dispatch,
+                }}
               />
             )}
           </DrawerBody>

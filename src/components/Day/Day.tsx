@@ -16,7 +16,7 @@ import type { MDbMovie, MDbTV } from "../../types/typesMDb";
 import type { MediaDiaryWithId } from "../../types/typesMedia";
 import BookmarkIcon from "../icons/BookmarkIcon";
 import MdLoader from "../md/MdLoader";
-import { DayMovie, DaySpotify, DayTV } from "./components";
+import { MediaMovie, MediaSpotify, MediaTV } from "../Media";
 
 export default function Day(): JSX.Element {
   const { edit } = useMDState();
@@ -88,24 +88,24 @@ function DaySuspense({
     <>
       <DrawerBody px={{ base: 6, sm: 8 }}>
         {type === "movie" && (
-          <DayMovie
+          <MediaMovie
             data={data as MDbMovie}
             diaryDate={diaryDate}
             rating={rating}
           />
         )}
         {type === "tv" && (
-          <DayTV
+          <MediaTV
             data={data as MDbTV}
             diaryDate={diaryDate}
             rating={rating}
-            season={season}
+            seasonInfo={{ season }}
             poster={poster}
             releasedDate={releasedDate}
           />
         )}
         {type === "album" && (
-          <DaySpotify
+          <MediaSpotify
             artistInfo={(data as DataFetchSpotify)[1]}
             albumInfo={(data as DataFetchSpotify)[0]}
             diaryDate={diaryDate}
