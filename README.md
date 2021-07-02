@@ -1,3 +1,5 @@
+[![Unit Tests](https://github.com/snesjhon/mediaDiary/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/snesjhon/mediaDiary/actions/workflows/unit-tests.yml)
+
 # MediaDiary
 A Keep track of _all_ your favorite media.
 
