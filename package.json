@@ -7,7 +7,8 @@
     "prod": "next start",
     "validate": "node_modules/.bin/tsc --noEmit",
     "lint": "node_modules/.bin/eslint '**/**' --fix",
-    "test": "jest --watch --env=jsdom"
+    "test": "jest --watch --env=jsdom",
+    "test:ci": "jest --env=jsdom"
   },
   "dependencies": {
     "@chakra-ui/icons": "^1.0.13",
