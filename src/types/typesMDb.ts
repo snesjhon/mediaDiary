@@ -125,7 +125,7 @@ export interface TVCrew {
 export interface MDbMovie {
   adult: boolean;
   backdrop_path: string;
-  belongs_to_collection?: null;
+  // belongs_to_collection?: any;
   budget: number;
   genres?: MovieGenres[] | null;
   homepage: string;
@@ -136,8 +136,8 @@ export interface MDbMovie {
   overview: string;
   popularity: number;
   poster_path: string;
-  production_companies?: MovieProductionCompanies[] | null;
-  production_countries?: MovieProductionCountries[] | null;
+  // production_companies?: MovieProductionCompanies[] | null;
+  // production_countries?: MovieProductionCountries[] | null;
   release_date: string;
   revenue: number;
   runtime: number;
