@@ -1,55 +1,18 @@
-import type { IconProps } from "@chakra-ui/react";
 import {
   Avatar,
   Box,
-  Button,
   Flex,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   Text,
-  useColorModeValue,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import type { FunctionComponent } from "react";
 import React from "react";
-import useFuegoLogout from "../../fuego/useFuegoLogout";
-import useFuegoUser from "../../fuego/useFuegoUser";
+import useFuegoLogout from "../../../../../fuego/useFuegoLogout";
+import useFuegoUser from "../../../../../fuego/useFuegoUser";
 
-export function SidebarButton({
-  title,
-  route,
-  Icon,
-}: {
-  title: string;
-  route: string;
-  Icon: FunctionComponent<IconProps>;
-}): JSX.Element {
-  const router = useRouter();
-  const bgColor = useColorModeValue("purple.100", "purple.500");
-  const colorActiveBg = useColorModeValue("purple.600", "purple.300");
-  const activeBg = useColorModeValue("purple.200", "purple.400");
-  return (
-    <Button
-      variant="ghost"
-      leftIcon={<Icon mb="2px" />}
-      fontSize="xl"
-      color={router.pathname === route ? colorActiveBg : undefined}
-      _hover={{
-        bg: bgColor,
-      }}
-      _active={{
-        bg: activeBg,
-      }}
-      onClick={() => router.push(route)}
-    >
-      {title}
-    </Button>
-  );
-}
-
-export function SidebarFooter(): JSX.Element | null {
+export default function SidebarFooter(): JSX.Element | null {
   const { user } = useFuegoUser();
   const logout = useFuegoLogout();
   // const router = useRouter();

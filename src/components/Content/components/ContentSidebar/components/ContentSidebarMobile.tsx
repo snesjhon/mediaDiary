@@ -10,13 +10,13 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React from "react";
-import ActivityIcon from "../icons/ActivityIcon";
-import BookmarkIcon from "../icons/BookmarkIcon";
-import HomeIcon from "../icons/HomeIcon";
-import MdLogo from "../md/MdLogo";
-import { SidebarButton, SidebarFooter } from "./SidebarContent";
+import { ContentSidebarButton, ContentSidebarFooter } from ".";
+import ActivityIcon from "../../../../icons/ActivityIcon";
+import BookmarkIcon from "../../../../icons/BookmarkIcon";
+import HomeIcon from "../../../../icons/HomeIcon";
+import MdLogo from "../../../../md/MdLogo";
 
-function Sidebar({
+export default function ContentSidebarMobile({
   onClose,
   isOpen,
 }: {
@@ -33,18 +33,22 @@ function Sidebar({
           </DrawerHeader>
           <DrawerBody mt={4}>
             <VStack spacing={6} align="flex-start">
-              <SidebarButton title="Home" route="/home" Icon={HomeIcon} />
-              <SidebarButton
+              <ContentSidebarButton
+                title="Home"
+                route="/home"
+                Icon={HomeIcon}
+              />
+              <ContentSidebarButton
                 title="Bookmarks"
                 route="/bookmarks"
                 Icon={BookmarkIcon}
               />
-              <SidebarButton
+              <ContentSidebarButton
                 title="Activity"
                 route="/activity"
                 Icon={ActivityIcon}
               />
-              <SidebarButton
+              <ContentSidebarButton
                 title="Settings"
                 route="/settings"
                 Icon={SettingsIcon}
@@ -52,12 +56,10 @@ function Sidebar({
             </VStack>
           </DrawerBody>
           <DrawerFooter justifyContent="flex-start">
-            <SidebarFooter />
+            <ContentSidebarFooter />
           </DrawerFooter>
         </DrawerContent>
       </DrawerOverlay>
     </Drawer>
   );
 }
-
-export default Sidebar;

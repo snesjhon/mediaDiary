@@ -72,10 +72,7 @@ export default function MediaSpotify({
           )}
           {genres && <MediaInfoText title="Genre" text={genres[0]} />}
           {label && <MediaInfoText title="Label" text={label} />}
-          <Flex
-            justify="space-between"
-            direction={{ sm: "column", md: "initial" }}
-          >
+          <Flex justify="space-between">
             {artistInfo.external_urls.spotify && (
               <MediaInfoButton
                 title="Artist Page"

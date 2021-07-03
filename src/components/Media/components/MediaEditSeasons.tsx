@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/layout";
 import { Select } from "@chakra-ui/react";
 import React from "react";
-import type { MDbTV, TVSeason } from "../../../types/typesMDb";
+import type { TVSeason } from "../../../types/typesMDb";
 import { parsePosterUrl } from "../../../utils/helpers";
 
 interface Props {

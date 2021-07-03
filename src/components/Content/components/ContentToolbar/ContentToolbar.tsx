@@ -11,11 +11,11 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
-import { useMDDispatch } from "../../config/store";
-import useIsBreakpoint from "../../utils/useIsBreakpoint";
-import FiltersIcon from "../icons/FiltersIcon";
-import MdLogo from "../md/MdLogo";
-import Filters from "./ContentFilters";
+import { useMDDispatch } from "../../../../config/store";
+import useIsBreakpoint from "../../../../utils/useIsBreakpoint";
+import FiltersIcon from "../../../icons/FiltersIcon";
+import MdLogo from "../../../md/MdLogo";
+import Filters from "../ContentFilters/ContentFilters";
 
 function ContentToolbar({ onOpen }: { onOpen: () => void }): JSX.Element {
   const isMd = useIsBreakpoint("md");

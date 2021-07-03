@@ -16,19 +16,17 @@ import React, { useEffect, useRef } from "react";
 import { useMDDispatch, useMDState } from "../../config/store";
 import useIsBreakpoint from "../../utils/useIsBreakpoint";
 import Layout from "../layouts/Layout";
-import LayoutDrawer from "../layouts/LayoutDrawer";
-import MdLoader from "../md/MdLoader";
 import MdLogo from "../md/MdLogo";
-import Sidebar from "../sidebar/Sidebar";
-import SidebarDesktop from "../sidebar/SidebarDesktop";
-import ContentSearch from "./ContentSearch";
-import ContentToolbar from "./ContentToolbar";
-import Log from "../Log";
-import { Edit } from "../Edit";
-import { Day } from "../Day";
-import { Selected } from "../Selected";
+import { Day, Edit, Log, Selected } from "..";
+import MdLoader from "../md/MdLoader";
+import {
+  ContentDrawer,
+  ContentSearch,
+  ContentSidebar,
+  ContentToolbar,
+} from "./components";
 
-function Content({
+export default function Content({
   children,
   title = "MediaDiary",
 }: PropsWithChildren<unknown> & { title: string }): JSX.Element {
@@ -67,16 +65,12 @@ function Content({
       </Head>
       <ContentToolbar onOpen={onOpen} />
       <Grid mt={12} gridTemplateColumns={{ base: "1fr", md: "0.2fr 1fr" }}>
-        {isMd ? (
-          <SidebarDesktop />
-        ) : (
-          <Sidebar isOpen={isOpen} onClose={onClose} />
-        )}
+        <ContentSidebar isOpen={isOpen} onClose={onClose} />
         <Box>{loading ? <MdLoader /> : children}</Box>
       </Grid>
       {!loading && (
         <>
-          <LayoutDrawer
+          <ContentDrawer
             isOpen={
               view === "log" ||
               view === "edit" ||
@@ -89,7 +83,7 @@ function Content({
             {view === "selectedWithId" && <Day />}
             {view === "log" && <Log />}
             {view === "edit" && <Edit />}
-          </LayoutDrawer>
+          </ContentDrawer>
           <Modal
             isOpen={view === "search"}
             onClose={() => dispatch({ type: "dayClose" })}
@@ -114,5 +108,3 @@ function Content({
     </Layout>
   );
 }
-
-export default Content;

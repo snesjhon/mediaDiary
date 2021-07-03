@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
-import Bookmarks from "../src/components/Bookmarks";
-import Content from "../src/components/content/Content";
+import { Bookmarks, Content } from "../src/components";
 import MdLoader from "../src/components/md/MdLoader";
 import useFuegoAuth from "../src/fuego/useFuegoAuth";
 

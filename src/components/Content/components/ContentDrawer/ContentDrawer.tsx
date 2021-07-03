@@ -10,10 +10,10 @@ import {
 import type { PropsWithChildren, RefObject } from "react";
 import React from "react";
 import { useSwipeable } from "react-swipeable";
-import { useMDDispatch } from "../../config/store";
-import MdLogo from "../md/MdLogo";
+import { useMDDispatch } from "../../../../config/store";
+import MdLogo from "../../../md/MdLogo";
 
-function LayoutDrawer({
+export default function ContentDrawer({
   children,
   refHook,
   placement = "right",
@@ -59,5 +59,3 @@ function LayoutDrawer({
     dispatch({ type: "view", payload: "md" });
   }
 }
-
-export default LayoutDrawer;

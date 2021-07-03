@@ -11,13 +11,13 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { cache, useSWRInfinite } from "swr";
-import { useMDDispatch, useMDState } from "../config/store";
-import { fuegoBookmarkGet } from "../fuego/fuegoBookmarks";
-import type { MediaDiaryWithId } from "../types/typesMedia";
-import type { UserFuegoValidated } from "../types/typesUser";
-import { createPosterURL } from "../utils/helpers";
-import LogoIcon from "./icons/LogoIcon";
-import MdLoader from "./md/MdLoader";
+import { useMDDispatch, useMDState } from "../../config/store";
+import { fuegoBookmarkGet } from "../../fuego/fuegoBookmarks";
+import type { MediaDiaryWithId } from "../../types/typesMedia";
+import type { UserFuegoValidated } from "../../types/typesUser";
+import { createPosterURL } from "../../utils/helpers";
+import LogoIcon from "../icons/LogoIcon";
+import MdLoader from "../md/MdLoader";
 
 function Bookmarks({ user }: { user: UserFuegoValidated }): JSX.Element {
   const state = useMDState();

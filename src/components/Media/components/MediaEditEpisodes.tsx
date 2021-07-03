@@ -1,12 +1,5 @@
-import {
-  Text,
-  Flex,
-  Button,
-  Divider,
-  SimpleGrid,
-  Checkbox,
-} from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Text, Divider, SimpleGrid, Checkbox } from "@chakra-ui/react";
+import React from "react";
 import type { Dispatch } from "react";
 import type { LogActions, LogState } from "../../../config/storeLog";
 

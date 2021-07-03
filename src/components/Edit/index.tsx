@@ -1,1 +1,1 @@
-export { default as Edit } from "./Edit";
+export { default } from "./Edit";

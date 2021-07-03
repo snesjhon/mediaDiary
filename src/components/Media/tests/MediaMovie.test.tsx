@@ -2,12 +2,12 @@ import React from "react";
 import { MediaMovie } from "..";
 import { mount } from "@shopify/react-testing";
 import "@shopify/react-testing/matchers";
-import jsonData from "../../../utils/test-data.json";
 import { MediaAbout, MediaHeader, MediaRating } from "../components";
 import type { MDbMovie } from "../../../types/typesMDb";
 import Rating from "react-rating";
+import { mDbData } from "../../../utils";
 
-const movieData = jsonData as MDbMovie;
+const movieData = mDbData as MDbMovie;
 describe("<MediaMovie />", () => {
   it("renders <MediaHeader /> with appropriate props", () => {
     const wrapper = mount(<MediaMovie data={movieData} />);

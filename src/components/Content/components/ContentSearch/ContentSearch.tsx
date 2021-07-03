@@ -4,21 +4,21 @@ import dayjs from "dayjs";
 import type { RefObject } from "react";
 import React, { useState } from "react";
 import useSWR from "swr";
-import { useMDDispatch, useMDState } from "../../config/store";
-import type { MediaSelected, MediaType } from "../../types/typesMedia";
+import { useMDDispatch, useMDState } from "../../../../config/store";
+import type { MediaSelected, MediaType } from "../../../../types/typesMedia";
 import type {
   MDbSearch,
   MDbSearchResult,
   SpotifySearch,
   SpotifySearchResult,
-} from "../../types/typesSearch";
-import { fetcher, parsePosterUrl } from "../../utils/helpers";
-import { spotifyFetch } from "../../utils/helperSpotify";
-import useDebounce from "../../utils/useDebounce";
-import AlbumIcon from "../icons/AlbumIcon";
-import FilmIcon from "../icons/FilmIcon";
-import TvIcon from "../icons/TvIcon";
-import MdSpinner from "../md/MdSpinner";
+} from "../../../../types/typesSearch";
+import { fetcher, parsePosterUrl } from "../../../../utils/helpers";
+import { spotifyFetch } from "../../../../utils/helperSpotify";
+import useDebounce from "../../../../utils/useDebounce";
+import AlbumIcon from "../../../icons/AlbumIcon";
+import FilmIcon from "../../../icons/FilmIcon";
+import TvIcon from "../../../icons/TvIcon";
+import MdSpinner from "../../../md/MdSpinner";
 
 // This is the root of our search Types. This can be extended for future search queries.
 // We always want to keep a strict returnArr to ensure that we follow the userPref

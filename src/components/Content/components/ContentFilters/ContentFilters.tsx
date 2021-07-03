@@ -23,17 +23,17 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import useSWR from "swr";
-import { useMDDispatch, useMDState } from "../../config/store";
-import { fuegoFiltersAll } from "../../fuego/fuegoFilterActions";
-import useFuegoUser from "../../fuego/useFuegoUser";
-import type { FilterData, FilterDiary } from "../../types/typesFilters";
-import type { MediaType } from "../../types/typesMedia";
-import { capFormat } from "../../utils/helpers";
-import AlbumIcon from "../icons/AlbumIcon";
-import FilmIcon from "../icons/FilmIcon";
-import TvIcon from "../icons/TvIcon";
-import MdLogo from "../md/MdLogo";
-import MdStatus from "../md/MdStatus";
+import { useMDDispatch, useMDState } from "../../../../config/store";
+import { fuegoFiltersAll } from "../../../../fuego/fuegoFilterActions";
+import useFuegoUser from "../../../../fuego/useFuegoUser";
+import type { FilterData, FilterDiary } from "../../../../types/typesFilters";
+import type { MediaType } from "../../../../types/typesMedia";
+import { capFormat } from "../../../../utils/helpers";
+import AlbumIcon from "../../../icons/AlbumIcon";
+import FilmIcon from "../../../icons/FilmIcon";
+import TvIcon from "../../../icons/TvIcon";
+import MdLogo from "../../../md/MdLogo";
+import MdStatus from "../../../md/MdStatus";
 
 function ContentFilters({
   onClose,
