@@ -1,14 +1,14 @@
 import { SearchIcon, SettingsIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, VStack } from "@chakra-ui/react";
 import React from "react";
-import { useMDDispatch } from "../../config/store";
-import useFuegoUser from "../../fuego/useFuegoUser";
-import ActivityIcon from "../icons/ActivityIcon";
-import BookmarkIcon from "../icons/BookmarkIcon";
-import HomeIcon from "../icons/HomeIcon";
-import { SidebarButton, SidebarFooter } from "./SidebarContent";
+import { ContentSidebarButton, ContentSidebarFooter } from ".";
+import { useMDDispatch } from "../../../../../config/store";
+import useFuegoUser from "../../../../../fuego/useFuegoUser";
+import ActivityIcon from "../../../../icons/ActivityIcon";
+import BookmarkIcon from "../../../../icons/BookmarkIcon";
+import HomeIcon from "../../../../icons/HomeIcon";
 
-function SidebarDesktop(): JSX.Element {
+export default function ContentSidebarDesktop(): JSX.Element {
   const { user } = useFuegoUser();
   const dispatch = useMDDispatch();
 
@@ -17,24 +17,24 @@ function SidebarDesktop(): JSX.Element {
       <Box position="sticky" top="3rem" pt={6}>
         <VStack spacing={6} align="flex-start">
           <Box>
-            <SidebarButton title="Home" Icon={HomeIcon} route="/home" />
+            <ContentSidebarButton title="Home" Icon={HomeIcon} route="/home" />
           </Box>
           <Box>
-            <SidebarButton
+            <ContentSidebarButton
               title="Bookmarks"
               Icon={BookmarkIcon}
               route="/bookmarks"
             />
           </Box>
           <Box>
-            <SidebarButton
+            <ContentSidebarButton
               title="Activity"
               Icon={ActivityIcon}
               route="/activity"
             />
           </Box>
           <Box>
-            <SidebarButton
+            <ContentSidebarButton
               title="Settings"
               Icon={SettingsIcon}
               route="/settings"
@@ -58,10 +58,8 @@ function SidebarDesktop(): JSX.Element {
         </Flex>
       </Box>
       <Box position="fixed" bottom="2rem">
-        {user && <SidebarFooter />}
+        {user && <ContentSidebarFooter />}
       </Box>
     </Box>
   );
 }
-
-export default SidebarDesktop;

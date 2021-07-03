@@ -15,6 +15,7 @@ import {
   MediaPoster,
   MediaRating,
 } from "./components";
+import { Flex } from "@chakra-ui/react";
 
 interface Props {
   data: MDbMovie;
@@ -71,13 +72,16 @@ export default function MediaMovie({
             />
           )}
           {genres && <MediaInfoText title="Genre" text={genres[0].name} />}
-          {whereToWatch && (
-            <MediaInfoButton
-              title="Where to Watch"
-              link={data["watch/providers"].results["US"].link}
-            />
-          )}
-          {homepage && <MediaInfoButton title="Home Page" link={homepage} />}
+
+          <Flex justify="space-between">
+            {whereToWatch && (
+              <MediaInfoButton
+                title="Where to Watch"
+                link={data["watch/providers"].results["US"].link}
+              />
+            )}
+            {homepage && <MediaInfoButton title="Home Page" link={homepage} />}
+          </Flex>
         </MediaInfo>
       </MediaContainer>
       {edit ? (
