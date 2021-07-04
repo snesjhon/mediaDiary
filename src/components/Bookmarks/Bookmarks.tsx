@@ -58,11 +58,9 @@ function Bookmarks({ user }: { user: UserFuegoValidated }): JSX.Element {
   // We need to reset whenever we unmount to keep the rendering times at a good pace
   useEffect(() => {
     return () => {
-      if (size > 1) {
-        cache.clear();
-      }
+      cache.clear();
     };
-  }, [size]);
+  }, []);
 
   // We have data! Or not...
   const isLoadingInitialData = !data && !error;
