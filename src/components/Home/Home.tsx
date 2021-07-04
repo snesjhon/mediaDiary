@@ -64,7 +64,6 @@ export default function Home({
       revalidateOnFocus: false,
     }
   );
-  console.log(data);
 
   // Instead of mutating by key in ANY part of the UI, instead whenever "isSaving" is triggered
   // then mutate this list regardless of the filters
