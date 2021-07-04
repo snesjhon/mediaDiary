@@ -99,7 +99,7 @@ function Bookmarks({ user }: { user: UserFuegoValidated }): JSX.Element {
           alignItems="flex-end"
           borderLeftWidth={{ base: 0, md: "1px" }}
           borderRightWidth={{ base: 0, md: "1px" }}
-          py={{ md: 8 }}
+          py={{ base: 5, md: 8 }}
           px={{ md: 8 }}
         >
           {allData.map((e, i) => (

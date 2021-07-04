@@ -11,10 +11,10 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import Rating from "react-rating";
-import { useMDDispatch } from "../../config/store";
-import type { MediaDiaryWithId } from "../../types/typesMedia";
-import { createPosterURL } from "../../utils/helpers";
-import StarEmptyIcon from "../icons/StartEmptyIcon";
+import { useMDDispatch } from "../../../config/store";
+import type { MediaDiaryWithId } from "../../../types/typesMedia";
+import { createPosterURL } from "../../../utils/helpers";
+import StarEmptyIcon from "../../icons/StartEmptyIcon";
 
 function ChartTop({ list }: { list: MediaDiaryWithId[] }): JSX.Element {
   const dispatch = useMDDispatch();

@@ -1,8 +1,8 @@
 import React from "react";
 import useSWR from "swr";
-import type { MediaDiaryWithId, MediaType } from "../../types/typesMedia";
-import { fuegoChartYear } from "../../fuego/fuegoChartActions";
-import MdLoader from "../md/MdLoader";
+import { fuegoChartYear } from "../fuego/fuegoChartActions";
+import type { MediaType, MediaDiaryWithId } from "../../../types/typesMedia";
+import MdLoader from "../../md/MdLoader";
 import ChartTop from "./ChartTop";
 import { ChartVizGenre, ChartVizRating, ChartVizReleased } from "./ChartViz";
 
