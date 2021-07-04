@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { Content } from "../src/components";
 import MdLoader from "../src/components/md/MdLoader";
-import Preferences from "../src/components/Settings";
+import Preferences from "../src/components/Settings/Settings";
 import useFuegoAuth from "../src/fuego/useFuegoAuth";
 
 /**

@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { ResponsiveBar } from "@nivo/bar";
 import React from "react";
-import MdRating from "../md/MdRating";
+import MdRating from "../../md/MdRating";
 
 export function ChartVizRating({ list }: { list: number[] }): JSX.Element {
   const { colorMode } = useColorMode();

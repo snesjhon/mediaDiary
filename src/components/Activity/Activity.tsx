@@ -11,20 +11,19 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import useSWR from "swr";
-import { fuegoFiltersAll } from "../fuego/fuegoFilterActions";
-import type { FilterData } from "../types/typesFilters";
-import type { MediaType } from "../types/typesMedia";
-import type { UserFuegoValidated } from "../types/typesUser";
-import { capFormat } from "../utils/helpers";
-import ChartAll from "./chart/ChartAll";
-import ChartYear from "./chart/ChartYear";
-import AlbumIcon from "./icons/AlbumIcon";
-import LogoFilm from "./icons/FilmIcon";
-import LayersIcon from "./icons/LayersIcon";
-import TvIcon from "./icons/TvIcon";
-import MdEmpty from "./md/MdEmpty";
-import MdLoader from "./md/MdLoader";
-import MdStatus from "./md/MdStatus";
+import { fuegoFiltersAll } from "../../fuego/fuegoFilterActions";
+import type { FilterData } from "../../types/typesFilters";
+import type { MediaType } from "../../types/typesMedia";
+import type { UserFuegoValidated } from "../../types/typesUser";
+import { capFormat } from "../../utils/helpers";
+import AlbumIcon from "../icons/AlbumIcon";
+import LogoFilm from "../icons/FilmIcon";
+import LayersIcon from "../icons/LayersIcon";
+import TvIcon from "../icons/TvIcon";
+import MdEmpty from "../md/MdEmpty";
+import MdLoader from "../md/MdLoader";
+import MdStatus from "../md/MdStatus";
+import { ChartAll, ChartYear } from "./components";
 
 function Activity({ user }: { user: UserFuegoValidated }): JSX.Element {
   const [yearType, setYearType] = useState<number | null>(null);

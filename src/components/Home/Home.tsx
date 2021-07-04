@@ -15,23 +15,27 @@ import dayjs from "dayjs";
 import React, { useEffect } from "react";
 import Rating from "react-rating";
 import { cache, useSWRInfinite } from "swr";
-import { useMDDispatch, useMDState } from "../config/store";
-import { fuegoDiaryGet } from "../fuego/fuegoMDActions";
-import type { MediaDiaryState, MediaDiaryWithId } from "../types/typesMedia";
-import type { UserFuegoValidated } from "../types/typesUser";
-import { createPosterURL } from "../utils/helpers";
-import AlbumIcon from "./icons/AlbumIcon";
-import FilmIcon from "./icons/FilmIcon";
-import LogoIcon from "./icons/LogoIcon";
-import StarEmptyIcon from "./icons/StartEmptyIcon";
-import TvIcon from "./icons/TvIcon";
-import MdLoader from "./md/MdLoader";
+import { useMDDispatch, useMDState } from "../../config/store";
+import { fuegoDiaryGet } from "./fuego/fuegoHome";
+import type { MediaDiaryState, MediaDiaryWithId } from "../../types/typesMedia";
+import type { UserFuegoValidated } from "../../types/typesUser";
+import { createPosterURL } from "../../utils/helpers";
+import AlbumIcon from "../icons/AlbumIcon";
+import FilmIcon from "../icons/FilmIcon";
+import LogoIcon from "../icons/LogoIcon";
+import StarEmptyIcon from "../icons/StartEmptyIcon";
+import TvIcon from "../icons/TvIcon";
+import MdLoader from "../md/MdLoader";
 
 interface ListState {
   [key: string]: MediaDiaryState;
 }
 
-function Home({ user }: { user: UserFuegoValidated }): JSX.Element {
+export default function Home({
+  user,
+}: {
+  user: UserFuegoValidated;
+}): JSX.Element {
   const state = useMDState();
   const dispatch = useMDDispatch();
   const { colorMode } = useColorMode();
@@ -312,5 +316,3 @@ function Home({ user }: { user: UserFuegoValidated }): JSX.Element {
 
   return <MdLoader />;
 }
-
-export default Home;

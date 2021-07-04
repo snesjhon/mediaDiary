@@ -1,7 +1,7 @@
 import React from "react";
 import useSWR from "swr";
-import { fuegoChartTop6 } from "../../fuego/fuegoChartActions";
-import type { FilterData } from "../../types/typesFilters";
+import { fuegoChartTop6 } from "../fuego/fuegoChartActions";
+import type { FilterData } from "../../../types/typesFilters";
 import ChartTop from "./ChartTop";
 import { ChartVizGenre, ChartVizRating, ChartVizReleased } from "./ChartViz";
 
