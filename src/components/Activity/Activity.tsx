@@ -4,9 +4,7 @@ import {
   Center,
   Divider,
   Flex,
-  Grid,
   Heading,
-  SimpleGrid,
   Text,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
@@ -23,7 +21,7 @@ import TvIcon from "../icons/TvIcon";
 import MdEmpty from "../md/MdEmpty";
 import MdLoader from "../md/MdLoader";
 import MdStatus from "../md/MdStatus";
-import { ChartAll, ChartYear } from "./components";
+import { ActivityAll, ActivityYear } from "./components";
 
 function Activity({ user }: { user: UserFuegoValidated }): JSX.Element {
   const [yearType, setYearType] = useState<number | null>(null);
@@ -80,8 +78,16 @@ function Activity({ user }: { user: UserFuegoValidated }): JSX.Element {
         py={10}
         borderLeftWidth={{ base: 0, md: "1px" }}
         borderRightWidth={{ base: 0, md: "1px" }}
-        px={{ md: 8 }}
+        px={{ md: 4 }}
       >
+        <Flex alignItems="center" justifyContent="center" mb={4}>
+          {user.photoURL !== null && <Avatar src={user.photoURL} size="sm" />}
+          {user.displayName !== null && (
+            <Text fontWeight="semibold" ml={3} color="gray.500">
+              {user.displayName}&apos;s year to date
+            </Text>
+          )}
+        </Flex>
         <Center>
           {Object.keys(diaryYear).length > 0 ? (
             <Flex alignItems="flex-end">
@@ -107,7 +113,7 @@ function Activity({ user }: { user: UserFuegoValidated }): JSX.Element {
                       size={isActive ? "4xl" : undefined}
                       color={!isActive ? "gray.500" : undefined}
                       onClick={() => newYearHandler(yearInt)}
-                      pl={3}
+                      pl={10}
                       cursor={!isActive ? "pointer" : undefined}
                       _hover={{
                         color: !isActive ? "gray.400" : undefined,
@@ -124,51 +130,47 @@ function Activity({ user }: { user: UserFuegoValidated }): JSX.Element {
             </Heading>
           )}
         </Center>
-        <Flex alignItems="center" justifyContent="center" mt={4}>
-          {user.photoURL !== null && <Avatar src={user.photoURL} size="sm" />}
-          {user.displayName !== null && (
-            <Text fontWeight="semibold" ml={3} color="gray.500">
-              {user.displayName}&apos;s year to date
-            </Text>
-          )}
-        </Flex>
-        <Divider my={10} />
-        <Grid
-          gridTemplateColumns={`repeat(${
-            Object.keys(dataCounts).length + 1
-          }, 1fr)`}
-          gridColumnGap={6}
-          justifyContent="center"
+        <Divider mt={10} mb="6" />
+        <Flex
+          justifyContent={
+            Object.keys(dataCounts).length + 1 >= 4
+              ? "space-between"
+              : "space-around"
+          }
+          bg="gray.50"
+          p="8"
+          mb="8"
         >
-          <SimpleGrid
-            row={2}
+          <Flex
             textAlign="center"
             onClick={() => setMediaType(null)}
             cursor="pointer"
           >
             <Heading
-              size="md"
+              size="2xl"
+              fontWeight="normal"
               color={localMediaType === null ? "purple.500" : undefined}
             >
-              <LayersIcon mr={2} boxSize={4} mb={1} />
               {Object.keys(dataCounts).reduce(
                 (a, c) => (a += dataCounts[c]),
                 0
               )}
             </Heading>
-            <Text color={localMediaType === null ? "purple.500" : undefined}>
-              Memories
-            </Text>
-          </SimpleGrid>
+            <Box pl="2">
+              <LayersIcon boxSize={6} />
+              <Text color={localMediaType === null ? "purple.500" : undefined}>
+                Memories
+              </Text>
+            </Box>
+          </Flex>
           {Object.keys(dataCounts)
             .sort()
             .map((e) => {
               const StatIcon =
                 e === "tv" ? TvIcon : e === "album" ? AlbumIcon : LogoFilm;
               return (
-                <SimpleGrid
+                <Flex
                   key={`statIcon_${e}`}
-                  row={2}
                   textAlign="center"
                   cursor="pointer"
                   onClick={() => setMediaType(e as MediaType)}
@@ -177,35 +179,38 @@ function Activity({ user }: { user: UserFuegoValidated }): JSX.Element {
                   }}
                 >
                   <Heading
-                    size="md"
+                    size="2xl"
+                    fontWeight="normal"
                     color={localMediaType === e ? "purple.500" : undefined}
                   >
-                    <StatIcon
-                      boxSize={4}
-                      mb={1}
-                      color={localMediaType === e ? "purple.500" : undefined}
-                    />{" "}
                     {dataCounts[e]}
                   </Heading>
-                  <Text color={localMediaType === e ? "purple.500" : undefined}>
-                    {capFormat(e, {
-                      allCaps: e === "tv",
-                      isPlural: dataCounts[e] > 1,
-                    })}
-                  </Text>
-                </SimpleGrid>
+                  <Box pl="2">
+                    <StatIcon
+                      boxSize={6}
+                      color={localMediaType === e ? "purple.500" : undefined}
+                    />
+                    <Text
+                      color={localMediaType === e ? "purple.500" : undefined}
+                    >
+                      {capFormat(e, {
+                        allCaps: e === "tv",
+                        isPlural: dataCounts[e] > 1,
+                      })}
+                    </Text>
+                  </Box>
+                </Flex>
               );
             })}
-        </Grid>
-        <Divider my={10} />
+        </Flex>
         {yearType === null && localMediaType === null && (
-          <ChartAll uid={user.uid} list={data} />
+          <ActivityAll uid={user.uid} list={data} />
         )}
         {yearType === null && localMediaType !== null && (
-          <ChartYear uid={user.uid} mediaType={localMediaType} year={null} />
+          <ActivityYear uid={user.uid} mediaType={localMediaType} year={null} />
         )}
         {yearType !== null && (
-          <ChartYear
+          <ActivityYear
             uid={user.uid}
             mediaType={localMediaType}
             year={yearType}

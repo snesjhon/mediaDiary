@@ -34,7 +34,8 @@ export async function fuegoChartYear(
 
 export async function fuegoChartTop6(
   key: string,
-  uid: string
+  uid: string,
+  count = 6
 ): Promise<MediaDiaryWithId[]> {
   let diaryRef = fuegoDb.collection(
     `users/${uid}/diary`
@@ -42,7 +43,7 @@ export async function fuegoChartTop6(
 
   diaryRef = diaryRef.orderBy("rating", "desc");
 
-  const diaryItems = await diaryRef.limit(6).get();
+  const diaryItems = await diaryRef.limit(count).get();
 
   const items: MediaDiaryWithId[] = [];
   diaryItems.forEach((item) => {

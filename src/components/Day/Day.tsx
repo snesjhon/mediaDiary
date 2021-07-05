@@ -5,11 +5,6 @@ import useSWR, { cache } from "swr";
 import { useMDDispatch, useMDState } from "../../config/store";
 import type { DataFetchSpotify } from "../../config/useDataFetch";
 import useDataFetch from "../../config/useDataFetch";
-import {
-  fuegoBookmarkAddWithId,
-  fuegoBookmarkDelete,
-  fuegoBookmarkDeleteWithId,
-} from "../../fuego/fuegoBookmarks";
 import { fuegoDiaryEntry } from "../../fuego/fuegoMDActions";
 import useFuegoUser from "../../fuego/useFuegoUser";
 import type { MDbMovie, MDbTV } from "../../types/typesMDb";
@@ -17,6 +12,11 @@ import type { MediaDiaryWithId } from "../../types/typesMedia";
 import BookmarkIcon from "../icons/BookmarkIcon";
 import MdLoader from "../md/MdLoader";
 import { MediaMovie, MediaSpotify, MediaTV } from "../Media";
+import {
+  fuegoBookmarkAddWithId,
+  fuegoBookmarkDelete,
+  fuegoBookmarkDeleteWithId,
+} from "./fuego";
 
 export default function Day(): JSX.Element {
   const { edit } = useMDState();

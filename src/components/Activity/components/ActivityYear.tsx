@@ -3,10 +3,15 @@ import useSWR from "swr";
 import { fuegoChartYear } from "../fuego/fuegoChartActions";
 import type { MediaType, MediaDiaryWithId } from "../../../types/typesMedia";
 import MdLoader from "../../md/MdLoader";
-import ChartTop from "./ChartTop";
-import { ChartVizGenre, ChartVizRating, ChartVizReleased } from "./ChartViz";
+import useIsBreakpoint from "../../../utils/useIsBreakpoint";
+import {
+  VizHighestRated,
+  VizRating,
+  VizReleased,
+  VizGenre,
+} from "./components";
 
-function ChartYear({
+export default function ActivityYear({
   uid,
   mediaType,
   year,
@@ -15,6 +20,7 @@ function ChartYear({
   year: number | null;
   mediaType: MediaType | null;
 }): JSX.Element {
+  const isMd = useIsBreakpoint("md");
   const { data, error } = useSWR<MediaDiaryWithId[]>(
     ["/fuego/chartYear", uid, year, mediaType],
     fuegoChartYear,
@@ -32,7 +38,9 @@ function ChartYear({
     if (data && data.length < 1) {
       return <div>no data</div>;
     }
-    const highestRated = data.filter((e) => !e.loggedBefore).slice(0, 6);
+    const highestRated = data
+      .filter((e) => !e.loggedBefore)
+      .slice(0, isMd ? 8 : 6);
 
     const ratingCount = data.reduce((a, c) => {
       a[c.rating * 2] += 1;
@@ -86,14 +94,12 @@ function ChartYear({
     }, {});
     return (
       <>
-        <ChartTop list={highestRated} />
-        <ChartVizRating list={ratingCount} />
-        <ChartVizReleased list={yearList} />
-        <ChartVizGenre list={genreList} />
+        <VizHighestRated list={highestRated} mediaType={mediaType} />
+        <VizRating list={ratingCount} />
+        <VizReleased list={yearList} />
+        <VizGenre list={genreList} />
       </>
     );
   }
   return <MdLoader />;
 }
-
-export default ChartYear;
