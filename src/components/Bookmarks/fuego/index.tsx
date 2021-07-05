@@ -1,0 +1,1 @@
+export { fuegoBookmarkGet } from "./fuegoBookmarks";

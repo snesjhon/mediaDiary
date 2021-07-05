@@ -2,19 +2,29 @@ import React from "react";
 import useSWR from "swr";
 import { fuegoChartTop6 } from "../fuego/fuegoChartActions";
 import type { FilterData } from "../../../types/typesFilters";
-import ChartTop from "./ChartTop";
-import { ChartVizGenre, ChartVizRating, ChartVizReleased } from "./ChartViz";
+import useIsBreakpoint from "../../../utils/useIsBreakpoint";
+import {
+  VizGenre,
+  VizHighestRated,
+  VizRating,
+  VizReleased,
+} from "./components";
 
-function ChartAll({
+export default function ActivityAll({
   uid,
   list,
 }: {
   uid: string;
   list: FilterData;
 }): JSX.Element {
-  const { data, error } = useSWR(["fuego/chartTop", uid], fuegoChartTop6, {
-    revalidateOnFocus: false,
-  });
+  const isMd = useIsBreakpoint("md");
+  const { data, error } = useSWR(
+    ["fuego/chartTop", uid, isMd ? 8 : 6],
+    fuegoChartTop6,
+    {
+      revalidateOnFocus: false,
+    }
+  );
 
   const { rating, releasedYear, genre } = list;
 
@@ -88,11 +98,10 @@ function ChartAll({
 
   return (
     <>
-      {data && <ChartTop list={data} />}
-      <ChartVizRating list={ratingCount} />
-      <ChartVizReleased list={yearList} />
-      <ChartVizGenre list={genreList} />
+      {data && <VizHighestRated list={data} mediaType={null} />}
+      <VizRating list={ratingCount} />
+      <VizReleased list={yearList} />
+      <VizGenre list={genreList} />
     </>
   );
 }
-export default ChartAll;
