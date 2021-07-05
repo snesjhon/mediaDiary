@@ -14,7 +14,6 @@ export default function VizHighestRated({
   list: MediaDiaryWithId[];
   mediaType: MediaType | null;
 }): JSX.Element {
-  console.log({ list });
   const dispatch = useMDDispatch();
   const [purple700] = useToken("colors", ["purple.700"]);
   return (
