@@ -2,13 +2,13 @@ import { Box, useColorMode, useToken, Text } from "@chakra-ui/react";
 import { ResponsiveBar } from "@nivo/bar";
 import React from "react";
 
-interface Props {
+export interface VizGenreProps {
   list: {
     [key: string]: number;
   };
 }
 
-export default function VizGenre({ list }: Props): JSX.Element {
+export default function VizGenre({ list }: VizGenreProps): JSX.Element {
   const { colorMode } = useColorMode();
   const [purple500, borderColor, zeroColor] = useToken("colors", [
     "purple.500",
