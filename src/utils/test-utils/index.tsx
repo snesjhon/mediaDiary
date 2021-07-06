@@ -1,2 +1,3 @@
-export { default as mountWithContext } from "./mountWithContext";
-export { default as mDbData } from "./test-data.json";
+export { mountWithContext, mountWithDrawerSuspense } from "./mountWith";
+export { mockAlbumDiaryWithId, mockAlbumFetchData } from "./dataSpotify";
+export { mockMovieDiaryWithId, mockMovieFetchData } from "./dataMovie";
