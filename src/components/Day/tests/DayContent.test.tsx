@@ -1,18 +1,18 @@
 import React from "react";
-import { DayContent } from "..";
+import { DayContent } from "../components";
 import {
   mockAlbumDiaryWithId,
   mockAlbumFetchData,
   mockMovieDiaryWithId,
   mockMovieFetchData,
   mountWithDrawerSuspense,
-} from "../../../../utils/test-utils";
-import MdLoader from "../../../md/MdLoader";
-import { MediaMovie, MediaSpotify, MediaTV } from "../../../Media";
+} from "../../../utils/test-utils";
+import MdLoader from "../../md/MdLoader";
+import { MediaMovie, MediaSpotify, MediaTV } from "../../Media";
 
 let mockIsLoading = true;
 let mockType = "album";
-jest.mock("../../../../config/useDataFetch", () => {
+jest.mock("../../../config/useDataFetch", () => {
   return jest.fn(() => ({
     data: mockType === "album" ? mockAlbumFetchData : mockMovieFetchData,
     isLoading: mockIsLoading,
