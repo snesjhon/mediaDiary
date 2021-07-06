@@ -3,14 +3,12 @@ import { MediaMovie } from "..";
 import { mount } from "@shopify/react-testing";
 import "@shopify/react-testing/matchers";
 import { MediaAbout, MediaHeader, MediaRating } from "../components";
-import type { MDbMovie } from "../../../types/typesMDb";
 import Rating from "react-rating";
-import { mDbData } from "../../../utils";
+import { mockMovieFetchData } from "../../../utils/test-utils";
 
-const movieData = mDbData as MDbMovie;
 describe("<MediaMovie />", () => {
   it("renders <MediaHeader /> with appropriate props", () => {
-    const wrapper = mount(<MediaMovie data={movieData} />);
+    const wrapper = mount(<MediaMovie data={mockMovieFetchData} />);
     expect(wrapper).toContainReactComponent(MediaHeader);
 
     const mediaHeaderInWrapper = wrapper.find(MediaHeader);
@@ -20,7 +18,7 @@ describe("<MediaMovie />", () => {
   });
 
   it("renders <MediaAbout /> with appropriate props", () => {
-    const wrapper = mount(<MediaMovie data={movieData} />);
+    const wrapper = mount(<MediaMovie data={mockMovieFetchData} />);
     expect(wrapper).toContainReactComponent(MediaAbout);
 
     const aboutComponent = wrapper.find(MediaAbout);
