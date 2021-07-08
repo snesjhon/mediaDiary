@@ -1,5 +1,16 @@
 import type { MDbMovie } from "../../types/typesMDb";
-import type { MediaDiaryWithId } from "../../types/typesMedia";
+import type { MediaDiaryWithId, MediaSelected } from "../../types/typesMedia";
+
+export const mockMovieSelected: MediaSelected = {
+  mediaId: "76341",
+  poster: "8tZYtuWezp8JbcsvHYO0O46tFbo",
+  title: "Mad Max: Fury Road",
+  releasedDate: "2015-05-13T07:00:00.000Z",
+  genre: "",
+  artist: "",
+  bookmark: false,
+  type: "movie",
+};
 
 export const mockMovieDiaryWithId: MediaDiaryWithId = {
   artist: "Edgar Wright",

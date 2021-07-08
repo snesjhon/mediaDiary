@@ -5,4 +5,5 @@ export {
   mockAlbumFetchData,
   mockMovieDiaryWithId,
   mockMovieFetchData,
+  mockMovieSelected,
 } from "./test-utils";
