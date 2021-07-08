@@ -1,10 +1,10 @@
+import { useMDDispatch } from "@/config/store";
+import type { MediaDiaryWithId, MediaType } from "@/types";
+import { capFormat, createPosterURL } from "@/utils";
 import { StarIcon } from "@chakra-ui/icons";
 import { Box, Grid, Image, SimpleGrid, Text, useToken } from "@chakra-ui/react";
 import React from "react";
 import Rating from "react-rating";
-import { useMDDispatch } from "../../../../config/store";
-import type { MediaDiaryWithId, MediaType } from "../../../../types/typesMedia";
-import { capFormat, createPosterURL } from "../../../../utils/helpers";
 import StarEmptyIcon from "../../../icons/StartEmptyIcon";
 
 export default function VizHighestRated({
