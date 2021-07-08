@@ -58,6 +58,7 @@ export default function SelectedContent({
         pb={{ base: 8, sm: 0 }}
       >
         <Button
+          id="selectedBookmark"
           onClick={addBookmark}
           leftIcon={<BookmarkIcon />}
           colorScheme="orange"

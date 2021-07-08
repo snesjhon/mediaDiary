@@ -1,11 +1,8 @@
+import dayjs from "dayjs";
 import { Button } from "@chakra-ui/react";
 import React from "react";
-import useDataFetch from "../../../config/useDataFetch";
 import { fuegoBookmarkAdd } from "../../../fuego/fuegoBookmarks";
 import {
-  mockAlbumDiaryWithId,
-  mockAlbumFetchData,
-  mockMovieDiaryWithId,
   mockMovieFetchData,
   mockMovieSelected,
   mountWithDrawerSuspense,
@@ -15,7 +12,6 @@ import { MediaMovie, MediaSpotify, MediaTV } from "../../Media";
 import { SelectedContent } from "../components";
 
 let mockIsLoading = true;
-// const mockType = "movie";
 jest.mock("../../../config/useDataFetch", () => {
   return jest.fn(() => ({
     data: mockMovieFetchData,
@@ -23,14 +19,27 @@ jest.mock("../../../config/useDataFetch", () => {
   }));
 });
 
+jest.mock("../../../fuego/useFuegoUser", () => {
+  return jest.fn(() => ({
+    user: {
+      uid: 1,
+    },
+  }));
+});
+
 jest.mock("../../../fuego/fuegoBookmarks", () => ({
   fuegoBookmarkAdd: jest.fn(),
-  // return jest.fn(() => ({
-  //   data: mockMovieFetchData,
-  //   isLoading: mockIsLoading,
-  // }));
 }));
+
+jest.spyOn(dayjs(), "toISOString").mockImplementation(() => "1234");
 describe("<SelectedContent /> ", () => {
+  beforeAll(() => {
+    jest.useFakeTimers("modern");
+    jest.setSystemTime(new Date(2020, 3, 3));
+  });
+  afterAll(() => {
+    jest.useRealTimers();
+  });
   beforeEach(() => jest.resetModules());
   describe("<SelectedContent /> with albumData", () => {
     it("renders a loader, if data is loading", () => {
@@ -71,40 +80,26 @@ describe("<SelectedContent /> ", () => {
           }}
         />
       );
-      const btns = wrapper.findAll(Button);
-      console.log(btns[btns.length - 2].debug());
-      btns[btns.length - 2]?.trigger("onClick");
       expect(wrapper).toContainReactComponent(MediaMovie);
+      const btn = wrapper.find(Button, { id: "selectedBookmark" });
+      btn?.trigger("onClick");
+      expect(fuegoBookmarkAdd).toBeCalledWith(1, {
+        releasedYear: 2015,
+        releasedDecade: 2010,
+        addedDate: "2020-04-03T07:00:00.000Z",
+        type: "movie",
+        genre: "Adventure",
+        mediaId: "76341",
+        poster: "8tZYtuWezp8JbcsvHYO0O46tFbo",
+        artist: "Steven Spielberg",
+        title: "Mad Max: Fury Road",
+        releasedDate: "2015-05-13T07:00:00.000Z",
+        bookmark: true,
+        rating: -1,
+        diaryDate: null,
+        diaryYear: null,
+        loggedBefore: false,
+      });
     });
   });
-  // describe("<SelectedContent /> with movieData", () => {
-  //   it("renders a loader, if data is loading", () => {
-  //     mockIsLoading = true;
-  //     const wrapper = mountWithDrawerSuspense(
-  //       <SelectedContent
-  //         mdData={mockMovieDiaryWithId}
-  //         mutate={() => {
-  //           null;
-  //         }}
-  //       />
-  //     );
-  //     expect(wrapper).toContainReactComponent(MdLoader);
-  //   });
-
-  //   it("renders the appropriate Media component based on Data", () => {
-  //     mockIsLoading = false;
-  //     mockType = "movie";
-  //     const wrapper = mountWithDrawerSuspense(
-  //       <SelectedContent
-  //         mdData={mockMovieDiaryWithId}
-  //         mutate={() => {
-  //           null;
-  //         }}
-  //       />
-  //     );
-  //     expect(wrapper).toContainReactComponent(MediaMovie);
-  //     expect(wrapper).not.toContainReactComponent(MediaSpotify);
-  //     expect(wrapper).not.toContainReactComponent(MediaTV);
-  //   });
-  // });
 });
