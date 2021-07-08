@@ -35,7 +35,9 @@ jest.spyOn(dayjs(), "toISOString").mockImplementation(() => "1234");
 describe("<SelectedContent /> ", () => {
   beforeAll(() => {
     jest.useFakeTimers("modern");
-    jest.setSystemTime(new Date(2020, 3, 3));
+    // In the github test runner, and local runner. The TZ is different
+    // This is set at zero to have a baseline of `1970-01-01T00:00:00.000Z`
+    jest.setSystemTime(0);
   });
   afterAll(() => {
     jest.useRealTimers();
@@ -86,7 +88,7 @@ describe("<SelectedContent /> ", () => {
       expect(fuegoBookmarkAdd).toBeCalledWith(1, {
         releasedYear: 2015,
         releasedDecade: 2010,
-        addedDate: "2020-04-03T07:00:00.000Z",
+        addedDate: "1970-01-01T00:00:00.000Z",
         type: "movie",
         genre: "Adventure",
         mediaId: "76341",
