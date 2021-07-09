@@ -1,10 +1,9 @@
 import React from "react";
 import "@shopify/react-testing/matchers";
-import { mountWithContext } from "../../../../../utils";
 import { VizHighestRated } from "..";
 import type { MediaDiaryWithId } from "../../../../../types/typesMedia";
 import { Image } from "@chakra-ui/react";
-import { createPosterURL } from "../../../../../utils/helpers";
+import { mountWithContext } from "@/utils/test-utils";
 
 const list: MediaDiaryWithId[] = [
   {

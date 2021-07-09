@@ -13,7 +13,18 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "importsNotUsedAsValues": "error",
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@/config": ["./src/config"],
+      "@/config/*": ["./src/config/*"],
+      "@/fuego": ["./src/fuego"],
+      "@/fuego/*": ["./src/fuego/*"],
+      "@/types": ["./src/types"],
+      "@/types/*": ["./src/types/*"],
+      "@/utils": ["./src/utils"],
+      "@/utils/*": ["./src/utils/*"]
+    }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

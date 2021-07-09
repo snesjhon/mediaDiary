@@ -68,15 +68,16 @@ export async function fuegoDiaryById(
   key: string,
   uid: string,
   type: MediaType,
-  mediaId: string,
-  season: number
+  mediaId: string
 ): Promise<MediaDiaryWithId | false> {
   let diaryRef = fuegoDb.collection(
     `users/${uid}/diary`
   ) as fuego.firestore.Query;
   diaryRef = diaryRef.where("mediaId", "==", mediaId);
+
+  // We looking up by TV, we never want to get the specific season
   if (type === "tv") {
-    diaryRef = diaryRef.where("season", "==", season);
+    diaryRef = diaryRef.where("season", "==", -1);
   }
 
   const diaryItems = await diaryRef.limit(1).get();

@@ -1,11 +1,11 @@
 import React, { Suspense } from "react";
 import useSWR from "swr";
 import { useMDDispatch, useMDState } from "../../config/store";
-import { fuegoDiaryById } from "../../fuego/fuegoMDActions";
 import useFuegoUser from "../../fuego/useFuegoUser";
 import type { MediaDiaryWithId } from "../../types/typesMedia";
 import MdLoader from "../md/MdLoader";
 import { SelectedContent } from "./components";
+import { fuegoDiaryById } from "./config";
 
 export default function Selected(): JSX.Element {
   const { user } = useFuegoUser();
@@ -16,13 +16,7 @@ export default function Selected(): JSX.Element {
     MediaDiaryWithId | false
   >(
     user && selected
-      ? [
-          "/fuego/diaryById",
-          user.uid,
-          selected.type,
-          selected.mediaId,
-          selected.season ? selected.season : -1,
-        ]
+      ? ["/fuego/diaryById", user.uid, selected.type, selected.mediaId]
       : null,
     fuegoDiaryById,
     {
