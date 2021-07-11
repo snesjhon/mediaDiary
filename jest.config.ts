@@ -84,9 +84,12 @@ export default {
   moduleNameMapper: {
     "^@/config": "<rootDir>/src/config",
     "^@/config/(.*)": "<rootDir>/src/config/$1",
-    "^@/fuego/(.*)": "<rootDir>/src/fuego/$1",
     "^@/fuego": "<rootDir>/src/fuego",
+    "^@/fuego/(.*)": "<rootDir>/src/fuego/$1",
     "^@/utils": "<rootDir>/src/utils",
+    "^@/utils/(.*)": "<rootDir>/src/utils/$1",
+    "^@/types": "<rootDir>/src/types",
+    "^@/types/(.*)": "<rootDir>/src/types/$1",
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -134,7 +137,7 @@ export default {
   // setupFiles: [],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  // setupFilesAfterEnv: [],
+  setupFilesAfterEnv: ["<rootDir>/src/utils/test-utils/testSetup.ts"],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,

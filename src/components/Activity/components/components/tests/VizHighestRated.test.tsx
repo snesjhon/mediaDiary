@@ -1,5 +1,4 @@
 import React from "react";
-import "@shopify/react-testing/matchers";
 import { VizHighestRated } from "..";
 import type { MediaDiaryWithId } from "../../../../../types/typesMedia";
 import { Image } from "@chakra-ui/react";

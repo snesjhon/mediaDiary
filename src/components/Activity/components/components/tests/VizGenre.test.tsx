@@ -1,6 +1,5 @@
 import { mountWithContext } from "@/utils/test-utils";
 import { ResponsiveBar } from "@nivo/bar";
-import "@shopify/react-testing/matchers";
 import React from "react";
 import { VizGenre } from "..";
 import type { VizGenreProps } from "../VizGenre";

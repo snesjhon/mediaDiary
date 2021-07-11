@@ -6,7 +6,7 @@ import type {
   UserFuegoValidated,
   UserPref,
 } from "@/types";
-import { createMediaTypes, createMediaTypesArr } from "@/utils";
+import { createMediaTypes, createMediaTypesArr } from "@/utils/helpers";
 import {
   Box,
   Button,

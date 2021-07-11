@@ -8,7 +8,7 @@ import {
   mockMovieFetchData,
   mockMovieSelected,
   mountWithDrawerSuspense,
-} from "@/utils";
+} from "@/utils/test-utils";
 import SelectedContent from "..";
 
 let mockIsLoading = true;
@@ -34,6 +34,19 @@ jest.mock("../../../../../fuego/fuegoBookmarks", () => ({
 jest.spyOn(dayjs(), "toISOString").mockImplementation(() => "1234");
 describe("<SelectedContent /> ", () => {
   beforeAll(() => {
+    Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      value: jest.fn().mockImplementation((query) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(), // deprecated
+        removeListener: jest.fn(), // deprecated
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+      })),
+    });
     jest.useFakeTimers("modern");
     // In the github test runner, and local runner. The TZ is different
     // This is set at zero to have a baseline of `1970-01-01T00:00:00.000Z`
