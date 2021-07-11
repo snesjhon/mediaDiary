@@ -1,7 +1,6 @@
 import React from "react";
 import { MediaMovie } from "..";
 import { mount } from "@shopify/react-testing";
-import "@shopify/react-testing/matchers";
 import { MediaAbout, MediaHeader, MediaRating } from "../components";
 import Rating from "react-rating";
 import { mockMovieFetchData } from "../../../utils/test-utils";

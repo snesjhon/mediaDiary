@@ -16,7 +16,7 @@ import { useMDState } from "../../config/store";
 import useFuegoDelete from "./fuego/useFuegoDelete";
 import type { UserFuegoValidated } from "../../types/typesUser";
 import LayoutModal from "../layouts/LayoutModal";
-import UserPreference from "../user/UserPreference";
+import { SettingsUserPreference } from "./components";
 
 function Settings({ user }: { user: UserFuegoValidated }): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -59,7 +59,7 @@ function Settings({ user }: { user: UserFuegoValidated }): JSX.Element {
         </Heading>
         <Divider mt={2} mb={3} />
         <Box mt={2} mb={12}>
-          <UserPreference user={user} preference={preference} />
+          <SettingsUserPreference user={user} preference={preference} />
         </Box>
       </Box>
       <Box>

@@ -4,9 +4,13 @@ import { destroyCookie } from "nookies";
 import React, { useEffect, useState } from "react";
 import type { UserFuegoValidated } from "../../types/typesUser";
 import LogoIcon from "../icons/LogoIcon";
-import UserPreference from "./UserPreference";
+import { NewUserPreferences } from "./components";
 
-function UserNew({ user }: { user: UserFuegoValidated }): JSX.Element {
+export default function NewUser({
+  user,
+}: {
+  user: UserFuegoValidated;
+}): JSX.Element {
   const router = useRouter();
   const [isRedirecting, setIsRedirecting] = useState(false);
   useEffect(() => {
@@ -34,10 +38,8 @@ function UserNew({ user }: { user: UserFuegoValidated }): JSX.Element {
       {isRedirecting ? (
         <Text>Loading your experience</Text>
       ) : (
-        <UserPreference user={user} cb={() => setIsRedirecting(true)} />
+        <NewUserPreferences user={user} cb={() => setIsRedirecting(true)} />
       )}
     </Box>
   );
 }
-
-export default UserNew;

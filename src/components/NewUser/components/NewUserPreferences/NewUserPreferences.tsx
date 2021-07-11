@@ -1,3 +1,12 @@
+import { MEDIA_TYPES, useMDDispatch, useMDState } from "@/config";
+import { fuegoSetPreferences } from "@/fuego";
+import type {
+  MediaTypesArr,
+  UserFuegoPref,
+  UserFuegoValidated,
+  UserPref,
+} from "@/types";
+import { createMediaTypes, createMediaTypesArr } from "@/utils";
 import {
   Box,
   Button,
@@ -10,18 +19,8 @@ import {
   useCheckboxGroup,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { MEDIA_TYPES } from "../../config/contants";
-import { useMDDispatch, useMDState } from "../../config/store";
-import { fuegoSetPreferences } from "../../fuego/fuegoMDActions";
-import type { MediaTypesArr } from "../../types/typesMedia";
-import type {
-  UserFuegoPref,
-  UserFuegoValidated,
-  UserPref,
-} from "../../types/typesUser";
-import { createMediaTypes, createMediaTypesArr } from "../../utils/helpers";
 
-function UserPreference({
+export default function NewUserPreference({
   user,
   preference,
   cb,
@@ -111,5 +110,3 @@ function UserPreference({
     }
   }
 }
-
-export default UserPreference;
