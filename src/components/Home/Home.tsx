@@ -180,7 +180,7 @@ export default function Home({
                       }}
                       onClick={() =>
                         dispatch({
-                          type: "selectedWithId",
+                          type: "day",
                           payload: diaryDates[month][day],
                         })
                       }

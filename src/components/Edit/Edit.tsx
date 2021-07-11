@@ -160,7 +160,7 @@ export default function Edit(): JSX.Element {
       // TODO: we have to assure to breakup the "edit" types, to assure we're editing the types correctly
       await fuegoDelete(user.uid, edit.id, edit as MediaDiaryDate);
       mdDispatch({ type: "view", payload: "md" });
-      mdDispatch({ type: "saved" });
+      mdDispatch({ type: "close" });
     } else {
       console.error("[EDIT]: Missing delete params");
     }

@@ -153,7 +153,7 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
             dispatch({ type: "saving" });
           })
           .finally(() => {
-            dispatch({ type: "savedd" });
+            dispatch({ type: "saved" });
             mutate();
           });
       } else {
@@ -174,7 +174,7 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
             // TODO: might just want to roll this into a single dispatch, I believe i did this before because of
             // styling and FOUC issues.
             dispatch({ type: "view", payload: "md" });
-            dispatch({ type: "savedd" });
+            dispatch({ type: "saved" });
           });
       }
     } else {
@@ -197,7 +197,7 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
           dispatch({ type: "saving" });
         })
         .finally(() => {
-          dispatch({ type: "savedd" });
+          dispatch({ type: "saved" });
           mutate();
         });
     } else {
