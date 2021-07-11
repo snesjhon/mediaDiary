@@ -1,25 +1,25 @@
 import dayjs from "dayjs";
 import { Button } from "@chakra-ui/react";
 import React from "react";
-import { fuegoBookmarkAdd } from "../../../fuego/fuegoBookmarks";
+import MdLoader from "../../../../md/MdLoader";
+import { MediaMovie, MediaSpotify, MediaTV } from "../../../../Media";
+import { fuegoBookmarkAdd } from "@/fuego";
 import {
   mockMovieFetchData,
   mockMovieSelected,
   mountWithDrawerSuspense,
-} from "../../../utils/test-utils";
-import MdLoader from "../../md/MdLoader";
-import { MediaMovie, MediaSpotify, MediaTV } from "../../Media";
-import { SelectedContent } from "../components";
+} from "@/utils";
+import SelectedContent from "..";
 
 let mockIsLoading = true;
-jest.mock("../../../config/useDataFetch", () => {
+jest.mock("../../../../../config/useDataFetch", () => {
   return jest.fn(() => ({
     data: mockMovieFetchData,
     isLoading: mockIsLoading,
   }));
 });
 
-jest.mock("../../../fuego/useFuegoUser", () => {
+jest.mock("../../../../../fuego/useFuegoUser", () => {
   return jest.fn(() => ({
     user: {
       uid: 1,
@@ -27,7 +27,7 @@ jest.mock("../../../fuego/useFuegoUser", () => {
   }));
 });
 
-jest.mock("../../../fuego/fuegoBookmarks", () => ({
+jest.mock("../../../../../fuego/fuegoBookmarks", () => ({
   fuegoBookmarkAdd: jest.fn(),
 }));
 

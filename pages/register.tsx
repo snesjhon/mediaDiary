@@ -2,13 +2,13 @@ import "firebase/auth";
 import { useRouter } from "next/router";
 import { destroyCookie, parseCookies, setCookie } from "nookies";
 import React, { useEffect, useState } from "react";
+import { Register } from "src/components";
 import LayoutGradient from "../src/components/layouts/LayoutGradient";
 import MdLoader from "../src/components/md/MdLoader";
-import UserRegister from "../src/components/user/UserRegister";
 import fuego from "../src/fuego/fuego";
 import useFuegoUser from "../src/fuego/useFuegoUser";
 
-export default function SignUpPage(): JSX.Element {
+export default function RegisterPage(): JSX.Element {
   const cookies = parseCookies();
   const [isNewUser, setIsNewUser] = useState(!!cookies?.fuegoNewUser);
   const router = useRouter();
@@ -52,7 +52,7 @@ export default function SignUpPage(): JSX.Element {
   } else {
     return (
       <LayoutGradient>
-        <UserRegister type={type === "login" ? "login" : "signup"} />
+        <Register type={type === "login" ? "login" : "signup"} />
       </LayoutGradient>
     );
   }

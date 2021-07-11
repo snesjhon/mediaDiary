@@ -1,19 +1,22 @@
 import dayjs from "dayjs";
 import React from "react";
-import { useMDDispatch } from "../../../config/store";
-import useDataFetch from "../../../config/useDataFetch";
-import type { DataFetchSpotify } from "../../../config/useDataFetch";
-import { fuegoBookmarkAdd } from "../../../fuego/fuegoBookmarks";
-import useFuegoUser from "../../../fuego/useFuegoUser";
-import type { MDbMovie, MDbTV } from "../../../types/typesMDb";
-import type { MediaSelected } from "../../../types/typesMedia";
-import type { SpotifyAlbum, SpotifyArtist } from "../../../types/typesSpotify";
-import { parsePosterUrl } from "../../../utils/helpers";
+import { useMDDispatch } from "../../../../config/store";
+import useDataFetch from "../../../../config/useDataFetch";
+import type { DataFetchSpotify } from "../../../../config/useDataFetch";
+import { fuegoBookmarkAdd } from "../../../../fuego/fuegoBookmarks";
+import useFuegoUser from "../../../../fuego/useFuegoUser";
+import type { MDbMovie, MDbTV } from "../../../../types/typesMDb";
+import type { MediaSelected } from "../../../../types/typesMedia";
+import type {
+  SpotifyAlbum,
+  SpotifyArtist,
+} from "../../../../types/typesSpotify";
+import { parsePosterUrl } from "../../../../utils/helpers";
 import { CalendarIcon } from "@chakra-ui/icons";
 import { DrawerBody, DrawerFooter, Button } from "@chakra-ui/react";
-import { BookmarkIcon } from "../../icons";
-import MdLoader from "../../md/MdLoader";
-import { MediaSpotify, MediaMovie, MediaTV } from "../../Media";
+import { BookmarkIcon } from "../../../icons";
+import MdLoader from "../../../md/MdLoader";
+import { MediaSpotify, MediaMovie, MediaTV } from "../../../Media";
 
 export default function SelectedContent({
   item,

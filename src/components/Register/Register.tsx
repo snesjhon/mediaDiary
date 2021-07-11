@@ -17,7 +17,7 @@ interface Props {
   type: "login" | "signup";
 }
 
-export default function UserRegister({ type }: Props): JSX.Element {
+export default function Register({ type }: Props): JSX.Element {
   const mdPurple = useColorModeValue("purple.700", "purple.200");
   const typeText = type === "login" ? "Login in" : "Sign Up";
   return (
