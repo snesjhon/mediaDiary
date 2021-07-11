@@ -122,7 +122,7 @@ export default function Log(): JSX.Element {
         mdDispatch({ type: "saving" });
         await fuegoDiaryAdd(user.uid, addDiary);
         mdDispatch({ type: "view", payload: "md" });
-        mdDispatch({ type: "saved" });
+        mdDispatch({ type: "close" });
       } else {
         console.error("diary fails");
       }

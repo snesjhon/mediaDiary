@@ -8,14 +8,7 @@ import type { UserFuegoPref } from "../types/typesUser";
 export interface MDState {
   preference: UserFuegoPref;
   isSaving?: boolean;
-  view?:
-    | "search"
-    | "log"
-    | "edit"
-    | "md"
-    | "activity"
-    | "selected"
-    | "selectedWithId";
+  view?: "search" | "log" | "edit" | "md" | "activity" | "day" | "selected";
   selected?: MediaSelected;
   selectedTV?: MDbTV;
   selectedMovie?: MDbMovie;
@@ -62,7 +55,7 @@ export type MDActions =
       payload: MDState["view"];
     }
   | {
-      type: "selectedWithId" | "savedEdit";
+      type: "day" | "savedEdit";
       payload: MDState["edit"];
     }
   | {
@@ -70,7 +63,7 @@ export type MDActions =
       payload: MDState["preference"];
     }
   | {
-      type: "saved" | "savedd" | "saving" | "dayClose";
+      type: "close" | "saved" | "saving";
     }
   | {
       type: "filter";
@@ -105,7 +98,7 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
         isSaving: true,
       };
     }
-    case "savedd": {
+    case "saved": {
       return {
         ...state,
         isSaving: false,
@@ -115,7 +108,7 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
       return {
         ...state,
         isSaving: false,
-        view: "selectedWithId",
+        view: "day",
         edit: actions.payload,
       };
     }
@@ -126,8 +119,7 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
         preference: actions.payload,
       };
     }
-    case "dayClose":
-    case "saved": {
+    case "close": {
       return {
         ...state,
         isSaving: false,
@@ -161,10 +153,10 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
         isSaving: false,
       };
     }
-    case "selectedWithId": {
+    case "day": {
       return {
         ...state,
-        view: "selectedWithId",
+        view: "day",
         selected: undefined,
         edit: actions.payload,
       };

@@ -28,8 +28,9 @@ export default function Selected(): JSX.Element {
     // if its TV then we have a problem, because if there IS a previous Item, then we have to realize
     // that we NEED to go search for a further season information.
     if (data) {
-      // If we find this search has given us a result, then push to "SelectedWithId"
-      dispatch({ type: "selectedWithId", payload: data });
+      // If we find this search has given us a result, then push to the "Day" component so the
+      // user is able to re-log their component
+      dispatch({ type: "day", payload: data });
       return <MdLoader />;
     } else if (selected) {
       return (

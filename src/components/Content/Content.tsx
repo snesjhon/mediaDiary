@@ -75,18 +75,18 @@ export default function Content({
               view === "log" ||
               view === "edit" ||
               view === "selected" ||
-              view === "selectedWithId"
+              view === "day"
             }
             placement="right"
           >
             {view === "selected" && <Selected />}
-            {view === "selectedWithId" && <Day />}
+            {view === "day" && <Day />}
             {view === "log" && <Log />}
             {view === "edit" && <Edit />}
           </ContentDrawer>
           <Modal
             isOpen={view === "search"}
-            onClose={() => dispatch({ type: "dayClose" })}
+            onClose={() => dispatch({ type: "close" })}
             scrollBehavior="inside"
             size={isMd ? "xl" : "sm"}
             initialFocusRef={refInput}

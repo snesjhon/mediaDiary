@@ -50,7 +50,7 @@ export default function VizHighestRated({
                 borderColor="gray.300"
                 onClick={() =>
                   dispatch({
-                    type: "selectedWithId",
+                    type: "day",
                     payload: e,
                   })
                 }

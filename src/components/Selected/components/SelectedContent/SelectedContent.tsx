@@ -199,7 +199,7 @@ export default function SelectedContent({
         ...(typeof season !== "undefined" && { season }),
       });
       dispatch({ type: "saving" });
-      dispatch({ type: "savedd" });
+      dispatch({ type: "saved" });
       mutate();
     } else {
       console.error("[SELECTED]: No user");
