@@ -1,21 +1,23 @@
-import React from "react";
-import { cache } from "swr";
-import { useMDDispatch } from "../../../config/store";
-import useDataFetch from "../../../config/useDataFetch";
-import type { DataFetchSpotify } from "../../../config/useDataFetch";
-import useFuegoUser from "../../../fuego/useFuegoUser";
-import type { MDbMovie, MDbTV } from "../../../types/typesMDb";
-import type { MediaDiaryWithId } from "../../../types/typesMedia";
-import {
-  fuegoBookmarkDeleteWithId,
-  fuegoBookmarkDelete,
-  fuegoBookmarkAddWithId,
-} from "../fuego";
+import type { DataFetchSpotify } from "@/config";
+import { useMDDispatch, useDataFetch } from "@/config";
+import type { MDbMovie, MDbTV, MediaDiaryWithId } from "@/types";
 import { CalendarIcon } from "@chakra-ui/icons";
-import { DrawerBody, DrawerFooter, Button } from "@chakra-ui/react";
-import { BookmarkIcon } from "../../icons";
-import MdLoader from "../../md/MdLoader";
-import { MediaMovie, MediaTV, MediaSpotify } from "../../Media";
+import { Button, DrawerBody, DrawerFooter } from "@chakra-ui/react";
+import React from "react";
+import { BookmarkIcon } from "../../../icons";
+import MdLoader from "../../../md/MdLoader";
+import {
+  MediaMovie,
+  MediaSpotify,
+  MediaTV,
+} from "../../../../components/Media";
+import { cache } from "swr";
+import {
+  fuegoBookmarkAddWithId,
+  fuegoBookmarkDelete,
+  fuegoBookmarkDeleteWithId,
+} from "../../fuego";
+import { useFuegoUser } from "@/fuego";
 
 interface Props {
   mdData: MediaDiaryWithId;
@@ -98,6 +100,15 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
         >
           {bookmark ? "Bookmarked" : "Bookmark"}
         </Button>
+        {isEditable && (
+          <Button
+            onClick={() => handleLogAgain}
+            colorScheme="blue"
+            variant="outline"
+          >
+            Log Again
+          </Button>
+        )}
         <Button
           // TODO: At the current moment there isn't a good way of adding SEASON support
           // AFTER you've bookmarked TV. That is inconvenient because I'd want to refecth
@@ -202,6 +213,12 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
         });
     } else {
       console.error("[CONTENT]: Failed to add a bookmark");
+    }
+  }
+
+  function handleLogAgain() {
+    if (user && id) {
+      return;
     }
   }
 }

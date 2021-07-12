@@ -4,5 +4,5 @@ export * from "./fuegoFilterActions";
 export * from "./fuegoMDActions";
 export * from "./fuegoProvider";
 export * from "./useFuegoAuth";
-export * from "./useFuegoLogout";
-export * from "./useFuegoUser";
+export { default as useFuegoLogout } from "./useFuegoLogout";
+export { default as useFuegoUser } from "./useFuegoUser";
