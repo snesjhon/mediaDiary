@@ -1,30 +1,28 @@
-import type { Icon } from "@chakra-ui/react";
-import { Box, Center, Flex, Input, Text, useColorMode } from "@chakra-ui/react";
-import dayjs from "dayjs";
-import type { RefObject } from "react";
-import React, { useState } from "react";
-import useSWR from "swr";
-import { useMDDispatch, useMDState } from "../../../../config/store";
-import type { MediaSelected, MediaType } from "../../../../types/typesMedia";
+import { useMDState, useMDDispatch } from "@/config";
 import type {
   MDbSearch,
-  MDbSearchResult,
   SpotifySearch,
+  MediaSelected,
+  MediaType,
   SpotifySearchResult,
-} from "../../../../types/typesSearch";
-import { fetcher, parsePosterUrl } from "../../../../utils/helpers";
-import { spotifyFetch } from "../../../../utils/helperSpotify";
-import useDebounce from "../../../../utils/useDebounce";
-import AlbumIcon from "../../../icons/AlbumIcon";
-import FilmIcon from "../../../icons/FilmIcon";
-import TvIcon from "../../../icons/TvIcon";
-import MdSpinner from "../../../md/MdSpinner";
+  MDbSearchResult,
+} from "@/types";
+import { parsePosterUrl, fetcher, spotifyFetch } from "@/utils";
+import useDebounce from "@/utils/useDebounce";
+import { Text, Box, Center, Flex, Input, useColorMode } from "@chakra-ui/react";
+import type { Icon } from "@chakra-ui/react";
+import dayjs from "dayjs";
+import React, { useState } from "react";
+import type { RefObject } from "react";
+import useSWR from "swr";
+import { FilmIcon, TvIcon, AlbumIcon } from "src/components/icons";
+import MdSpinner from "src/components/md/MdSpinner";
 
 // This is the root of our search Types. This can be extended for future search queries.
 // We always want to keep a strict returnArr to ensure that we follow the userPref
 type SearchTypes = [MDbSearch | false, SpotifySearch | false];
 
-function ContentSearch({
+export default function Search({
   refInput,
 }: {
   refInput: RefObject<HTMLInputElement>;
@@ -300,5 +298,3 @@ function ContentSearch({
     }
   }
 }
-
-export default ContentSearch;

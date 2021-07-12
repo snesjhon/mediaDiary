@@ -1,4 +1,4 @@
-import { mountWithContext } from "@/utils/test-utils";
+import { mountWithContext } from "../../../../../utils/test-utils/mountWith";
 import { ResponsiveBar } from "@nivo/bar";
 import React from "react";
 import { VizGenre } from "..";

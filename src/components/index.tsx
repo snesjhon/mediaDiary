@@ -6,3 +6,4 @@ export { default as Log } from "./Log";
 export { default as Selected } from "./Selected";
 export { default as Register } from "./Register";
 export { default as NewUser } from "./NewUser";
+export { default as Search } from "./Search";

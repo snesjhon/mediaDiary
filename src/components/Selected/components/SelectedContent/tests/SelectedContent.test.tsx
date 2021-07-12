@@ -7,8 +7,8 @@ import { fuegoBookmarkAdd } from "@/fuego";
 import {
   mockMovieFetchData,
   mockMovieSelected,
-  mountWithDrawerSuspense,
-} from "@/utils/test-utils";
+} from "../../../../../utils/test-utils";
+import { mountWithDrawerSuspense } from "../../../../../utils/test-utils/mountWith";
 import SelectedContent from "..";
 
 let mockIsLoading = true;
