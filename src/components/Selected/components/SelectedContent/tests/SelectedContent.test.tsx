@@ -31,7 +31,6 @@ jest.mock("../../../../../fuego/fuegoBookmarks", () => ({
   fuegoBookmarkAdd: jest.fn(),
 }));
 
-jest.spyOn(dayjs(), "toISOString").mockImplementation(() => "1234");
 describe("<SelectedContent /> ", () => {
   beforeAll(() => {
     Object.defineProperty(window, "matchMedia", {
@@ -108,7 +107,7 @@ describe("<SelectedContent /> ", () => {
         poster: "8tZYtuWezp8JbcsvHYO0O46tFbo",
         artist: "George Miller",
         title: "Mad Max: Fury Road",
-        releasedDate: "2015-05-13T07:00:00.000Z",
+        releasedDate: dayjs("2015-05-13").toISOString(),
         bookmark: true,
         rating: -1,
         diaryDate: null,
