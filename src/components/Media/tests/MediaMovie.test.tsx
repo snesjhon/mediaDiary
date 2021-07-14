@@ -12,7 +12,7 @@ describe("<MediaMovie />", () => {
 
     const mediaHeaderInWrapper = wrapper.find(MediaHeader);
     expect(mediaHeaderInWrapper).toHaveReactProps({
-      artist: "Steven Spielberg",
+      artist: "George Miller",
     });
   });
 
@@ -23,9 +23,8 @@ describe("<MediaMovie />", () => {
     const aboutComponent = wrapper.find(MediaAbout);
     expect(aboutComponent).toHaveReactProps({
       overview:
-        "When Dr. Indiana Jones – the tweed-suited professor who just happens to be a celebrated archaeologist – is hired by the government to locate the legendary Ark of the Covenant, he finds himself up against the entire Nazi regime.",
-      tagline:
-        "Indiana Jones - the new hero from the creators of JAWS and STAR WARS.",
+        "An apocalyptic story set in the furthest reaches of our planet, in a stark desert landscape where humanity is broken, and most everyone is crazed fighting for the necessities of life. Within this world exist two rebels on the run who just might be able to restore order.",
+      tagline: "What a Lovely Day.",
     });
   });
 

@@ -18,6 +18,7 @@ import {
   fuegoBookmarkDeleteWithId,
 } from "../../fuego";
 import { useFuegoUser } from "@/fuego";
+import { createMediaSelected } from "@/utils";
 
 interface Props {
   mdData: MediaDiaryWithId;
@@ -101,11 +102,7 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
           {bookmark ? "Bookmarked" : "Bookmark"}
         </Button>
         {isEditable && (
-          <Button
-            onClick={() => handleLogAgain}
-            colorScheme="blue"
-            variant="outline"
-          >
+          <Button onClick={handleLogAgain} colorScheme="blue" variant="outline">
             Log Again
           </Button>
         )}
@@ -217,7 +214,25 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
   }
 
   function handleLogAgain() {
-    if (user && id) {
+    if (data) {
+      const mediaSelected = createMediaSelected(type, data, bookmark);
+      if (mediaSelected) {
+        dispatch({
+          type: "logAgain",
+          payload: {
+            selected: mediaSelected,
+            selectedMovie: type === "movie" ? (data as MDbMovie) : undefined,
+            selectedTV: type === "tv" ? (data as MDbTV) : undefined,
+            selectedSpotify:
+              type === "album"
+                ? {
+                    artist: (data as DataFetchSpotify)[1],
+                    album: (data as DataFetchSpotify)[0],
+                  }
+                : undefined,
+          },
+        });
+      }
       return;
     }
   }

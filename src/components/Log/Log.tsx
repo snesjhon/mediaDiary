@@ -21,12 +21,18 @@ export default function Log(): JSX.Element {
   const mdDispatch = useMDDispatch();
   const { user } = useFuegoUser();
   const MDState = useMDState();
-  const { selected, selectedMovie, selectedSpotify, selectedTV, isSaving } =
-    MDState;
+  const {
+    selected,
+    selectedMovie,
+    selectedSpotify,
+    selectedTV,
+    isSaving,
+    isLoggedBefore,
+  } = MDState;
 
   const initData: LogState = {
     diaryDate: dayjs().toISOString(),
-    loggedBefore: false,
+    loggedBefore: isLoggedBefore ?? false,
     rating: 0,
   };
 
