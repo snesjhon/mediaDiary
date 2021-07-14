@@ -28,7 +28,7 @@ export default function createMediaSelected(
       let movieItem: MediaSelected = {
         releasedDate: released,
         mediaId: castItem.id.toString(),
-        poster: castItem.poster_path,
+        poster: parsePosterUrl(castItem.poster_path, "movie"),
         type: "movie",
         title: castItem.title,
         artist: "",
@@ -60,7 +60,7 @@ export default function createMediaSelected(
       let tvItem: MediaSelected = {
         releasedDate: released,
         mediaId: castItem.id.toString(),
-        poster: castItem.poster_path,
+        poster: parsePosterUrl(castItem.poster_path, "tv"),
         type: "tv",
         title: castItem.name,
         artist: "",
