@@ -1,13 +1,18 @@
 import { createContext, useContext } from "react";
 import type { FilterBookmarkState, FilterState } from "../types/typesFilters";
 import type { MDbMovie, MDbTV } from "../types/typesMDb";
-import type { MediaDiaryWithId, MediaSelected } from "../types/typesMedia";
+import type {
+  MediaDiaryWithId,
+  MediaSelected,
+  MediaType,
+} from "../types/typesMedia";
 import type { SpotifyAlbum, SpotifyArtist } from "../types/typesSpotify";
 import type { UserFuegoPref } from "../types/typesUser";
 
 export interface MDState {
   preference: UserFuegoPref;
   isSaving?: boolean;
+  isLoggedBefore?: boolean;
   view?: "search" | "log" | "edit" | "md" | "activity" | "day" | "selected";
   selected?: MediaSelected;
   selectedTV?: MDbTV;
@@ -33,7 +38,7 @@ export type MDActions =
       payload: MDState["selected"];
     }
   | {
-      type: "log";
+      type: "log" | "logAgain";
       payload: {
         selected: MDState["selected"];
         selectedTV: MDState["selectedTV"];
@@ -125,6 +130,7 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
         isSaving: false,
         view: "md",
         edit: undefined,
+        isLoggedBefore: false,
       };
     }
     case "view": {
@@ -142,6 +148,18 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
         selectedSpotify: actions.payload.selectedSpotify,
         view: "log",
         edit: undefined,
+      };
+    }
+    case "logAgain": {
+      return {
+        ...state,
+        selected: actions.payload.selected,
+        selectedMovie: actions.payload.selectedMovie,
+        selectedTV: actions.payload.selectedTV,
+        selectedSpotify: actions.payload.selectedSpotify,
+        view: "log",
+        edit: undefined,
+        isLoggedBefore: true,
       };
     }
     case "selected": {
