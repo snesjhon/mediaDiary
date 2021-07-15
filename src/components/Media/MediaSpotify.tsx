@@ -127,17 +127,14 @@ export default function MediaSpotify({
           <Heading size="lg" mb={3}>
             About
           </Heading>
-          <Grid
-            gridTemplateColumns={{ base: "0.5fr 1fr", md: "0.6fr 1fr" }}
-            gridGap={{ base: 4, md: 0 }}
-          >
+          <Grid gridTemplateColumns={{ md: "0.6fr 1fr" }} gridGap="4">
             {artistInfo?.images && (
               <Box>
                 <Image src={artistInfo.images[2].url} borderRadius="xl" />
               </Box>
             )}
             <Box>
-              <Heading size="md" mb={4}>
+              <Heading size="md" fontWeight="medium" mb={4}>
                 {artistInfo.name}
               </Heading>
               {artistInfo?.genres && (
