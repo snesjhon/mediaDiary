@@ -55,7 +55,6 @@ export default function MediaTV({
   artist,
 }: Props): JSX.Element {
   const [showEpisodes, setShowEpisodes] = useState(false);
-  console.log(seasonInfo);
   const {
     credits,
     genres,
