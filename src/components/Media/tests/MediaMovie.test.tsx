@@ -5,6 +5,10 @@ import { MediaAbout, MediaHeader, MediaRating } from "../components";
 import Rating from "react-rating";
 import { mockMovieFetchData } from "../../../utils/test-utils";
 
+jest.mock("@/utils/useIsBreakpoint", () => {
+  return jest.fn(() => true);
+});
+
 describe("<MediaMovie />", () => {
   it("renders <MediaHeader /> with appropriate props", () => {
     const wrapper = mount(<MediaMovie data={mockMovieFetchData} />);

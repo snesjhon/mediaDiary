@@ -13,11 +13,12 @@ import {
   MediaInfo,
   MediaInfoButton,
   MediaInfoText,
+  MediaLinks,
   MediaPoster,
   MediaRating,
 } from "./components";
 import type { LogActions, LogState } from "../../config/storeLog";
-import { Button, Flex, Text } from "@chakra-ui/react";
+import { Button, Divider, Flex, Text } from "@chakra-ui/react";
 
 interface Props {
   data: MDbTV;
@@ -25,6 +26,7 @@ interface Props {
   rating?: number;
   releasedDate?: string;
   poster?: string;
+  artist?: string;
   edit?: {
     dispatch: Dispatch<LogActions>;
     fields: LogState;
@@ -32,6 +34,7 @@ interface Props {
   seasonInfo?: {
     season?: number;
     episodes?: number;
+    seenEpisodes?: number[];
   };
   handleSeasonSelected?: (props: {
     season?: number;
@@ -49,6 +52,7 @@ export default function MediaTV({
   seasonInfo,
   edit,
   handleSeasonSelected,
+  artist,
 }: Props): JSX.Element {
   const [showEpisodes, setShowEpisodes] = useState(false);
   const {
@@ -65,10 +69,11 @@ export default function MediaTV({
 
   const whereToWatch = data["watch/providers"]?.results["US"]?.link;
 
-  const artist =
-    credits &&
-    credits.crew &&
-    credits.crew.find((e) => e.job === "Director")?.name;
+  const artistData =
+    (credits &&
+      credits.crew &&
+      credits.crew.find((e) => e.job === "Director")?.name) ??
+    artist;
 
   const mediaDate =
     seasonInfo?.season && seasonInfo.season !== -1 && seasons
@@ -77,7 +82,7 @@ export default function MediaTV({
 
   return (
     <>
-      <MediaHeader artist={artist} title={original_name} />
+      <MediaHeader artist={artistData} title={original_name} />
       <MediaContainer>
         <MediaPoster poster={poster ?? poster_path} type="tv" />
         <MediaInfo>
@@ -87,11 +92,21 @@ export default function MediaTV({
               text={dayjs(diaryDate).format("MMM D, YYYY")}
             />
           )}
-          {rating && <MediaRating rating={rating} />}
+          {rating ? (
+            <MediaRating rating={rating} />
+          ) : (
+            <MediaInfoText title="Rating" text="No Rating" />
+          )}
           {seasonInfo?.season && seasonInfo.season !== -1 && (
             <MediaInfoText
               title="Season"
               text={seasonInfo.season.toLocaleString()}
+            />
+          )}
+          {seasonInfo?.seenEpisodes && seasonInfo.seenEpisodes.length > 0 && (
+            <MediaInfoText
+              title="Episodes"
+              text={seasonInfo.seenEpisodes.reverse().join(", ")}
             />
           )}
           {mediaDate && (
@@ -103,16 +118,6 @@ export default function MediaTV({
             />
           )}
           {genres && <MediaInfoText title="Genre" text={genres[0].name} />}
-
-          <Flex justifyContent="space-between">
-            {whereToWatch && (
-              <MediaInfoButton
-                title="Where to Watch"
-                link={data["watch/providers"].results["US"].link}
-              />
-            )}
-            {homepage && <MediaInfoButton title="Home Page" link={homepage} />}
-          </Flex>
         </MediaInfo>
       </MediaContainer>
       {edit ? (
@@ -155,6 +160,16 @@ export default function MediaTV({
       ) : (
         <>
           {overview && <MediaAbout overview={overview} tagline={tagline} />}
+          <MediaLinks>
+            {whereToWatch && (
+              <MediaInfoButton
+                title="Where to Watch"
+                link={data["watch/providers"].results["US"].link}
+              />
+            )}
+            {homepage && <MediaInfoButton title="Home Page" link={homepage} />}
+          </MediaLinks>
+          <Divider mt={4} mb={4} />
           {credits && credits.cast && <MediaCast cast={credits.cast} />}
         </>
       )}

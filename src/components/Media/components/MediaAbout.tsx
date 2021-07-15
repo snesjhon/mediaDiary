@@ -21,7 +21,6 @@ export default function MediaAbout({ tagline, overview }: Props): JSX.Element {
         {tagline}
       </Text>
       <Text>{overview}</Text>
-      <Divider mt={4} mb={4} />
     </>
   );
 }

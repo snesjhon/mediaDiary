@@ -19,6 +19,10 @@ jest.mock("../../../../../config/useDataFetch", () => {
   }));
 });
 
+jest.mock("@/utils/useIsBreakpoint", () => {
+  return jest.fn(() => true);
+});
+
 describe("<DayContent /> ", () => {
   beforeAll(() => {
     Object.defineProperty(window, "matchMedia", {
