@@ -12,10 +12,11 @@ import {
   MediaInfo,
   MediaInfoButton,
   MediaInfoText,
+  MediaLinks,
   MediaPoster,
   MediaRating,
 } from "./components";
-import { Flex } from "@chakra-ui/react";
+import { Divider, Flex } from "@chakra-ui/react";
 
 interface Props {
   data: MDbMovie;
@@ -62,7 +63,11 @@ export default function MediaMovie({
               text={dayjs(diaryDate).format("MMM D, YYYY")}
             />
           )}
-          {rating && <MediaRating rating={rating} />}
+          {rating ? (
+            <MediaRating rating={rating} />
+          ) : (
+            <MediaInfoText title="Rating" text="No Rating" />
+          )}
           {release_date && (
             <MediaInfoText
               title="Released"
@@ -72,16 +77,6 @@ export default function MediaMovie({
             />
           )}
           {genres && <MediaInfoText title="Genre" text={genres[0].name} />}
-
-          <Flex justify="space-between">
-            {whereToWatch && (
-              <MediaInfoButton
-                title="Where to Watch"
-                link={data["watch/providers"].results["US"].link}
-              />
-            )}
-            {homepage && <MediaInfoButton title="Home Page" link={homepage} />}
-          </Flex>
         </MediaInfo>
       </MediaContainer>
       {edit ? (
@@ -89,6 +84,16 @@ export default function MediaMovie({
       ) : (
         <>
           {overview && <MediaAbout overview={overview} tagline={tagline} />}
+          <MediaLinks>
+            {whereToWatch && (
+              <MediaInfoButton
+                title="Where to Watch"
+                link={data["watch/providers"].results["US"].link}
+              />
+            )}
+            {homepage && <MediaInfoButton title="Home Page" link={homepage} />}
+          </MediaLinks>
+          <Divider mt={4} mb={4} />
           {credits && credits.cast && <MediaCast cast={credits.cast} />}
         </>
       )}

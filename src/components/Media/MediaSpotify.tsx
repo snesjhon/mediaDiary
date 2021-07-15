@@ -22,9 +22,11 @@ import {
   MediaInfo,
   MediaInfoButton,
   MediaInfoText,
+  MediaLinks,
   MediaPoster,
   MediaRating,
 } from "./components";
+import useIsBreakpoint from "@/utils/useIsBreakpoint";
 
 interface Props {
   albumInfo: SpotifyAlbum;
@@ -44,9 +46,8 @@ export default function MediaSpotify({
   rating,
   edit,
 }: Props): JSX.Element {
-  const { name: title, images, release_date, label } = albumInfo;
+  const { name: title, images, release_date } = albumInfo;
   const { name: artist, genres } = artistInfo;
-
   return (
     <>
       <MediaHeader title={title} artist={artist} />
@@ -54,39 +55,30 @@ export default function MediaSpotify({
         {images && images?.length > 0 && (
           <MediaPoster poster={images[0].url} type="album" />
         )}
-        <MediaInfo>
-          {diaryDate && (
-            <MediaInfoText
-              title="Date"
-              text={dayjs(diaryDate).format("MMM D, YYYY")}
-            />
-          )}
-          {rating && <MediaRating rating={rating} />}
-          {release_date && (
-            <MediaInfoText
-              title="Released"
-              text={new Date(release_date).toLocaleDateString("en-us", {
-                year: "numeric",
-              })}
-            />
-          )}
-          {genres && <MediaInfoText title="Genre" text={genres[0]} />}
-          {label && <MediaInfoText title="Label" text={label} />}
-          <Flex justify="space-between">
-            {artistInfo.external_urls.spotify && (
-              <MediaInfoButton
-                title="Artist Page"
-                link={artistInfo.external_urls.spotify}
+        {!edit && (
+          <MediaInfo>
+            {diaryDate && (
+              <MediaInfoText
+                title="Date"
+                text={dayjs(diaryDate).format("MMM D, YYYY")}
               />
             )}
-            {albumInfo.external_urls.spotify && (
-              <MediaInfoButton
-                title="Album Page"
-                link={albumInfo.external_urls.spotify}
+            {rating ? (
+              <MediaRating rating={rating} />
+            ) : (
+              <MediaInfoText title="Rating" text="No Rating" />
+            )}
+            {release_date && (
+              <MediaInfoText
+                title="Released"
+                text={new Date(release_date).toLocaleDateString("en-us", {
+                  year: "numeric",
+                })}
               />
             )}
-          </Flex>
-        </MediaInfo>
+            {genres && <MediaInfoText title="Genre" text={genres[0]} />}
+          </MediaInfo>
+        )}
       </MediaContainer>
       {edit ? (
         <MediaEdit dispatch={edit.dispatch} fields={edit.fields} />
@@ -144,11 +136,11 @@ export default function MediaSpotify({
                 <Image src={artistInfo.images[2].url} borderRadius="xl" />
               </Box>
             )}
-            {artistInfo?.genres && (
-              <Box>
-                <Heading size="md" mb={4}>
-                  {artistInfo.name}
-                </Heading>
+            <Box>
+              <Heading size="md" mb={4}>
+                {artistInfo.name}
+              </Heading>
+              {artistInfo?.genres && (
                 <Flex wrap="wrap">
                   {artistInfo.genres.slice(0, 4).map((e: string) => (
                     <Tag
@@ -161,8 +153,22 @@ export default function MediaSpotify({
                     </Tag>
                   ))}
                 </Flex>
-              </Box>
-            )}
+              )}
+              <MediaLinks>
+                {artistInfo.external_urls.spotify && (
+                  <MediaInfoButton
+                    title="Artist Page"
+                    link={artistInfo.external_urls.spotify}
+                  />
+                )}
+                {albumInfo.external_urls.spotify && (
+                  <MediaInfoButton
+                    title="Album Page"
+                    link={albumInfo.external_urls.spotify}
+                  />
+                )}
+              </MediaLinks>
+            </Box>
           </Grid>
         </Box>
       )}

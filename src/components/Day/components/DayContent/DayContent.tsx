@@ -40,6 +40,8 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
     releasedDate,
     id,
     poster,
+    artist,
+    seenEpisodes,
   } = mdData;
 
   const { data, error, isLoading } = useDataFetch({
@@ -71,8 +73,9 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
           <MediaTV
             data={data as MDbTV}
             diaryDate={diaryDate}
+            artist={artist}
             rating={rating}
-            seasonInfo={{ season }}
+            seasonInfo={{ season, seenEpisodes }}
             poster={poster}
             releasedDate={releasedDate}
           />
