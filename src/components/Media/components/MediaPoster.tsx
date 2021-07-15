@@ -11,7 +11,7 @@ export default function mediaPoster({
   type: MediaType;
 }): JSX.Element {
   return (
-    <Box maxW="2xs" mx="auto">
+    <Box maxW={{ base: "48", sm: "2xs" }} mx="auto">
       <Image
         src={
           type === "album"

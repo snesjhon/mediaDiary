@@ -11,10 +11,10 @@ export default function MediaInfoText({ title, text }: Props): JSX.Element {
   const isMd = useIsBreakpoint("md");
   return (
     <Box>
-      <Text fontWeight={500} fontSize={isMd ? "sm" : "xs"}>
+      <Text fontWeight={500} fontSize="sm">
         {title}
       </Text>
-      <Text fontWeight="bold" fontSize={isMd ? "lg" : "sm"}>
+      <Text fontWeight="bold" fontSize={isMd ? "lg" : undefined}>
         {text}
       </Text>
     </Box>

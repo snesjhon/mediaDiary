@@ -30,7 +30,7 @@ export default function ContentDrawer({
     onSwipedDown: () => onClose(),
     delta: 250,
   });
-  const sizeType = useBreakpointValue({ base: "full", sm: "lg" });
+  const sizeType = useBreakpointValue({ base: "full", sm: "md" });
   const fullHeight = useBreakpointValue({ base: true, sm: false });
 
   return (

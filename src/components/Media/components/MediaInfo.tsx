@@ -16,7 +16,7 @@ export default function MediaInfo({
           sm: "repeat(auto-fill, minmax(150px, 1fr))",
           md: "repeat(auto-fill, minmax(200px, 1fr))",
         }}
-        gridGap={{ base: "5", sm: "10" }}
+        gridGap={{ base: "5", sm: "7" }}
       >
         {children}
       </Grid>
