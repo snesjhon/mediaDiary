@@ -17,7 +17,7 @@ import type { MediaDiaryWithId } from "../../types/typesMedia";
 import type { UserFuegoValidated } from "../../types/typesUser";
 import { createPosterURL } from "../../utils/helpers";
 import MdLoader from "../md/MdLoader";
-import { fuegoBookmarkGet } from "./fuego";
+import { fuegoBookmarkGet } from "./config";
 
 function Bookmarks({ user }: { user: UserFuegoValidated }): JSX.Element {
   const state = useMDState();

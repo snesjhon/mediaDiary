@@ -12,11 +12,11 @@ import {
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React, { useState } from "react";
-import { useMDState } from "../../config/store";
-import useFuegoDelete from "./fuego/useFuegoDelete";
+import { useMDState } from "@/config/store";
+import { useFuegoDelete } from "./config";
 import type { UserFuegoValidated } from "../../types/typesUser";
-import LayoutModal from "../layouts/LayoutModal";
 import { SettingsUserPreference } from "./components";
+import { MdModal } from "@/md";
 
 function Settings({ user }: { user: UserFuegoValidated }): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -76,14 +76,14 @@ function Settings({ user }: { user: UserFuegoValidated }): JSX.Element {
         </Button>
       </Box>
 
-      <LayoutModal
+      <MdModal
         isOpen={isOpen}
         onClose={onClose}
         title="Delete Account"
         size="md"
       >
         <DeleteContent user={user} onClose={onClose} />
-      </LayoutModal>
+      </MdModal>
     </Box>
   );
 }

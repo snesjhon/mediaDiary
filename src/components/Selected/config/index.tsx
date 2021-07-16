@@ -1,1 +1,1 @@
-export { default as fuegoDiaryById } from "./fuegoSelected";
+export { default as fuegoDiaryById } from "./fuego";

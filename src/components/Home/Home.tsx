@@ -16,7 +16,7 @@ import React, { useEffect } from "react";
 import Rating from "react-rating";
 import { cache, useSWRInfinite } from "swr";
 import { useMDDispatch, useMDState } from "../../config/store";
-import { fuegoDiaryGet } from "./fuego/fuegoHome";
+import { fuegoDiaryGet } from "./config";
 import type { MediaDiaryState, MediaDiaryWithId } from "../../types/typesMedia";
 import type { UserFuegoValidated } from "../../types/typesUser";
 import { createPosterURL } from "../../utils/helpers";

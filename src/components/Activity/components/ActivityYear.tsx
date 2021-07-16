@@ -1,6 +1,6 @@
 import React from "react";
 import useSWR from "swr";
-import { fuegoChartYear } from "../fuego/fuegoChartActions";
+import { fuegoChartYear } from "../config/fuego";
 import type { MediaType, MediaDiaryWithId } from "../../../types/typesMedia";
 import MdLoader from "../../md/MdLoader";
 import useIsBreakpoint from "../../../utils/useIsBreakpoint";

@@ -1,0 +1,1 @@
+export { fuegoDiaryAdd } from "./fuego";

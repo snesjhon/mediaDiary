@@ -93,6 +93,8 @@ export default {
     "^@/types/(.*)": "<rootDir>/src/types/$1",
     "^@/icons": "<rootDir>/src/components/Icons",
     "^@/icons/(.*)": "<rootDir>/src/components/Icons/$1",
+    "^@/md": "<rootDir>/src/components/md",
+    "^@/md/(.*)": "<rootDir>/src/components/md/$1",
     "^@/src/(.*)": "<rootDir>/src/$1",
   },
 

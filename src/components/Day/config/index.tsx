@@ -2,4 +2,4 @@ export {
   fuegoBookmarkAddWithId,
   fuegoBookmarkDelete,
   fuegoBookmarkDeleteWithId,
-} from "./fuegoBookmarks";
+} from "./fuego";

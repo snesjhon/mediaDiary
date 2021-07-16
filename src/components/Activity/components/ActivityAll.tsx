@@ -1,6 +1,6 @@
 import React from "react";
 import useSWR from "swr";
-import { fuegoChartTop6 } from "../fuego/fuegoChartActions";
+import { fuegoChartTop6 } from "../config/fuego";
 import type { FilterData } from "../../../types/typesFilters";
 import useIsBreakpoint from "../../../utils/useIsBreakpoint";
 import {

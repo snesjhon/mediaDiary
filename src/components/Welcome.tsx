@@ -26,9 +26,7 @@ import {
   ActivityIcon,
   BookmarkIcon,
 } from "@/icons";
-import Layout from "./layouts/Layout";
-import LayoutFooter from "./layouts/LayoutFooter";
-import LayoutHeader from "./layouts/LayoutHeader";
+import { MdFooter, MdHeader, MdLayout } from "@/md";
 
 const fade = keyframes`
      0%,50% {
@@ -82,8 +80,8 @@ function Welcome(): JSX.Element {
   const isMd = useIsBreakpoint("md");
 
   return (
-    <Layout>
-      <LayoutHeader />
+    <MdLayout>
+      <MdHeader />
       <Box my={{ base: 20 }}>
         <Grid
           display={{ base: "flex", lg: "grid" }}
@@ -273,8 +271,8 @@ function Welcome(): JSX.Element {
           </Box>
         </Flex>
       </Box>
-      <LayoutFooter />
-    </Layout>
+      <MdFooter />
+    </MdLayout>
   );
 }
 
