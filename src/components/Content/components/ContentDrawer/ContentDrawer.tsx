@@ -18,11 +18,13 @@ export default function ContentDrawer({
   refHook,
   placement = "right",
   isOpen,
+  showHeader = true,
   ...rest
 }: PropsWithChildren<unknown> & {
   refHook?: RefObject<HTMLInputElement> | undefined;
   isOpen: DrawerProps["isOpen"];
   placement?: DrawerProps["placement"];
+  showHeader?: boolean;
 }): JSX.Element {
   const dispatch = useMDDispatch();
   const handlers = useSwipeable({
@@ -45,10 +47,12 @@ export default function ContentDrawer({
     >
       <DrawerOverlay zIndex={2}>
         <DrawerContent {...handlers}>
-          <DrawerHeader>
-            <MdLogo title="mediaDiary" />
-          </DrawerHeader>
-          <DrawerCloseButton />
+          {showHeader && (
+            <DrawerHeader>
+              <MdLogo title="mediaDiary" />
+              <DrawerCloseButton />
+            </DrawerHeader>
+          )}
           {children}
         </DrawerContent>
       </DrawerOverlay>

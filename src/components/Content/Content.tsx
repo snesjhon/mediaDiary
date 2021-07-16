@@ -60,6 +60,7 @@ export default function Content({
               view === "day"
             }
             placement="right"
+            showHeader={view === "day" ? false : true}
           >
             {view === "selected" && <Selected />}
             {view === "day" && <Day />}

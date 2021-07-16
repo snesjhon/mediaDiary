@@ -8,7 +8,7 @@ export const mockMovieSelected: MediaSelected = {
   type: "movie",
   title: "Mad Max: Fury Road",
   artist: "George Miller",
-  genre: "Action",
+  genre: "action",
   bookmark: false,
 };
 

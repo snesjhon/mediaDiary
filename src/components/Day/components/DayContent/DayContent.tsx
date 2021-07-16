@@ -1,8 +1,16 @@
 import type { DataFetchSpotify } from "@/config";
 import { useMDDispatch, useDataFetch } from "@/config";
 import type { MDbMovie, MDbTV, MediaDiaryWithId } from "@/types";
-import { CalendarIcon } from "@chakra-ui/icons";
-import { Button, DrawerBody, DrawerFooter } from "@chakra-ui/react";
+import { CalendarIcon, RepeatIcon } from "@chakra-ui/icons";
+import {
+  Button,
+  CloseButton,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  Flex,
+  IconButton,
+} from "@chakra-ui/react";
 import React from "react";
 import { BookmarkIcon } from "../../../icons";
 import MdLoader from "../../../md/MdLoader";
@@ -19,6 +27,7 @@ import {
 } from "../../fuego";
 import { useFuegoUser } from "@/fuego";
 import { createMediaSelected } from "@/utils";
+import MdLogo from "@/src/components/md/MdLogo";
 
 interface Props {
   mdData: MediaDiaryWithId;
@@ -61,6 +70,30 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
     <MdLoader />
   ) : (
     <>
+      <DrawerHeader>
+        <Flex justifyContent="space-between">
+          <MdLogo title="mediaDiary" />
+          <Flex alignItems="center">
+            <IconButton
+              aria-label="Search database"
+              icon={
+                <BookmarkIcon
+                  fill={bookmark ? "orange.100" : "none"}
+                  boxSize="5"
+                />
+              }
+              variant="ghost"
+              colorScheme="orange"
+              mr="2"
+              size="md"
+              onClick={() =>
+                bookmark ? removeBookmark(mdData, id) : addBookmark(mdData, id)
+              }
+            />
+            <CloseButton />
+          </Flex>
+        </Flex>
+      </DrawerHeader>
       <DrawerBody px={{ base: 6, sm: 8 }}>
         {type === "movie" && (
           <MediaMovie
@@ -94,19 +127,14 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
         justifyContent="space-between"
         pb={{ base: 8, sm: 4 }}
       >
-        <Button
-          onClick={() =>
-            bookmark ? removeBookmark(mdData, id) : addBookmark(mdData, id)
-          }
-          leftIcon={<BookmarkIcon fill={bookmark ? "orange.100" : "none"} />}
-          colorScheme="orange"
-          variant="outline"
-        >
-          {bookmark ? "Bookmarked" : "Bookmark"}
-        </Button>
         {isEditable && (
-          <Button onClick={handleLogAgain} colorScheme="blue" variant="outline">
-            Log Again
+          <Button
+            onClick={handleLogAgain}
+            colorScheme="blue"
+            variant="outline"
+            leftIcon={<RepeatIcon />}
+          >
+            Log again
           </Button>
         )}
         <Button
@@ -141,7 +169,7 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
   );
 
   function removeBookmark(mediaData: MediaDiaryWithId, id: string) {
-    if (user !== null && user && user.email !== null && id) {
+    if (user && id) {
       const {
         diaryDate,
         rating,
