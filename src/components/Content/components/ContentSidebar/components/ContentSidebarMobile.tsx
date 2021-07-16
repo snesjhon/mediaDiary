@@ -1,3 +1,4 @@
+import { HomeIcon, BookmarkIcon, ActivityIcon } from "@/icons";
 import { SettingsIcon } from "@chakra-ui/icons";
 import {
   Drawer,
@@ -11,9 +12,6 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { ContentSidebarButton, ContentSidebarFooter } from ".";
-import ActivityIcon from "../../../../icons/ActivityIcon";
-import BookmarkIcon from "../../../../icons/BookmarkIcon";
-import HomeIcon from "../../../../icons/HomeIcon";
 import MdLogo from "../../../../md/MdLogo";
 
 export default function ContentSidebarMobile({

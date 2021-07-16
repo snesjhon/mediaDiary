@@ -1,3 +1,4 @@
+import { LogoIcon } from "@/icons";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -15,7 +16,6 @@ import { useMDDispatch, useMDState } from "../../config/store";
 import type { MediaDiaryWithId } from "../../types/typesMedia";
 import type { UserFuegoValidated } from "../../types/typesUser";
 import { createPosterURL } from "../../utils/helpers";
-import LogoIcon from "../icons/LogoIcon";
 import MdLoader from "../md/MdLoader";
 import { fuegoBookmarkGet } from "./fuego";
 

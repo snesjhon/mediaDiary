@@ -9,6 +9,6 @@ export { default as LayersIcon } from "./LayersIcon";
 export { default as LogoIcon } from "./LogoIcon";
 export { default as MemoryIcon } from "./MemoryIcon";
 export { default as PlusIcon } from "./PlusIcon";
-export { default as StartEmptyIcon } from "./StartEmptyIcon";
+export { default as StarEmptyIcon } from "./StarEmptyIcon";
 export { default as TvIcon } from "./TvIcon";
 export { default as TwitterIcon } from "./TwitterIcon";

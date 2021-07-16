@@ -1,9 +1,9 @@
+import { StarEmptyIcon } from "@/icons";
 import useIsBreakpoint from "@/utils/useIsBreakpoint";
 import { StarIcon } from "@chakra-ui/icons";
 import { Box, Text } from "@chakra-ui/react";
 import React from "react";
 import Rating from "react-rating";
-import StarEmptyIcon from "../../icons/StartEmptyIcon";
 
 interface Props {
   rating: number;

@@ -1,12 +1,10 @@
+import { HomeIcon, BookmarkIcon, ActivityIcon } from "@/icons";
 import { SearchIcon, SettingsIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, VStack } from "@chakra-ui/react";
 import React from "react";
 import { ContentSidebarButton, ContentSidebarFooter } from ".";
 import { useMDDispatch } from "../../../../../config/store";
 import useFuegoUser from "../../../../../fuego/useFuegoUser";
-import ActivityIcon from "../../../../icons/ActivityIcon";
-import BookmarkIcon from "../../../../icons/BookmarkIcon";
-import HomeIcon from "../../../../icons/HomeIcon";
 
 export default function ContentSidebarDesktop(): JSX.Element {
   const { user } = useFuegoUser();

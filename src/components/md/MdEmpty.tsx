@@ -1,6 +1,6 @@
+import { LogoIcon } from "@/icons";
 import { Heading, Square } from "@chakra-ui/react";
 import React from "react";
-import LogoIcon from "../icons/LogoIcon";
 
 /**
  * Provide a placeholder message when there's no records for this user

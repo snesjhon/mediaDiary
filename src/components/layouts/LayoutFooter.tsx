@@ -1,3 +1,4 @@
+import { LogoIcon } from "@/icons";
 import {
   Divider,
   Flex,
@@ -7,7 +8,6 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import useIsBreakpoint from "../../utils/useIsBreakpoint";
-import LogoIcon from "../icons/LogoIcon";
 
 function LayoutFooter(): JSX.Element {
   const mdPurple = useColorModeValue("purple.700", "purple.200");

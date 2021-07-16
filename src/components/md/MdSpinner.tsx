@@ -1,6 +1,6 @@
+import { LogoIcon } from "@/icons";
 import { Grid, Spinner } from "@chakra-ui/react";
 import React from "react";
-import LogoIcon from "../icons/LogoIcon";
 
 function MdSpinner(): JSX.Element {
   return (

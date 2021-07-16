@@ -10,8 +10,7 @@ import { setCookie } from "nookies";
 import Link from "next/link";
 import React from "react";
 import fuego from "../../fuego/fuego";
-import GoogleIcon from "../icons/GoogleIcon";
-import LogoIcon from "../icons/LogoIcon";
+import { LogoIcon, GoogleIcon } from "@/icons";
 
 interface Props {
   type: "login" | "signup";

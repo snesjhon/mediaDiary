@@ -20,12 +20,8 @@ import { fuegoDiaryGet } from "./fuego/fuegoHome";
 import type { MediaDiaryState, MediaDiaryWithId } from "../../types/typesMedia";
 import type { UserFuegoValidated } from "../../types/typesUser";
 import { createPosterURL } from "../../utils/helpers";
-import AlbumIcon from "../icons/AlbumIcon";
-import FilmIcon from "../icons/FilmIcon";
-import LogoIcon from "../icons/LogoIcon";
-import StarEmptyIcon from "../icons/StartEmptyIcon";
-import TvIcon from "../icons/TvIcon";
 import MdLoader from "../md/MdLoader";
+import { LogoIcon, StarEmptyIcon, FilmIcon, AlbumIcon, TvIcon } from "@/icons";
 
 interface ListState {
   [key: string]: MediaDiaryState;
@@ -271,6 +267,7 @@ export default function Home({
                                   />
                                 }
                                 emptySymbol={
+                                  // eslint-disable-next-line react/jsx-no-undef
                                   <StarEmptyIcon
                                     h={{ base: "12px", md: "20px" }}
                                     w={{ base: "12px", md: "20px" }}

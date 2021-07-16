@@ -9,10 +9,10 @@ import type { MDbMovie, MDbTV } from "../../../../types/typesMDb";
 import type { MediaSelected } from "../../../../types/typesMedia";
 import { CalendarIcon } from "@chakra-ui/icons";
 import { DrawerBody, DrawerFooter, Button } from "@chakra-ui/react";
-import { BookmarkIcon } from "../../../icons";
 import MdLoader from "../../../md/MdLoader";
 import { MediaSpotify, MediaMovie, MediaTV } from "../../../Media";
 import { createMediaSelected } from "@/utils";
+import { BookmarkIcon } from "@/icons";
 
 export default function SelectedContent({
   item,

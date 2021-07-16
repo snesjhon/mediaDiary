@@ -16,7 +16,6 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@/src/*": ["./src/*"],
       "@/config": ["./src/config"],
       "@/config/*": ["./src/config/*"],
       "@/fuego": ["./src/fuego"],
@@ -24,7 +23,10 @@
       "@/types": ["./src/types"],
       "@/types/*": ["./src/types/*"],
       "@/utils": ["./src/utils"],
-      "@/utils/*": ["./src/utils/*"]
+      "@/utils/*": ["./src/utils/*"],
+      "@/icons": ["./src/components/icons"],
+      "@/icons/*": ["./src/comeponents/icons/*"],
+      "@/src/*": ["./src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
