@@ -1,10 +1,9 @@
+import { MdGradient, MdLoader } from "@/md";
 import "firebase/auth";
 import { useRouter } from "next/router";
 import { destroyCookie, parseCookies, setCookie } from "nookies";
 import React, { useEffect, useState } from "react";
 import { Register } from "src/components";
-import LayoutGradient from "../src/components/layouts/LayoutGradient";
-import MdLoader from "../src/components/md/MdLoader";
 import fuego from "../src/fuego/fuego";
 import useFuegoUser from "../src/fuego/useFuegoUser";
 
@@ -51,9 +50,9 @@ export default function RegisterPage(): JSX.Element {
     return <MdLoader />;
   } else {
     return (
-      <LayoutGradient>
+      <MdGradient>
         <Register type={type === "login" ? "login" : "signup"} />
-      </LayoutGradient>
+      </MdGradient>
     );
   }
 }

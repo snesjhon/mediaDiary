@@ -1,4 +1,4 @@
-import { fuegoDb } from "../../../fuego/fuego";
+import { fuegoDb } from "@/fuego";
 import {
   createFilterKeys,
   createFilterSet,

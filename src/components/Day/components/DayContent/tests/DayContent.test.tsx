@@ -14,7 +14,7 @@ import {
   fuegoBookmarkAddWithId,
   fuegoBookmarkDeleteWithId,
   fuegoBookmarkDelete,
-} from "../../../fuego";
+} from "../../../config";
 
 let mockIsLoading = false;
 let mockType = "album";
@@ -37,7 +37,7 @@ jest.mock("@/fuego", () => ({
   })),
 }));
 
-jest.mock("../../../fuego", () => ({
+jest.mock("../../../config", () => ({
   fuegoBookmarkAddWithId: jest.fn().mockImplementation(() => Promise.resolve()),
   fuegoBookmarkDelete: jest.fn().mockImplementation(() => Promise.resolve()),
   fuegoBookmarkDeleteWithId: jest

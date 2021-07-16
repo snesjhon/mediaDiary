@@ -1,15 +1,14 @@
 import { Flex } from "@chakra-ui/react";
 import React from "react";
-import Layout from "../layouts/Layout";
-import MdSpinner from "./MdSpinner";
+import { MdLayout, MdSpinner } from ".";
 
 function MdLoader(): JSX.Element {
   return (
-    <Layout>
+    <MdLayout>
       <Flex height="90vh" justifyContent="center" alignItems="center">
         <MdSpinner />
       </Flex>
-    </Layout>
+    </MdLayout>
   );
 }
 export default MdLoader;

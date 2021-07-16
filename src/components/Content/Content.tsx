@@ -1,3 +1,4 @@
+import { MdLayout, MdLoader } from "@/md";
 import { Box, Grid, useDisclosure } from "@chakra-ui/react";
 import Head from "next/head";
 import { Router } from "next/router";
@@ -6,8 +7,6 @@ import React, { useEffect } from "react";
 import { Day, Edit, Log, Search, Selected } from "..";
 import { useMDState } from "../../config/store";
 import useIsBreakpoint from "../../utils/useIsBreakpoint";
-import Layout from "../layouts/Layout";
-import MdLoader from "../md/MdLoader";
 import { ContentDrawer, ContentSidebar, ContentToolbar } from "./components";
 
 export default function Content({
@@ -41,7 +40,7 @@ export default function Content({
   }, [isMd, onClose]);
 
   return (
-    <Layout>
+    <MdLayout>
       <Head>
         <title>{title} / MediaDiary</title>
       </Head>
@@ -70,6 +69,6 @@ export default function Content({
           <Search />
         </>
       )}
-    </Layout>
+    </MdLayout>
   );
 }

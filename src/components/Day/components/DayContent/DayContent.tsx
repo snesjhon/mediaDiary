@@ -27,7 +27,7 @@ import {
   fuegoBookmarkAddWithId,
   fuegoBookmarkDelete,
   fuegoBookmarkDeleteWithId,
-} from "../../fuego";
+} from "../../config";
 
 interface Props {
   mdData: MediaDiaryWithId;

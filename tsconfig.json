@@ -26,6 +26,8 @@
       "@/utils/*": ["./src/utils/*"],
       "@/icons": ["./src/components/Icons"],
       "@/icons/*": ["./src/comeponents/Icons/*"],
+      "@/md": ["./src/components/md"],
+      "@/md/*": ["./src/comeponents/md/*"],
       "@/src/*": ["./src/*"]
     }
   },

@@ -1,7 +1,7 @@
+import { MdGradient } from "@/md";
 import { useRouter } from "next/router";
 import React from "react";
 import { NewUser } from "src/components";
-import LayoutGradient from "../src/components/layouts/LayoutGradient";
 import MdLoader from "../src/components/md/MdLoader";
 import useFuegoAuth from "../src/fuego/useFuegoAuth";
 
@@ -22,9 +22,9 @@ export default function NewUserPage(): JSX.Element {
     return <MdLoader />;
   } else if (!userValidating && userValid && userNoPreference) {
     return (
-      <LayoutGradient>
+      <MdGradient>
         <NewUser user={userValid} />;
-      </LayoutGradient>
+      </MdGradient>
     );
   } else if (userValidHasPreference) {
     router.push("/home");

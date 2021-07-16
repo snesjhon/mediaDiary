@@ -4,7 +4,7 @@ import React, { useEffect, useReducer, useRef } from "react";
 import { useMDDispatch, useMDState } from "../../config/store";
 import type { LogState } from "../../config/storeLog";
 import { LogReducer } from "../../config/storeLog";
-import { fuegoDiaryAdd } from "./fuego/fuegoLog";
+import { fuegoDiaryAdd } from "./config";
 import useFuegoUser from "../../fuego/useFuegoUser";
 import type { MediaDiaryDate } from "../../types/typesMedia";
 import { parsePosterUrl } from "../../utils/helpers";
