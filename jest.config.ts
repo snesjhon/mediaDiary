@@ -91,8 +91,8 @@ export default {
     "^@/utils/test-utils/(.*)": "<rootDir>/src/utils/test-utils/$1",
     "^@/types": "<rootDir>/src/types",
     "^@/types/(.*)": "<rootDir>/src/types/$1",
-    "^@/icons": "<rootDir>/src/components/icons",
-    "^@/icons/(.*)": "<rootDir>/src/components/icons/$1",
+    "^@/icons": "<rootDir>/src/components/Icons",
+    "^@/icons/(.*)": "<rootDir>/src/components/Icons/$1",
     "^@/src/(.*)": "<rootDir>/src/$1",
   },
 

@@ -24,8 +24,8 @@
       "@/types/*": ["./src/types/*"],
       "@/utils": ["./src/utils"],
       "@/utils/*": ["./src/utils/*"],
-      "@/icons": ["./src/components/icons"],
-      "@/icons/*": ["./src/comeponents/icons/*"],
+      "@/icons": ["./src/components/Icons"],
+      "@/icons/*": ["./src/comeponents/Icons/*"],
       "@/src/*": ["./src/*"]
     }
   },

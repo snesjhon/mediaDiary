@@ -19,11 +19,13 @@ import { useRouter } from "next/router";
 import type { ComponentType } from "react";
 import React, { useState } from "react";
 import useIsBreakpoint from "../utils/useIsBreakpoint";
-import ActivityIcon from "./icons/ActivityIcon";
-import AlbumIcon from "./icons/AlbumIcon";
-import BookmarkIcon from "./icons/BookmarkIcon";
-import FilmIcon from "./icons/FilmIcon";
-import TvIcon from "./icons/TvIcon";
+import {
+  FilmIcon,
+  TvIcon,
+  AlbumIcon,
+  ActivityIcon,
+  BookmarkIcon,
+} from "@/icons";
 import Layout from "./layouts/Layout";
 import LayoutFooter from "./layouts/LayoutFooter";
 import LayoutHeader from "./layouts/LayoutHeader";
