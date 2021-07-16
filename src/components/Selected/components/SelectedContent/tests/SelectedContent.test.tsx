@@ -102,7 +102,7 @@ describe("<SelectedContent /> ", () => {
         releasedDecade: 2010,
         addedDate: "1970-01-01T00:00:00.000Z",
         type: "movie",
-        genre: "Action",
+        genre: "action",
         mediaId: "76341",
         poster: "8tZYtuWezp8JbcsvHYO0O46tFbo",
         artist: "George Miller",

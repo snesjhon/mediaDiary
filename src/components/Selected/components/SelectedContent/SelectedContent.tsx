@@ -114,7 +114,7 @@ export default function SelectedContent({
         releasedDecade: Math.floor(releasedYear / 10) * 10,
         addedDate: dayjs().toISOString(),
         type,
-        genre,
+        genre: genre !== "" ? genre.toLocaleLowerCase() : "",
         mediaId,
         poster,
         artist,

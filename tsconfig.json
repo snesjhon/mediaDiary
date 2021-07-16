@@ -16,6 +16,7 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
+      "@/src/*": ["./src/*"],
       "@/config": ["./src/config"],
       "@/config/*": ["./src/config/*"],
       "@/fuego": ["./src/fuego"],

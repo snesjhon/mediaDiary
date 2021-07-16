@@ -1,18 +1,15 @@
 import type { DataFetchSpotify } from "@/config";
 import { useMDDispatch, useDataFetch } from "@/config";
 import type { MDbMovie, MDbTV, MediaDiaryWithId } from "@/types";
-import { CalendarIcon } from "@chakra-ui/icons";
+import { CalendarIcon, RepeatIcon } from "@chakra-ui/icons";
 import {
-  Box,
   Button,
   CloseButton,
   DrawerBody,
-  DrawerCloseButton,
   DrawerFooter,
   DrawerHeader,
   Flex,
   IconButton,
-  useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
 import { BookmarkIcon } from "../../../icons";
@@ -30,7 +27,7 @@ import {
 } from "../../fuego";
 import { useFuegoUser } from "@/fuego";
 import { createMediaSelected } from "@/utils";
-import MdLogo from "src/components/md/MdLogo";
+import MdLogo from "@/src/components/md/MdLogo";
 
 interface Props {
   mdData: MediaDiaryWithId;
@@ -131,8 +128,13 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
         pb={{ base: 8, sm: 4 }}
       >
         {isEditable && (
-          <Button onClick={handleLogAgain} colorScheme="blue" variant="outline">
-            Log Again
+          <Button
+            onClick={handleLogAgain}
+            colorScheme="blue"
+            variant="outline"
+            leftIcon={<RepeatIcon />}
+          >
+            Log again
           </Button>
         )}
         <Button
@@ -167,7 +169,7 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
   );
 
   function removeBookmark(mediaData: MediaDiaryWithId, id: string) {
-    if (user !== null && user && user.email !== null && id) {
+    if (user && id) {
       const {
         diaryDate,
         rating,
