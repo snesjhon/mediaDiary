@@ -2,8 +2,8 @@ import { StarIcon } from "@chakra-ui/icons";
 import React from "react";
 import Rating from "react-rating";
 import type { RatingComponentProps } from "react-rating";
-import StarEmptyIcon from "../icons/StartEmptyIcon";
 import type { LayoutProps } from "@chakra-ui/react";
+import { StarEmptyIcon } from "@/icons";
 
 function MdRating({
   initialRating,

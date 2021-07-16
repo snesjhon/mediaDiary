@@ -82,7 +82,6 @@ export default {
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
-    "^@/src/(.*)": "<rootDir>/src/$1",
     "^@/config": "<rootDir>/src/config",
     "^@/config/(.*)": "<rootDir>/src/config/$1",
     "^@/fuego": "<rootDir>/src/fuego",
@@ -92,6 +91,9 @@ export default {
     "^@/utils/test-utils/(.*)": "<rootDir>/src/utils/test-utils/$1",
     "^@/types": "<rootDir>/src/types",
     "^@/types/(.*)": "<rootDir>/src/types/$1",
+    "^@/icons": "<rootDir>/src/components/icons",
+    "^@/icons/(.*)": "<rootDir>/src/components/icons/$1",
+    "^@/src/(.*)": "<rootDir>/src/$1",
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader

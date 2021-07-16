@@ -1,3 +1,6 @@
+import { fuegoFiltersAll } from "@/fuego";
+import { LayersIcon, TvIcon, AlbumIcon, FilmIcon } from "@/icons";
+import type { FilterData, MediaType, UserFuegoValidated } from "@/types";
 import {
   Avatar,
   Box,
@@ -9,15 +12,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import useSWR from "swr";
-import { fuegoFiltersAll } from "../../fuego/fuegoFilterActions";
-import type { FilterData } from "../../types/typesFilters";
-import type { MediaType } from "../../types/typesMedia";
-import type { UserFuegoValidated } from "../../types/typesUser";
 import { capFormat } from "../../utils/helpers";
-import AlbumIcon from "../icons/AlbumIcon";
-import LogoFilm from "../icons/FilmIcon";
-import LayersIcon from "../icons/LayersIcon";
-import TvIcon from "../icons/TvIcon";
 import MdEmpty from "../md/MdEmpty";
 import MdLoader from "../md/MdLoader";
 import MdStatus from "../md/MdStatus";
@@ -167,7 +162,7 @@ function Activity({ user }: { user: UserFuegoValidated }): JSX.Element {
             .sort()
             .map((e) => {
               const StatIcon =
-                e === "tv" ? TvIcon : e === "album" ? AlbumIcon : LogoFilm;
+                e === "tv" ? TvIcon : e === "album" ? AlbumIcon : FilmIcon;
               return (
                 <Flex
                   key={`statIcon_${e}`}

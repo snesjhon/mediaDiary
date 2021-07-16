@@ -2,7 +2,7 @@ import React from "react";
 import type { IconProps } from "@chakra-ui/react";
 import { Icon } from "@chakra-ui/react";
 
-function LogoFilm(props: IconProps): JSX.Element {
+export default function FilmIcon(props: IconProps): JSX.Element {
   return (
     <Icon
       viewBox="0 0 24 24"
@@ -24,5 +24,3 @@ function LogoFilm(props: IconProps): JSX.Element {
     </Icon>
   );
 }
-
-export default LogoFilm;

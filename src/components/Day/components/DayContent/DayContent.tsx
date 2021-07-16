@@ -1,6 +1,10 @@
 import type { DataFetchSpotify } from "@/config";
-import { useMDDispatch, useDataFetch } from "@/config";
+import { useDataFetch, useMDDispatch } from "@/config";
+import { useFuegoUser } from "@/fuego";
+import { BookmarkIcon } from "@/icons";
+import MdLogo from "@/src/components/md/MdLogo";
 import type { MDbMovie, MDbTV, MediaDiaryWithId } from "@/types";
+import { createMediaSelected } from "@/utils";
 import { CalendarIcon, RepeatIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -12,22 +16,18 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import React from "react";
-import { BookmarkIcon } from "../../../icons";
-import MdLoader from "../../../md/MdLoader";
+import { cache } from "swr";
 import {
   MediaMovie,
   MediaSpotify,
   MediaTV,
 } from "../../../../components/Media";
-import { cache } from "swr";
+import MdLoader from "../../../md/MdLoader";
 import {
   fuegoBookmarkAddWithId,
   fuegoBookmarkDelete,
   fuegoBookmarkDeleteWithId,
 } from "../../fuego";
-import { useFuegoUser } from "@/fuego";
-import { createMediaSelected } from "@/utils";
-import MdLogo from "@/src/components/md/MdLogo";
 
 interface Props {
   mdData: MediaDiaryWithId;

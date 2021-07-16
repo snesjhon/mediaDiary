@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
-import LogoIcon from "../icons/LogoIcon";
+import { LogoIcon } from "@/icons";
 
 function MdLogo({
   title,

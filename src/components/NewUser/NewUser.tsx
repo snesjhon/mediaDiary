@@ -1,9 +1,9 @@
+import { LogoIcon } from "@/icons";
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { destroyCookie } from "nookies";
 import React, { useEffect, useState } from "react";
 import type { UserFuegoValidated } from "../../types/typesUser";
-import LogoIcon from "../icons/LogoIcon";
 import { NewUserPreferences } from "./components";
 
 export default function NewUser({

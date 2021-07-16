@@ -7,7 +7,7 @@ import { StarIcon } from "@chakra-ui/icons";
 import { Flex, Box, Divider } from "@chakra-ui/layout";
 import { Input, Checkbox, Text } from "@chakra-ui/react";
 import Rating from "react-rating";
-import StarEmptyIcon from "../../icons/StartEmptyIcon";
+import { StarEmptyIcon } from "@/icons";
 
 interface Props {
   dispatch: Dispatch<LogActions>;

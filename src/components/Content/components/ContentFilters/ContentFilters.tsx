@@ -1,3 +1,4 @@
+import { FilmIcon, TvIcon, AlbumIcon } from "@/icons";
 import {
   Box,
   Button,
@@ -29,9 +30,6 @@ import useFuegoUser from "../../../../fuego/useFuegoUser";
 import type { FilterData, FilterDiary } from "../../../../types/typesFilters";
 import type { MediaType } from "../../../../types/typesMedia";
 import { capFormat } from "../../../../utils/helpers";
-import AlbumIcon from "../../../icons/AlbumIcon";
-import FilmIcon from "../../../icons/FilmIcon";
-import TvIcon from "../../../icons/TvIcon";
 import MdLogo from "../../../md/MdLogo";
 import MdStatus from "../../../md/MdStatus";
 

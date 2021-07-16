@@ -1,3 +1,4 @@
+import { FiltersIcon } from "@/icons";
 import { AddIcon, HamburgerIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -13,7 +14,6 @@ import { useRouter } from "next/router";
 import React from "react";
 import { useMDDispatch } from "../../../../config/store";
 import useIsBreakpoint from "../../../../utils/useIsBreakpoint";
-import FiltersIcon from "../../../icons/FiltersIcon";
 import MdLogo from "../../../md/MdLogo";
 import Filters from "../ContentFilters/ContentFilters";
 
