@@ -181,7 +181,7 @@ describe("<DayContent /> ", () => {
             ...mockMovieDiaryWithId,
             bookmark: true,
             rating: -1,
-            diaryDate: null,
+            diaryDate: false,
           }}
           mutate={() => null}
         />

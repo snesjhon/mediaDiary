@@ -16,12 +16,13 @@ import {
   MediaPoster,
   MediaRating,
 } from "./components";
-import { Divider, Flex } from "@chakra-ui/react";
+import { Divider } from "@chakra-ui/react";
+import type { MediaDiary } from "@/types";
 
 interface Props {
   data: MDbMovie;
-  diaryDate?: string | null;
-  rating?: number;
+  diaryDate?: MediaDiary["diaryDate"];
+  rating?: MediaDiary["rating"];
   edit?: {
     dispatch: Dispatch<LogActions>;
     fields: LogState;

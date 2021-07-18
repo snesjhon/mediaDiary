@@ -188,7 +188,7 @@ export default function Home({
                             colorMode === "light" ? "gray.500" : "gray.300"
                           }
                         >
-                          {diaryDate !== null
+                          {diaryDate
                             ? new Date(diaryDate).toLocaleDateString("en-us", {
                                 day: "numeric",
                               })

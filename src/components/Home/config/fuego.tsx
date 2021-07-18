@@ -9,7 +9,7 @@ export async function fuegoDiaryGet(
   mediaTypes: MediaType[] | null,
   rating: number | null,
   releasedDecade: number | null,
-  diaryYear: number | null,
+  diaryYear: number | false,
   loggedBefore: boolean | null,
   genre: string | null
 ): Promise<MediaDiaryWithId[]> {

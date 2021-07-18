@@ -229,7 +229,7 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
         releasedDecade,
         releasedYear,
         type,
-        genre,
+        genre: genre !== "" ? genre.toLocaleLowerCase() : "",
         addedDate,
       })
         .then(() => {
