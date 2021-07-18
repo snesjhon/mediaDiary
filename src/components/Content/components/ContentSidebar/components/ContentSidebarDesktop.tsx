@@ -26,6 +26,13 @@ export default function ContentSidebarDesktop(): JSX.Element {
           </Box>
           <Box>
             <ContentSidebarButton
+              title="Memories"
+              Icon={BookmarkIcon}
+              route="/memories"
+            />
+          </Box>
+          <Box>
+            <ContentSidebarButton
               title="Activity"
               Icon={ActivityIcon}
               route="/activity"
