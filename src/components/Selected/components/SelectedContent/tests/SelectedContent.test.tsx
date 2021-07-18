@@ -110,8 +110,8 @@ describe("<SelectedContent /> ", () => {
         releasedDate: dayjs("2015-05-13").toISOString(),
         bookmark: true,
         rating: -1,
-        diaryDate: null,
-        diaryYear: null,
+        diaryDate: false,
+        diaryYear: false,
         loggedBefore: false,
       });
     });

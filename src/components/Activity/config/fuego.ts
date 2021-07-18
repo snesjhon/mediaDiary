@@ -5,7 +5,7 @@ import { fuegoDb } from "../../../fuego/fuego";
 export async function fuegoChartYear(
   key: string,
   uid: string,
-  diaryYear: number | null,
+  diaryYear: number | false,
   mediaType: MediaType | null
 ): Promise<MediaDiaryWithId[]> {
   let diaryRef = fuegoDb.collection(

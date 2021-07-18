@@ -24,7 +24,7 @@ export default function Edit(): JSX.Element {
   };
   if (typeof edit !== "undefined") {
     // TODO: edit date shouldn't HAVE to be null
-    if (edit.diaryDate !== null) {
+    if (edit.diaryDate) {
       initData = {
         ...edit,
         diaryDate: edit.diaryDate,

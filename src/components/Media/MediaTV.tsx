@@ -19,14 +19,15 @@ import {
 } from "./components";
 import type { LogActions, LogState } from "../../config/storeLog";
 import { Button, Divider, Flex, Text } from "@chakra-ui/react";
+import type { MediaDiary } from "@/types";
 
 interface Props {
   data: MDbTV;
-  diaryDate?: string | null;
-  rating?: number;
-  releasedDate?: string;
-  poster?: string;
-  artist?: string;
+  diaryDate?: MediaDiary["diaryDate"];
+  rating?: MediaDiary["rating"];
+  releasedDate?: MediaDiary["releasedDate"];
+  poster?: MediaDiary["poster"];
+  artist?: MediaDiary["artist"];
   edit?: {
     dispatch: Dispatch<LogActions>;
     fields: LogState;

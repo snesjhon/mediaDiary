@@ -26,13 +26,13 @@ import {
   MediaPoster,
   MediaRating,
 } from "./components";
-import useIsBreakpoint from "@/utils/useIsBreakpoint";
+import type { MediaDiary } from "@/types";
 
 interface Props {
   albumInfo: SpotifyAlbum;
   artistInfo: SpotifyArtist;
-  diaryDate?: string | null;
-  rating?: number;
+  diaryDate?: MediaDiary["diaryDate"];
+  rating?: MediaDiary["rating"];
   edit?: {
     dispatch: Dispatch<LogActions>;
     fields: LogState;

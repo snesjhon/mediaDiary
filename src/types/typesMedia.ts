@@ -55,9 +55,9 @@ export interface MediaDiary extends Omit<MediaSelected, "seasons"> {
   /** Rating -1-10 */
   rating: number;
   /** What date the user recorded this memory */
-  diaryDate: string | null;
+  diaryDate: string | false;
   /** What year the user recorded this memory (calculated) */
-  diaryYear: number | null;
+  diaryYear: number | false;
   /** Whether the user has logged this media before or not */
   loggedBefore: boolean;
   /** MediaType TV - what episodes did the user see */
@@ -66,8 +66,8 @@ export interface MediaDiary extends Omit<MediaSelected, "seasons"> {
 
 /** For bookmark route, these are items we should have*/
 export interface MediaBookmark extends MediaDiary {
-  diaryDate: null;
-  diaryYear: null;
+  diaryDate: false;
+  diaryYear: false;
   bookmark: true;
 }
 

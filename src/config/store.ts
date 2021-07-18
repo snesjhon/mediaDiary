@@ -1,11 +1,7 @@
 import { createContext, useContext } from "react";
 import type { FilterBookmarkState, FilterState } from "../types/typesFilters";
 import type { MDbMovie, MDbTV } from "../types/typesMDb";
-import type {
-  MediaDiaryWithId,
-  MediaSelected,
-  MediaType,
-} from "../types/typesMedia";
+import type { MediaDiaryWithId, MediaSelected } from "../types/typesMedia";
 import type { SpotifyAlbum, SpotifyArtist } from "../types/typesSpotify";
 import type { UserFuegoPref } from "../types/typesUser";
 
