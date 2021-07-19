@@ -4,6 +4,7 @@ import {
   bookmarkFilterSet,
 } from "../../../fuego/fuegoBookmarks";
 import type { BookmarkKeys } from "../../../fuego/fuegoBookmarks";
+import type { MediaDiaryWithId } from "@/types";
 
 /** Given the diaryId we completely remove the item and bookmark */
 export async function fuegoBookmarkDelete(
@@ -73,4 +74,14 @@ export async function fuegoBookmarkDeleteWithId(
   } catch {
     console.error("[FUEGO-BOOKMARK]: Failed bookmarkDeleteWithId");
   }
+}
+
+export async function fuegoDiaryEntry(
+  key: string,
+  uid: string,
+  diaryId: string
+): Promise<MediaDiaryWithId | false> {
+  const diaryRef = fuegoDb.collection(`users/${uid}/diary`).doc(diaryId);
+  const diaryItem = await diaryRef.get();
+  return (diaryItem.data() as MediaDiaryWithId) ?? false;
 }

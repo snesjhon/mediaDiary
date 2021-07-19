@@ -1,0 +1,1 @@
+export { fuegoMemoriesGet } from "./fuego";

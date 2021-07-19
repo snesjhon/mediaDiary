@@ -5,11 +5,12 @@ import { cache, mutate } from "swr";
 import { useMDDispatch, useMDState } from "../../config/store";
 import type { LogState } from "../../config/storeLog";
 import { LogReducer } from "../../config/storeLog";
-import { fuegoDelete, fuegoEdit } from "../../fuego/fuegoMDActions";
+import { fuegoDelete } from "../../fuego/fuegoMDActions";
 import useFuegoUser from "../../fuego/useFuegoUser";
 import type { MediaDiaryDate, MediaDiaryWithId } from "../../types/typesMedia";
 import MdSpinner from "../md/MdSpinner";
 import { MediaMovie, MediaSpotify, MediaTV } from "../Media";
+import { fuegoEdit } from "./config";
 
 export default function Edit(): JSX.Element {
   const MDState = useMDState();
@@ -23,7 +24,6 @@ export default function Edit(): JSX.Element {
     rating: 0,
   };
   if (typeof edit !== "undefined") {
-    // TODO: edit date shouldn't HAVE to be null
     if (edit.diaryDate) {
       initData = {
         ...edit,

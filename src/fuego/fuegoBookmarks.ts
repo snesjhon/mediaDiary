@@ -53,7 +53,7 @@ export function bookmarkFilterSet(
   const setObj: Partial<fuego.firestore.DocumentData> = {};
   (Object.keys(filters) as Array<keyof FilterBookmark>).forEach((e) => {
     const addedYear = `${dayjs(filters.addedDate).year()}`;
-    if (e === "addedDate" && filters[e] !== null) {
+    if (e === "addedDate" && filters[e]) {
       setObj[e] = {
         [addedYear]: fuego.firestore.FieldValue.increment(incrementor),
       };
