@@ -186,7 +186,7 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
         genre,
         addedDate,
       };
-      if (diaryDate || rating !== -1) {
+      if (diaryDate || rating !== 0) {
         fuegoBookmarkDeleteWithId(user.uid, id, filterData)
           .then(() => {
             dispatch({ type: "saving" });

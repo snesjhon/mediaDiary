@@ -18,10 +18,10 @@ if (!fuego.apps.length) {
 
 const fbDb = fuego.firestore();
 
-// Use this for local testing;
-// if (process.env.NODE_ENV === "development") {
-//   fbDb.useEmulator("localhost", 8080);
-// }
+//Use this for local testing;
+if (process.env.NODE_ENV === "development") {
+  fbDb.useEmulator("localhost", 8080);
+}
 
 export const fuegoDb = fbDb;
 

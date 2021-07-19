@@ -1,11 +1,11 @@
 import React, { Suspense } from "react";
 import useSWR from "swr";
 import { useMDState } from "../../config/store";
-import { fuegoDiaryEntry } from "../../fuego/fuegoMDActions";
 import useFuegoUser from "../../fuego/useFuegoUser";
 import type { MediaDiaryWithId } from "../../types/typesMedia";
 import MdLoader from "../md/MdLoader";
 import { DayContent } from "./components";
+import { fuegoDiaryEntry } from "./config";
 
 export default function Day(): JSX.Element {
   const { edit } = useMDState();

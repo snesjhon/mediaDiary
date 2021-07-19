@@ -21,7 +21,7 @@ export default function MediaRating({ rating }: Props): JSX.Element {
         <Rating
           fractions={2}
           readonly
-          initialRating={rating}
+          initialRating={rating === -1 ? 0 : rating}
           fullSymbol={<StarIcon color="purple.400" w={size} h={size} />}
           emptySymbol={<StarEmptyIcon stroke="purple.400" w={size} h={size} />}
         />
