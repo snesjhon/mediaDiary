@@ -173,6 +173,7 @@ export default function Log(): JSX.Element {
         // this is because regardless of whether this is true or not, an item is no longer
         // bookmarked whenever we add it as an diaryItem
         bookmark: false,
+        memory: rating > 0 ? true : false,
         diaryYear: parseInt(dayjs(diaryDate).format("YYYY")),
         addedDate: dayjs().toISOString(),
         loggedBefore,

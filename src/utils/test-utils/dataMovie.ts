@@ -10,6 +10,7 @@ export const mockMovieSelected: MediaSelected = {
   artist: "George Miller",
   genre: "action",
   bookmark: false,
+  memory: false,
 };
 
 export const mockMovieDiaryWithId: MediaDiaryWithId = {
@@ -26,6 +27,7 @@ export const mockMovieDiaryWithId: MediaDiaryWithId = {
   artist: "George Miller",
   rating: 5,
   bookmark: false,
+  memory: true,
   releasedDate: "2015-05-13T07:00:00.000Z",
   releasedDecade: 2010,
   type: "movie",

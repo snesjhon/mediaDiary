@@ -32,6 +32,8 @@ export interface MediaSelected {
   mediaId: string;
   /** If an item has been bookmarked, default to `false` in new items */
   bookmark: boolean;
+  /** If an item has a rating, then its a memory, defaults to `false` for new Items */
+  memory: boolean;
   /** Optional season number */
   season?: number;
   /** All of the seasons for the current TV item, this isn't saved  */
@@ -69,6 +71,7 @@ export interface MediaBookmark extends MediaDiary {
   diaryDate: false;
   diaryYear: false;
   bookmark: true;
+  memory: false;
 }
 
 /** For logged items which include a date, we must make them non-optional or non-null */

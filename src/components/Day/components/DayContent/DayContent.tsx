@@ -40,6 +40,7 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
   const {
     addedDate,
     bookmark,
+    memory,
     type,
     rating,
     diaryDate,
@@ -246,7 +247,7 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
 
   function handleLogAgain() {
     if (data) {
-      const mediaSelected = createMediaSelected(type, data, bookmark);
+      const mediaSelected = createMediaSelected(type, data, bookmark, memory);
       if (mediaSelected) {
         dispatch({
           type: "logAgain",
