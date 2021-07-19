@@ -227,6 +227,7 @@ export default function Search({
         artist: castItem.artists[0].name,
         artistId: castItem.artists[0].id,
         bookmark: false,
+        memory: false,
         genre: "",
         type,
       };
@@ -254,6 +255,7 @@ export default function Search({
         genre: "",
         artist: "",
         bookmark: false,
+        memory: false,
         type: type as MediaType,
       };
     }

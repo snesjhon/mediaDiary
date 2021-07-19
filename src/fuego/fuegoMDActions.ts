@@ -19,10 +19,14 @@ export async function fuegoDelete(
   const filtersSetObj = createFilterSet(filtersKeys, -1);
   filtersRef.set(filtersSetObj, { merge: true });
 
-  const memoryRef = fuegoDb.collection(`/users/${uid}/filters`).doc("memories");
-  const memoryKeys = bookmarkFilterKeys(data);
-  const memorySetObj = bookmarkFilterSet(memoryKeys, -1);
-  memoryRef.set(memorySetObj, { merge: true });
+  if (data.rating > 0) {
+    const memoryRef = fuegoDb
+      .collection(`/users/${uid}/filters`)
+      .doc("memories");
+    const memoryKeys = bookmarkFilterKeys(data);
+    const memorySetObj = bookmarkFilterSet(memoryKeys, -1);
+    memoryRef.set(memorySetObj, { merge: true });
+  }
 
   if (data.bookmark) {
     const bookmarkKeys = bookmarkFilterKeys(data);

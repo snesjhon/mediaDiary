@@ -13,7 +13,8 @@ import { parsePosterUrl } from "./helpers";
 export default function createMediaSelected(
   type: MediaType,
   data: DataFetch,
-  bookmark = false
+  bookmark = false,
+  memory = false
 ): MediaSelected | false {
   if (data) {
     if (type === "movie") {
@@ -34,6 +35,7 @@ export default function createMediaSelected(
         artist: "",
         genre: "",
         bookmark,
+        memory,
       };
 
       if (castItem.credits.crew) {
@@ -66,6 +68,7 @@ export default function createMediaSelected(
         artist: "",
         genre: "",
         bookmark,
+        memory,
         seasons: castItem.seasons,
       };
 
@@ -115,6 +118,7 @@ export default function createMediaSelected(
             : "",
         genre: (artistData.genres && artistData.genres[0]) ?? "none",
         bookmark,
+        memory,
       };
       return albumItem;
     }

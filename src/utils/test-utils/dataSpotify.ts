@@ -5,6 +5,7 @@ export const mockAlbumDiaryWithId: MediaDiaryWithId = {
   title: "Atrocity Exhibition",
   artistId: "7aA592KWirLsnfb5ulGWvU",
   bookmark: false,
+  memory: true,
   genre: "alternative hip hop",
   rating: 4.5,
   releasedDecade: 2010,

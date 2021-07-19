@@ -109,6 +109,7 @@ describe("<SelectedContent /> ", () => {
         title: "Mad Max: Fury Road",
         releasedDate: dayjs("2015-05-13").toISOString(),
         bookmark: true,
+        memory: false,
         rating: 0,
         diaryDate: false,
         diaryYear: false,

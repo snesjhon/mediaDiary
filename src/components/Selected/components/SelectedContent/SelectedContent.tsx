@@ -121,6 +121,7 @@ export default function SelectedContent({
         title,
         releasedDate,
         bookmark: true,
+        memory: false,
         rating: 0,
         diaryDate: false,
         diaryYear: false,

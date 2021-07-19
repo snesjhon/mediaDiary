@@ -130,6 +130,7 @@ export default function Edit(): JSX.Element {
         diaryYear: parseInt(dayjs(state.diaryDate).format("YYYY")),
         loggedBefore: state.loggedBefore,
         rating: state.rating,
+        memory: state.rating > 0 ? true : false,
       };
       if (typeof state.seenEpisodes !== "undefined") {
         Object.assign(editItem, { seenEpisodes: state.seenEpisodes });
