@@ -13,11 +13,13 @@ import {
   MediaInfoButton,
   MediaInfoText,
   MediaLinks,
+  MediaLogRating,
   MediaPoster,
   MediaRating,
 } from "./components";
 import { Divider } from "@chakra-ui/react";
 import type { MediaDiary } from "@/types";
+import type { LogRatingActions, LogRatingState } from "../LogRating/config";
 
 interface Props {
   data: MDbMovie;
@@ -27,6 +29,10 @@ interface Props {
     dispatch: Dispatch<LogActions>;
     fields: LogState;
   };
+  logRating?: {
+    dispatch: Dispatch<LogRatingActions>;
+    fields: LogRatingState;
+  };
 }
 
 export default function MediaMovie({
@@ -34,6 +40,7 @@ export default function MediaMovie({
   diaryDate,
   rating,
   edit,
+  logRating,
 }: Props): JSX.Element {
   const {
     credits,
@@ -80,9 +87,14 @@ export default function MediaMovie({
           {genres && <MediaInfoText title="Genre" text={genres[0].name} />}
         </MediaInfo>
       </MediaContainer>
-      {edit ? (
-        <MediaEdit dispatch={edit.dispatch} fields={edit.fields} />
-      ) : (
+      {logRating && (
+        <MediaLogRating
+          dispatch={logRating.dispatch}
+          fields={logRating.fields}
+        />
+      )}
+      {edit && <MediaEdit dispatch={edit.dispatch} fields={edit.fields} />}
+      {!edit && !logRating && (
         <>
           {overview && <MediaAbout overview={overview} tagline={tagline} />}
           <MediaLinks>

@@ -10,4 +10,5 @@ export { default as MediaRating } from "./MediaRating";
 export { default as MediaEdit } from "./MediaEdit";
 export { default as MediaEditEpisodes } from "./MediaEditEpisodes";
 export { default as MediaEditSeasons } from "./MediaEditSeasons";
-export { MediaLinks } from "./MediaLinks";
+export { default as MediaLinks } from "./MediaLinks";
+export { default as MediaLogRating } from "./MediaLogRating";

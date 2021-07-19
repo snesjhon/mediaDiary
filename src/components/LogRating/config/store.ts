@@ -1,21 +1,22 @@
-import type { MediaDiary } from "../types/typesMedia";
+import type { MediaDiary } from "@/types";
 
-export interface LogState {
-  diaryDate: MediaDiary["diaryDate"];
+export interface LogRatingState {
   rating: MediaDiary["rating"];
-  loggedBefore: MediaDiary["loggedBefore"];
   seenEpisodes?: MediaDiary["seenEpisodes"];
 }
 
-export type LogActions = {
+export type LogRatingActions = {
   type: "state";
   payload: {
-    key: keyof LogState;
+    key: keyof LogRatingState;
     value: any;
   };
 };
 
-export function LogReducer(state: LogState, actions: LogActions): LogState {
+export function LogRatingReducer(
+  state: LogRatingState,
+  actions: LogRatingActions
+): LogRatingState {
   switch (actions.type) {
     case "state":
       return {

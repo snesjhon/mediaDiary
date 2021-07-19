@@ -4,7 +4,7 @@ import Head from "next/head";
 import { Router } from "next/router";
 import type { PropsWithChildren } from "react";
 import React, { useEffect } from "react";
-import { Day, Edit, Log, Search, Selected } from "..";
+import { Day, DayRating, Edit, Log, LogRating, Search, Selected } from "..";
 import { useMDState } from "../../config/store";
 import useIsBreakpoint from "../../utils/useIsBreakpoint";
 import { ContentDrawer, ContentSidebar, ContentToolbar } from "./components";
@@ -56,14 +56,18 @@ export default function Content({
               view === "log" ||
               view === "edit" ||
               view === "selected" ||
-              view === "day"
+              view === "day" ||
+              view === "dayRating" ||
+              view === "logRating"
             }
             placement="right"
-            showHeader={view === "day" ? false : true}
+            showHeader={view === "day" || view === "dayRating" ? false : true}
           >
             {view === "selected" && <Selected />}
             {view === "day" && <Day />}
+            {view === "dayRating" && <DayRating />}
             {view === "log" && <Log />}
+            {view === "logRating" && <LogRating />}
             {view === "edit" && <Edit />}
           </ContentDrawer>
           <Search />

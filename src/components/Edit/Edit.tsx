@@ -24,6 +24,7 @@ export default function Edit(): JSX.Element {
     rating: 0,
   };
   if (typeof edit !== "undefined") {
+    initData = { ...edit };
     if (edit.diaryDate) {
       initData = {
         ...edit,

@@ -74,6 +74,13 @@ export interface MediaBookmark extends MediaDiary {
   memory: false;
 }
 
+export interface MediaMemory extends MediaDiary {
+  diaryDate: false;
+  diaryYear: false;
+  bookmark: false;
+  memory: true;
+}
+
 /** For logged items which include a date, we must make them non-optional or non-null */
 export interface MediaDiaryDate extends MediaDiary {
   diaryDate: string;

@@ -9,7 +9,16 @@ export interface MDState {
   preference: UserFuegoPref;
   isSaving?: boolean;
   isLoggedBefore?: boolean;
-  view?: "search" | "log" | "edit" | "md" | "activity" | "day" | "selected";
+  view?:
+    | "search"
+    | "log"
+    | "logRating"
+    | "edit"
+    | "md"
+    | "activity"
+    | "day"
+    | "dayRating"
+    | "selected";
   selected?: MediaSelected;
   selectedTV?: MDbTV;
   selectedMovie?: MDbMovie;
@@ -34,7 +43,7 @@ export type MDActions =
       payload: MDState["selected"];
     }
   | {
-      type: "log" | "logAgain";
+      type: "log" | "logAgain" | "logRating";
       payload: {
         selected: MDState["selected"];
         selectedTV: MDState["selectedTV"];
@@ -56,7 +65,7 @@ export type MDActions =
       payload: MDState["view"];
     }
   | {
-      type: "day" | "savedEdit";
+      type: "day" | "dayRating" | "savedEdit";
       payload: MDState["edit"];
     }
   | {
@@ -146,6 +155,17 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
         edit: undefined,
       };
     }
+    case "logRating": {
+      return {
+        ...state,
+        selected: actions.payload.selected,
+        selectedMovie: actions.payload.selectedMovie,
+        selectedTV: actions.payload.selectedTV,
+        selectedSpotify: actions.payload.selectedSpotify,
+        view: "logRating",
+        edit: undefined,
+      };
+    }
     case "logAgain": {
       return {
         ...state,
@@ -171,6 +191,14 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
       return {
         ...state,
         view: "day",
+        selected: undefined,
+        edit: actions.payload,
+      };
+    }
+    case "dayRating": {
+      return {
+        ...state,
+        view: "dayRating",
         selected: undefined,
         edit: actions.payload,
       };

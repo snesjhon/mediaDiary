@@ -116,7 +116,7 @@ export default function Memories({
               gridGap="0.5"
               onClick={() =>
                 dispatch({
-                  type: "day",
+                  type: e.diaryDate ? "day" : "dayRating",
                   payload: e,
                 })
               }
