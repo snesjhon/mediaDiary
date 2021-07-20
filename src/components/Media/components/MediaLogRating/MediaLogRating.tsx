@@ -9,7 +9,7 @@ import { StarEmptyIcon } from "@/icons";
 import type {
   LogRatingActions,
   LogRatingState,
-} from "@/src/components/LogRating/config";
+} from "@/src/components/Log/config";
 
 interface Props {
   dispatch: Dispatch<LogRatingActions>;

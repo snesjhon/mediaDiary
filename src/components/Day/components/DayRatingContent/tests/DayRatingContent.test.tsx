@@ -1,6 +1,6 @@
 import { IconButton } from "@chakra-ui/react";
 import React from "react";
-import DayContent from "..";
+import DayRatingContent from "..";
 import {
   mockAlbumDiaryWithId,
   mockAlbumFetchData,
@@ -74,7 +74,7 @@ describe("<DayContent /> ", () => {
     it("renders a loader, if data is loading", () => {
       mockIsLoading = true;
       const wrapper = mountWithDrawerSuspense(
-        <DayContent
+        <DayRatingContent
           mdData={mockAlbumDiaryWithId}
           mutate={() => {
             null;
@@ -87,7 +87,7 @@ describe("<DayContent /> ", () => {
     it("renders the appropriate Media component based on Data", () => {
       mockIsLoading = false;
       const wrapper = mountWithDrawerSuspense(
-        <DayContent
+        <DayRatingContent
           mdData={mockAlbumDiaryWithId}
           mutate={() => {
             null;
@@ -103,7 +103,7 @@ describe("<DayContent /> ", () => {
     it("renders a loader, if data is loading", () => {
       mockIsLoading = true;
       const wrapper = mountWithDrawerSuspense(
-        <DayContent
+        <DayRatingContent
           mdData={mockMovieDiaryWithId}
           mutate={() => {
             null;
@@ -117,7 +117,7 @@ describe("<DayContent /> ", () => {
       mockIsLoading = false;
       mockType = "movie";
       const wrapper = mountWithDrawerSuspense(
-        <DayContent
+        <DayRatingContent
           mdData={mockMovieDiaryWithId}
           mutate={() => {
             null;
@@ -133,7 +133,7 @@ describe("<DayContent /> ", () => {
       mockIsLoading = false;
       mockType = "movie";
       const wrapper = mountWithDrawerSuspense(
-        <DayContent mdData={mockMovieDiaryWithId} mutate={() => null} />
+        <DayRatingContent mdData={mockMovieDiaryWithId} mutate={() => null} />
       );
       expect(wrapper).toContainReactComponent(MediaMovie);
       const btn = wrapper.find(IconButton);
@@ -151,7 +151,7 @@ describe("<DayContent /> ", () => {
       mockIsLoading = false;
       mockType = "movie";
       const wrapper = mountWithDrawerSuspense(
-        <DayContent
+        <DayRatingContent
           mdData={{ ...mockMovieDiaryWithId, bookmark: true }}
           mutate={() => null}
         />
@@ -176,7 +176,7 @@ describe("<DayContent /> ", () => {
       mockIsLoading = false;
       mockType = "movie";
       const wrapper = mountWithDrawerSuspense(
-        <DayContent
+        <DayRatingContent
           mdData={{
             ...mockMovieDiaryWithId,
             bookmark: true,

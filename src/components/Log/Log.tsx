@@ -164,39 +164,42 @@ export default function Log(): JSX.Element {
       } = selected;
       const { diaryDate, loggedBefore, rating, seenEpisodes } = state;
       const releasedYear = parseInt(dayjs(releasedDate).format("YYYY"));
-      return {
-        artist,
-        title,
-        poster,
-        mediaId,
-        diaryDate,
-        // this is because regardless of whether this is true or not, an item is no longer
-        // bookmarked whenever we add it as an diaryItem
-        bookmark: false,
-        memory: rating > 0 ? true : false,
-        diaryYear: parseInt(dayjs(diaryDate).format("YYYY")),
-        addedDate: dayjs().toISOString(),
-        loggedBefore,
-        rating,
-        type,
-        releasedDate,
-        releasedYear,
-        releasedDecade: Math.floor(releasedYear / 10) * 10,
-        genre:
-          typeof selected?.genre !== "undefined"
-            ? selected.genre.toLocaleLowerCase()
-            : "",
-        ...(typeof seenEpisodes !== "undefined" && {
-          seenEpisodes: seenEpisodes,
-        }),
-        ...(typeof artistId !== "undefined" && {
-          artistId: artistId,
-        }),
-        ...(typeof season !== "undefined" && {
-          season,
-          episodes,
-        }),
-      };
+      if (diaryDate) {
+        return {
+          artist,
+          title,
+          poster,
+          mediaId,
+          diaryDate,
+          // this is because regardless of whether this is true or not, an item is no longer
+          // bookmarked whenever we add it as an diaryItem
+          bookmark: false,
+          memory: rating > 0 ? true : false,
+          diaryYear: parseInt(dayjs(diaryDate).format("YYYY")),
+          addedDate: dayjs().toISOString(),
+          loggedBefore,
+          rating,
+          type,
+          releasedDate,
+          releasedYear,
+          releasedDecade: Math.floor(releasedYear / 10) * 10,
+          genre:
+            typeof selected?.genre !== "undefined"
+              ? selected.genre.toLocaleLowerCase()
+              : "",
+          ...(typeof seenEpisodes !== "undefined" && {
+            seenEpisodes: seenEpisodes,
+          }),
+          ...(typeof artistId !== "undefined" && {
+            artistId: artistId,
+          }),
+          ...(typeof season !== "undefined" && {
+            season,
+            episodes,
+          }),
+        };
+      }
+      return false;
     } else {
       return false;
     }

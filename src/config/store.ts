@@ -14,6 +14,7 @@ export interface MDState {
     | "log"
     | "logRating"
     | "edit"
+    | "editRating"
     | "md"
     | "activity"
     | "day"
@@ -52,7 +53,7 @@ export type MDActions =
       };
     }
   | {
-      type: "edit";
+      type: "edit" | "editRating";
       payload: {
         edit: MDState["edit"];
         editMovie: MDState["editMovie"];
@@ -213,6 +214,17 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
       return {
         ...state,
         view: "edit",
+        selected: undefined,
+        edit: actions.payload.edit,
+        editMovie: actions.payload.editMovie,
+        editTV: actions.payload.editTV,
+        editSpotify: actions.payload.editSpotify,
+      };
+    }
+    case "editRating": {
+      return {
+        ...state,
+        view: "editRating",
         selected: undefined,
         edit: actions.payload.edit,
         editMovie: actions.payload.editMovie,

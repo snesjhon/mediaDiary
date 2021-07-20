@@ -61,7 +61,7 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
     isSuspense: true,
   });
 
-  const isEditable = addedDate === null || rating !== -1;
+  // const isEditable = addedDate === null || rating !== 0;
 
   if (error) {
     return <div>{error}</div>;
@@ -128,7 +128,7 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
         justifyContent="space-between"
         pb={{ base: 8, sm: 4 }}
       >
-        {isEditable && (
+        {diaryDate && (
           <Button
             onClick={handleLogAgain}
             colorScheme="blue"
@@ -163,7 +163,7 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
           variant="outline"
           leftIcon={<CalendarIcon />}
         >
-          {isEditable ? "Edit" : "Log"}
+          {bookmark && !diaryDate ? "Log" : "Edit"}
         </Button>
       </DrawerFooter>
     </>

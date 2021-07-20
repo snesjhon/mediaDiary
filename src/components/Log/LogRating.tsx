@@ -71,11 +71,11 @@ export default function LogRating(): JSX.Element {
                 }}
               />
             )}
-            {/* {selectedTV && (
+            {selectedTV && (
               <MediaTV
                 data={selectedTV}
                 poster={selected?.poster ?? selectedTV.poster_path}
-                edit={{
+                logRating={{
                   fields: state,
                   dispatch,
                 }}
@@ -90,12 +90,12 @@ export default function LogRating(): JSX.Element {
               <MediaSpotify
                 artistInfo={selectedSpotify.artist}
                 albumInfo={selectedSpotify.album}
-                edit={{
+                logRating={{
                   fields: state,
                   dispatch,
                 }}
               />
-            )} */}
+            )}
           </DrawerBody>
           <DrawerFooter borderTopWidth="1px">
             <Button

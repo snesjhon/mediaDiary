@@ -2,10 +2,11 @@ import { Text, Divider, SimpleGrid, Checkbox } from "@chakra-ui/react";
 import React from "react";
 import type { Dispatch } from "react";
 import type { LogActions, LogState } from "../../../config/storeLog";
+import type { LogRatingActions, LogRatingState } from "../../Log/config";
 
 interface Props {
-  dispatch: Dispatch<LogActions>;
-  fields: LogState;
+  dispatch: Dispatch<LogActions> | Dispatch<LogRatingActions>;
+  fields: LogState | LogRatingState;
   episodes: number;
 }
 export default function MediaEditEpisodes({
