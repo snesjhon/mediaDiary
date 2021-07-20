@@ -1,38 +1,36 @@
 import { Button, Center, DrawerBody, DrawerFooter } from "@chakra-ui/react";
-import dayjs from "dayjs";
 import React, { useReducer } from "react";
 import { cache, mutate } from "swr";
 import { useMDDispatch, useMDState } from "../../config/store";
-import type { LogState } from "../../config/storeLog";
-import { LogReducer } from "../../config/storeLog";
-import { fuegoDelete } from "../../fuego/fuegoMDActions";
 import useFuegoUser from "../../fuego/useFuegoUser";
-import type { MediaDiaryDate, MediaDiaryWithId } from "../../types/typesMedia";
+import type { MediaDiaryWithId, MediaMemory } from "../../types/typesMedia";
+import type { LogRatingState } from "../Log/config";
+import { LogRatingReducer } from "../Log/config";
 import MdSpinner from "../md/MdSpinner";
 import { MediaMovie, MediaSpotify, MediaTV } from "../Media";
-import { fuegoEdit } from "./config";
+import { fuegoEditRating } from "./config";
+import { fuegoDeleteRating } from "./config/fuego";
 
-export default function Edit(): JSX.Element {
+export default function EditRating(): JSX.Element {
   const MDState = useMDState();
   const { edit, editMovie, editSpotify, editTV, isSaving } = MDState;
   const mdDispatch = useMDDispatch();
   const { user } = useFuegoUser();
 
-  let initData: LogState = {
-    diaryDate: dayjs().toISOString(),
-    loggedBefore: false,
+  let initData: LogRatingState = {
     rating: 0,
   };
   if (typeof edit !== "undefined") {
+    initData = { ...edit };
     if (edit.diaryDate) {
       initData = {
         ...edit,
-        diaryDate: edit.diaryDate,
+        rating: edit.rating,
       };
     }
   }
 
-  const [state, dispatch] = useReducer(LogReducer, initData);
+  const [state, dispatch] = useReducer(LogRatingReducer, initData);
 
   return (
     <>
@@ -44,13 +42,16 @@ export default function Edit(): JSX.Element {
         <>
           <DrawerBody px={{ base: 6, sm: 8 }}>
             {editMovie && (
-              <MediaMovie data={editMovie} edit={{ fields: state, dispatch }} />
+              <MediaMovie
+                data={editMovie}
+                logRating={{ fields: state, dispatch }}
+              />
             )}
             {editTV && (
               <MediaTV
                 data={editTV}
                 poster={edit?.poster ?? editTV.poster_path}
-                edit={{
+                logRating={{
                   fields: state,
                   dispatch,
                 }}
@@ -64,7 +65,7 @@ export default function Edit(): JSX.Element {
               <MediaSpotify
                 artistInfo={editSpotify.artist}
                 albumInfo={editSpotify.album}
-                edit={{
+                logRating={{
                   fields: state,
                   dispatch,
                 }}
@@ -108,7 +109,12 @@ export default function Edit(): JSX.Element {
       mdDispatch({ type: "saving" });
       const diaryEdit = createEdit();
       if (diaryEdit) {
-        await fuegoEdit(user.uid, edit.id, diaryEdit, edit as MediaDiaryDate);
+        await fuegoEditRating(
+          user.uid,
+          edit.id,
+          diaryEdit,
+          edit as MediaMemory
+        );
         mdDispatch({
           type: "savedEdit",
           payload: diaryEdit as MediaDiaryWithId,
@@ -122,16 +128,16 @@ export default function Edit(): JSX.Element {
     }
   }
 
-  function createEdit(): MediaDiaryDate | false {
-    const { diaryDate, loggedBefore, rating, seenEpisodes } = state;
-    if (typeof edit !== "undefined" && diaryDate) {
+  function createEdit(): MediaMemory | false {
+    const { rating, seenEpisodes } = state;
+    if (typeof edit !== "undefined" && rating > 0) {
       const editItem = {
         ...edit,
-        diaryDate: diaryDate,
-        diaryYear: parseInt(dayjs(diaryDate).format("YYYY")),
-        loggedBefore: loggedBefore,
+        diaryDate: false as const,
+        diaryYear: false as const,
+        bookmark: false as const,
         rating,
-        memory: rating > 0 ? true : false,
+        memory: true as const,
       };
       if (typeof seenEpisodes !== "undefined") {
         Object.assign(editItem, { seenEpisodes });
@@ -159,8 +165,7 @@ export default function Edit(): JSX.Element {
         edit.mediaId,
         edit.season ? edit.season : -1,
       ]);
-      // TODO: we have to assure to breakup the "edit" types, to assure we're editing the types correctly
-      await fuegoDelete(user.uid, edit.id, edit as MediaDiaryDate);
+      await fuegoDeleteRating(user.uid, edit.id, edit as MediaMemory);
       mdDispatch({ type: "view", payload: "md" });
       mdDispatch({ type: "close" });
     } else {

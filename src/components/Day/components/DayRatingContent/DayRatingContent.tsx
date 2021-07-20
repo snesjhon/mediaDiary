@@ -34,16 +34,16 @@ interface Props {
   mutate: () => void;
 }
 
-export default function DayContent({ mdData, mutate }: Props): JSX.Element {
+export default function DayRatingContent({
+  mdData,
+  mutate,
+}: Props): JSX.Element {
   const { user } = useFuegoUser();
   const dispatch = useMDDispatch();
   const {
-    addedDate,
     bookmark,
-    memory,
     type,
     rating,
-    diaryDate,
     artistId,
     mediaId,
     season,
@@ -95,16 +95,11 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
       </DrawerHeader>
       <DrawerBody px={{ base: 6, sm: 8 }}>
         {type === "movie" && (
-          <MediaMovie
-            data={data as MDbMovie}
-            diaryDate={diaryDate}
-            rating={rating}
-          />
+          <MediaMovie data={data as MDbMovie} rating={rating} />
         )}
         {type === "tv" && (
           <MediaTV
             data={data as MDbTV}
-            diaryDate={diaryDate}
             artist={artist}
             rating={rating}
             seasonInfo={{ season, seenEpisodes }}
@@ -116,7 +111,6 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
           <MediaSpotify
             artistInfo={(data as DataFetchSpotify)[1]}
             albumInfo={(data as DataFetchSpotify)[0]}
-            diaryDate={diaryDate}
             rating={rating}
           />
         )}
@@ -126,23 +120,13 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
         justifyContent="space-between"
         pb={{ base: 8, sm: 4 }}
       >
-        {diaryDate && (
-          <Button
-            onClick={handleLogAgain}
-            colorScheme="blue"
-            variant="outline"
-            leftIcon={<RepeatIcon />}
-          >
-            Log again
-          </Button>
-        )}
         <Button
           // TODO: At the current moment there isn't a good way of adding SEASON support
           // AFTER you've bookmarked TV. That is inconvenient because I'd want to refecth
           // the seasons because we would want to have that dropdown. 03/17/21
           onClick={() =>
             dispatch({
-              type: "edit",
+              type: "editRating",
               payload: {
                 edit: mdData,
                 editMovie: type === "movie" ? (data as MDbMovie) : undefined,
@@ -161,7 +145,7 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
           variant="outline"
           leftIcon={<CalendarIcon />}
         >
-          {bookmark && !diaryDate ? "Log" : "Edit"}
+          Edit
         </Button>
       </DrawerFooter>
     </>
@@ -240,30 +224,6 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
         });
     } else {
       console.error("[CONTENT]: Failed to add a bookmark");
-    }
-  }
-
-  function handleLogAgain() {
-    if (data) {
-      const mediaSelected = createMediaSelected(type, data, bookmark, memory);
-      if (mediaSelected) {
-        dispatch({
-          type: "logAgain",
-          payload: {
-            selected: mediaSelected,
-            selectedMovie: type === "movie" ? (data as MDbMovie) : undefined,
-            selectedTV: type === "tv" ? (data as MDbTV) : undefined,
-            selectedSpotify:
-              type === "album"
-                ? {
-                    artist: (data as DataFetchSpotify)[1],
-                    album: (data as DataFetchSpotify)[0],
-                  }
-                : undefined,
-          },
-        });
-      }
-      return;
     }
   }
 }

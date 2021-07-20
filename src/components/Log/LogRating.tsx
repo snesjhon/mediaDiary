@@ -2,11 +2,10 @@ import { Button, Center, DrawerBody, DrawerFooter } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React, { useEffect, useReducer, useRef } from "react";
 import { useMDDispatch, useMDState } from "../../config/store";
-import type { LogState } from "../../config/storeLog";
-import { LogReducer } from "../../config/storeLog";
-import { fuegoDiaryAdd } from "./config";
+import { LogRatingReducer, fuegoLogRatingAdd } from "./config";
+import type { LogRatingState } from "./config";
 import useFuegoUser from "../../fuego/useFuegoUser";
-import type { MediaDiaryDate } from "../../types/typesMedia";
+import type { MediaMemory } from "../../types/typesMedia";
 import { parsePosterUrl } from "../../utils/helpers";
 import MdSpinner from "../md/MdSpinner";
 import { MediaMovie, MediaSpotify, MediaTV } from "../Media";
@@ -17,26 +16,18 @@ export interface LogTVSeason {
   poster: string;
 }
 
-export default function Log(): JSX.Element {
+export default function LogRating(): JSX.Element {
   const mdDispatch = useMDDispatch();
   const { user } = useFuegoUser();
   const MDState = useMDState();
-  const {
-    selected,
-    selectedMovie,
-    selectedSpotify,
-    selectedTV,
-    isSaving,
-    isLoggedBefore,
-  } = MDState;
+  const { selected, selectedMovie, selectedSpotify, selectedTV, isSaving } =
+    MDState;
 
-  const initData: LogState = {
-    diaryDate: dayjs().toISOString(),
-    loggedBefore: isLoggedBefore ?? false,
+  const initData: LogRatingState = {
     rating: 0,
   };
 
-  const [state, dispatch] = useReducer(LogReducer, initData);
+  const [state, dispatch] = useReducer(LogRatingReducer, initData);
   const initSeason = useRef(true);
 
   // // This is temporary because I think we should maybe let the user select IF they want to add a season
@@ -74,7 +65,7 @@ export default function Log(): JSX.Element {
             {selectedMovie && (
               <MediaMovie
                 data={selectedMovie}
-                edit={{
+                logRating={{
                   fields: state,
                   dispatch,
                 }}
@@ -84,7 +75,7 @@ export default function Log(): JSX.Element {
               <MediaTV
                 data={selectedTV}
                 poster={selected?.poster ?? selectedTV.poster_path}
-                edit={{
+                logRating={{
                   fields: state,
                   dispatch,
                 }}
@@ -99,7 +90,7 @@ export default function Log(): JSX.Element {
               <MediaSpotify
                 artistInfo={selectedSpotify.artist}
                 albumInfo={selectedSpotify.album}
-                edit={{
+                logRating={{
                   fields: state,
                   dispatch,
                 }}
@@ -126,7 +117,7 @@ export default function Log(): JSX.Element {
       const addDiary = createDiary();
       if (addDiary) {
         mdDispatch({ type: "saving" });
-        await fuegoDiaryAdd(user.uid, addDiary);
+        await fuegoLogRatingAdd(user.uid, addDiary);
         mdDispatch({ type: "view", payload: "md" });
         mdDispatch({ type: "close" });
       } else {
@@ -149,8 +140,9 @@ export default function Log(): JSX.Element {
     }
   }
 
-  function createDiary(): MediaDiaryDate | false {
-    if (selected) {
+  function createDiary(): MediaMemory | false {
+    // We can only have a memory if the rating is higher than 0
+    if (selected && state.rating > 0) {
       const {
         mediaId,
         type,
@@ -162,44 +154,43 @@ export default function Log(): JSX.Element {
         season,
         episodes,
       } = selected;
-      const { diaryDate, loggedBefore, rating, seenEpisodes } = state;
+      const { rating, seenEpisodes } = state;
       const releasedYear = parseInt(dayjs(releasedDate).format("YYYY"));
-      if (diaryDate) {
-        return {
-          artist,
-          title,
-          poster,
-          mediaId,
-          diaryDate,
-          // this is because regardless of whether this is true or not, an item is no longer
-          // bookmarked whenever we add it as an diaryItem
-          bookmark: false,
-          memory: rating > 0 ? true : false,
-          diaryYear: parseInt(dayjs(diaryDate).format("YYYY")),
-          addedDate: dayjs().toISOString(),
-          loggedBefore,
-          rating,
-          type,
-          releasedDate,
-          releasedYear,
-          releasedDecade: Math.floor(releasedYear / 10) * 10,
-          genre:
-            typeof selected?.genre !== "undefined"
-              ? selected.genre.toLocaleLowerCase()
-              : "",
-          ...(typeof seenEpisodes !== "undefined" && {
-            seenEpisodes: seenEpisodes,
-          }),
-          ...(typeof artistId !== "undefined" && {
-            artistId: artistId,
-          }),
-          ...(typeof season !== "undefined" && {
-            season,
-            episodes,
-          }),
-        };
-      }
-      return false;
+      return {
+        artist,
+        title,
+        poster,
+        mediaId,
+        diaryDate: false,
+        // this is because regardless of whether this is true or not, an item is no longer
+        // bookmarked whenever we add it as an diaryItem
+        bookmark: false,
+        memory: true,
+        diaryYear: false,
+        addedDate: dayjs().toISOString(),
+        // For memories, I'm thinking this is always false because although the person
+        // has seen/heard it before. Is that really a "rewatch"
+        loggedBefore: false,
+        rating,
+        type,
+        releasedDate,
+        releasedYear,
+        releasedDecade: Math.floor(releasedYear / 10) * 10,
+        genre:
+          typeof selected?.genre !== "undefined"
+            ? selected.genre.toLocaleLowerCase()
+            : "",
+        ...(typeof seenEpisodes !== "undefined" && {
+          seenEpisodes: seenEpisodes,
+        }),
+        ...(typeof artistId !== "undefined" && {
+          artistId: artistId,
+        }),
+        ...(typeof season !== "undefined" && {
+          season,
+          episodes,
+        }),
+      };
     } else {
       return false;
     }

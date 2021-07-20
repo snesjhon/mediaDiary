@@ -13,11 +13,13 @@ import {
   MediaInfoButton,
   MediaInfoText,
   MediaLinks,
+  MediaLogRating,
   MediaPoster,
   MediaRating,
 } from "./components";
 import { Divider } from "@chakra-ui/react";
 import type { MediaDiary } from "@/types";
+import type { LogRatingActions, LogRatingState } from "../Log/config";
 
 interface Props {
   data: MDbMovie;
@@ -27,6 +29,10 @@ interface Props {
     dispatch: Dispatch<LogActions>;
     fields: LogState;
   };
+  logRating?: {
+    dispatch: Dispatch<LogRatingActions>;
+    fields: LogRatingState;
+  };
 }
 
 export default function MediaMovie({
@@ -34,6 +40,7 @@ export default function MediaMovie({
   diaryDate,
   rating,
   edit,
+  logRating,
 }: Props): JSX.Element {
   const {
     credits,
@@ -52,37 +59,46 @@ export default function MediaMovie({
     credits &&
     credits.crew &&
     credits.crew.find((e) => e.job === "Director")?.name;
+
+  const showInfo = !edit && !logRating;
   return (
     <>
       <MediaHeader artist={artist} title={title} />
       <MediaContainer>
         <MediaPoster poster={poster_path} type="movie" />
-        <MediaInfo>
-          {diaryDate && (
-            <MediaInfoText
-              title="Date"
-              text={dayjs(diaryDate).format("MMM D, YYYY")}
-            />
-          )}
-          {rating ? (
-            <MediaRating rating={rating} />
-          ) : (
-            <MediaInfoText title="Rating" text="No Rating" />
-          )}
-          {release_date && (
-            <MediaInfoText
-              title="Released"
-              text={new Date(release_date).toLocaleDateString("en-us", {
-                year: "numeric",
-              })}
-            />
-          )}
-          {genres && <MediaInfoText title="Genre" text={genres[0].name} />}
-        </MediaInfo>
+        {showInfo && (
+          <MediaInfo>
+            {diaryDate && (
+              <MediaInfoText
+                title="Date"
+                text={dayjs(diaryDate).format("MMM D, YYYY")}
+              />
+            )}
+            {rating ? (
+              <MediaRating rating={rating} />
+            ) : (
+              <MediaInfoText title="Rating" text="No Rating" />
+            )}
+            {release_date && (
+              <MediaInfoText
+                title="Released"
+                text={new Date(release_date).toLocaleDateString("en-us", {
+                  year: "numeric",
+                })}
+              />
+            )}
+            {genres && <MediaInfoText title="Genre" text={genres[0].name} />}
+          </MediaInfo>
+        )}
       </MediaContainer>
-      {edit ? (
-        <MediaEdit dispatch={edit.dispatch} fields={edit.fields} />
-      ) : (
+      {logRating && (
+        <MediaLogRating
+          dispatch={logRating.dispatch}
+          fields={logRating.fields}
+        />
+      )}
+      {edit && <MediaEdit dispatch={edit.dispatch} fields={edit.fields} />}
+      {showInfo && (
         <>
           {overview && <MediaAbout overview={overview} tagline={tagline} />}
           <MediaLinks>

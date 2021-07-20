@@ -17,27 +17,29 @@ export default function MediaEdit({ dispatch, fields }: Props): JSX.Element {
   const { diaryDate, loggedBefore, rating } = fields;
   return (
     <>
-      <Flex alignItems="center" justifyContent="space-between">
-        <Text>Date</Text>
-        <Box>
-          <Input
-            size="sm"
-            type="date"
-            required
-            value={dayjs(diaryDate).format("YYYY-MM-DD")}
-            max={dayjs().format("YYYY-MM-DD")}
-            onChange={(e) =>
-              dispatch({
-                type: "state",
-                payload: {
-                  key: "diaryDate",
-                  value: dayjs(e.target.value).toISOString(),
-                },
-              })
-            }
-          />
-        </Box>
-      </Flex>
+      {diaryDate && (
+        <Flex alignItems="center" justifyContent="space-between">
+          <Text>Date</Text>
+          <Box>
+            <Input
+              size="sm"
+              type="date"
+              required
+              value={dayjs(diaryDate).format("YYYY-MM-DD")}
+              max={dayjs().format("YYYY-MM-DD")}
+              onChange={(e) =>
+                dispatch({
+                  type: "state",
+                  payload: {
+                    key: "diaryDate",
+                    value: dayjs(e.target.value).toISOString(),
+                  },
+                })
+              }
+            />
+          </Box>
+        </Flex>
+      )}
       <Divider my={2} />
       <Flex alignItems="center" justifyContent="space-between">
         <Text>Rate</Text>

@@ -14,12 +14,14 @@ import {
   MediaInfoButton,
   MediaInfoText,
   MediaLinks,
+  MediaLogRating,
   MediaPoster,
   MediaRating,
 } from "./components";
 import type { LogActions, LogState } from "../../config/storeLog";
 import { Button, Divider, Flex, Text } from "@chakra-ui/react";
 import type { MediaDiary } from "@/types";
+import type { LogRatingActions, LogRatingState } from "../Log/config";
 
 interface Props {
   data: MDbTV;
@@ -31,6 +33,10 @@ interface Props {
   edit?: {
     dispatch: Dispatch<LogActions>;
     fields: LogState;
+  };
+  logRating?: {
+    dispatch: Dispatch<LogRatingActions>;
+    fields: LogRatingState;
   };
   seasonInfo?: {
     season?: number;
@@ -52,6 +58,7 @@ export default function MediaTV({
   poster,
   seasonInfo,
   edit,
+  logRating,
   handleSeasonSelected,
   artist,
 }: Props): JSX.Element {
@@ -81,84 +88,102 @@ export default function MediaTV({
       ? seasons[seasonInfo.season].air_date
       : releasedDate ?? first_air_date;
 
+  const showInfo = !edit && !logRating;
+  const showEdit = edit || logRating;
   return (
     <>
       <MediaHeader artist={artistData} title={original_name} />
       <MediaContainer>
         <MediaPoster poster={poster ?? poster_path} type="tv" />
-        <MediaInfo>
-          {diaryDate && (
-            <MediaInfoText
-              title="Date"
-              text={dayjs(diaryDate).format("MMM D, YYYY")}
-            />
-          )}
-          {rating ? (
-            <MediaRating rating={rating} />
-          ) : (
-            <MediaInfoText title="Rating" text="No Rating" />
-          )}
-          {seasonInfo?.season && seasonInfo.season !== -1 && (
-            <MediaInfoText
-              title="Season"
-              text={seasonInfo.season.toLocaleString()}
-            />
-          )}
-          {seasonInfo?.seenEpisodes && seasonInfo.seenEpisodes.length > 0 && (
-            <MediaInfoText
-              title="Episodes"
-              text={seasonInfo.seenEpisodes.reverse().join(", ")}
-            />
-          )}
-          {mediaDate && (
-            <MediaInfoText
-              title="Released"
-              text={new Date(mediaDate).toLocaleDateString("en-us", {
-                year: "numeric",
-              })}
-            />
-          )}
-          {genres && <MediaInfoText title="Genre" text={genres[0].name} />}
-        </MediaInfo>
+        {showInfo && (
+          <MediaInfo>
+            {diaryDate && (
+              <MediaInfoText
+                title="Date"
+                text={dayjs(diaryDate).format("MMM D, YYYY")}
+              />
+            )}
+            {rating ? (
+              <MediaRating rating={rating} />
+            ) : (
+              <MediaInfoText title="Rating" text="No Rating" />
+            )}
+            {seasonInfo?.season && seasonInfo.season !== -1 && (
+              <MediaInfoText
+                title="Season"
+                text={seasonInfo.season.toLocaleString()}
+              />
+            )}
+            {seasonInfo?.seenEpisodes && seasonInfo.seenEpisodes.length > 0 && (
+              <MediaInfoText
+                title="Episodes"
+                text={seasonInfo.seenEpisodes.reverse().join(", ")}
+              />
+            )}
+            {mediaDate && (
+              <MediaInfoText
+                title="Released"
+                text={new Date(mediaDate).toLocaleDateString("en-us", {
+                  year: "numeric",
+                })}
+              />
+            )}
+            {genres && <MediaInfoText title="Genre" text={genres[0].name} />}
+          </MediaInfo>
+        )}
       </MediaContainer>
-      {edit ? (
-        <>
-          <MediaEdit dispatch={edit.dispatch} fields={edit.fields} />
-          {seasonInfo && (
-            <Flex alignItems="center" justifyContent="space-between">
-              <Text flex="1">Season</Text>
-              {seasonInfo?.episodes && (
-                <Button
-                  size="sm"
-                  colorScheme="purple"
-                  mr={3}
-                  variant="link"
-                  onClick={() => setShowEpisodes(!showEpisodes)}
-                >
-                  + Episodes
-                </Button>
-              )}
-              {seasons && handleSeasonSelected ? (
-                <MediaEditSeasons
-                  handleSeasonSelected={handleSeasonSelected}
-                  poster={poster ?? poster_path}
-                  season={seasonInfo?.season}
-                  seasons={seasons}
-                />
-              ) : (
-                <div>{seasonInfo.season}</div>
-              )}
-            </Flex>
+      {logRating && (
+        <MediaLogRating
+          dispatch={logRating.dispatch}
+          fields={logRating.fields}
+        />
+      )}
+      {edit && <MediaEdit dispatch={edit.dispatch} fields={edit.fields} />}
+      {showEdit && seasonInfo && (
+        <Flex alignItems="center" justifyContent="space-between">
+          <Text flex="1">Season</Text>
+          {seasonInfo?.episodes && (
+            <Button
+              size="sm"
+              colorScheme="purple"
+              mr={3}
+              variant="link"
+              onClick={() => setShowEpisodes(!showEpisodes)}
+            >
+              + Episodes
+            </Button>
           )}
-          {seasonInfo?.episodes && showEpisodes && (
+          {seasons && handleSeasonSelected ? (
+            <MediaEditSeasons
+              handleSeasonSelected={handleSeasonSelected}
+              poster={poster ?? poster_path}
+              season={seasonInfo?.season}
+              seasons={seasons}
+            />
+          ) : (
+            <div>{seasonInfo.season}</div>
+          )}
+        </Flex>
+      )}
+      {showEdit && seasonInfo?.episodes && showEpisodes && (
+        <>
+          {edit && (
             <MediaEditEpisodes
               dispatch={edit.dispatch}
               fields={edit.fields}
               episodes={seasonInfo.episodes}
             />
           )}
+          {logRating && (
+            <MediaEditEpisodes
+              dispatch={logRating.dispatch}
+              fields={logRating.fields}
+              episodes={seasonInfo.episodes}
+            />
+          )}
         </>
-      ) : (
+      )}
+      {showInfo && (
         <>
           {overview && <MediaAbout overview={overview} tagline={tagline} />}
           <MediaLinks>

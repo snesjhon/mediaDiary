@@ -1,1 +1,1 @@
-export { default as MediaLinks } from "./MediaLinks";
+export { default } from "./MediaLinks";

@@ -23,10 +23,12 @@ import {
   MediaInfoButton,
   MediaInfoText,
   MediaLinks,
+  MediaLogRating,
   MediaPoster,
   MediaRating,
 } from "./components";
 import type { MediaDiary } from "@/types";
+import type { LogRatingActions, LogRatingState } from "../Log/config";
 
 interface Props {
   albumInfo: SpotifyAlbum;
@@ -37,6 +39,10 @@ interface Props {
     dispatch: Dispatch<LogActions>;
     fields: LogState;
   };
+  logRating?: {
+    dispatch: Dispatch<LogRatingActions>;
+    fields: LogRatingState;
+  };
 }
 
 export default function MediaSpotify({
@@ -45,9 +51,11 @@ export default function MediaSpotify({
   diaryDate,
   rating,
   edit,
+  logRating,
 }: Props): JSX.Element {
   const { name: title, images, release_date } = albumInfo;
   const { name: artist, genres } = artistInfo;
+  const showInfo = !edit && !logRating;
   return (
     <>
       <MediaHeader title={title} artist={artist} />
@@ -55,7 +63,7 @@ export default function MediaSpotify({
         {images && images?.length > 0 && (
           <MediaPoster poster={images[0].url} type="album" />
         )}
-        {!edit && (
+        {showInfo && (
           <MediaInfo>
             {diaryDate && (
               <MediaInfoText
@@ -80,9 +88,14 @@ export default function MediaSpotify({
           </MediaInfo>
         )}
       </MediaContainer>
-      {edit ? (
-        <MediaEdit dispatch={edit.dispatch} fields={edit.fields} />
-      ) : (
+      {logRating && (
+        <MediaLogRating
+          dispatch={logRating.dispatch}
+          fields={logRating.fields}
+        />
+      )}
+      {edit && <MediaEdit dispatch={edit.dispatch} fields={edit.fields} />}
+      {showInfo && (
         <Box my={4}>
           <Flex justifyContent="space-between" alignItems="center" mb={3}>
             <Heading size="lg">Tracks</Heading>
