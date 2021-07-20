@@ -4,12 +4,11 @@ import { useFuegoUser } from "@/fuego";
 import { BookmarkIcon } from "@/icons";
 import MdLogo from "@/src/components/md/MdLogo";
 import type { MDbMovie, MDbTV, MediaDiaryWithId } from "@/types";
-import { createMediaSelected } from "@/utils";
-import { CalendarIcon, RepeatIcon } from "@chakra-ui/icons";
+import { CalendarIcon } from "@chakra-ui/icons";
 import {
   Button,
-  CloseButton,
   DrawerBody,
+  DrawerCloseButton,
   DrawerFooter,
   DrawerHeader,
   Flex,
@@ -89,7 +88,7 @@ export default function DayRatingContent({
                 bookmark ? removeBookmark(mdData, id) : addBookmark(mdData, id)
               }
             />
-            <CloseButton />
+            <DrawerCloseButton pos="relative" top="0" right="0" />
           </Flex>
         </Flex>
       </DrawerHeader>

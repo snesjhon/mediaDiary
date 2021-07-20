@@ -8,8 +8,8 @@ import { createMediaSelected } from "@/utils";
 import { CalendarIcon, RepeatIcon } from "@chakra-ui/icons";
 import {
   Button,
-  CloseButton,
   DrawerBody,
+  DrawerCloseButton,
   DrawerFooter,
   DrawerHeader,
   Flex,
@@ -38,7 +38,6 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
   const { user } = useFuegoUser();
   const dispatch = useMDDispatch();
   const {
-    addedDate,
     bookmark,
     memory,
     type,
@@ -89,7 +88,7 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
                 bookmark ? removeBookmark(mdData, id) : addBookmark(mdData, id)
               }
             />
-            <CloseButton />
+            <DrawerCloseButton pos="relative" top="0" right="0" />
           </Flex>
         </Flex>
       </DrawerHeader>

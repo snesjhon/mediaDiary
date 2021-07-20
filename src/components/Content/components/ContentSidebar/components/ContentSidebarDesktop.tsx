@@ -1,4 +1,4 @@
-import { HomeIcon, BookmarkIcon, ActivityIcon } from "@/icons";
+import { HomeIcon, BookmarkIcon, ActivityIcon, LayersIcon } from "@/icons";
 import { SearchIcon, SettingsIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, VStack } from "@chakra-ui/react";
 import React from "react";
@@ -19,16 +19,16 @@ export default function ContentSidebarDesktop(): JSX.Element {
           </Box>
           <Box>
             <ContentSidebarButton
-              title="Bookmarks"
-              Icon={BookmarkIcon}
-              route="/bookmarks"
+              title="Memories"
+              Icon={LayersIcon}
+              route="/memories"
             />
           </Box>
           <Box>
             <ContentSidebarButton
-              title="Memories"
+              title="Bookmarks"
               Icon={BookmarkIcon}
-              route="/memories"
+              route="/bookmarks"
             />
           </Box>
           <Box>

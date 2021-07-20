@@ -1,4 +1,4 @@
-import { HomeIcon, BookmarkIcon, ActivityIcon } from "@/icons";
+import { HomeIcon, BookmarkIcon, ActivityIcon, LayersIcon } from "@/icons";
 import { SettingsIcon } from "@chakra-ui/icons";
 import {
   Drawer,
@@ -35,6 +35,11 @@ export default function ContentSidebarMobile({
                 title="Home"
                 route="/home"
                 Icon={HomeIcon}
+              />
+              <ContentSidebarButton
+                title="Memories"
+                route="/memories"
+                Icon={LayersIcon}
               />
               <ContentSidebarButton
                 title="Bookmarks"
