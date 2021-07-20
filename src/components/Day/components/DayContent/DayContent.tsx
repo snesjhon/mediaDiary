@@ -7,9 +7,7 @@ import type { MDbMovie, MDbTV, MediaDiaryWithId } from "@/types";
 import { createMediaSelected } from "@/utils";
 import { CalendarIcon, RepeatIcon } from "@chakra-ui/icons";
 import {
-  Box,
   Button,
-  CloseButton,
   DrawerBody,
   DrawerCloseButton,
   DrawerFooter,

@@ -4,11 +4,9 @@ import { useFuegoUser } from "@/fuego";
 import { BookmarkIcon } from "@/icons";
 import MdLogo from "@/src/components/md/MdLogo";
 import type { MDbMovie, MDbTV, MediaDiaryWithId } from "@/types";
-import { createMediaSelected } from "@/utils";
-import { CalendarIcon, RepeatIcon } from "@chakra-ui/icons";
+import { CalendarIcon } from "@chakra-ui/icons";
 import {
   Button,
-  CloseButton,
   DrawerBody,
   DrawerCloseButton,
   DrawerFooter,
