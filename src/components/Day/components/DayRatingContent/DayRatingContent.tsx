@@ -10,6 +10,7 @@ import {
   Button,
   CloseButton,
   DrawerBody,
+  DrawerCloseButton,
   DrawerFooter,
   DrawerHeader,
   Flex,
@@ -89,7 +90,7 @@ export default function DayRatingContent({
                 bookmark ? removeBookmark(mdData, id) : addBookmark(mdData, id)
               }
             />
-            <CloseButton />
+            <DrawerCloseButton pos="relative" top="0" right="0" />
           </Flex>
         </Flex>
       </DrawerHeader>
