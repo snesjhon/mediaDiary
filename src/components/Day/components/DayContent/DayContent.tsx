@@ -61,8 +61,6 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
     isSuspense: true,
   });
 
-  // const isEditable = addedDate === null || rating !== 0;
-
   if (error) {
     return <div>{error}</div>;
   }

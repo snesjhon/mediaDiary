@@ -1,15 +1,9 @@
 import { Button, Center, DrawerBody, DrawerFooter } from "@chakra-ui/react";
-import dayjs from "dayjs";
 import React, { useReducer } from "react";
 import { cache, mutate } from "swr";
 import { useMDDispatch, useMDState } from "../../config/store";
-import { fuegoDelete } from "../../fuego/fuegoMDActions";
 import useFuegoUser from "../../fuego/useFuegoUser";
-import type {
-  MediaDiaryDate,
-  MediaDiaryWithId,
-  MediaMemory,
-} from "../../types/typesMedia";
+import type { MediaDiaryWithId, MediaMemory } from "../../types/typesMedia";
 import type { LogRatingState } from "../Log/config";
 import { LogRatingReducer } from "../Log/config";
 import MdSpinner from "../md/MdSpinner";
@@ -137,7 +131,6 @@ export default function EditRating(): JSX.Element {
   function createEdit(): MediaMemory | false {
     const { rating, seenEpisodes } = state;
     if (typeof edit !== "undefined" && rating > 0) {
-      // const { diaryDate, diaryYear, ...rest } = edit;
       const editItem = {
         ...edit,
         diaryDate: false as const,

@@ -90,7 +90,6 @@ export default function MediaTV({
 
   const showInfo = !edit && !logRating;
   const showEdit = edit || logRating;
-  console.log(edit, logRating);
   return (
     <>
       <MediaHeader artist={artistData} title={original_name} />
