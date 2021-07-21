@@ -1,11 +1,13 @@
-import { fuegoDb } from "../../../fuego/fuego";
-import type fuego from "../../../fuego/fuego";
-import type { MediaDiaryWithId, MediaType } from "../../../types/typesMedia";
+import { fuegoDb } from "@/fuego";
+import type fuego from "@/fuego/fuego";
+import type { MediaDiaryWithId, MediaType } from "@/types";
+import type { SortType } from "../Memories";
 
 export async function fuegoMemoriesGet(
   key: string,
   uid: string,
   cursor: string,
+  sortType: SortType = "addedDate",
   mediaTypes: MediaType[] | null,
   releasedDecade: number | null,
   addedDate: number | null,
@@ -31,10 +33,15 @@ export async function fuegoMemoriesGet(
     diaryRef = diaryRef.where("genre", "==", genre);
   }
 
-  diaryRef = diaryRef.where("memory", "==", true).orderBy("addedDate", "desc");
+  diaryRef = diaryRef.where("memory", "==", true).orderBy(sortType, "desc");
 
   if (cursor !== null) {
-    diaryRef = diaryRef.startAfter(cursor);
+    const cursorItem = await fuegoDb
+      .collection(`users/${uid}/diary`)
+      .doc(cursor)
+      .get();
+
+    diaryRef = diaryRef.startAfter(cursorItem);
   }
 
   const diaryItems = await diaryRef.limit(30).get();

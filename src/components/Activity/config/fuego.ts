@@ -41,7 +41,7 @@ export async function fuegoChartTop6(
     `users/${uid}/diary`
   ) as fuego.firestore.Query;
 
-  diaryRef = diaryRef.orderBy("rating", "desc");
+  diaryRef = diaryRef.orderBy("rating", "desc").orderBy("addedDate", "desc");
 
   const diaryItems = await diaryRef.limit(count).get();
 
