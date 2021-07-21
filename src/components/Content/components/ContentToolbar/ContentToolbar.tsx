@@ -33,7 +33,7 @@ function ContentToolbar({ onOpen }: { onOpen: () => void }): JSX.Element {
         as="header"
         pos="fixed"
         top="0"
-        zIndex="1"
+        zIndex="2"
         bg={colorMode === "light" ? "white" : "gray.800"}
         left="0"
         right="0"
