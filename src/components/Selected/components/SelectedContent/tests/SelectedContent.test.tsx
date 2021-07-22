@@ -113,6 +113,7 @@ describe("<SelectedContent /> ", () => {
         rating: 0,
         diaryDate: false,
         diaryYear: false,
+        diary: false,
         loggedBefore: false,
       });
     });
