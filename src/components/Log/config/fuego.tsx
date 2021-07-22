@@ -1,9 +1,6 @@
 import { bookmarkFilterKeys, bookmarkFilterSet, fuegoDb } from "@/fuego";
 import type { MediaDiaryDate, MediaMemory } from "@/types";
-import {
-  createFilterKeys,
-  createFilterSet,
-} from "../../../fuego/fuegoFilterActions";
+import { createFilterKeys, createFilterSet } from "../../Filters/config";
 
 export async function fuegoDiaryAdd(
   uid: string,

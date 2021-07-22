@@ -1,15 +1,13 @@
-import { FilmIcon, TvIcon, AlbumIcon } from "@/icons";
+import { useMDState, useMDDispatch } from "@/config";
+import { AlbumIcon, FilmIcon, TvIcon } from "@/icons";
+import type { MediaType } from "@/types";
+import { capFormat } from "@/utils";
 import {
   Box,
   Button,
   Divider,
-  Drawer,
   DrawerBody,
-  DrawerCloseButton,
-  DrawerContent,
   DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
   Flex,
   Heading,
   HStack,
@@ -23,58 +21,7 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import useSWR from "swr";
-import { useMDDispatch, useMDState } from "../../../../config/store";
-import { fuegoFiltersAll } from "../../../../fuego/fuegoFilterActions";
-import useFuegoUser from "../../../../fuego/useFuegoUser";
-import type { FilterData, FilterDiary } from "../../../../types/typesFilters";
-import type { MediaType } from "../../../../types/typesMedia";
-import { capFormat } from "../../../../utils/helpers";
-import MdLogo from "../../../md/MdLogo";
-import MdStatus from "../../../md/MdStatus";
-
-function ContentFilters({
-  onClose,
-  isOpen,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-}): JSX.Element {
-  const { user } = useFuegoUser();
-
-  const { data, error } = useSWR<FilterData>(
-    user && user !== null ? ["/filters/all", user.uid] : null,
-    fuegoFiltersAll,
-    {
-      revalidateOnFocus: false,
-    }
-  );
-
-  if (error) {
-    console.error(error);
-    return <MdStatus title="There was an Error" />;
-  }
-
-  return (
-    <Drawer placement="right" onClose={onClose} isOpen={isOpen}>
-      <DrawerOverlay sx={{ zIndex: 2 }}>
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader pt={3} pb={2}>
-            <MdLogo title="Filters" />
-          </DrawerHeader>
-          {data ? (
-            <FiltersData data={data} onClose={onClose} />
-          ) : (
-            <DrawerBody px={{ base: 0, sm: 8 }}>
-              <MdStatus title="No Memories" />
-            </DrawerBody>
-          )}
-        </DrawerContent>
-      </DrawerOverlay>
-    </Drawer>
-  );
-}
+import type { FilterData, FilterDiary } from "../../config";
 
 const ratingSelect: { [key: string]: string } = {
   1: "½",
@@ -89,13 +36,13 @@ const ratingSelect: { [key: string]: string } = {
   10: "⭑⭑⭑⭑⭑",
 };
 
-function FiltersData({
+export default function FiltersContent({
   data,
   onClose,
 }: {
   data: FilterData;
   onClose: () => void;
-}) {
+}): JSX.Element {
   const { diaryFilters } = useMDState();
   // Using optional chaining and nullish because I want to ALWAYS return null if diaryFilters undefined
   const mediaType = diaryFilters?.mediaType ?? null;
@@ -385,5 +332,3 @@ function FiltersData({
       }, []);
   }
 }
-
-export default ContentFilters;

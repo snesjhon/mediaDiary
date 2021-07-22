@@ -1,7 +1,7 @@
+import { fuegoDb } from "@/fuego";
+import type { MediaDiaryDate } from "@/types";
 import firebase from "firebase/app";
-import type { FilterData, FilterDiary } from "../types/typesFilters";
-import type { MediaDiaryDate } from "../types/typesMedia";
-import { fuegoDb } from "./fuego";
+import type { FilterData, FilterDiary } from "./types";
 
 export async function fuegoFiltersAll(
   key: string,
@@ -35,9 +35,8 @@ export function createFilterSet(
     } else if (filters[e] !== null) {
       setObj[e] = {
         [`${filters.diaryYear}`]: {
-          [`${filters[e]}`]: firebase.firestore.FieldValue.increment(
-            incrementor
-          ),
+          [`${filters[e]}`]:
+            firebase.firestore.FieldValue.increment(incrementor),
         },
       };
     }

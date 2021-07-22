@@ -103,11 +103,7 @@ export default function MediaTV({
                 text={dayjs(diaryDate).format("MMM D, YYYY")}
               />
             )}
-            {rating ? (
-              <MediaRating rating={rating} />
-            ) : (
-              <MediaInfoText title="Rating" text="No Rating" />
-            )}
+            {rating && rating > 0 ? <MediaRating rating={rating} /> : null}
             {seasonInfo?.season && seasonInfo.season !== -1 && (
               <MediaInfoText
                 title="Season"

@@ -1,10 +1,6 @@
-import { FiltersIcon, LogoIcon } from "@/icons";
+import { LogoIcon } from "@/icons";
 import { MdRating } from "@/md";
-import {
-  ArrowDownIcon,
-  ChevronDownIcon,
-  QuestionOutlineIcon,
-} from "@chakra-ui/icons";
+import { ArrowDownIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -12,15 +8,9 @@ import {
   Grid,
   Heading,
   HStack,
-  IconButton,
   Image,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Square,
   Text,
-  Tooltip,
   useToken,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
@@ -31,9 +21,9 @@ import type { MediaDiaryWithId } from "../../types/typesMedia";
 import type { UserFuegoValidated } from "../../types/typesUser";
 import { createPosterURL } from "../../utils/helpers";
 import MdLoader from "../md/MdLoader";
+import { MemoriesHeader } from "./components";
+import type { SortType } from "./config";
 import { fuegoMemoriesGet } from "./config";
-
-export type SortType = "addedDate" | "rating";
 
 export default function Memories({
   user,
@@ -117,62 +107,10 @@ export default function Memories({
 
     return (
       <Box pos="relative">
-        <Box
-          position="sticky"
-          top="3rem"
-          pt="2"
-          zIndex="1"
-          bgColor="white"
-          borderBottomWidth="1px"
-        >
-          <Flex w="100%" h="100%" py={2} align="center" justify="space-between">
-            <Flex alignItems="baseline">
-              <Heading size="lg" mr="2">
-                Memories
-              </Heading>
-              <Tooltip
-                label={
-                  <Text>
-                    Memories include rated Media <br />
-                    with or without a Diary entry
-                  </Text>
-                }
-              >
-                <QuestionOutlineIcon />
-              </Tooltip>
-            </Flex>
-            <Flex maxW="720px" align="center">
-              <HStack spacing={{ base: 0, sm: 3 }}>
-                <Flex alignItems="baseline">
-                  <Text color="gray.500" fontSize="sm">
-                    Sorted By
-                  </Text>
-                  <Menu>
-                    <MenuButton as={Button} variant="ghost" size="sm" pr="1">
-                      {sortType === "addedDate" && "When Rated"}
-                      {sortType === "rating" && "Rating"}
-                      <ChevronDownIcon boxSize="6" mb="1" />
-                    </MenuButton>
-                    <MenuList>
-                      <MenuItem onClick={() => setSortType("addedDate")}>
-                        When Rated
-                      </MenuItem>
-                      <MenuItem onClick={() => setSortType("rating")}>
-                        Rating
-                      </MenuItem>
-                    </MenuList>
-                  </Menu>
-                </Flex>
-                <IconButton
-                  icon={<FiltersIcon />}
-                  aria-label="filter"
-                  size="sm"
-                  variant="outline"
-                />
-              </HStack>
-            </Flex>
-          </Flex>
-        </Box>
+        <MemoriesHeader
+          sortType={sortType}
+          onChange={(val) => setSortType(val)}
+        />
         <Grid
           gridTemplateColumns="repeat(5, 1fr)"
           gridGap="2"

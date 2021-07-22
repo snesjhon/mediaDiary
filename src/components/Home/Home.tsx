@@ -12,16 +12,18 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Rating from "react-rating";
 import { cache, useSWRInfinite } from "swr";
 import { useMDDispatch, useMDState } from "../../config/store";
 import { fuegoDiaryGet } from "./config";
+import type { SortType } from "./config";
 import type { MediaDiaryState, MediaDiaryWithId } from "../../types/typesMedia";
 import type { UserFuegoValidated } from "../../types/typesUser";
 import { createPosterURL } from "../../utils/helpers";
 import MdLoader from "../md/MdLoader";
 import { LogoIcon, StarEmptyIcon, FilmIcon, AlbumIcon, TvIcon } from "@/icons";
+import { HomeHeader } from "./components";
 
 interface ListState {
   [key: string]: MediaDiaryState;
@@ -35,6 +37,7 @@ export default function Home({
   const state = useMDState();
   const dispatch = useMDDispatch();
   const { colorMode } = useColorMode();
+  const [sortType, setSortType] = useState<SortType>("diaryDate");
 
   const { data, error, size, setSize, mutate } = useSWRInfinite<
     MediaDiaryWithId[]
@@ -47,6 +50,7 @@ export default function Home({
         "/fuego/diary",
         user.uid,
         prev !== null ? prev[prev.length - 1].diaryDate : null,
+        sortType,
         state.diaryFilters?.mediaType ?? null,
         state.diaryFilters?.rating ?? null,
         state.diaryFilters?.releasedDecade ?? null,
@@ -99,9 +103,7 @@ export default function Home({
   }
 
   if (data) {
-    // TODO: Refactor.. Something about SWRInfinite throws a TS error
-    const allData = data ? ([] as MediaDiaryWithId[]).concat(...data) : [];
-
+    const allData = data.flat();
     const diaryDates: ListState = allData.reduce<ListState>((a, c) => {
       if (c.diaryDate) {
         const dateString = dayjs(c.diaryDate).format("YYYY-MM");
@@ -112,9 +114,9 @@ export default function Home({
 
     const isReachingEnd =
       isEmpty || (data && data[data.length - 1]?.length < 30);
-
     return (
       <>
+        <HomeHeader sortType={sortType} onChange={(val) => setSortType(val)} />
         {Object.keys(diaryDates).map((month, monthIndex) => {
           return (
             <Grid
@@ -133,7 +135,7 @@ export default function Home({
                   color={colorMode === "light" ? "gray.600" : "gray.300"}
                   fontWeight="bold"
                   position="sticky"
-                  top="4rem"
+                  top="7.5rem"
                 >
                   {dayjs(`${month}-01`).format("MMM")}
                   <Text
