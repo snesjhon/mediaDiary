@@ -1,15 +1,14 @@
-import { Button, Center, DrawerBody, DrawerFooter } from "@chakra-ui/react";
+import { useMDDispatch, useMDState, LogReducer } from "@/config";
+import type { LogState } from "@/config";
+import { useFuegoUser } from "@/fuego";
+import type { MediaDiaryDate } from "@/types";
+import { parsePosterUrl } from "@/utils";
 import dayjs from "dayjs";
-import React, { useEffect, useReducer, useRef } from "react";
-import { useMDDispatch, useMDState } from "../../config/store";
-import type { LogState } from "../../config/storeLog";
-import { LogReducer } from "../../config/storeLog";
+import React, { useReducer, useRef, useEffect } from "react";
 import { fuegoDiaryAdd } from "./config";
-import useFuegoUser from "../../fuego/useFuegoUser";
-import type { MediaDiaryDate } from "../../types/typesMedia";
-import { parsePosterUrl } from "../../utils/helpers";
-import MdSpinner from "../md/MdSpinner";
-import { MediaMovie, MediaSpotify, MediaTV } from "../Media";
+import { MdSpinner } from "@/md";
+import { Center, DrawerBody, DrawerFooter, Button } from "@chakra-ui/react";
+import { MediaMovie, MediaTV, MediaSpotify } from "../Media";
 
 export interface LogTVSeason {
   season?: number;

@@ -1,4 +1,10 @@
-import { ArrowDownIcon, StarIcon } from "@chakra-ui/icons";
+import { useMDState, useMDDispatch } from "@/config";
+import type {
+  MediaDiaryState,
+  UserFuegoValidated,
+  MediaDiaryWithId,
+} from "@/types";
+import { createPosterURL } from "@/utils";
 import {
   Box,
   Button,
@@ -6,23 +12,20 @@ import {
   Grid,
   Heading,
   HStack,
-  Image,
   Square,
-  Text,
   useColorMode,
+  Text,
+  Image,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
-import Rating from "react-rating";
-import { cache, useSWRInfinite } from "swr";
-import { useMDDispatch, useMDState } from "../../config/store";
+import React, { useState, useEffect } from "react";
+import { useSWRInfinite, cache } from "swr";
 import { fuegoDiaryGet } from "./config";
 import type { SortType } from "./config";
-import type { MediaDiaryState, MediaDiaryWithId } from "../../types/typesMedia";
-import type { UserFuegoValidated } from "../../types/typesUser";
-import { createPosterURL } from "../../utils/helpers";
-import MdLoader from "../md/MdLoader";
 import { LogoIcon, StarEmptyIcon, FilmIcon, AlbumIcon, TvIcon } from "@/icons";
+import { MdLoader } from "@/md";
+import { StarIcon, ArrowDownIcon } from "@chakra-ui/icons";
+import Rating from "react-rating";
 import { HomeHeader } from "./components";
 
 interface ListState {

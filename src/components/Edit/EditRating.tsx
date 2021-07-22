@@ -1,15 +1,15 @@
-import { Button, Center, DrawerBody, DrawerFooter } from "@chakra-ui/react";
+import { useMDState, useMDDispatch } from "@/config";
+import { useFuegoUser } from "@/fuego";
+import type { MediaMemory, MediaDiaryWithId } from "@/types";
 import React, { useReducer } from "react";
-import { cache, mutate } from "swr";
-import { useMDDispatch, useMDState } from "../../config/store";
-import useFuegoUser from "../../fuego/useFuegoUser";
-import type { MediaDiaryWithId, MediaMemory } from "../../types/typesMedia";
-import type { LogRatingState } from "../Log/config";
+import { mutate, cache } from "swr";
 import { LogRatingReducer } from "../Log/config";
-import MdSpinner from "../md/MdSpinner";
-import { MediaMovie, MediaSpotify, MediaTV } from "../Media";
-import { fuegoEditRating } from "./config";
-import { fuegoDeleteRating } from "./config/fuego";
+import type { LogRatingState } from "../Log/config";
+import { fuegoEditRating, fuegoDeleteRating } from "./config";
+import { MdSpinner } from "@/md";
+import { Center } from "@chakra-ui/layout";
+import { DrawerBody, DrawerFooter, Button } from "@chakra-ui/react";
+import { MediaMovie, MediaTV, MediaSpotify } from "../Media";
 
 export default function EditRating(): JSX.Element {
   const MDState = useMDState();

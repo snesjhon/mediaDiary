@@ -1,5 +1,8 @@
+import { useMDState, useMDDispatch } from "@/config";
 import { LogoIcon } from "@/icons";
-import { MdRating } from "@/md";
+import { MdLoader, MdRating } from "@/md";
+import type { UserFuegoValidated, MediaDiaryWithId } from "@/types";
+import { createPosterURL } from "@/utils";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -16,14 +19,9 @@ import {
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { cache, useSWRInfinite } from "swr";
-import { useMDDispatch, useMDState } from "../../config/store";
-import type { MediaDiaryWithId } from "../../types/typesMedia";
-import type { UserFuegoValidated } from "../../types/typesUser";
-import { createPosterURL } from "../../utils/helpers";
-import MdLoader from "../md/MdLoader";
 import { MemoriesHeader } from "./components";
-import type { SortType } from "./config";
 import { fuegoMemoriesGet } from "./config";
+import type { SortType } from "./config";
 
 export default function Memories({
   user,

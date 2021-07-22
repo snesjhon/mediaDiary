@@ -11,13 +11,11 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import useSWR from "swr";
-import { capFormat } from "../../utils/helpers";
 import { fuegoFiltersAll } from "../Filters/config";
 import type { FilterData } from "../Filters/config";
-import MdEmpty from "../md/MdEmpty";
-import MdLoader from "../md/MdLoader";
-import MdStatus from "../md/MdStatus";
 import { ActivityAll, ActivityYear } from "./components";
+import { MdStatus, MdLoader, MdEmpty } from "@/md";
+import { capFormat } from "@/utils";
 
 function Activity({ user }: { user: UserFuegoValidated }): JSX.Element {
   const [yearType, setYearType] = useState<number | null>(null);

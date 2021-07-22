@@ -1,8 +1,8 @@
+import type { TVSeason } from "@/types";
+import { parsePosterUrl } from "@/utils";
 import { Box } from "@chakra-ui/layout";
 import { Select } from "@chakra-ui/react";
 import React from "react";
-import type { TVSeason } from "../../../types/typesMDb";
-import { parsePosterUrl } from "../../../utils/helpers";
 
 interface Props {
   seasons: TVSeason[];

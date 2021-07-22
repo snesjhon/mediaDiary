@@ -1,10 +1,10 @@
+import { useMDDispatch } from "@/config";
+import { useFuegoUser } from "@/fuego";
 import { HomeIcon, BookmarkIcon, ActivityIcon, LayersIcon } from "@/icons";
 import { SearchIcon, SettingsIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, VStack } from "@chakra-ui/react";
 import React from "react";
 import { ContentSidebarButton, ContentSidebarFooter } from ".";
-import { useMDDispatch } from "../../../../../config/store";
-import useFuegoUser from "../../../../../fuego/useFuegoUser";
 
 export default function ContentSidebarDesktop(): JSX.Element {
   const { user } = useFuegoUser();

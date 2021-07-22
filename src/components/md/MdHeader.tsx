@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import router from "next/router";
 import React from "react";
-import MdLogo from "../md/MdLogo";
+import { MdLogo } from ".";
 
 export default function LayoutHeader(): JSX.Element {
   const { colorMode, toggleColorMode } = useColorMode();

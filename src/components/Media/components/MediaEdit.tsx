@@ -1,13 +1,13 @@
-import dayjs from "dayjs";
-import React from "react";
-import type { Dispatch } from "react";
-import { MEDIA_LOGGED_BEFORE } from "../../../config/contants";
-import type { LogActions, LogState } from "../../../config/storeLog";
-import { StarIcon } from "@chakra-ui/icons";
-import { Flex, Box, Divider } from "@chakra-ui/layout";
-import { Input, Checkbox, Text } from "@chakra-ui/react";
-import Rating from "react-rating";
+import type { LogActions, LogState } from "@/config";
+import { MEDIA_LOGGED_BEFORE } from "@/config";
 import { StarEmptyIcon } from "@/icons";
+import { StarIcon } from "@chakra-ui/icons";
+import { Box, Divider, Flex, Text } from "@chakra-ui/layout";
+import { Checkbox, Input } from "@chakra-ui/react";
+import dayjs from "dayjs";
+import type { Dispatch } from "react";
+import React from "react";
+import Rating from "react-rating";
 
 interface Props {
   dispatch: Dispatch<LogActions>;

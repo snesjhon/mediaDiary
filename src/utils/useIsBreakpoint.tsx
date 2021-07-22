@@ -1,6 +1,6 @@
 import { useMediaQuery, useToken } from "@chakra-ui/react";
 
-function useIsBreakpoint(
+export default function useIsBreakpoint(
   size: keyof {
     sm: string;
     md: string;
@@ -12,5 +12,3 @@ function useIsBreakpoint(
   const [isBp] = useMediaQuery(`(min-width: ${bp})`);
   return isBp;
 }
-
-export default useIsBreakpoint;

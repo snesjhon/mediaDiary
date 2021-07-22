@@ -1,4 +1,4 @@
-import { Text, Heading, Divider } from "@chakra-ui/layout";
+import { Heading, Text } from "@chakra-ui/layout";
 import React from "react";
 
 interface Props {

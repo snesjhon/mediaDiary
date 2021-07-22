@@ -14,9 +14,9 @@ import dayjs from "dayjs";
 import React, { useState } from "react";
 import { useMDState } from "@/config/store";
 import { useFuegoDelete } from "./config";
-import type { UserFuegoValidated } from "../../types/typesUser";
 import { SettingsUserPreference } from "./components";
 import { MdModal } from "@/md";
+import type { UserFuegoValidated } from "@/types";
 
 function Settings({ user }: { user: UserFuegoValidated }): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();

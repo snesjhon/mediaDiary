@@ -1,3 +1,6 @@
+import { useMDDispatch } from "@/config";
+import { MdLogo } from "@/md";
+import { useIsBreakpoint } from "@/utils";
 import { AddIcon, HamburgerIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -8,9 +11,6 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import React from "react";
-import { useMDDispatch } from "../../../../config/store";
-import useIsBreakpoint from "../../../../utils/useIsBreakpoint";
-import MdLogo from "../../../md/MdLogo";
 
 function ContentToolbar({ onOpen }: { onOpen: () => void }): JSX.Element {
   const isMd = useIsBreakpoint("md");

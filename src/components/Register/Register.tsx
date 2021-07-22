@@ -9,8 +9,8 @@ import {
 import { setCookie } from "nookies";
 import Link from "next/link";
 import React from "react";
-import fuego from "../../fuego/fuego";
 import { LogoIcon, GoogleIcon } from "@/icons";
+import fuego from "@/fuego/fuego";
 
 interface Props {
   type: "login" | "signup";

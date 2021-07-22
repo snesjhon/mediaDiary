@@ -18,7 +18,6 @@ import {
 import { useRouter } from "next/router";
 import type { ComponentType } from "react";
 import React, { useState } from "react";
-import useIsBreakpoint from "../utils/useIsBreakpoint";
 import {
   FilmIcon,
   TvIcon,
@@ -27,6 +26,7 @@ import {
   BookmarkIcon,
 } from "@/icons";
 import { MdFooter, MdHeader, MdLayout } from "@/md";
+import { useIsBreakpoint } from "@/utils";
 
 const fade = keyframes`
      0%,50% {

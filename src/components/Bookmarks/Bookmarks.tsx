@@ -1,4 +1,8 @@
+import { useMDState, useMDDispatch } from "@/config";
 import { LogoIcon } from "@/icons";
+import { MdLoader } from "@/md";
+import type { UserFuegoValidated, MediaDiaryWithId } from "@/types";
+import { createPosterURL } from "@/utils";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -12,11 +16,6 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { cache, useSWRInfinite } from "swr";
-import { useMDDispatch, useMDState } from "../../config/store";
-import type { MediaDiaryWithId } from "../../types/typesMedia";
-import type { UserFuegoValidated } from "../../types/typesUser";
-import { createPosterURL } from "../../utils/helpers";
-import MdLoader from "../md/MdLoader";
 import { fuegoBookmarkGet } from "./config";
 
 function Bookmarks({ user }: { user: UserFuegoValidated }): JSX.Element {

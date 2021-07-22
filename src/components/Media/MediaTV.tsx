@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import React, { useState } from "react";
 import type { Dispatch } from "react";
-import type { MDbTV } from "../../types/typesMDb";
 import {
   MediaAbout,
   MediaCast,
@@ -18,9 +17,9 @@ import {
   MediaPoster,
   MediaRating,
 } from "./components";
-import type { LogActions, LogState } from "../../config/storeLog";
 import { Button, Divider, Flex, Text } from "@chakra-ui/react";
-import type { MediaDiary } from "@/types";
+import type { MDbTV, MediaDiary } from "@/types";
+import type { LogActions, LogState } from "@/config";
 import type { LogRatingActions, LogRatingState } from "../Log/config";
 
 interface Props {

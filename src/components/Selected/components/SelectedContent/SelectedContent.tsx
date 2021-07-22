@@ -1,18 +1,15 @@
+import { useMDDispatch, useDataFetch } from "@/config";
+import type { DataFetchSpotify } from "@/config";
+import { useFuegoUser, fuegoBookmarkAdd } from "@/fuego";
+import type { MediaSelected, MDbMovie, MDbTV } from "@/types";
+import { createMediaSelected } from "@/utils";
 import dayjs from "dayjs";
 import React from "react";
-import { useMDDispatch } from "../../../../config/store";
-import useDataFetch from "../../../../config/useDataFetch";
-import type { DataFetchSpotify } from "../../../../config/useDataFetch";
-import { fuegoBookmarkAdd } from "../../../../fuego/fuegoBookmarks";
-import useFuegoUser from "../../../../fuego/useFuegoUser";
-import type { MDbMovie, MDbTV } from "../../../../types/typesMDb";
-import type { MediaSelected } from "../../../../types/typesMedia";
+import { BookmarkIcon } from "@/icons";
+import { MdLoader } from "@/md";
+import { MediaSpotify, MediaMovie, MediaTV } from "@/src/components/Media";
 import { CalendarIcon } from "@chakra-ui/icons";
 import { DrawerBody, DrawerFooter, Button } from "@chakra-ui/react";
-import MdLoader from "../../../md/MdLoader";
-import { MediaSpotify, MediaMovie, MediaTV } from "../../../Media";
-import { createMediaSelected } from "@/utils";
-import { BookmarkIcon } from "@/icons";
 
 export default function SelectedContent({
   item,

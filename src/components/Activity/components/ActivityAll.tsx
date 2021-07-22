@@ -1,7 +1,6 @@
 import React from "react";
 import useSWR from "swr";
 import { fuegoChartTop6 } from "../config/fuego";
-import useIsBreakpoint from "../../../utils/useIsBreakpoint";
 import {
   VizGenre,
   VizHighestRated,
@@ -9,6 +8,7 @@ import {
   VizReleased,
 } from "./components";
 import type { FilterData } from "../../Filters/config";
+import { useIsBreakpoint } from "@/utils";
 
 export default function ActivityAll({
   uid,

@@ -1,9 +1,9 @@
+import { MdLoader } from "@/md";
+import type { MediaType, MediaDiaryWithId } from "@/types";
+import { useIsBreakpoint } from "@/utils";
 import React from "react";
 import useSWR from "swr";
 import { fuegoChartYear } from "../config/fuego";
-import type { MediaType, MediaDiaryWithId } from "../../../types/typesMedia";
-import MdLoader from "../../md/MdLoader";
-import useIsBreakpoint from "../../../utils/useIsBreakpoint";
 import {
   VizHighestRated,
   VizRating,

@@ -25,10 +25,6 @@ jest.mock("../../../../../config/useDataFetch", () => {
   }));
 });
 
-jest.mock("@/utils/useIsBreakpoint", () => {
-  return jest.fn(() => true);
-});
-
 jest.mock("@/fuego", () => ({
   useFuegoUser: jest.fn(() => ({
     user: {

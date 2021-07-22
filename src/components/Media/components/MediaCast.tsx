@@ -1,3 +1,5 @@
+import { MDB_IMGURL } from "@/config";
+import type { MovieCastEntity, TVCast } from "@/types";
 import {
   Image,
   Heading,
@@ -7,8 +9,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React from "react";
-import { MDB_IMGURL } from "../../../config/contants";
-import type { MovieCastEntity, TVCast } from "../../../types/typesMDb";
 
 interface Props {
   cast: MovieCastEntity[] | TVCast[];

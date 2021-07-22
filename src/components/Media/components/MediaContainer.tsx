@@ -1,4 +1,4 @@
-import { Box, Grid } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import type { PropsWithChildren, ReactNode } from "react";
 import React from "react";
 

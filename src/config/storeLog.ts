@@ -1,4 +1,4 @@
-import type { MediaDiary } from "../types/typesMedia";
+import type { MediaDiary } from "@/types";
 
 export interface LogState {
   diaryDate: MediaDiary["diaryDate"];

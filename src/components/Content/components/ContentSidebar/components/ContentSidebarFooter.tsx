@@ -1,3 +1,4 @@
+import { useFuegoUser, useFuegoLogout } from "@/fuego";
 import {
   Avatar,
   Box,
@@ -9,13 +10,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React from "react";
-import useFuegoLogout from "../../../../../fuego/useFuegoLogout";
-import useFuegoUser from "../../../../../fuego/useFuegoUser";
 
 export default function SidebarFooter(): JSX.Element | null {
   const { user } = useFuegoUser();
   const logout = useFuegoLogout();
-  // const router = useRouter();
+
   return user ? (
     <Menu autoSelect={false}>
       <MenuButton _hover={{ bg: "purple.100" }} p={2} rounded="md">
