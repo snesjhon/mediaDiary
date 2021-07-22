@@ -1,6 +1,5 @@
-import { fuegoFiltersAll } from "@/fuego";
 import { LayersIcon, TvIcon, AlbumIcon, FilmIcon } from "@/icons";
-import type { FilterData, MediaType, UserFuegoValidated } from "@/types";
+import type { MediaType, UserFuegoValidated } from "@/types";
 import {
   Avatar,
   Box,
@@ -13,6 +12,8 @@ import {
 import React, { useState } from "react";
 import useSWR from "swr";
 import { capFormat } from "../../utils/helpers";
+import { fuegoFiltersAll } from "../Filters/config";
+import type { FilterData } from "../Filters/config";
 import MdEmpty from "../md/MdEmpty";
 import MdLoader from "../md/MdLoader";
 import MdStatus from "../md/MdStatus";

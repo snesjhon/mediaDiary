@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import type { FilterBookmark } from "../types/typesFilters";
+import type { FilterBookmark } from "../components/Filters/config";
 import type { MediaDiary } from "../types/typesMedia";
 import fuego, { fuegoDb } from "./fuego";
 

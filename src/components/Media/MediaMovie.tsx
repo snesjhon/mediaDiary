@@ -74,11 +74,7 @@ export default function MediaMovie({
                 text={dayjs(diaryDate).format("MMM D, YYYY")}
               />
             )}
-            {rating ? (
-              <MediaRating rating={rating} />
-            ) : (
-              <MediaInfoText title="Rating" text="No Rating" />
-            )}
+            {rating && rating > 0 ? <MediaRating rating={rating} /> : null}
             {release_date && (
               <MediaInfoText
                 title="Released"

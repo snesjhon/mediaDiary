@@ -8,3 +8,4 @@ export { default as Register } from "./Register";
 export { default as NewUser } from "./NewUser";
 export { default as Search } from "./Search";
 export { default as Memories } from "./Memories";
+export { default as Filters } from "./Filters";

@@ -1,8 +1,11 @@
+import {
+  createFilterKeys,
+  createFilterSet,
+} from "../components/Filters/config";
 import type { MediaDiaryDate } from "../types/typesMedia";
 import type { UserPref } from "../types/typesUser";
 import { fuegoDb } from "./fuego";
 import { bookmarkFilterKeys, bookmarkFilterSet } from "./fuegoBookmarks";
-import { createFilterKeys, createFilterSet } from "./fuegoFilterActions";
 
 export async function fuegoDelete(
   uid: string,

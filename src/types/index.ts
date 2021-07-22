@@ -1,4 +1,3 @@
-export * from "./typesFilters";
 export * from "./typesMDb";
 export * from "./typesMDbTVSeason";
 export * from "./typesMedia";

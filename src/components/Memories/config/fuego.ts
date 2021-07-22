@@ -1,7 +1,7 @@
 import { fuegoDb } from "@/fuego";
 import type fuego from "@/fuego/fuego";
 import type { MediaDiaryWithId, MediaType } from "@/types";
-import type { SortType } from "../Memories";
+import type { SortType } from ".";
 
 export async function fuegoMemoriesGet(
   key: string,

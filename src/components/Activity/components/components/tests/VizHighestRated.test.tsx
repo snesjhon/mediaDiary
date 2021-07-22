@@ -23,6 +23,7 @@ const list: MediaDiaryWithId[] = [
     genre: "drama",
     diaryYear: 2021,
     diaryDate: "2021-01-18T06:57:32.359Z",
+    diary: true,
   },
   {
     diaryYear: 2020,
@@ -42,6 +43,7 @@ const list: MediaDiaryWithId[] = [
     poster: "wmqqLKSm7d6Wwjupm4sOUodnAg9",
     title: "A West Wing Special to Benefit When We All Vote",
     diaryDate: "2020-10-17T07:00:00.000Z",
+    diary: true,
   },
 ];
 

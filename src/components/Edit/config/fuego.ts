@@ -1,12 +1,10 @@
+import { fuegoDb, bookmarkFilterKeys, bookmarkFilterSet } from "@/fuego";
+import type { MediaDiaryDate, MediaMemory } from "@/types";
 import {
-  fuegoDb,
   createFilterKeys,
   createFilterSet,
   createFilterEditSet,
-  bookmarkFilterKeys,
-  bookmarkFilterSet,
-} from "@/fuego";
-import type { MediaDiaryDate, MediaMemory } from "@/types";
+} from "../../Filters/config";
 
 /** Edit diary items with dates, bookmarks, and memories */
 export async function fuegoEdit(

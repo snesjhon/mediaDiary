@@ -127,6 +127,7 @@ export default function Edit(): JSX.Element {
     if (typeof edit !== "undefined" && diaryDate) {
       const editItem = {
         ...edit,
+        diary: true as const,
         diaryDate: diaryDate,
         diaryYear: parseInt(dayjs(diaryDate).format("YYYY")),
         loggedBefore: loggedBefore,

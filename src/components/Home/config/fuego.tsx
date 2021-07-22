@@ -1,11 +1,13 @@
 import { fuegoDb } from "@/fuego";
 import type fuego from "@/fuego/fuego";
 import type { MediaType, MediaDiaryWithId } from "../../../types/typesMedia";
+import type { SortType } from "./types";
 
 export async function fuegoDiaryGet(
   key: string,
   uid: string,
   cursor: string,
+  sortType: SortType = "diaryDate",
   mediaTypes: MediaType[] | null,
   rating: number | null,
   releasedDecade: number | null,
@@ -42,15 +44,13 @@ export async function fuegoDiaryGet(
     diaryRef = diaryRef.where("genre", "==", genre);
   }
 
-  diaryRef = diaryRef.where("diaryDate", "!=", null);
-  diaryRef = diaryRef.orderBy("diaryDate", "desc");
+  diaryRef = diaryRef.where("diary", "==", true).orderBy(sortType, "desc");
 
   if (cursor !== null) {
     diaryRef = diaryRef.startAfter(cursor);
   }
 
   const diaryItems = await diaryRef.limit(30).get();
-
   const items: MediaDiaryWithId[] = [];
   diaryItems.forEach((item) => {
     items.push(item.data() as MediaDiaryWithId);

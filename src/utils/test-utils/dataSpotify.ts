@@ -6,6 +6,7 @@ export const mockAlbumDiaryWithId: MediaDiaryWithId = {
   artistId: "7aA592KWirLsnfb5ulGWvU",
   bookmark: false,
   memory: true,
+  diary: true,
   genre: "alternative hip hop",
   rating: 4.5,
   releasedDecade: 2010,

@@ -34,6 +34,8 @@ export interface MediaSelected {
   bookmark: boolean;
   /** If an item has a rating, then its a memory, defaults to `false` for new Items */
   memory: boolean;
+  /** If an item is a diary (has a date) then this is true */
+  diary: boolean;
   /** Optional season number */
   season?: number;
   /** All of the seasons for the current TV item, this isn't saved  */
@@ -85,6 +87,7 @@ export interface MediaMemory extends MediaDiary {
 export interface MediaDiaryDate extends MediaDiary {
   diaryDate: string;
   diaryYear: number;
+  diary: true;
 }
 
 /** When we MediaAdd we don't have an id, until AFTER firebase creates one. */
