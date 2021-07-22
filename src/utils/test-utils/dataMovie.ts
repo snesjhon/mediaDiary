@@ -11,12 +11,14 @@ export const mockMovieSelected: MediaSelected = {
   genre: "action",
   bookmark: false,
   memory: false,
+  diary: false,
 };
 
 export const mockMovieDiaryWithId: MediaDiaryWithId = {
   diaryYear: 2019,
   releasedYear: 2015,
   loggedBefore: true,
+  diary: true,
   mediaId: "76341",
   addedDate: "2020-12-24T09:17:07.861Z",
   title: "Mad Max: Fury Road",

@@ -14,7 +14,8 @@ export default function createMediaSelected(
   type: MediaType,
   data: DataFetch,
   bookmark = false,
-  memory = false
+  memory = false,
+  diary = false
 ): MediaSelected | false {
   if (data) {
     if (type === "movie") {
@@ -36,6 +37,7 @@ export default function createMediaSelected(
         genre: "",
         bookmark,
         memory,
+        diary,
       };
 
       if (castItem.credits.crew) {
@@ -70,6 +72,7 @@ export default function createMediaSelected(
         bookmark,
         memory,
         seasons: castItem.seasons,
+        diary,
       };
 
       if (castItem.seasons && castItem.seasons !== null) {
@@ -119,6 +122,7 @@ export default function createMediaSelected(
         genre: (artistData.genres && artistData.genres[0]) ?? "none",
         bookmark,
         memory,
+        diary,
       };
       return albumItem;
     }

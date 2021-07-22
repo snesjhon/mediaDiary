@@ -166,6 +166,7 @@ export default function LogRating(): JSX.Element {
         // bookmarked whenever we add it as an diaryItem
         bookmark: false,
         memory: true,
+        diary: false,
         diaryYear: false,
         addedDate: dayjs().toISOString(),
         // For memories, I'm thinking this is always false because although the person

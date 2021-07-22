@@ -1,31 +1,20 @@
-import { FiltersIcon } from "@/icons";
 import { AddIcon, HamburgerIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 import {
   Box,
-  Button,
   Container,
   Flex,
   HStack,
   IconButton,
   useColorMode,
-  useDisclosure,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import React from "react";
 import { useMDDispatch } from "../../../../config/store";
 import useIsBreakpoint from "../../../../utils/useIsBreakpoint";
 import MdLogo from "../../../md/MdLogo";
-// import Filters from "../../../Filters/components/ContentFilters";
 
 function ContentToolbar({ onOpen }: { onOpen: () => void }): JSX.Element {
   const isMd = useIsBreakpoint("md");
-  // const router = useRouter();
   const { colorMode, toggleColorMode } = useColorMode();
-  // const {
-  //   isOpen: menuIsOpen,
-  //   onClose: menuOnClose,
-  //   onOpen: menuOnOpen,
-  // } = useDisclosure();
   const dispatch = useMDDispatch();
   return (
     <>
@@ -57,29 +46,6 @@ function ContentToolbar({ onOpen }: { onOpen: () => void }): JSX.Element {
             </Flex>
             <Flex maxW="720px" align="center">
               <HStack spacing="2">
-                {/* {router.pathname === "/home" && (
-                  <>
-                    {isMd ? (
-                      <Button
-                        leftIcon={<FiltersIcon />}
-                        size="sm"
-                        variant="outline"
-                        onClick={menuOnOpen}
-                      >
-                        Filters
-                      </Button>
-                    ) : (
-                      <IconButton
-                        aria-label="Menu"
-                        icon={<FiltersIcon />}
-                        size="sm"
-                        variant="outline"
-                        onClick={menuOnOpen}
-                        isRound
-                      />
-                    )}
-                  </>
-                )} */}
                 <IconButton
                   onClick={toggleColorMode}
                   aria-label="Theme Switcher"
@@ -107,7 +73,6 @@ function ContentToolbar({ onOpen }: { onOpen: () => void }): JSX.Element {
           </Flex>
         </Container>
       </Box>
-      {/* <Filters isOpen={menuIsOpen} onClose={menuOnClose} /> */}
     </>
   );
 }

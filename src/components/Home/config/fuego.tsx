@@ -55,7 +55,6 @@ export async function fuegoDiaryGet(
   diaryItems.forEach((item) => {
     items.push(item.data() as MediaDiaryWithId);
   });
-  console.log(items);
 
   return items;
 }
