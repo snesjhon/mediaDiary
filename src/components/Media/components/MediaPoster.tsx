@@ -1,7 +1,7 @@
+import type { MediaType } from "@/types";
+import { createPosterURL, parsePosterUrl } from "@/utils";
 import { Box, Image } from "@chakra-ui/react";
 import React from "react";
-import type { MediaType } from "../../../types/typesMedia";
-import { createPosterURL, parsePosterUrl } from "../../../utils/helpers";
 
 export default function mediaPoster({
   poster,

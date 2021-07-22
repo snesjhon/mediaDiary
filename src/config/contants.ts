@@ -1,4 +1,4 @@
-import type { MediaType, MediaTypesArr } from "../types/typesMedia";
+import type { MediaType, MediaTypesArr } from "@/types";
 
 export const MEDIA_TYPES: MediaTypesArr = ["movie", "tv", "album"];
 

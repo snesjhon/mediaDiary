@@ -2,7 +2,9 @@ import type { DataFetchSpotify } from "@/config";
 import { useDataFetch, useMDDispatch } from "@/config";
 import { useFuegoUser } from "@/fuego";
 import { BookmarkIcon } from "@/icons";
+import { MdLoader } from "@/md";
 import MdLogo from "@/src/components/md/MdLogo";
+import { MediaMovie, MediaTV, MediaSpotify } from "@/src/components/Media";
 import type { MDbMovie, MDbTV, MediaDiaryWithId } from "@/types";
 import { CalendarIcon } from "@chakra-ui/icons";
 import {
@@ -17,15 +19,9 @@ import {
 import React from "react";
 import { cache } from "swr";
 import {
-  MediaMovie,
-  MediaSpotify,
-  MediaTV,
-} from "../../../../components/Media";
-import MdLoader from "../../../md/MdLoader";
-import {
-  fuegoBookmarkAddWithId,
-  fuegoBookmarkDelete,
   fuegoBookmarkDeleteWithId,
+  fuegoBookmarkDelete,
+  fuegoBookmarkAddWithId,
 } from "../../config";
 
 interface Props {

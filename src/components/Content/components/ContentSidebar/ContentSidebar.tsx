@@ -1,5 +1,5 @@
+import { useIsBreakpoint } from "@/utils";
 import React from "react";
-import useIsBreakpoint from "../../../../utils/useIsBreakpoint";
 import { ContentSidebarDesktop, ContentSidebarMobile } from "./components";
 
 interface Props {

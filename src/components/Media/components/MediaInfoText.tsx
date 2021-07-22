@@ -1,6 +1,6 @@
+import { useIsBreakpoint } from "@/utils";
 import { Box, Text } from "@chakra-ui/react";
 import React from "react";
-import useIsBreakpoint from "../../../utils/useIsBreakpoint";
 
 interface Props {
   title: string;

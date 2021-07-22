@@ -1,9 +1,5 @@
-import { fuegoDb } from "../../../fuego/fuego";
-import {
-  bookmarkFilterKeys,
-  bookmarkFilterSet,
-} from "../../../fuego/fuegoBookmarks";
-import type { BookmarkKeys } from "../../../fuego/fuegoBookmarks";
+import { fuegoDb, bookmarkFilterKeys, bookmarkFilterSet } from "@/fuego";
+import type { BookmarkKeys } from "@/fuego";
 import type { MediaDiaryWithId } from "@/types";
 
 /** Given the diaryId we completely remove the item and bookmark */

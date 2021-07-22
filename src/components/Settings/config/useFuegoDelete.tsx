@@ -1,6 +1,6 @@
+import fuego from "@/fuego/fuego";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import fuego from "../../../fuego/fuego";
 
 function useFuegoDelete(): { isDeleting: boolean; deleteUser: () => void } {
   const [isDeleting, setIsDeleting] = useState(false);

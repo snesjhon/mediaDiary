@@ -1,6 +1,6 @@
-import { fuegoDb } from "../../../fuego/fuego";
-import type fuego from "../../../fuego/fuego";
-import type { MediaDiaryWithId, MediaType } from "../../../types/typesMedia";
+import { fuegoDb } from "@/fuego";
+import type fuego from "@/fuego/fuego";
+import type { MediaType, MediaDiaryWithId } from "@/types";
 
 export async function fuegoBookmarkGet(
   key: string,

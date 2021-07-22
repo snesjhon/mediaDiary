@@ -1,5 +1,6 @@
 import { useMDDispatch, useMDState } from "@/config";
-import useIsBreakpoint from "@/utils/useIsBreakpoint";
+import { MdLogo } from "@/md";
+import { useIsBreakpoint } from "@/utils";
 import {
   Modal,
   ModalOverlay,
@@ -9,7 +10,6 @@ import {
   ModalBody,
 } from "@chakra-ui/react";
 import React, { useRef } from "react";
-import MdLogo from "../md/MdLogo";
 import { SearchContent } from "./components";
 
 export default function Search(): JSX.Element {

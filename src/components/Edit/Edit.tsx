@@ -1,16 +1,15 @@
-import { Button, Center, DrawerBody, DrawerFooter } from "@chakra-ui/react";
+import { useMDState, useMDDispatch, LogReducer } from "@/config";
+import type { LogState } from "@/config";
+import { useFuegoUser, fuegoDelete } from "@/fuego";
+import type { MediaDiaryDate, MediaDiaryWithId } from "@/types";
 import dayjs from "dayjs";
 import React, { useReducer } from "react";
-import { cache, mutate } from "swr";
-import { useMDDispatch, useMDState } from "../../config/store";
-import type { LogState } from "../../config/storeLog";
-import { LogReducer } from "../../config/storeLog";
-import { fuegoDelete } from "../../fuego/fuegoMDActions";
-import useFuegoUser from "../../fuego/useFuegoUser";
-import type { MediaDiaryDate, MediaDiaryWithId } from "../../types/typesMedia";
-import MdSpinner from "../md/MdSpinner";
-import { MediaMovie, MediaSpotify, MediaTV } from "../Media";
+import { mutate, cache } from "swr";
 import { fuegoEdit } from "./config";
+import { MdSpinner } from "@/md";
+import { Center } from "@chakra-ui/layout";
+import { DrawerBody, DrawerFooter, Button } from "@chakra-ui/react";
+import { MediaMovie, MediaTV, MediaSpotify } from "../Media";
 
 export default function Edit(): JSX.Element {
   const MDState = useMDState();

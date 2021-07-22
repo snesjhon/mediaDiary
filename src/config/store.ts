@@ -1,12 +1,17 @@
+import type {
+  UserFuegoPref,
+  MediaSelected,
+  MDbTV,
+  MDbMovie,
+  SpotifyArtist,
+  SpotifyAlbum,
+  MediaDiaryWithId,
+} from "@/types";
 import { createContext, useContext } from "react";
 import type {
   FilterState,
   FilterBookmarkState,
 } from "../components/Filters/config";
-import type { MDbMovie, MDbTV } from "../types/typesMDb";
-import type { MediaDiaryWithId, MediaSelected } from "../types/typesMedia";
-import type { SpotifyAlbum, SpotifyArtist } from "../types/typesSpotify";
-import type { UserFuegoPref } from "../types/typesUser";
 
 export interface MDState {
   preference: UserFuegoPref;

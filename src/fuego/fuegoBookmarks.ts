@@ -1,7 +1,8 @@
+import type { MediaDiary } from "@/types";
 import dayjs from "dayjs";
+import { fuegoDb } from ".";
 import type { FilterBookmark } from "../components/Filters/config";
-import type { MediaDiary } from "../types/typesMedia";
-import fuego, { fuegoDb } from "./fuego";
+import fuego from "./fuego";
 
 export interface BookmarkKeys {
   releasedDecade: MediaDiary["releasedDecade"];

@@ -15,8 +15,8 @@ import dayjs from "dayjs";
 import React, { useState } from "react";
 import type { RefObject } from "react";
 import useSWR from "swr";
-import MdSpinner from "src/components/md/MdSpinner";
 import { FilmIcon, TvIcon, AlbumIcon } from "@/icons";
+import { MdSpinner } from "@/md";
 
 // This is the root of our search Types. This can be extended for future search queries.
 // We always want to keep a strict returnArr to ensure that we follow the userPref

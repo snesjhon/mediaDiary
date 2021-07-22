@@ -1,5 +1,5 @@
+import type { UserFuego } from "@/types";
 import React, { createContext, useEffect, useRef, useState } from "react";
-import type { UserFuego } from "../types/typesUser";
 import fuego from "./fuego";
 
 export const FuegoContext = createContext<{

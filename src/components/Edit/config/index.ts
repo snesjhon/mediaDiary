@@ -1,1 +1,1 @@
-export { fuegoEdit, fuegoEditRating } from "./fuego";
+export { fuegoEdit, fuegoEditRating, fuegoDeleteRating } from "./fuego";

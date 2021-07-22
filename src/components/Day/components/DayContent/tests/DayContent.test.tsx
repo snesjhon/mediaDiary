@@ -1,3 +1,7 @@
+// jest.mock("@/utils", () => ({
+//   __esModule: true,
+//   default: () => "You have called a mocked method 1!",
+// }));
 import { IconButton } from "@chakra-ui/react";
 import React from "react";
 import DayContent from "..";
@@ -23,10 +27,6 @@ jest.mock("../../../../../config/useDataFetch", () => {
     data: mockType === "album" ? mockAlbumFetchData : mockMovieFetchData,
     isLoading: mockIsLoading,
   }));
-});
-
-jest.mock("@/utils/useIsBreakpoint", () => {
-  return jest.fn(() => true);
 });
 
 jest.mock("@/fuego", () => ({

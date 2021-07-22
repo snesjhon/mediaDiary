@@ -1,15 +1,13 @@
-import dayjs from "dayjs";
-import React from "react";
-import type { Dispatch } from "react";
-import { StarIcon } from "@chakra-ui/icons";
-import { Flex, Box, Divider } from "@chakra-ui/layout";
-import { Input, Checkbox, Text } from "@chakra-ui/react";
-import Rating from "react-rating";
 import { StarEmptyIcon } from "@/icons";
 import type {
   LogRatingActions,
   LogRatingState,
 } from "@/src/components/Log/config";
+import { StarIcon } from "@chakra-ui/icons";
+import { Flex, Box, Divider, Text } from "@chakra-ui/react";
+import type { Dispatch } from "react";
+import React from "react";
+import Rating from "react-rating";
 
 interface Props {
   dispatch: Dispatch<LogRatingActions>;

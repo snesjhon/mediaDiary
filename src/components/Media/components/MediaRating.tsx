@@ -1,5 +1,5 @@
 import { StarEmptyIcon } from "@/icons";
-import useIsBreakpoint from "@/utils/useIsBreakpoint";
+import { useIsBreakpoint } from "@/utils";
 import { StarIcon } from "@chakra-ui/icons";
 import { Box, Text } from "@chakra-ui/react";
 import React from "react";

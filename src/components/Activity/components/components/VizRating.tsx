@@ -1,16 +1,8 @@
+import { MdRating } from "@/md";
 import { StarIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Divider,
-  Flex,
-  Heading,
-  useColorMode,
-  useToken,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Flex, Text, useColorMode, useToken } from "@chakra-ui/react";
 import { ResponsiveBar } from "@nivo/bar";
 import React from "react";
-import MdRating from "../../../md/MdRating";
 
 export default function VizRating({ list }: { list: number[] }): JSX.Element {
   const { colorMode } = useColorMode();

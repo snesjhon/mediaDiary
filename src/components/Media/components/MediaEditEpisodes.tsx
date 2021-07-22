@@ -1,8 +1,9 @@
-import { Text, Divider, SimpleGrid, Checkbox } from "@chakra-ui/react";
+import type { LogActions, LogState } from "@/config";
 import React from "react";
 import type { Dispatch } from "react";
-import type { LogActions, LogState } from "../../../config/storeLog";
 import type { LogRatingActions, LogRatingState } from "../../Log/config";
+import { Divider, SimpleGrid } from "@chakra-ui/layout";
+import { Text, Checkbox } from "@chakra-ui/react";
 
 interface Props {
   dispatch: Dispatch<LogActions> | Dispatch<LogRatingActions>;

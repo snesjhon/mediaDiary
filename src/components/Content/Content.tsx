@@ -1,4 +1,6 @@
+import { useMDState } from "@/config";
 import { MdLayout, MdLoader } from "@/md";
+import { useIsBreakpoint } from "@/utils";
 import { Box, Grid, useDisclosure } from "@chakra-ui/react";
 import Head from "next/head";
 import { Router } from "next/router";
@@ -14,8 +16,6 @@ import {
   Search,
   Selected,
 } from "..";
-import { useMDState } from "../../config/store";
-import useIsBreakpoint from "../../utils/useIsBreakpoint";
 import { ContentDrawer, ContentSidebar, ContentToolbar } from "./components";
 
 export default function Content({

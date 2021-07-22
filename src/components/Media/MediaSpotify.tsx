@@ -13,8 +13,6 @@ import {
 import dayjs from "dayjs";
 import React from "react";
 import type { Dispatch } from "react";
-import type { LogActions, LogState } from "../../config/storeLog";
-import type { SpotifyAlbum, SpotifyArtist } from "../../types/typesSpotify";
 import {
   MediaContainer,
   MediaEdit,
@@ -27,8 +25,9 @@ import {
   MediaPoster,
   MediaRating,
 } from "./components";
-import type { MediaDiary } from "@/types";
+import type { MediaDiary, SpotifyAlbum, SpotifyArtist } from "@/types";
 import type { LogRatingActions, LogRatingState } from "../Log/config";
+import type { LogActions, LogState } from "@/config";
 
 interface Props {
   albumInfo: SpotifyAlbum;

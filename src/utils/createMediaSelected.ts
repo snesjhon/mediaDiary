@@ -8,7 +8,7 @@ import type {
   SpotifyAlbum,
   SpotifyArtist,
 } from "../types";
-import { parsePosterUrl } from "./helpers";
+import { parsePosterUrl } from "@/utils";
 
 export default function createMediaSelected(
   type: MediaType,

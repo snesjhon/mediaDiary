@@ -1,9 +1,9 @@
+import { useMDState } from "@/config";
+import { useFuegoUser } from "@/fuego";
+import { MdLoader } from "@/md";
+import type { MediaDiaryWithId } from "@/types";
 import React, { Suspense } from "react";
 import useSWR from "swr";
-import { useMDState } from "../../config/store";
-import useFuegoUser from "../../fuego/useFuegoUser";
-import type { MediaDiaryWithId } from "../../types/typesMedia";
-import MdLoader from "../md/MdLoader";
 import { DayContent } from "./components";
 import { fuegoDiaryEntry } from "./config";
 

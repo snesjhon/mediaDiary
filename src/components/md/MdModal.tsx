@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import type { PropsWithChildren } from "react";
 import React from "react";
-import MdLogo from "../md/MdLogo";
+import { MdLogo } from ".";
 
 function LayoutModal({
   children,

@@ -1,3 +1,5 @@
+import { useMDDispatch } from "@/config";
+import { MdLogo } from "@/md";
 import type { DrawerProps } from "@chakra-ui/react";
 import {
   Drawer,
@@ -10,8 +12,6 @@ import {
 import type { PropsWithChildren, RefObject } from "react";
 import React from "react";
 import { useSwipeable } from "react-swipeable";
-import { useMDDispatch } from "../../../../config/store";
-import MdLogo from "../../../md/MdLogo";
 
 export default function ContentDrawer({
   children,
