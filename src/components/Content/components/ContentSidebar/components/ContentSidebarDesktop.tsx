@@ -9,11 +9,13 @@ import {
 } from "@/icons";
 import { SearchIcon, SettingsIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, VStack } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
 import { ContentSidebarButton, ContentSidebarFooter } from ".";
 
 export default function ContentSidebarDesktop(): JSX.Element {
   const { user } = useFuegoUser();
+  const router = useRouter();
   const dispatch = useMDDispatch();
 
   return (
@@ -55,11 +57,12 @@ export default function ContentSidebarDesktop(): JSX.Element {
         <Flex mt={12} mr={6}>
           <Button
             colorScheme="purple"
-            onClick={() =>
-              dispatch({
-                type: "state",
-                payload: { key: "view", value: "search" },
-              })
+            onClick={
+              () => router.push("/add")
+              // dispatch({
+              //   type: "state",
+              //   payload: { key: "view", value: "search" },
+              // })
             }
             px={8}
             leftIcon={<PlusIcon boxSize={6} />}
