@@ -10,6 +10,7 @@ import {
   MenuItem,
   IconButton,
   Text,
+  useColorMode,
 } from "@chakra-ui/react";
 import React from "react";
 import type { SortType } from "../../config";
@@ -23,13 +24,14 @@ export default function MemoriesHeader({
   sortType,
   onChange,
 }: Props): JSX.Element {
+  const { colorMode } = useColorMode();
   return (
     <Box
       position="sticky"
       top="3rem"
       pt="2"
       zIndex="1"
-      bgColor="white"
+      bgColor={colorMode === "light" ? "white" : "gray.800"}
       borderBottomWidth="1px"
     >
       <Flex w="100%" h="100%" py={2} align="center" justify="space-between">

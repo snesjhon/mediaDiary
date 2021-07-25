@@ -12,6 +12,7 @@ import {
   IconButton,
   Text,
   useDisclosure,
+  useColorMode,
 } from "@chakra-ui/react";
 import React from "react";
 import type { SortType } from "../../config";
@@ -23,6 +24,7 @@ interface Props {
 
 export default function HomeHeader({ sortType, onChange }: Props): JSX.Element {
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const { colorMode } = useColorMode();
   return (
     <>
       <Box
@@ -30,7 +32,7 @@ export default function HomeHeader({ sortType, onChange }: Props): JSX.Element {
         top="3rem"
         pt="2"
         zIndex="1"
-        bgColor="white"
+        bgColor={colorMode === "light" ? "white" : "gray.800"}
         borderBottomWidth="1px"
       >
         <Flex w="100%" h="100%" py={2} align="center" justify="space-between">

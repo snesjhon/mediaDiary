@@ -2,7 +2,7 @@ import { useMDState, useMDDispatch } from "@/config";
 import { LogoIcon } from "@/icons";
 import { MdLoader, MdRating } from "@/md";
 import type { UserFuegoValidated, MediaDiaryWithId } from "@/types";
-import { createPosterURL } from "@/utils";
+import { createPosterURL, useIsBreakpoint } from "@/utils";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -32,6 +32,7 @@ export default function Memories({
   const dispatch = useMDDispatch();
   const [sortType, setSortType] = useState<SortType>("addedDate");
   const [purple500] = useToken("colors", ["purple.500"]);
+  const isMd = useIsBreakpoint("md");
 
   const { data, error, size, setSize, mutate } = useSWRInfinite<
     MediaDiaryWithId[]
@@ -110,7 +111,7 @@ export default function Memories({
           onChange={(val) => setSortType(val)}
         />
         <Grid
-          gridTemplateColumns="repeat(5, 1fr)"
+          gridTemplateColumns={`repeat(${isMd ? 5 : 3}, 1fr)`}
           gridGap="2"
           alignItems="flex-end"
           borderLeftWidth={{ base: 0, md: "1px" }}
@@ -144,12 +145,7 @@ export default function Memories({
               />
               <Flex justifyContent="space-between" alignItems="center">
                 <MdRating initialRating={e.rating} wh="3" />
-                <Text
-                  as="span"
-                  display="block"
-                  fontSize="sm"
-                  color="purple.700"
-                >
+                <Text as="span" display="block" fontSize="sm">
                   {dayjs(e.addedDate).format("MMM D")}
                 </Text>
               </Flex>
