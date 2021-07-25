@@ -64,6 +64,8 @@ export interface MediaDiary extends Omit<MediaSelected, "seasons"> {
   diaryYear: number | false;
   /** Whether the user has logged this media before or not */
   loggedBefore: boolean;
+  /** Whenever we search we create a string array from title and artist */
+  search_title: string[];
   /** MediaType TV - what episodes did the user see */
   seenEpisodes?: number[];
 }

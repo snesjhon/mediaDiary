@@ -2,7 +2,7 @@ import { useMDDispatch, useMDState, LogReducer } from "@/config";
 import type { LogState } from "@/config";
 import { useFuegoUser } from "@/fuego";
 import type { MediaDiaryDate } from "@/types";
-import { parsePosterUrl } from "@/utils";
+import { createSearchTitles, parsePosterUrl } from "@/utils";
 import dayjs from "dayjs";
 import React, { useReducer, useRef, useEffect } from "react";
 import { fuegoDiaryAdd } from "./config";
@@ -163,6 +163,7 @@ export default function Log(): JSX.Element {
       } = selected;
       const { diaryDate, loggedBefore, rating, seenEpisodes } = state;
       const releasedYear = parseInt(dayjs(releasedDate).format("YYYY"));
+      const searchTitles = createSearchTitles(title, artist);
       if (diaryDate) {
         return {
           artist,
@@ -183,6 +184,7 @@ export default function Log(): JSX.Element {
           releasedDate,
           releasedYear,
           releasedDecade: Math.floor(releasedYear / 10) * 10,
+          search_title: searchTitles,
           genre:
             typeof selected?.genre !== "undefined"
               ? selected.genre.toLocaleLowerCase()

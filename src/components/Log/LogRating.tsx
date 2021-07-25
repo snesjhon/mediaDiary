@@ -1,7 +1,7 @@
 import { useMDDispatch, useMDState } from "@/config";
 import { useFuegoUser } from "@/fuego";
 import type { MediaMemory } from "@/types";
-import { parsePosterUrl } from "@/utils";
+import { createSearchTitles, parsePosterUrl } from "@/utils";
 import dayjs from "dayjs";
 import React, { useReducer, useRef, useEffect } from "react";
 import { LogRatingReducer, fuegoLogRatingAdd } from "./config";
@@ -157,6 +157,7 @@ export default function LogRating(): JSX.Element {
       } = selected;
       const { rating, seenEpisodes } = state;
       const releasedYear = parseInt(dayjs(releasedDate).format("YYYY"));
+      const searchTitle = createSearchTitles(title, artist);
       return {
         artist,
         title,
@@ -178,6 +179,7 @@ export default function LogRating(): JSX.Element {
         releasedDate,
         releasedYear,
         releasedDecade: Math.floor(releasedYear / 10) * 10,
+        search_title: searchTitle,
         genre:
           typeof selected?.genre !== "undefined"
             ? selected.genre.toLocaleLowerCase()

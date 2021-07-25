@@ -1,21 +1,35 @@
 import { useMDDispatch } from "@/config";
+import { MoonAltIcon } from "@/icons";
 import { MdLogo } from "@/md";
 import { useIsBreakpoint } from "@/utils";
-import { AddIcon, HamburgerIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
+import { AddIcon, HamburgerIcon, SearchIcon, SunIcon } from "@chakra-ui/icons";
 import {
   Box,
   Container,
   Flex,
   HStack,
   IconButton,
+  Input,
+  InputGroup,
+  InputLeftElement,
   useColorMode,
 } from "@chakra-ui/react";
 import React from "react";
 
-function ContentToolbar({ onOpen }: { onOpen: () => void }): JSX.Element {
+interface Props {
+  onOpen: () => void;
+  searchString: string;
+  handleSearch: (val: string) => void;
+}
+function ContentToolbar({
+  handleSearch,
+  onOpen,
+  searchString,
+}: Props): JSX.Element {
   const isMd = useIsBreakpoint("md");
   const { colorMode, toggleColorMode } = useColorMode();
   const dispatch = useMDDispatch();
+
   return (
     <>
       <Box
@@ -46,10 +60,27 @@ function ContentToolbar({ onOpen }: { onOpen: () => void }): JSX.Element {
             </Flex>
             <Flex maxW="720px" align="center">
               <HStack spacing="2">
+                <InputGroup size="sm">
+                  <InputLeftElement pointerEvents="none">
+                    <SearchIcon color="purple.500" />
+                  </InputLeftElement>
+                  <Input
+                    placeholder="Search for Media"
+                    onChange={(e) => handleSearch(e.target.value)}
+                    value={searchString}
+                    type="search"
+                  />
+                </InputGroup>
                 <IconButton
                   onClick={toggleColorMode}
                   aria-label="Theme Switcher"
-                  icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+                  icon={
+                    colorMode === "light" ? (
+                      <MoonAltIcon color="purple.500" />
+                    ) : (
+                      <SunIcon />
+                    )
+                  }
                   size="sm"
                   variant="outline"
                 />

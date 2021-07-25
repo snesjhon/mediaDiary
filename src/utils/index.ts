@@ -6,6 +6,7 @@ export {
   createPosterURL,
   fetcher,
   parsePosterUrl,
+  createSearchTitles,
 } from "./helpers";
 export * from "./helperSpotify";
 export * from "./index";
