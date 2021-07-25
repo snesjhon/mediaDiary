@@ -1,5 +1,10 @@
 import { MDB_IMGURL, SPOTIFY_IMGURL } from "../config/contants";
-import type { MediaTypesArr, MediaTypes, MediaType } from "../types/typesMedia";
+import type {
+  MediaTypesArr,
+  MediaTypes,
+  MediaType,
+  MediaDiary,
+} from "../types/typesMedia";
 
 export async function fetcher<T>(key: string): Promise<T> {
   const result = await fetch(key);
@@ -64,4 +69,35 @@ export function parsePosterUrl(url: string, type: MediaType): string {
     const item = url.replace(".jpg", "").split("/");
     return item[item.length - 1];
   }
+}
+
+export function createSearchTitles(
+  title: MediaDiary["title"],
+  artist: MediaDiary["artist"]
+): string[] {
+  const searchTitles: string[] = [];
+  if (title !== "") {
+    const titleReplaced = title.replace(/[\W_]+/g, " ");
+    const titleLowered = titleReplaced.toLocaleLowerCase();
+    searchTitles.push(titleLowered);
+    const splitTitle = titleLowered.split("");
+    splitTitle.forEach((e: string, i: number) => {
+      searchTitles.push(
+        splitTitle
+          .slice(0, i + 1)
+          .join("")
+          .toLocaleLowerCase()
+      );
+    });
+  }
+  if (artist && artist !== "") {
+    const allArtists = artist.split(", ");
+    allArtists.forEach((name: string) => {
+      const singleArtist = name.toLocaleLowerCase().split("");
+      singleArtist.forEach((e: string, i: number) => {
+        searchTitles.push(singleArtist.slice(0, i + 1).join(""));
+      });
+    });
+  }
+  return searchTitles;
 }

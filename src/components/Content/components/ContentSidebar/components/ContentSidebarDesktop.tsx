@@ -1,6 +1,12 @@
 import { useMDDispatch } from "@/config";
 import { useFuegoUser } from "@/fuego";
-import { HomeIcon, BookmarkIcon, ActivityIcon, LayersIcon } from "@/icons";
+import {
+  HomeIcon,
+  BookmarkIcon,
+  ActivityIcon,
+  LayersIcon,
+  PlusIcon,
+} from "@/icons";
 import { SearchIcon, SettingsIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, VStack } from "@chakra-ui/react";
 import React from "react";
@@ -56,9 +62,9 @@ export default function ContentSidebarDesktop(): JSX.Element {
               })
             }
             px={8}
-            leftIcon={<SearchIcon boxSize={4} />}
+            leftIcon={<PlusIcon boxSize={6} />}
           >
-            Search
+            Media
           </Button>
         </Flex>
       </Box>

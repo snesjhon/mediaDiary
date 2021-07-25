@@ -1,11 +1,15 @@
 import { useMDState } from "@/config";
+import { useFuegoUser } from "@/fuego";
 import { MdLayout, MdLoader } from "@/md";
 import { useIsBreakpoint } from "@/utils";
+import useDebounce from "@/utils/useDebounce";
 import { Box, Grid, useDisclosure } from "@chakra-ui/react";
 import Head from "next/head";
 import { Router } from "next/router";
+import { useState } from "react";
 import type { PropsWithChildren } from "react";
 import React, { useEffect } from "react";
+import useSWR from "swr";
 import {
   Day,
   DayRating,
@@ -17,15 +21,21 @@ import {
   Selected,
 } from "..";
 import { ContentDrawer, ContentSidebar, ContentToolbar } from "./components";
+import { fuegoDiarySearch } from "./config/fuego";
+import SearchMedia from "../SearchMedia";
+import type { MediaDiaryWithId } from "@/types";
 
 export default function Content({
   children,
   title = "MediaDiary",
 }: PropsWithChildren<unknown> & { title: string }): JSX.Element {
   const { view } = useMDState();
-  const isMd = useIsBreakpoint("md");
+  const { user } = useFuegoUser();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [loading, setLoading] = React.useState(false);
+  const [search, setSearch] = useState("");
+  const isMd = useIsBreakpoint("md");
+
   // route transition - in order to prevent bad UX because of SSR props
   // https://stackoverflow.com/questions/60755316/nextjs-getserversideprops-show-loading
   useEffect(() => {
@@ -48,15 +58,36 @@ export default function Content({
     };
   }, [isMd, onClose]);
 
+  const bouncedSearch = useDebounce(search, 500);
+  const { data, isValidating } = useSWR<MediaDiaryWithId[]>(
+    bouncedSearch !== "" && user
+      ? [`/fuegoSearch/${bouncedSearch}`, user.uid, bouncedSearch]
+      : null,
+    fuegoDiarySearch,
+    { revalidateOnFocus: false }
+  );
+
   return (
     <MdLayout>
       <Head>
         <title>{title} / MediaDiary</title>
       </Head>
-      <ContentToolbar onOpen={onOpen} />
+      <ContentToolbar
+        onOpen={onOpen}
+        searchString={search}
+        handleSearch={(val) => setSearch(val)}
+      />
       <Grid mt={12} gridTemplateColumns={{ base: "1fr", md: "0.2fr 1fr" }}>
         <ContentSidebar isOpen={isOpen} onClose={onClose} />
-        <Box>{loading ? <MdLoader /> : children}</Box>
+        <Box>
+          {loading || isValidating ? (
+            <MdLoader />
+          ) : data && data.length > 0 ? (
+            <SearchMedia data={data} />
+          ) : (
+            children
+          )}
+        </Box>
       </Grid>
       {!loading && (
         <>

@@ -12,3 +12,4 @@ export { default as PlusIcon } from "./PlusIcon";
 export { default as StarEmptyIcon } from "./StarEmptyIcon";
 export { default as TvIcon } from "./TvIcon";
 export { default as TwitterIcon } from "./TwitterIcon";
+export { default as MoonAltIcon } from "./MoonAltIcon";

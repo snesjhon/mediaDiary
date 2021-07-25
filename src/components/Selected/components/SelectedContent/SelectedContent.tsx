@@ -2,7 +2,7 @@ import { useMDDispatch, useDataFetch } from "@/config";
 import type { DataFetchSpotify } from "@/config";
 import { useFuegoUser, fuegoBookmarkAdd } from "@/fuego";
 import type { MediaSelected, MDbMovie, MDbTV } from "@/types";
-import { createMediaSelected } from "@/utils";
+import { createMediaSelected, createSearchTitles } from "@/utils";
 import dayjs from "dayjs";
 import React from "react";
 import { BookmarkIcon } from "@/icons";
@@ -131,6 +131,7 @@ export default function SelectedContent({
       } = mediaSelected;
 
       const releasedYear = parseInt(dayjs(releasedDate).format("YYYY"));
+      const searchTitle = createSearchTitles(title, artist);
       await fuegoBookmarkAdd(user.uid, {
         releasedYear,
         releasedDecade: Math.floor(releasedYear / 10) * 10,
@@ -149,6 +150,7 @@ export default function SelectedContent({
         diaryDate: false,
         diaryYear: false,
         loggedBefore: false,
+        search_title: searchTitle,
         ...(typeof artistId !== "undefined" && { artistId }),
         ...(typeof season !== "undefined" && { season }),
       });
