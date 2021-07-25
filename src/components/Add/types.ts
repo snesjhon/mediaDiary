@@ -1,3 +1,7 @@
+// This is the root of our search Types. This can be extended for future search queries.
+// We always want to keep a strict returnArr to ensure that we follow the userPref
+export type SearchTypes = [MDbSearch | false, SpotifySearch | false];
+
 /**
  * THE MOVIE DB SEARCH API
  */

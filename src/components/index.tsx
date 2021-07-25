@@ -6,7 +6,7 @@ export { default as Log, LogRating } from "./Log";
 export { default as Selected } from "./Selected";
 export { default as Register } from "./Register";
 export { default as NewUser } from "./NewUser";
-export { default as Search } from "./Search";
 export { default as Memories } from "./Memories";
 export { default as Filters } from "./Filters";
 export { default as SearchMedia } from "./SearchMedia";
+export { default as Add } from "./Add";

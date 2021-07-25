@@ -10,16 +10,7 @@ import { useState } from "react";
 import type { PropsWithChildren } from "react";
 import React, { useEffect } from "react";
 import useSWR from "swr";
-import {
-  Day,
-  DayRating,
-  Edit,
-  EditRating,
-  Log,
-  LogRating,
-  Search,
-  Selected,
-} from "..";
+import { Day, DayRating, Edit, EditRating, Log, LogRating, Selected } from "..";
 import { ContentDrawer, ContentSidebar, ContentToolbar } from "./components";
 import { fuegoDiarySearch } from "./config/fuego";
 import SearchMedia from "../SearchMedia";
@@ -67,6 +58,9 @@ export default function Content({
     { revalidateOnFocus: false }
   );
 
+  const showLoading = loading || isValidating;
+  const showContent = !loading && !isValidating;
+
   return (
     <MdLayout>
       <Head>
@@ -80,12 +74,17 @@ export default function Content({
       <Grid mt={12} gridTemplateColumns={{ base: "1fr", md: "0.2fr 1fr" }}>
         <ContentSidebar isOpen={isOpen} onClose={onClose} />
         <Box>
-          {loading || isValidating ? (
-            <MdLoader />
-          ) : data && data.length > 0 ? (
-            <SearchMedia data={data} />
-          ) : (
-            children
+          {showLoading && <MdLoader />}
+          {showContent && (
+            <>
+              {data && (
+                <>
+                  {data.length > 0 && <SearchMedia data={data} />}
+                  {data.length === 0 && <div>No Data</div>}
+                </>
+              )}
+              {!data && children}
+            </>
           )}
         </Box>
       </Grid>
@@ -112,7 +111,6 @@ export default function Content({
             {view === "edit" && <Edit />}
             {view === "editRating" && <EditRating />}
           </ContentDrawer>
-          <Search />
         </>
       )}
     </MdLayout>

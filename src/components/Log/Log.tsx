@@ -9,6 +9,7 @@ import { fuegoDiaryAdd } from "./config";
 import { MdSpinner } from "@/md";
 import { Center, DrawerBody, DrawerFooter, Button } from "@chakra-ui/react";
 import { MediaMovie, MediaTV, MediaSpotify } from "../Media";
+import { useRouter } from "next/router";
 
 export interface LogTVSeason {
   season?: number;
@@ -20,6 +21,7 @@ export default function Log(): JSX.Element {
   const mdDispatch = useMDDispatch();
   const { user } = useFuegoUser();
   const MDState = useMDState();
+  const router = useRouter();
   const {
     selected,
     selectedMovie,
@@ -128,6 +130,9 @@ export default function Log(): JSX.Element {
         await fuegoDiaryAdd(user.uid, addDiary);
         mdDispatch({ type: "view", payload: "md" });
         mdDispatch({ type: "close" });
+        if (router.pathname === "/add") {
+          router.push("/home");
+        }
       } else {
         console.error("diary fails");
       }

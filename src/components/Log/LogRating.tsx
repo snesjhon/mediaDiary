@@ -10,6 +10,7 @@ import { MdSpinner } from "@/md";
 import { Center } from "@chakra-ui/layout";
 import { DrawerBody, DrawerFooter, Button } from "@chakra-ui/react";
 import { MediaMovie, MediaTV, MediaSpotify } from "../Media";
+import { useRouter } from "next/router";
 
 export interface LogTVSeason {
   season?: number;
@@ -21,6 +22,7 @@ export default function LogRating(): JSX.Element {
   const mdDispatch = useMDDispatch();
   const { user } = useFuegoUser();
   const MDState = useMDState();
+  const router = useRouter();
   const { selected, selectedMovie, selectedSpotify, selectedTV, isSaving } =
     MDState;
 
@@ -121,6 +123,9 @@ export default function LogRating(): JSX.Element {
         await fuegoLogRatingAdd(user.uid, addDiary);
         mdDispatch({ type: "view", payload: "md" });
         mdDispatch({ type: "close" });
+        if (router.pathname === "/add") {
+          router.push("/memories");
+        }
       } else {
         console.error("diary fails");
       }
