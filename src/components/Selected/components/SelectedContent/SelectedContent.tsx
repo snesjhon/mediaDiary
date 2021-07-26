@@ -5,11 +5,19 @@ import type { MediaSelected, MDbMovie, MDbTV } from "@/types";
 import { createMediaSelected, createSearchTitles } from "@/utils";
 import dayjs from "dayjs";
 import React from "react";
-import { BookmarkIcon } from "@/icons";
-import { MdLoader } from "@/md";
+import { BookmarkIcon, StarEmptyIcon } from "@/icons";
+import { MdLoader, MdLogo } from "@/md";
 import { MediaSpotify, MediaMovie, MediaTV } from "@/src/components/Media";
 import { CalendarIcon } from "@chakra-ui/icons";
-import { DrawerBody, DrawerFooter, Button } from "@chakra-ui/react";
+import {
+  DrawerBody,
+  DrawerFooter,
+  Button,
+  DrawerCloseButton,
+  DrawerHeader,
+  Flex,
+  IconButton,
+} from "@chakra-ui/react";
 
 export default function SelectedContent({
   item,
@@ -38,6 +46,23 @@ export default function SelectedContent({
     <MdLoader />
   ) : (
     <>
+      <DrawerHeader>
+        <Flex justifyContent="space-between">
+          <MdLogo title="mediaDiary" />
+          <Flex alignItems="center">
+            <IconButton
+              aria-label="Search database"
+              icon={<BookmarkIcon fill="none" boxSize="5" />}
+              variant="ghost"
+              colorScheme="orange"
+              mr="2"
+              size="md"
+              onClick={addBookmark}
+            />
+            <DrawerCloseButton pos="relative" top="0" right="0" />
+          </Flex>
+        </Flex>
+      </DrawerHeader>
       <DrawerBody px={{ base: 6, sm: 8 }}>
         {item.type === "album" && (
           <MediaSpotify
@@ -51,17 +76,8 @@ export default function SelectedContent({
       <DrawerFooter
         borderTopWidth="1px"
         justifyContent="space-between"
-        pb={{ base: 8, sm: 0 }}
+        pb={{ base: 8, sm: 4 }}
       >
-        <Button
-          id="selectedBookmark"
-          onClick={addBookmark}
-          leftIcon={<BookmarkIcon />}
-          colorScheme="orange"
-          variant="outline"
-        >
-          Bookmark
-        </Button>
         <Button
           onClick={() =>
             dispatch({
@@ -83,7 +99,7 @@ export default function SelectedContent({
           }
           colorScheme="purple"
           variant="outline"
-          leftIcon={<CalendarIcon />}
+          leftIcon={<StarEmptyIcon />}
         >
           Rate
         </Button>
@@ -106,11 +122,11 @@ export default function SelectedContent({
               },
             })
           }
-          colorScheme="purple"
+          colorScheme="blue"
           variant="outline"
           leftIcon={<CalendarIcon />}
         >
-          Log
+          Add Diary
         </Button>
       </DrawerFooter>
     </>

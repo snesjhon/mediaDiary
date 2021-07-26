@@ -1,4 +1,3 @@
-import { useMDDispatch } from "@/config";
 import { MoonAltIcon } from "@/icons";
 import { MdLogo } from "@/md";
 import { useIsBreakpoint } from "@/utils";
@@ -14,6 +13,7 @@ import {
   InputLeftElement,
   useColorMode,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
 
 interface Props {
@@ -28,7 +28,7 @@ function ContentToolbar({
 }: Props): JSX.Element {
   const isMd = useIsBreakpoint("md");
   const { colorMode, toggleColorMode } = useColorMode();
-  const dispatch = useMDDispatch();
+  const router = useRouter();
 
   return (
     <>
@@ -65,7 +65,7 @@ function ContentToolbar({
                     <SearchIcon color="purple.500" />
                   </InputLeftElement>
                   <Input
-                    placeholder="Search for Media"
+                    placeholder="Search Your Media"
                     onChange={(e) => handleSearch(e.target.value)}
                     value={searchString}
                     type="search"
@@ -92,12 +92,7 @@ function ContentToolbar({
                   icon={<AddIcon />}
                   size="sm"
                   colorScheme="purple"
-                  onClick={() =>
-                    dispatch({
-                      type: "state",
-                      payload: { key: "view", value: "search" },
-                    })
-                  }
+                  onClick={() => router.push("/add")}
                 />
               )}
             </Flex>

@@ -8,7 +8,7 @@ export default function VizRating({ list }: { list: number[] }): JSX.Element {
   const { colorMode } = useColorMode();
   const [purple500, borderColor, zeroColor] = useToken("colors", [
     "purple.500",
-    colorMode === "light" ? "gray.50" : "gray.800",
+    colorMode === "light" ? "gray.50" : "gray.700",
     colorMode === "light" ? "purple.200" : "gray.600",
   ]);
 
@@ -40,7 +40,7 @@ export default function VizRating({ list }: { list: number[] }): JSX.Element {
           Rating Distribution
         </Text>
       </Box>
-      <Box p="8" bg="gray.50">
+      <Box p="8" bgColor={colorMode === "light" ? "gray.50" : "gray.700"}>
         <Flex
           alignItems="flex-end"
           height="120px"

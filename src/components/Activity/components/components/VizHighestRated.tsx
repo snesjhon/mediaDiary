@@ -3,7 +3,15 @@ import { StarEmptyIcon } from "@/icons";
 import type { MediaDiaryWithId, MediaType } from "@/types";
 import { capFormat, createPosterURL } from "@/utils/helpers";
 import { StarIcon } from "@chakra-ui/icons";
-import { Box, Grid, Image, SimpleGrid, Text, useToken } from "@chakra-ui/react";
+import {
+  Box,
+  Grid,
+  Image,
+  SimpleGrid,
+  Text,
+  useColorMode,
+  useToken,
+} from "@chakra-ui/react";
 import React from "react";
 import Rating from "react-rating";
 
@@ -16,6 +24,7 @@ export default function VizHighestRated({
 }): JSX.Element {
   const dispatch = useMDDispatch();
   const [purple700] = useToken("colors", ["purple.700"]);
+  const { colorMode } = useColorMode();
   return (
     <Box my="8">
       <Box mb="2">
@@ -32,7 +41,10 @@ export default function VizHighestRated({
             : "Memories"}
         </Text>
       </Box>
-      <Box bg="gray.50" p={{ base: 0, sm: "8" }}>
+      <Box
+        bg={colorMode === "light" ? "gray.50" : "gray.700"}
+        p={{ base: 0, sm: "8" }}
+      >
         <SimpleGrid
           columns={{ base: 3, sm: 3, md: 4 }}
           gap={{ base: 6, sm: 12, md: 12 }}
