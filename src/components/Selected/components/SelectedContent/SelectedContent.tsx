@@ -51,6 +51,7 @@ export default function SelectedContent({
           <MdLogo title="mediaDiary" />
           <Flex alignItems="center">
             <IconButton
+              id="selectedBookmark"
               aria-label="Search database"
               icon={<BookmarkIcon fill="none" boxSize="5" />}
               variant="ghost"
