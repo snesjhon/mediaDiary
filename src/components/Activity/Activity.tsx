@@ -8,6 +8,7 @@ import {
   Flex,
   Heading,
   Text,
+  useColorMode,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import useSWR from "swr";
@@ -20,6 +21,7 @@ import { capFormat } from "@/utils";
 function Activity({ user }: { user: UserFuegoValidated }): JSX.Element {
   const [yearType, setYearType] = useState<number | null>(null);
   const [localMediaType, setMediaType] = useState<MediaType | null>(null);
+  const { colorMode } = useColorMode();
   const { data, error, isValidating } = useSWR<FilterData>(
     ["fuego/chartCounts", user.uid],
     fuegoFiltersAll,
@@ -131,7 +133,7 @@ function Activity({ user }: { user: UserFuegoValidated }): JSX.Element {
               ? "space-between"
               : "space-around"
           }
-          bg="gray.50"
+          bg={colorMode === "light" ? "gray.50" : "gray.700"}
           p="8"
           mb="8"
         >

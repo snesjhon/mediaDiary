@@ -1,8 +1,18 @@
 import { useMDDispatch } from "@/config";
 import type { MediaSelected } from "@/types";
 import { createPosterURL, parsePosterUrl } from "@/utils";
-import { Box, Flex, Grid, Text, Image, useColorMode } from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import type { Icon } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  Heading,
+  Image,
+  Text,
+  useColorMode,
+} from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React from "react";
 
@@ -25,14 +35,21 @@ export default function AddResultList({
   const { colorMode } = useColorMode();
 
   return data.length > 0 ? (
-    <Box pt={4} borderBottom="1px" borderBottomColor="gray.200">
-      <Flex alignItems="center">
+    <Box py={4}>
+      <Flex
+        alignItems="center"
+        borderBottom="1px"
+        borderBottomColor={colorMode === "light" ? "gray.300" : "gray.600"}
+        pb="2"
+        mb="2"
+        px={{ md: 8 }}
+      >
         <DataIcon color="purple.500" />
-        <Text ml={2} fontWeight="bold">
+        <Heading size="md" ml={2}>
           {title}
-        </Text>
+        </Heading>
       </Flex>
-      <Grid gridTemplateColumns="repeat(5, 1fr)" gridGap="4">
+      <Grid gridTemplateColumns="repeat(5, 1fr)" gridGap="4" px={{ md: 8 }}>
         {data.slice(0, seeNumber).map((item: MediaSelected) => (
           <Box
             key={item.mediaId}
@@ -73,9 +90,15 @@ export default function AddResultList({
         ))}
       </Grid>
       {data.length > seeNumber && (
-        <Text mt={3} fontSize="sm" onClick={() => seeAction(seeNumber + 5)}>
-          See More...
-        </Text>
+        <Box px={{ md: 8 }} textAlign="center">
+          <Button
+            variant="outline"
+            onClick={() => seeAction(seeNumber + 5)}
+            leftIcon={<ChevronDownIcon />}
+          >
+            More
+          </Button>
+        </Box>
       )}
     </Box>
   ) : null;

@@ -57,13 +57,7 @@ export default function ContentSidebarDesktop(): JSX.Element {
         <Flex mt={12} mr={6}>
           <Button
             colorScheme="purple"
-            onClick={
-              () => router.push("/add")
-              // dispatch({
-              //   type: "state",
-              //   payload: { key: "view", value: "search" },
-              // })
-            }
+            onClick={() => router.push("/add")}
             px={8}
             leftIcon={<PlusIcon boxSize={6} />}
           >

@@ -1,9 +1,9 @@
 import { useMDState, useMDDispatch } from "@/config";
-import { LogoIcon } from "@/icons";
-import { MdLoader, MdRating } from "@/md";
+import { FiltersIcon, LogoIcon } from "@/icons";
+import { MdContentHeader, MdLoader, MdRating } from "@/md";
 import type { UserFuegoValidated, MediaDiaryWithId } from "@/types";
 import { createPosterURL, useIsBreakpoint } from "@/utils";
-import { ArrowDownIcon } from "@chakra-ui/icons";
+import { ArrowDownIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -11,7 +11,12 @@ import {
   Grid,
   Heading,
   HStack,
+  IconButton,
   Image,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Square,
   Text,
   useToken,
@@ -19,7 +24,6 @@ import {
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { cache, useSWRInfinite } from "swr";
-import { MemoriesHeader } from "./components";
 import { fuegoMemoriesGet } from "./config";
 import type { SortType } from "./config";
 
@@ -106,10 +110,44 @@ export default function Memories({
 
     return (
       <Box pos="relative">
-        <MemoriesHeader
-          sortType={sortType}
-          onChange={(val) => setSortType(val)}
-        />
+        <MdContentHeader
+          title="Memories"
+          description={
+            <Text>
+              Memories include rated Media <br />
+              with or without a Diary entry
+            </Text>
+          }
+        >
+          <HStack spacing={{ base: 0, sm: 3 }}>
+            <Flex alignItems="baseline">
+              <Text color="gray.500" fontSize="sm">
+                Sorted By
+              </Text>
+              <Menu>
+                <MenuButton as={Button} variant="ghost" size="sm" pr="1">
+                  {sortType === "addedDate" && "When Rated"}
+                  {sortType === "rating" && "Rating"}
+                  <ChevronDownIcon boxSize="6" mb="1" />
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={() => setSortType("addedDate")}>
+                    When Rated
+                  </MenuItem>
+                  <MenuItem onClick={() => setSortType("rating")}>
+                    Rating
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            </Flex>
+            <IconButton
+              icon={<FiltersIcon />}
+              aria-label="filter"
+              size="sm"
+              variant="outline"
+            />
+          </HStack>
+        </MdContentHeader>
         <Grid
           gridTemplateColumns={`repeat(${isMd ? 5 : 3}, 1fr)`}
           gridGap="2"

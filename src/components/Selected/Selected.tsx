@@ -35,7 +35,7 @@ export default function Selected(): JSX.Element {
     } else if (selected) {
       return (
         <Suspense fallback={<MdLoader />}>
-          <SelectedContent item={selected} mutate={mutate} />;
+          <SelectedContent item={selected} mutate={mutate} />
         </Suspense>
       );
     }

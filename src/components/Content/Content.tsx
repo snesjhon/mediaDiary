@@ -101,7 +101,11 @@ export default function Content({
               view === "logRating"
             }
             placement="right"
-            showHeader={view === "day" || view === "dayRating" ? false : true}
+            showHeader={
+              view === "day" || view === "dayRating" || view === "selected"
+                ? false
+                : true
+            }
           >
             {view === "selected" && <Selected />}
             {view === "day" && <Day />}

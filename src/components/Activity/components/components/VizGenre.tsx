@@ -12,7 +12,7 @@ export default function VizGenre({ list }: VizGenreProps): JSX.Element {
   const { colorMode } = useColorMode();
   const [purple500, borderColor, zeroColor] = useToken("colors", [
     "purple.500",
-    colorMode === "light" ? "gray.50" : "gray.800",
+    colorMode === "light" ? "gray.50" : "gray.700",
     colorMode === "light" ? "purple.200" : "gray.600",
   ]);
 
@@ -40,7 +40,7 @@ export default function VizGenre({ list }: VizGenreProps): JSX.Element {
           Genre
         </Text>
       </Box>
-      <Box p="8" bg="gray.50">
+      <Box p="8" bgColor={colorMode === "light" ? "gray.50" : "gray.700"}>
         <Box maxW={{ sm: "98%", md: "100%" }}>
           <Box height="300px">
             <ResponsiveBar
@@ -71,6 +71,7 @@ export default function VizGenre({ list }: VizGenreProps): JSX.Element {
               axisLeft={{ tickSize: 0, tickPadding: 20 }}
               borderColor={borderColor}
               animate={true}
+              tooltip={({ index }) => <TooltipFormat index={index} />}
               theme={{
                 axis: {
                   ticks: {
@@ -88,4 +89,19 @@ export default function VizGenre({ list }: VizGenreProps): JSX.Element {
       </Box>
     </Box>
   );
+
+  function TooltipFormat({ index }: { index: number }) {
+    const { count, genre } = data[index];
+    return (
+      <Box textAlign="center">
+        <Text mb={0} pb={0} color="black">
+          {count === 0.8 || count === 0.25 || count === 0.5 ? 0 : count}{" "}
+          Memories
+        </Text>
+        <Text fontSize="sm" color="gray.600">
+          {genre}
+        </Text>
+      </Box>
+    );
+  }
 }

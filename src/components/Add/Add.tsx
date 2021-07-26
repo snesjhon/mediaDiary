@@ -1,18 +1,8 @@
 import { useMDState } from "@/config";
-import { MdSpinner } from "@/md";
+import { MdContentHeader, MdSpinner } from "@/md";
 import { fetcher, spotifyFetch } from "@/utils";
 import useDebounce from "@/utils/useDebounce";
-import { QuestionOutlineIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Center,
-  Flex,
-  Heading,
-  HStack,
-  Input,
-  Text,
-  Tooltip,
-} from "@chakra-ui/react";
+import { Box, Center, HStack, Input, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import useSWR from "swr";
 import { AddResults } from "./components";
@@ -35,47 +25,32 @@ export default function Add(): JSX.Element {
 
   return (
     <Box pos="relative">
-      <Box
-        position="sticky"
-        top="3rem"
-        pt="2"
-        zIndex="1"
-        bgColor="white"
-        borderBottomWidth="1px"
+      <MdContentHeader
+        title="Add Media"
+        description={
+          <Text>
+            Diary includes all rated and <br />
+            unrated Media that have dates <br />
+            attached to them.
+          </Text>
+        }
       >
-        <Flex w="100%" h="100%" py={2} align="center" justify="space-between">
-          <Flex alignItems="baseline">
-            <Heading size="lg" mr="2">
-              Add Media
-            </Heading>
-            <Tooltip
-              label={
-                <Text>
-                  Diary includes all rated and <br />
-                  unrated Media that have dates <br />
-                  attached to them.
-                </Text>
-              }
-            >
-              <QuestionOutlineIcon />
-            </Tooltip>
-          </Flex>
-          <HStack spacing={{ base: 0, sm: 3 }}>
-            <Input
-              placeholder="Search for Albums, TV, or Film"
-              onChange={(e) => setSearch(e.target.value)}
-              value={search}
-              type="search"
-              autoFocus
-              minW="sm"
-            />
-          </HStack>
-        </Flex>
-      </Box>
+        <HStack spacing={{ base: 0, sm: 3 }}>
+          <Input
+            placeholder="Search for Albums, TV, or Film"
+            onChange={(e) => setSearch(e.target.value)}
+            value={search}
+            type="search"
+            autoFocus
+            minW="sm"
+          />
+        </HStack>
+      </MdContentHeader>
       <Box
         borderLeftWidth={{ base: 0, md: "1px" }}
         borderRightWidth={{ base: 0, md: "1px" }}
-        px={{ md: 8 }}
+        pb="10"
+        minH="83vh"
       >
         {!data && isValidating && (
           <Center h="20vh">

@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { Button } from "@chakra-ui/react";
+import { IconButton } from "@chakra-ui/react";
 import React from "react";
 import MdLoader from "../../../../md/MdLoader";
 import { MediaMovie, MediaSpotify, MediaTV } from "../../../../Media";
@@ -95,7 +95,7 @@ describe("<SelectedContent /> ", () => {
         />
       );
       expect(wrapper).toContainReactComponent(MediaMovie);
-      const btn = wrapper.find(Button, { id: "selectedBookmark" });
+      const btn = wrapper.find(IconButton, { id: "selectedBookmark" });
       btn?.trigger("onClick");
       expect(fuegoBookmarkAdd).toBeCalledWith(1, {
         releasedYear: 2015,

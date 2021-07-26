@@ -9,3 +9,4 @@ export { default as MdModal } from "./MdModal";
 export { default as MdRating } from "./MdRating";
 export { default as MdSpinner } from "./MdSpinner";
 export { default as MdStatus } from "./MdStatus";
+export { default as MdContentHeader } from "./MdContentHeader";

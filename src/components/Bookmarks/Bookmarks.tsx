@@ -1,6 +1,6 @@
 import { useMDState, useMDDispatch } from "@/config";
 import { LogoIcon } from "@/icons";
-import { MdLoader } from "@/md";
+import { MdContentHeader, MdLoader } from "@/md";
 import type { UserFuegoValidated, MediaDiaryWithId } from "@/types";
 import { createPosterURL } from "@/utils";
 import { ArrowDownIcon } from "@chakra-ui/icons";
@@ -90,6 +90,7 @@ function Bookmarks({ user }: { user: UserFuegoValidated }): JSX.Element {
 
     return (
       <>
+        <MdContentHeader title="Bookmarks" description="Bookmarks" />
         <Grid
           gridTemplateColumns="repeat(5, 1fr)"
           gridGap={4}
