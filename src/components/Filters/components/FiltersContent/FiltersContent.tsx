@@ -221,13 +221,20 @@ export default function FiltersContent({
           <Divider mt={2} mb={4} />
           <RadioGroup
             value={
-              typeof loggedBefore !== "undefined" && loggedBefore === null
+              typeof localLoggedBefore !== "undefined" &&
+              localLoggedBefore === null
                 ? "all"
-                : loggedBefore.toString()
+                : localLoggedBefore.toString()
             }
-            onChange={(val) =>
-              setLoggedBefore(val === "all" ? null : val === "true")
-            }
+            onChange={(val) => {
+              if (val === "all") {
+                setLoggedBefore(null);
+              } else if (val === "true") {
+                setLoggedBefore(true);
+              } else if (val === "false") {
+                setLoggedBefore(false);
+              }
+            }}
           >
             <Stack spacing={4} direction="row">
               <Radio value="all">All</Radio>
@@ -245,7 +252,7 @@ export default function FiltersContent({
                 onChange={(e) =>
                   setGenre(e.target.value === "all" ? null : e.target.value)
                 }
-                value={genre ?? "all"}
+                value={localGenre ?? "all"}
               >
                 <option value="all">All</option>
                 {createMediaKeys("genre")

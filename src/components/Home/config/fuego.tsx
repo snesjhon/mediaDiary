@@ -7,7 +7,7 @@ export async function fuegoDiaryGet(
   key: string,
   uid: string,
   cursor: string,
-  sortType: SortType = "diaryDate",
+  sortType: SortType = { type: "diaryDate", sort: "desc" },
   mediaTypes: MediaType[] | null,
   rating: number | null,
   releasedDecade: number | null,
@@ -44,7 +44,9 @@ export async function fuegoDiaryGet(
     diaryRef = diaryRef.where("genre", "==", genre);
   }
 
-  diaryRef = diaryRef.where("diary", "==", true).orderBy(sortType, "desc");
+  diaryRef = diaryRef
+    .where("diary", "==", true)
+    .orderBy(sortType.type, sortType.sort);
 
   if (cursor !== null) {
     diaryRef = diaryRef.startAfter(cursor);

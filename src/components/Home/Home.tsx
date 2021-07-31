@@ -40,7 +40,10 @@ export default function Home({
   const state = useMDState();
   const dispatch = useMDDispatch();
   const { colorMode } = useColorMode();
-  const [sortType, setSortType] = useState<SortType>("diaryDate");
+  const [sortType, setSortType] = useState<SortType>({
+    type: "diaryDate",
+    sort: "desc",
+  });
 
   const { data, error, size, setSize, mutate } = useSWRInfinite<
     MediaDiaryWithId[]
