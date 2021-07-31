@@ -1,11 +1,11 @@
 import { useMDState } from "@/config";
-import { MdContentHeader, MdSpinner } from "@/md";
+import { MdContentHeader, MdLoader, MdSpinner } from "@/md";
 import { fetcher, spotifyFetch } from "@/utils";
 import useDebounce from "@/utils/useDebounce";
-import { Box, Center, HStack, Input, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Box, Center, HStack, Input, Spinner, Text } from "@chakra-ui/react";
+import React, { Suspense, useState } from "react";
 import useSWR from "swr";
-import { AddResults } from "./components";
+import { AddMovieList, AddResults } from "./components";
 import type { MDbSearch, SpotifySearch } from "./types";
 
 export default function Add(): JSX.Element {
@@ -64,6 +64,11 @@ export default function Add(): JSX.Element {
             showMovie={showMovie}
             showTV={showTV}
           />
+        )}
+        {!data && !isValidating && (
+          <Suspense fallback={<MdLoader />}>
+            <AddMovieList />
+          </Suspense>
         )}
       </Box>
     </Box>
