@@ -1,20 +1,21 @@
 import { useMDState } from "@/config";
-import { FiltersIcon } from "@/icons";
+import { FiltersIcon, GridIcon, ListIcon } from "@/icons";
 import Filters from "@/src/components/Filters";
-import { QuestionOutlineIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, QuestionOutlineIcon } from "@chakra-ui/icons";
 import { Box, Flex, Heading, HStack } from "@chakra-ui/layout";
 import {
-  Tooltip,
+  Button,
+  IconButton,
   Menu,
   MenuButton,
-  Button,
-  MenuList,
-  IconButton,
-  Text,
-  useDisclosure,
   MenuDivider,
   MenuItemOption,
+  MenuList,
   MenuOptionGroup,
+  Text,
+  Tooltip,
+  useColorMode,
+  useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
 import type { SortType } from "../../config";
@@ -22,11 +23,20 @@ import type { SortType } from "../../config";
 interface Props {
   sortType: SortType;
   onChange: (val: SortType) => void;
+  view: {
+    type: "list" | "grid";
+    onChange: (val: "list" | "grid") => void;
+  };
 }
 
-export default function HomeHeader({ sortType, onChange }: Props): JSX.Element {
+export default function HomeHeader({
+  sortType,
+  onChange,
+  view,
+}: Props): JSX.Element {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { diaryFilters } = useMDState();
+  const { colorMode } = useColorMode();
   const hasFilters = [
     !!diaryFilters?.diaryYear,
     !!diaryFilters?.genre,
@@ -46,7 +56,7 @@ export default function HomeHeader({ sortType, onChange }: Props): JSX.Element {
         top="3rem"
         pt="2"
         zIndex="1"
-        bgColor="white"
+        bgColor={colorMode === "light" ? "white" : "gray.800"}
         borderBottomWidth="1px"
       >
         <Flex w="100%" h="100%" py={2} align="center" justify="space-between">
@@ -142,6 +152,15 @@ export default function HomeHeader({ sortType, onChange }: Props): JSX.Element {
                   </MenuList>
                 </Menu>
               </Flex>
+              <IconButton
+                icon={view.type === "list" ? <ListIcon /> : <GridIcon />}
+                aria-label="filter"
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  view.onChange(view.type === "list" ? "grid" : "list")
+                }
+              />
               <IconButton
                 icon={<FiltersIcon />}
                 aria-label="filter"

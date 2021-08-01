@@ -20,7 +20,7 @@ export async function fuegoChartYear(
     diaryRef = diaryRef.where("type", "==", mediaType);
   }
 
-  diaryRef = diaryRef.orderBy("rating", "desc");
+  diaryRef = diaryRef.orderBy("rating", "desc").orderBy("addedDate", "desc");
 
   const diaryItems = await diaryRef.get();
 
