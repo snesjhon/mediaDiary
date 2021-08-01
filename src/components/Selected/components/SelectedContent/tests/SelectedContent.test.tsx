@@ -8,8 +8,8 @@ import {
   mockMovieFetchData,
   mockMovieSelected,
 } from "../../../../../utils/test-utils";
-import { mountWithDrawerSuspense } from "../../../../../utils/test-utils/mountWith";
 import SelectedContent from "..";
+import { mountWithDrawerSuspense } from "@/src/tests";
 
 let mockIsLoading = true;
 jest.mock("../../../../../config/useDataFetch", () => {
