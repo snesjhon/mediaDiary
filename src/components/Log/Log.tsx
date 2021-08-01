@@ -43,23 +43,27 @@ export default function Log(): JSX.Element {
   // // This is temporary because I think we should maybe let the user select IF they want to add a season
   // // They could also not want to select a season and just add the show.
   useEffect(() => {
-    if (initSeason.current) {
+    if (initSeason.current && selected?.seasons) {
+      const seasonIndex = selected?.seasons.findIndex(
+        (e) => e.season_number === 1
+      );
+      const selectedSeason = selected?.seasons[seasonIndex];
       if (
-        selected?.seasons &&
-        selected?.seasons[0].poster_path &&
-        selected?.seasons[0].poster_path !== null
+        selectedSeason &&
+        selectedSeason.poster_path &&
+        selectedSeason.poster_path !== null
       ) {
         mdDispatch({
           type: "selectedReplace",
           payload: {
             ...selected,
-            season: selected?.seasons[0].season_number,
-            episodes: selected?.seasons[0].episode_count,
-            poster: parsePosterUrl(selected?.seasons[0].poster_path, "tv"),
+            season: selectedSeason.season_number,
+            episodes: selectedSeason.episode_count,
+            poster: parsePosterUrl(selectedSeason.poster_path, "tv"),
           },
         });
-        initSeason.current = false;
       }
+      initSeason.current = false;
     }
   }, [selected, mdDispatch]);
 
