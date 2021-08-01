@@ -1,8 +1,8 @@
 import React from "react";
-import { VizHighestRated } from "..";
-import type { MediaDiaryWithId } from "../../../../../types/typesMedia";
 import { Image } from "@chakra-ui/react";
-import { mountWithContext } from "../../../../../utils/test-utils";
+import type { MediaDiaryWithId } from "@/types";
+import { mountWithContext } from "@/utils/test-utils";
+import VizHighestRated from "..";
 
 const list: MediaDiaryWithId[] = [
   {

@@ -8,14 +8,27 @@ export default function VizRating({ list }: { list: number[] }): JSX.Element {
   const { colorMode } = useColorMode();
   const [purple500, borderColor, zeroColor] = useToken("colors", [
     "purple.500",
-    colorMode === "light" ? "gray.50" : "gray.700",
+    colorMode === "light" ? "gray.100" : "gray.700",
     colorMode === "light" ? "purple.200" : "gray.600",
   ]);
+  const maxCount = Math.max(...list);
+  let padding = 0.7;
+  let zeroCount = 0.3;
+  if (maxCount > 70) {
+    padding = 3;
+  } else if (maxCount >= 30) {
+    padding = 1.8;
+  } else if (maxCount < 30) {
+    padding = 0.5;
+    zeroCount = 0.5;
+  }
+  // const padding = Math.max(...list) > 70 ? 3 : 0.7;
 
+  console.log(Math.max(...list));
   let ratingCount = list
     .map((e, i) => ({
       rating: i / 2,
-      count: e === 0 ? 0.3 : e,
+      count: e === 0 ? zeroCount + padding : e + padding,
     }))
     .slice(1);
 
@@ -40,7 +53,7 @@ export default function VizRating({ list }: { list: number[] }): JSX.Element {
           Rating Distribution
         </Text>
       </Box>
-      <Box p="8" bgColor={colorMode === "light" ? "gray.50" : "gray.700"}>
+      <Box p="8" bgColor={colorMode === "light" ? "gray.100" : "gray.700"}>
         <Flex
           alignItems="flex-end"
           height="120px"
@@ -51,7 +64,7 @@ export default function VizRating({ list }: { list: number[] }): JSX.Element {
             colors={({ id, data }) => {
               if (id === "filler") {
                 return "transparent";
-              } else if (data.count === 0.3) {
+              } else if (data.count === zeroCount + padding) {
                 return zeroColor;
               }
               return purple500;
@@ -88,7 +101,7 @@ export default function VizRating({ list }: { list: number[] }): JSX.Element {
     return (
       <Flex alignItems="center">
         <Text fontSize="sm" color="gray.600" mr={1}>
-          {count === 0.3 ? 0 : count}
+          {count === zeroCount + padding ? 0 : Math.ceil(count - padding)}
         </Text>
         <MdRating initialRating={rating} wh="10px" />
         <Text fontSize="sm" color="gray.600" ml={1}>

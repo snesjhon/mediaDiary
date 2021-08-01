@@ -1,4 +1,5 @@
 export * from "./helperMDb";
+export { mountWithContext } from "./test-utils";
 export {
   capFormat,
   createMediaTypes,

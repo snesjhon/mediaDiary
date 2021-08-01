@@ -79,11 +79,13 @@ export default {
   //   "json",
   //   "node"
   // ],
+  moduleFileExtensions: ["ts", "tsx", "js"],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
     "^@/utils": "<rootDir>/src/utils",
     "^@/utils/(.*)": "<rootDir>/src/utils/$1",
+    "^@/utils/test-utils": "<rootDir>/src/utils/test-utils",
     "^@/utils/test-utils/(.*)": "<rootDir>/src/utils/test-utils/$1",
     "^@/config": "<rootDir>/src/config",
     "^@/config/(.*)": "<rootDir>/src/config/$1",
@@ -135,6 +137,8 @@ export default {
   // roots: [
   //   "<rootDir>"
   // ],
+  // roots: ["src"],
+  // modulePaths: ["src"],
 
   // Allows you to use a custom runner instead of Jest's default test runner
   // runner: "jest-runner",
