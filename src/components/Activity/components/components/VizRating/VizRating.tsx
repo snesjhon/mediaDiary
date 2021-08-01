@@ -22,9 +22,7 @@ export default function VizRating({ list }: { list: number[] }): JSX.Element {
     padding = 0.5;
     zeroCount = 0.5;
   }
-  // const padding = Math.max(...list) > 70 ? 3 : 0.7;
 
-  console.log(Math.max(...list));
   let ratingCount = list
     .map((e, i) => ({
       rating: i / 2,
