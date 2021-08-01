@@ -18,15 +18,12 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
-import type { SortType } from "../../config";
+import type { SortType, ViewOptions } from "../../config";
 
 interface Props {
   sortType: SortType;
   onChange: (val: SortType) => void;
-  view: {
-    type: "list" | "grid";
-    onChange: (val: "list" | "grid") => void;
-  };
+  view: ViewOptions;
 }
 
 export default function HomeHeader({
@@ -153,12 +150,12 @@ export default function HomeHeader({
                 </Menu>
               </Flex>
               <IconButton
-                icon={view.type === "list" ? <ListIcon /> : <GridIcon />}
+                icon={view.options === "list" ? <ListIcon /> : <GridIcon />}
                 aria-label="filter"
                 size="sm"
                 variant="outline"
                 onClick={() =>
-                  view.onChange(view.type === "list" ? "grid" : "list")
+                  view.onChange(view.options === "list" ? "grid" : "list")
                 }
               />
               <IconButton

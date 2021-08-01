@@ -1,36 +1,31 @@
 import { useMDDispatch } from "@/config";
-import { StarEmptyIcon, FilmIcon, AlbumIcon, TvIcon } from "@/icons";
-import type { MediaDiaryState, MediaDiaryWithId } from "@/types";
+import { AlbumIcon, FilmIcon, StarEmptyIcon, TvIcon } from "@/icons";
+import type { MediaDiaryState } from "@/types";
 import { createPosterURL } from "@/utils";
 import { StarIcon } from "@chakra-ui/icons";
-import { Grid, Box, Flex, Text, Image } from "@chakra-ui/react";
+import { Box, Flex, Grid, Image, Text } from "@chakra-ui/react";
 import { useColorMode } from "@chakra-ui/system";
 import dayjs from "dayjs";
 import React from "react";
 import Rating from "react-rating";
+import type { SortType } from "../../config";
 
 interface Props {
-  data: MediaDiaryWithId[];
+  data: ListState;
+  sortType: SortType["type"];
 }
 
 interface ListState {
   [key: string]: MediaDiaryState;
 }
 
-export default function DiaryList({ data }: Props): JSX.Element {
+export default function DiaryList({ data, sortType }: Props): JSX.Element {
   const dispatch = useMDDispatch();
   const { colorMode } = useColorMode();
-  const diaryDates: ListState = data.reduce<ListState>((a, c) => {
-    if (c.diaryDate) {
-      const dateString = dayjs(c.diaryDate).format("YYYY-MM");
-      a[dateString] = Object.assign({ ...a[dateString] }, { [c.id]: c });
-    }
-    return a;
-  }, {});
 
   return (
     <>
-      {Object.keys(diaryDates).map((month, monthIndex) => {
+      {Object.keys(data).map((month, monthIndex) => {
         return (
           <Grid
             templateColumns={{
@@ -62,7 +57,8 @@ export default function DiaryList({ data }: Props): JSX.Element {
               </Text>
             </Box>
             <Box>
-              {Object.keys(diaryDates[month]).map((day, dayIndex) => {
+              {Object.keys(data[month]).map((day, dayIndex) => {
+                const currentDate = data[month][day];
                 const {
                   rating,
                   title,
@@ -72,8 +68,8 @@ export default function DiaryList({ data }: Props): JSX.Element {
                   type,
                   season,
                   seenEpisodes,
-                } = diaryDates[month][day];
-                const diaryDate = diaryDates[month][day].diaryDate;
+                } = currentDate;
+                const diaryDate = currentDate[sortType];
                 return (
                   <Grid
                     gridTemplateColumns={{
@@ -92,7 +88,7 @@ export default function DiaryList({ data }: Props): JSX.Element {
                     onClick={() =>
                       dispatch({
                         type: "day",
-                        payload: diaryDates[month][day],
+                        payload: data[month][day],
                       })
                     }
                   >
