@@ -81,10 +81,12 @@ export default function MediaTV({
       credits.crew &&
       credits.crew.find((e) => e.job === "Director")?.name) ??
     artist;
-
+  const seasonIndex = seasons?.findIndex(
+    (e) => e.season_number === seasonInfo?.season
+  );
   const mediaDate =
-    seasonInfo?.season && seasonInfo.season !== -1 && seasons
-      ? seasons[seasonInfo.season].air_date
+    seasons && seasonIndex && seasons[seasonIndex]
+      ? seasons[seasonIndex].air_date
       : releasedDate ?? first_air_date;
 
   const showInfo = !edit && !logRating;
