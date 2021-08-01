@@ -1,6 +1,5 @@
 import { useMDDispatch } from "@/config";
 import { StarEmptyIcon } from "@/icons";
-import type { MediaDiaryState, MediaDiaryWithId } from "@/types";
 import { createPosterURL } from "@/utils";
 import { StarIcon } from "@chakra-ui/icons";
 import { Box, Flex, Grid, Image, Text } from "@chakra-ui/react";
@@ -8,29 +7,20 @@ import { useColorMode } from "@chakra-ui/system";
 import dayjs from "dayjs";
 import React from "react";
 import Rating from "react-rating";
+import type { ListState, SortType } from "../../config";
 
 interface Props {
-  data: MediaDiaryWithId[];
+  data: ListState;
+  sortType: SortType["type"];
 }
 
-interface ListState {
-  [key: string]: MediaDiaryState;
-}
-
-export default function DiaryGrid({ data }: Props): JSX.Element {
+export default function DiaryGrid({ data, sortType }: Props): JSX.Element {
   const dispatch = useMDDispatch();
   const { colorMode } = useColorMode();
-  const diaryDates: ListState = data.reduce<ListState>((a, c) => {
-    if (c.diaryDate) {
-      const dateString = dayjs(c.diaryDate).format("YYYY-MM");
-      a[dateString] = Object.assign({ ...a[dateString] }, { [c.id]: c });
-    }
-    return a;
-  }, {});
 
   return (
     <>
-      {Object.keys(diaryDates).map((month, monthIndex) => {
+      {Object.keys(data).map((month, monthIndex) => {
         return (
           <Grid
             templateColumns={{
@@ -67,9 +57,9 @@ export default function DiaryGrid({ data }: Props): JSX.Element {
               borderBottomWidth="1px"
               mb="6"
             >
-              {Object.keys(diaryDates[month]).map((day, dayIndex) => {
-                const { rating, title, poster, type } = diaryDates[month][day];
-                const diaryDate = diaryDates[month][day].diaryDate;
+              {Object.keys(data[month]).map((day, dayIndex) => {
+                const { rating, title, poster, type } = data[month][day];
+                const diaryDate = data[month][day][sortType];
                 return (
                   <Grid
                     gridTemplateRows={{
@@ -88,7 +78,7 @@ export default function DiaryGrid({ data }: Props): JSX.Element {
                     onClick={() =>
                       dispatch({
                         type: "day",
-                        payload: diaryDates[month][day],
+                        payload: data[month][day],
                       })
                     }
                   >

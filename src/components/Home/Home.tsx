@@ -4,12 +4,13 @@ import { MdLoader } from "@/md";
 import type { MediaDiaryWithId, UserFuegoValidated } from "@/types";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import { Button, Heading, HStack, Square } from "@chakra-ui/react";
+import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { cache, useSWRInfinite } from "swr";
 import { HomeHeader } from "./components";
 import DiaryGrid from "./components/DiaryGrid";
 import DiaryList from "./components/DiaryList";
-import type { SortType } from "./config";
+import type { ListState, SortType, ViewType } from "./config";
 import { fuegoDiaryGet } from "./config";
 
 export default function Home({
@@ -22,7 +23,7 @@ export default function Home({
     type: "diaryDate",
     sort: "desc",
   });
-  const [viewType, setViewType] = useState<"grid" | "list">("list");
+  const [viewType, setViewType] = useState<ViewType>("list");
 
   const { data, error, size, setSize, mutate } = useSWRInfinite<
     MediaDiaryWithId[]
@@ -34,7 +35,7 @@ export default function Home({
       return [
         "/fuego/diary",
         user.uid,
-        prev !== null ? prev[prev.length - 1].diaryDate : null,
+        prev !== null ? prev[prev.length - 1][sortType.type] : null,
         sortType,
         state.diaryFilters?.mediaType ?? null,
         state.diaryFilters?.rating ?? null,
@@ -89,6 +90,17 @@ export default function Home({
 
   if (data) {
     const allData = data.flat();
+    const diaryDates: ListState = allData.reduce<ListState>((a, c) => {
+      if (c.diaryDate && sortType.type === "diaryDate") {
+        const dateString = dayjs(c.diaryDate).format("YYYY-MM");
+        a[dateString] = Object.assign({ ...a[dateString] }, { [c.id]: c });
+      }
+      if (c.addedDate && sortType.type === "addedDate") {
+        const dateString = dayjs(c.addedDate).format("YYYY-MM");
+        a[dateString] = Object.assign({ ...a[dateString] }, { [c.id]: c });
+      }
+      return a;
+    }, {});
     const isReachingEnd =
       isEmpty || (data && data[data.length - 1]?.length < 30);
     return (
@@ -96,10 +108,14 @@ export default function Home({
         <HomeHeader
           sortType={sortType}
           onChange={(val) => setSortType(val)}
-          view={{ type: viewType, onChange: (val) => setViewType(val) }}
+          view={{ options: viewType, onChange: (val) => setViewType(val) }}
         />
-        {viewType === "list" && <DiaryList data={allData} />}
-        {viewType === "grid" && <DiaryGrid data={allData} />}
+        {viewType === "list" && (
+          <DiaryList data={diaryDates} sortType={sortType.type} />
+        )}
+        {viewType === "grid" && (
+          <DiaryGrid data={diaryDates} sortType={sortType.type} />
+        )}
         {!isReachingEnd && (
           <HStack mt={3} mb={10} borderLeftWidth="1px" borderRightWidth="1px">
             <Button
