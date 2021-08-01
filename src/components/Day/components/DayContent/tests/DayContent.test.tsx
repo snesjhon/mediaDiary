@@ -1,3 +1,4 @@
+import { mountWithDrawerSuspense } from "@/src/tests";
 import { IconButton } from "@chakra-ui/react";
 import React from "react";
 import DayContent from "..";
@@ -6,7 +7,6 @@ import {
   mockAlbumFetchData,
   mockMovieDiaryWithId,
   mockMovieFetchData,
-  mountWithDrawerSuspense,
 } from "../../../../../utils/test-utils";
 import MdLoader from "../../../../md/MdLoader";
 import { MediaMovie, MediaSpotify, MediaTV } from "../../../../Media";

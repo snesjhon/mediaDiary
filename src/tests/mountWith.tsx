@@ -1,9 +1,9 @@
 /* eslint-disable react/display-name */
+import { MdLoader } from "@/md";
+import { ContentDrawer } from "@/src/components/Content/components";
 import { ChakraProvider } from "@chakra-ui/react";
 import { createMount } from "@shopify/react-testing";
 import React, { Suspense } from "react";
-import { ContentDrawer } from "../../components/Content/components";
-import MdLoader from "../../components/md/MdLoader";
 
 export const mountWithContext = createMount({
   context: (options) => options,

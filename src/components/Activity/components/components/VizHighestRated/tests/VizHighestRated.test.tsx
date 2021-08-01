@@ -1,8 +1,8 @@
 import React from "react";
 import { Image } from "@chakra-ui/react";
 import type { MediaDiaryWithId } from "@/types";
-import { mountWithContext } from "@/utils/test-utils";
 import VizHighestRated from "..";
+import { mountWithContext } from "@/src/tests";
 
 const list: MediaDiaryWithId[] = [
   {
