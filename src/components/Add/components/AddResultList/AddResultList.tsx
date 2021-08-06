@@ -1,6 +1,6 @@
 import { useMDDispatch } from "@/config";
 import type { MediaSelected } from "@/types";
-import { createPosterURL, parsePosterUrl } from "@/utils";
+import { createPosterURL, parsePosterUrl, useIsBreakpoint } from "@/utils";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import type { Icon } from "@chakra-ui/react";
 import {
@@ -33,6 +33,7 @@ export default function AddResultList({
 }: Props): JSX.Element | null {
   const dispatch = useMDDispatch();
   const { colorMode } = useColorMode();
+  const isMd = useIsBreakpoint("md");
 
   return data.length > 0 ? (
     <Box py={4}>
@@ -49,7 +50,11 @@ export default function AddResultList({
           {title}
         </Heading>
       </Flex>
-      <Grid gridTemplateColumns="repeat(5, 1fr)" gridGap="4" px={{ md: 8 }}>
+      <Grid
+        gridTemplateColumns={`repeat(${isMd ? 5 : 3}, 1fr)`}
+        gridGap="4"
+        px={{ md: 8 }}
+      >
         {data.slice(0, seeNumber).map((item: MediaSelected) => (
           <Box
             key={item.mediaId}

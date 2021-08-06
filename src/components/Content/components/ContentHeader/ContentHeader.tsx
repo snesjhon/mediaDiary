@@ -21,7 +21,7 @@ interface Props {
   searchString: string;
   handleSearch: (val: string) => void;
 }
-function ContentToolbar({
+export default function ContentHeader({
   handleSearch,
   onOpen,
   searchString,
@@ -60,30 +60,42 @@ function ContentToolbar({
             </Flex>
             <Flex maxW="720px" align="center">
               <HStack spacing="2">
-                <InputGroup size="sm">
-                  <InputLeftElement pointerEvents="none">
-                    <SearchIcon color="purple.500" />
-                  </InputLeftElement>
-                  <Input
-                    placeholder="Search Your Media"
-                    onChange={(e) => handleSearch(e.target.value)}
-                    value={searchString}
-                    type="search"
+                {isMd ? (
+                  <InputGroup size="sm">
+                    <InputLeftElement pointerEvents="none">
+                      <SearchIcon color="purple.500" />
+                    </InputLeftElement>
+                    <Input
+                      placeholder="Search Your Media"
+                      onChange={(e) => handleSearch(e.target.value)}
+                      value={searchString}
+                      type="search"
+                    />
+                  </InputGroup>
+                ) : (
+                  <IconButton
+                    onClick={() => router.push("/search")}
+                    aria-label="Theme Switcher"
+                    icon={<SearchIcon color="purple.500" />}
+                    size="sm"
+                    variant="outline"
                   />
-                </InputGroup>
-                <IconButton
-                  onClick={toggleColorMode}
-                  aria-label="Theme Switcher"
-                  icon={
-                    colorMode === "light" ? (
-                      <MoonAltIcon color="purple.500" />
-                    ) : (
-                      <SunIcon />
-                    )
-                  }
-                  size="sm"
-                  variant="outline"
-                />
+                )}
+                {isMd && (
+                  <IconButton
+                    onClick={toggleColorMode}
+                    aria-label="Theme Switcher"
+                    icon={
+                      colorMode === "light" ? (
+                        <MoonAltIcon color="purple.500" />
+                      ) : (
+                        <SunIcon />
+                      )
+                    }
+                    size="sm"
+                    variant="outline"
+                  />
+                )}
               </HStack>
               {!isMd && (
                 <IconButton
@@ -102,5 +114,3 @@ function ContentToolbar({
     </>
   );
 }
-
-export default ContentToolbar;
