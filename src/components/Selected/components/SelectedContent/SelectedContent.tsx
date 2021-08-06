@@ -77,7 +77,7 @@ export default function SelectedContent({
       <DrawerFooter
         borderTopWidth="1px"
         justifyContent="space-between"
-        pb={{ base: 8, sm: 4 }}
+        // pb={{ base: 8, sm: 4 }}
       >
         <Button
           onClick={() =>

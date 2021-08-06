@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
-import { Content, Add } from "../src/components";
+import { Content, SearchDiary } from "../src/components";
 import MdLoader from "../src/components/md/MdLoader";
 import useFuegoAuth from "../src/fuego/useFuegoAuth";
 
@@ -28,7 +28,7 @@ export default function AddPage(): JSX.Element {
   } else if (userValidHasPreference) {
     return (
       <Content title="Add Media">
-        <Add />
+        <SearchDiary />
       </Content>
     );
   }

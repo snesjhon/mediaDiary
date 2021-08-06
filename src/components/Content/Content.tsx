@@ -11,7 +11,7 @@ import type { PropsWithChildren } from "react";
 import React, { useEffect } from "react";
 import useSWR from "swr";
 import { Day, DayRating, Edit, EditRating, Log, LogRating, Selected } from "..";
-import { ContentDrawer, ContentSidebar, ContentToolbar } from "./components";
+import { ContentDrawer, ContentSidebar, ContentHeader } from "./components";
 import { fuegoDiarySearch } from "./config/fuego";
 import SearchMedia from "../SearchMedia";
 import type { MediaDiaryWithId } from "@/types";
@@ -66,7 +66,7 @@ export default function Content({
       <Head>
         <title>{title} / MediaDiary</title>
       </Head>
-      <ContentToolbar
+      <ContentHeader
         onOpen={onOpen}
         searchString={search}
         handleSearch={(val) => setSearch(val)}
