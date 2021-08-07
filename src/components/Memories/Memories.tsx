@@ -1,7 +1,13 @@
 import { useMDState, useMDDispatch } from "@/config";
 import { FiltersIcon, LogoIcon } from "@/icons";
 import { MdContentHeader, MdLoader, MdRating } from "@/md";
-import type { UserFuegoValidated, MediaDiaryWithId } from "@/types";
+import type {
+  UserFuegoValidated,
+  MediaDiaryWithId,
+  ListState,
+  SortType,
+  ViewType,
+} from "@/types";
 import { createPosterURL, useIsBreakpoint } from "@/utils";
 import { ArrowDownIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import {
@@ -24,8 +30,8 @@ import {
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { cache, useSWRInfinite } from "swr";
+import ContentList from "../Content/components/ContentList";
 import { fuegoMemoriesGet } from "./config";
-import type { SortType } from "./config";
 
 export default function Memories({
   user,
@@ -34,7 +40,11 @@ export default function Memories({
 }): JSX.Element {
   const state = useMDState();
   const dispatch = useMDDispatch();
-  const [sortType, setSortType] = useState<SortType>("addedDate");
+  const [sortType, setSortType] = useState<SortType>({
+    type: "addedDate",
+    sort: "desc",
+  });
+  const [viewType, setViewType] = useState<ViewType>("list");
   const [purple500] = useToken("colors", ["purple.500"]);
   const isMd = useIsBreakpoint("md");
 
@@ -105,6 +115,17 @@ export default function Memories({
 
   if (data) {
     const allData = data.flat();
+    const diaryDates: ListState = allData.reduce<ListState>((a, c) => {
+      if (c.diaryDate && sortType.type === "diaryDate") {
+        const dateString = dayjs(c.diaryDate).format("YYYY-MM");
+        a[dateString] = Object.assign({ ...a[dateString] }, { [c.id]: c });
+      }
+      if (c.addedDate && sortType.type === "addedDate") {
+        const dateString = dayjs(c.addedDate).format("YYYY-MM");
+        a[dateString] = Object.assign({ ...a[dateString] }, { [c.id]: c });
+      }
+      return a;
+    }, {});
     const isReachingEnd =
       isEmpty || (data && data[data.length - 1]?.length < 30);
 
@@ -126,15 +147,21 @@ export default function Memories({
               </Text>
               <Menu>
                 <MenuButton as={Button} variant="ghost" size="sm" pr="1">
-                  {sortType === "addedDate" && "When Rated"}
-                  {sortType === "rating" && "Rating"}
+                  {sortType.type === "addedDate" && "When Rated"}
+                  {sortType.type === "rating" && "Rating"}
                   <ChevronDownIcon boxSize="6" mb="1" />
                 </MenuButton>
                 <MenuList>
-                  <MenuItem onClick={() => setSortType("addedDate")}>
+                  <MenuItem
+                    onClick={() =>
+                      setSortType({ ...sortType, type: "addedDate" })
+                    }
+                  >
                     When Rated
                   </MenuItem>
-                  <MenuItem onClick={() => setSortType("rating")}>
+                  <MenuItem
+                    onClick={() => setSortType({ ...sortType, type: "rating" })}
+                  >
                     Rating
                   </MenuItem>
                 </MenuList>
@@ -148,7 +175,8 @@ export default function Memories({
             />
           </HStack>
         </MdContentHeader>
-        <Grid
+        <ContentList data={diaryDates} sortType={sortType.type} />
+        {/* <Grid
           gridTemplateColumns={`repeat(${isMd ? 5 : 3}, 1fr)`}
           gridGap="2"
           alignItems="flex-end"
@@ -189,7 +217,7 @@ export default function Memories({
               </Flex>
             </Grid>
           ))}
-        </Grid>
+        </Grid> */}
         {!isReachingEnd && (
           <HStack mt={3} mb={10} borderLeftWidth="1px" borderRightWidth="1px">
             <Button

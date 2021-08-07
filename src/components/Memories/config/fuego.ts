@@ -1,13 +1,12 @@
 import { fuegoDb } from "@/fuego";
 import type fuego from "@/fuego/fuego";
-import type { MediaDiaryWithId, MediaType } from "@/types";
-import type { SortType } from ".";
+import type { MediaDiaryWithId, MediaType, SortType } from "@/types";
 
 export async function fuegoMemoriesGet(
   key: string,
   uid: string,
   cursor: string,
-  sortType: SortType = "addedDate",
+  sortType: SortType = { type: "addedDate", sort: "desc" },
   mediaTypes: MediaType[] | null,
   releasedDecade: number | null,
   addedDate: number | null,
@@ -33,7 +32,9 @@ export async function fuegoMemoriesGet(
     diaryRef = diaryRef.where("genre", "==", genre);
   }
 
-  diaryRef = diaryRef.where("memory", "==", true).orderBy(sortType, "desc");
+  diaryRef = diaryRef
+    .where("memory", "==", true)
+    .orderBy(sortType.type, sortType.sort);
 
   if (cursor !== null) {
     const cursorItem = await fuegoDb

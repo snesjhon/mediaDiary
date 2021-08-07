@@ -1,6 +1,7 @@
 import { useMDState } from "@/config";
 import { FiltersIcon, GridIcon, ListIcon } from "@/icons";
 import Filters from "@/src/components/Filters";
+import type { SortType, ViewOptions } from "@/types";
 import { ChevronDownIcon, QuestionOutlineIcon } from "@chakra-ui/icons";
 import { Box, Flex, Heading, HStack } from "@chakra-ui/layout";
 import {
@@ -18,7 +19,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
-import type { SortType, ViewOptions } from "../../config";
 
 interface Props {
   sortType: SortType;

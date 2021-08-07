@@ -1,16 +1,19 @@
 import { useMDState } from "@/config";
 import { LogoIcon } from "@/icons";
 import { MdLoader } from "@/md";
-import type { MediaDiaryWithId, UserFuegoValidated } from "@/types";
+import type {
+  ListState,
+  MediaDiaryWithId,
+  SortType,
+  UserFuegoValidated,
+  ViewType,
+} from "@/types";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import { Button, Heading, HStack, Square } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { cache, useSWRInfinite } from "swr";
-import { DiaryHeader } from "./components";
-import DiaryGrid from "./components/DiaryGrid";
-import DiaryList from "./components/DiaryList";
-import type { ListState, SortType, ViewType } from "./config";
+import { DiaryGrid, DiaryHeader, DiaryList } from "./components";
 import { fuegoDiaryGet } from "./config";
 
 export default function Diary({
