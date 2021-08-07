@@ -27,7 +27,7 @@ export default function NewUserPage(): JSX.Element {
       </MdGradient>
     );
   } else if (userValidHasPreference) {
-    router.push("/home");
+    router.push("/diary");
     return <MdLoader />;
   }
   return <MdLoader />;

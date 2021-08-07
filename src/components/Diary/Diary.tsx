@@ -7,13 +7,13 @@ import { Button, Heading, HStack, Square } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { cache, useSWRInfinite } from "swr";
-import { HomeHeader } from "./components";
+import { DiaryHeader } from "./components";
 import DiaryGrid from "./components/DiaryGrid";
 import DiaryList from "./components/DiaryList";
 import type { ListState, SortType, ViewType } from "./config";
 import { fuegoDiaryGet } from "./config";
 
-export default function Home({
+export default function Diary({
   user,
 }: {
   user: UserFuegoValidated;
@@ -105,7 +105,7 @@ export default function Home({
       isEmpty || (data && data[data.length - 1]?.length < 30);
     return (
       <>
-        <HomeHeader
+        <DiaryHeader
           sortType={sortType}
           onChange={(val) => setSortType(val)}
           view={{ options: viewType, onChange: (val) => setViewType(val) }}

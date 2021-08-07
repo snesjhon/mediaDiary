@@ -15,3 +15,4 @@ export { default as TwitterIcon } from "./TwitterIcon";
 export { default as MoonAltIcon } from "./MoonAltIcon";
 export { default as ListIcon } from "./ListIcon";
 export { default as GridIcon } from "./GridIcon";
+export { default as BookIcon } from "./BookIcon";

@@ -1,3 +1,4 @@
+export { default as Diary } from "./Diary";
 export { default as Bookmarks } from "./Bookmarks";
 export { default as Content } from "./Content";
 export { default as Day, DayRating } from "./Day";

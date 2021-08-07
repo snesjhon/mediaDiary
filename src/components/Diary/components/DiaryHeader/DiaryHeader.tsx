@@ -26,7 +26,7 @@ interface Props {
   view: ViewOptions;
 }
 
-export default function HomeHeader({
+export default function DiaryHeader({
   sortType,
   onChange,
   view,
@@ -150,7 +150,7 @@ export default function HomeHeader({
                 </Menu>
               </Flex>
               <IconButton
-                icon={view.options === "list" ? <ListIcon /> : <GridIcon />}
+                icon={view.options === "list" ? <GridIcon /> : <ListIcon />}
                 aria-label="filter"
                 size="sm"
                 variant="outline"

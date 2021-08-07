@@ -16,7 +16,7 @@ export default function MainPage(): JSX.Element {
     router.push("/new");
     return <MdLoader />;
   } else if (user) {
-    router.push("/home");
+    router.push("/diary");
     return <MdLoader />;
   } else {
     return <Welcome />;

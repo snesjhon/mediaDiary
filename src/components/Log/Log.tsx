@@ -135,7 +135,7 @@ export default function Log(): JSX.Element {
         mdDispatch({ type: "view", payload: "md" });
         mdDispatch({ type: "close" });
         if (router.pathname === "/add") {
-          router.push("/home");
+          router.push("/diary");
         }
       } else {
         console.error("diary fails");

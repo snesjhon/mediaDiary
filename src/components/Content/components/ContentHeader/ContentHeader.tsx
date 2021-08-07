@@ -56,7 +56,7 @@ export default function ContentHeader({
                   onClick={onOpen}
                 />
               )}
-              <MdLogo title="mediaDiary" href="/home" />
+              <MdLogo title="mediaDiary" href="/diary" />
             </Flex>
             <Flex maxW="720px" align="center">
               <HStack spacing="2">
