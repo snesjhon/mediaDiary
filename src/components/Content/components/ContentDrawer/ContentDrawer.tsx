@@ -33,7 +33,6 @@ export default function ContentDrawer({
     delta: 250,
   });
   const sizeType = useBreakpointValue({ base: "full", sm: "md" });
-  const fullHeight = useBreakpointValue({ base: true, sm: false });
 
   return (
     <Drawer
@@ -42,7 +41,6 @@ export default function ContentDrawer({
       size={sizeType}
       placement={placement}
       initialFocusRef={refHook}
-      isFullHeight={fullHeight}
       {...rest}
     >
       <DrawerOverlay zIndex={2} />
