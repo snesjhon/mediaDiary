@@ -3,7 +3,7 @@ import { MediaMovie } from "..";
 import { mount } from "@shopify/react-testing";
 import { MediaAbout, MediaHeader, MediaRating } from "../components";
 import Rating from "react-rating";
-import { mockMovieFetchData } from "../../../utils/test-utils";
+import { mockMovieFetchData } from "@/src/tests/fixtures";
 
 describe("<MediaMovie />", () => {
   it("renders <MediaHeader /> with appropriate props", () => {

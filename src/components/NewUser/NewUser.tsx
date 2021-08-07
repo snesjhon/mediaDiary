@@ -16,7 +16,7 @@ export default function NewUser({
   useEffect(() => {
     if (isRedirecting) {
       destroyCookie(null, "fuegoNewUser");
-      router.push("/home");
+      router.push("/diary");
     }
   }, [isRedirecting, router]);
   return (

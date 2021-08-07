@@ -1,4 +1,4 @@
-import { HomeIcon, BookmarkIcon, ActivityIcon, LayersIcon } from "@/icons";
+import { BookmarkIcon, ActivityIcon, LayersIcon, BookIcon } from "@/icons";
 import { MdLogo } from "@/md";
 import { SettingsIcon } from "@chakra-ui/icons";
 import {
@@ -31,7 +31,11 @@ export default function ContentSidebarMobile({
         </DrawerHeader>
         <DrawerBody mt={4}>
           <VStack spacing={6} align="flex-start">
-            <ContentSidebarButton title="Home" route="/home" Icon={HomeIcon} />
+            <ContentSidebarButton
+              title="Diary"
+              route="/diary"
+              Icon={BookIcon}
+            />
             <ContentSidebarButton
               title="Memories"
               route="/memories"

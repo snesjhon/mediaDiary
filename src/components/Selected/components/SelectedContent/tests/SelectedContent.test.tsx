@@ -4,12 +4,9 @@ import React from "react";
 import MdLoader from "../../../../md/MdLoader";
 import { MediaMovie, MediaSpotify, MediaTV } from "../../../../Media";
 import { fuegoBookmarkAdd } from "@/fuego";
-import {
-  mockMovieFetchData,
-  mockMovieSelected,
-} from "../../../../../utils/test-utils";
 import SelectedContent from "..";
 import { mountWithDrawerSuspense } from "@/src/tests";
+import { mockMovieFetchData, mockMovieSelected } from "@/src/tests/fixtures";
 
 let mockIsLoading = true;
 jest.mock("../../../../../config/useDataFetch", () => {
