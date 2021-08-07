@@ -74,11 +74,7 @@ export default function SelectedContent({
         {item.type === "movie" && <MediaMovie data={data as MDbMovie} />}
         {item.type === "tv" && <MediaTV data={data as MDbTV} />}
       </DrawerBody>
-      <DrawerFooter
-        borderTopWidth="1px"
-        justifyContent="space-between"
-        // pb={{ base: 8, sm: 4 }}
-      >
+      <DrawerFooter borderTopWidth="1px" justifyContent="space-between">
         <Button
           onClick={() =>
             dispatch({

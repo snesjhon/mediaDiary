@@ -72,11 +72,7 @@ export default function EditRating(): JSX.Element {
               />
             )}
           </DrawerBody>
-          <DrawerFooter
-            justifyContent="space-between"
-            borderTopWidth="1px"
-            pb={{ base: 8, sm: 4 }}
-          >
+          <DrawerFooter justifyContent="space-between" borderTopWidth="1px">
             <Button
               onClick={deleteData}
               isLoading={isSaving}

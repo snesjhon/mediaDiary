@@ -45,17 +45,16 @@ export default function ContentDrawer({
       isFullHeight={fullHeight}
       {...rest}
     >
-      <DrawerOverlay zIndex={2}>
-        <DrawerContent {...handlers}>
-          {showHeader && (
-            <DrawerHeader>
-              <MdLogo title="mediaDiary" />
-              <DrawerCloseButton />
-            </DrawerHeader>
-          )}
-          {children}
-        </DrawerContent>
-      </DrawerOverlay>
+      <DrawerOverlay zIndex={2} />
+      <DrawerContent {...handlers}>
+        {showHeader && (
+          <DrawerHeader>
+            <MdLogo title="mediaDiary" />
+            <DrawerCloseButton />
+          </DrawerHeader>
+        )}
+        {children}
+      </DrawerContent>
     </Drawer>
   );
 
