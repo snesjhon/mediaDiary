@@ -110,11 +110,7 @@ export default function DayRatingContent({
           />
         )}
       </DrawerBody>
-      <DrawerFooter
-        borderTopWidth="1px"
-        justifyContent="space-between"
-        pb={{ base: 8, sm: 4 }}
-      >
+      <DrawerFooter borderTopWidth="1px" justifyContent="space-between">
         <Button
           // TODO: At the current moment there isn't a good way of adding SEASON support
           // AFTER you've bookmarked TV. That is inconvenient because I'd want to refecth

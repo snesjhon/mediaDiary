@@ -116,11 +116,7 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
           />
         )}
       </DrawerBody>
-      <DrawerFooter
-        borderTopWidth="1px"
-        justifyContent="space-between"
-        pb={{ base: 8, sm: 4 }}
-      >
+      <DrawerFooter borderTopWidth="1px" justifyContent="space-between">
         {diaryDate && (
           <Button
             onClick={handleLogAgain}
