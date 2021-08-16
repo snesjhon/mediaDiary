@@ -92,7 +92,7 @@ export default function FiltersContent({
                       setReleasedDecade(null);
                       setLoggedBefore(null);
                       setGenre(null);
-                      setDiaryYear(value);
+                      setDiaryYear(value === 0 ? null : value);
                     }
                   } else {
                     setValue([]);
