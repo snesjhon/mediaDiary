@@ -52,7 +52,11 @@ export default function DiaryGrid({ data, sortType }: Props): JSX.Element {
               </Text>
             </Box>
             <Grid
-              gridTemplateColumns="repeat(4, 1fr)"
+              gridTemplateColumns={{
+                base: "1fr 1fr",
+                sm: "1fr 1fr 1fr",
+                md: "repeat(4, 1fr)",
+              }}
               gridRowGap="6"
               borderBottomWidth="1px"
               mb="6"
@@ -64,7 +68,7 @@ export default function DiaryGrid({ data, sortType }: Props): JSX.Element {
                   <Grid
                     gridTemplateRows={{
                       base: "2rem 4rem 1fr",
-                      md: "1rem 1fr auto",
+                      xs: "1rem 1fr auto",
                     }}
                     alignItems="flex-end"
                     gridGap="0.5rem"
