@@ -11,9 +11,9 @@
     "test:ci": "jest --env=jsdom"
   },
   "dependencies": {
-    "@chakra-ui/icons": "^1.0.13",
-    "@chakra-ui/react": "^1.6.2",
-    "@emotion/react": "^11.4.0",
+    "@chakra-ui/icons": "^1.0.15",
+    "@chakra-ui/react": "^1.6.8",
+    "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@nivo/bar": "^0.69.1",
     "@nivo/core": "^0.69.0",
