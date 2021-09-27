@@ -16,7 +16,6 @@ import { useSwipeable } from "react-swipeable";
 export default function ContentDrawer({
   children,
   refHook,
-  placement = "right",
   isOpen,
   showHeader = true,
   ...rest
@@ -39,17 +38,19 @@ export default function ContentDrawer({
       onClose={onClose}
       isOpen={isOpen}
       size={sizeType}
-      placement={placement}
+      placement="right"
       initialFocusRef={refHook}
       {...rest}
     >
-      <DrawerOverlay zIndex={2} />
+      <DrawerOverlay zIndex="2" />
       <DrawerContent {...handlers}>
         {showHeader && (
-          <DrawerHeader>
-            <MdLogo title="mediaDiary" />
+          <>
             <DrawerCloseButton />
-          </DrawerHeader>
+            <DrawerHeader pt={3} pb={2}>
+              <MdLogo title="mediaDiary" />
+            </DrawerHeader>
+          </>
         )}
         {children}
       </DrawerContent>

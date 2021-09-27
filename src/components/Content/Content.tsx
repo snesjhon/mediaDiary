@@ -62,32 +62,34 @@ export default function Content({
   const showContent = !loading && !isValidating;
 
   return (
-    <MdLayout>
+    <>
       <Head>
         <title>{title} / MediaDiary</title>
       </Head>
-      <ContentHeader
-        onOpen={onOpen}
-        searchString={search}
-        handleSearch={(val) => setSearch(val)}
-      />
-      <Grid mt={12} gridTemplateColumns={{ base: "1fr", md: "0.2fr 1fr" }}>
-        <ContentSidebar isOpen={isOpen} onClose={onClose} />
-        <Box>
-          {showLoading && <MdLoader />}
-          {showContent && (
-            <>
-              {data && (
-                <>
-                  {data.length > 0 && <SearchMedia data={data} />}
-                  {data.length === 0 && <div>No Data</div>}
-                </>
-              )}
-              {!data && children}
-            </>
-          )}
-        </Box>
-      </Grid>
+      <MdLayout>
+        <ContentHeader
+          onOpen={onOpen}
+          searchString={search}
+          handleSearch={(val) => setSearch(val)}
+        />
+        <Grid mt={12} gridTemplateColumns={{ base: "1fr", md: "0.2fr 1fr" }}>
+          <ContentSidebar isOpen={isOpen} onClose={onClose} />
+          <Box>
+            {showLoading && <MdLoader />}
+            {showContent && (
+              <>
+                {data && (
+                  <>
+                    {data.length > 0 && <SearchMedia data={data} />}
+                    {data.length === 0 && <div>No Data</div>}
+                  </>
+                )}
+                {!data && children}
+              </>
+            )}
+          </Box>
+        </Grid>
+      </MdLayout>
       {!loading && (
         <>
           <ContentDrawer
@@ -100,7 +102,6 @@ export default function Content({
               view === "dayRating" ||
               view === "logRating"
             }
-            placement="right"
             showHeader={
               view === "day" || view === "dayRating" || view === "selected"
                 ? false
@@ -117,6 +118,6 @@ export default function Content({
           </ContentDrawer>
         </>
       )}
-    </MdLayout>
+    </>
   );
 }
