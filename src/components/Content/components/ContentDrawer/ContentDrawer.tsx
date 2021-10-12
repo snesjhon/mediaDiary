@@ -1,6 +1,5 @@
 import { useMDDispatch } from "@/config";
 import { MdLogo } from "@/md";
-import { useIsBreakpoint } from "@/utils";
 import type { DrawerProps } from "@chakra-ui/react";
 import {
   Drawer,
