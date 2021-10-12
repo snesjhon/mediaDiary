@@ -1,5 +1,6 @@
 import { useMDDispatch } from "@/config";
 import { MdLogo } from "@/md";
+import { useIsBreakpoint } from "@/utils";
 import type { DrawerProps } from "@chakra-ui/react";
 import {
   Drawer,
@@ -43,7 +44,7 @@ export default function ContentDrawer({
       {...rest}
     >
       <DrawerOverlay zIndex="2" />
-      <DrawerContent {...handlers}>
+      <DrawerContent height="100%" {...handlers}>
         {showHeader && (
           <>
             <DrawerCloseButton />
