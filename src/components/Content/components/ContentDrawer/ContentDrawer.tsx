@@ -43,7 +43,7 @@ export default function ContentDrawer({
       {...rest}
     >
       <DrawerOverlay zIndex="2" />
-      <DrawerContent {...handlers}>
+      <DrawerContent height="100%" {...handlers}>
         {showHeader && (
           <>
             <DrawerCloseButton />
