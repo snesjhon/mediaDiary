@@ -8,8 +8,9 @@ import type { LogRatingState } from "../Log/config";
 import { fuegoEditRating, fuegoDeleteRating } from "./config";
 import { MdSpinner } from "@/md";
 import { Center } from "@chakra-ui/layout";
-import { DrawerBody, DrawerFooter, Button } from "@chakra-ui/react";
+import { DrawerBody, Button } from "@chakra-ui/react";
 import { MediaMovie, MediaTV, MediaSpotify } from "../Media";
+import { ContentFooter } from "../Content";
 
 export default function EditRating(): JSX.Element {
   const MDState = useMDState();
@@ -72,7 +73,7 @@ export default function EditRating(): JSX.Element {
               />
             )}
           </DrawerBody>
-          <DrawerFooter justifyContent="space-between" borderTopWidth="1px">
+          <ContentFooter>
             <Button
               onClick={deleteData}
               isLoading={isSaving}
@@ -89,7 +90,7 @@ export default function EditRating(): JSX.Element {
             >
               Save
             </Button>
-          </DrawerFooter>
+          </ContentFooter>
         </>
       )}
     </>

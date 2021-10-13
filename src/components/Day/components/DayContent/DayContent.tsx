@@ -3,6 +3,7 @@ import { useDataFetch, useMDDispatch } from "@/config";
 import { useFuegoUser } from "@/fuego";
 import { BookmarkIcon } from "@/icons";
 import { MdLoader } from "@/md";
+import { ContentFooter } from "@/src/components/Content";
 import MdLogo from "@/src/components/md/MdLogo";
 import { MediaMovie, MediaTV, MediaSpotify } from "@/src/components/Media";
 import type { MDbMovie, MDbTV, MediaDiaryWithId } from "@/types";
@@ -12,7 +13,6 @@ import {
   Button,
   DrawerBody,
   DrawerCloseButton,
-  DrawerFooter,
   DrawerHeader,
   Flex,
   IconButton,
@@ -116,7 +116,7 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
           />
         )}
       </DrawerBody>
-      <DrawerFooter borderTopWidth="1px" justifyContent="space-between">
+      <ContentFooter>
         {diaryDate && (
           <Button
             onClick={handleLogAgain}
@@ -154,7 +154,7 @@ export default function DayContent({ mdData, mutate }: Props): JSX.Element {
         >
           {bookmark && !diaryDate ? "Log" : "Edit"}
         </Button>
-      </DrawerFooter>
+      </ContentFooter>
     </>
   );
 

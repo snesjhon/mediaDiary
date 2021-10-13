@@ -7,9 +7,10 @@ import dayjs from "dayjs";
 import React, { useReducer, useRef, useEffect } from "react";
 import { fuegoDiaryAdd } from "./config";
 import { MdSpinner } from "@/md";
-import { Center, DrawerBody, DrawerFooter, Button } from "@chakra-ui/react";
+import { Center, DrawerBody, Button } from "@chakra-ui/react";
 import { MediaMovie, MediaTV, MediaSpotify } from "../Media";
 import { useRouter } from "next/router";
+import { ContentFooter } from "../Content";
 
 export interface LogTVSeason {
   season?: number;
@@ -111,7 +112,7 @@ export default function Log(): JSX.Element {
               />
             )}
           </DrawerBody>
-          <DrawerFooter borderTopWidth="1px">
+          <ContentFooter>
             <Button
               onClick={addData}
               isLoading={isSaving}
@@ -120,7 +121,7 @@ export default function Log(): JSX.Element {
             >
               Save
             </Button>
-          </DrawerFooter>
+          </ContentFooter>
         </>
       )}
     </>
