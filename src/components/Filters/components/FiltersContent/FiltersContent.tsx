@@ -1,5 +1,6 @@
 import { useMDState, useMDDispatch } from "@/config";
 import { AlbumIcon, FilmIcon, TvIcon } from "@/icons";
+import { ContentFooter } from "@/src/components/Content";
 import type { MediaType } from "@/types";
 import { capFormat } from "@/utils";
 import {
@@ -7,7 +8,6 @@ import {
   Button,
   Divider,
   DrawerBody,
-  DrawerFooter,
   Flex,
   Heading,
   HStack,
@@ -266,7 +266,7 @@ export default function FiltersContent({
             )}
         </Box>
       </DrawerBody>
-      <DrawerFooter borderTopWidth="1px">
+      <ContentFooter>
         {(localMediaTypes.length !== 0 ||
           rating !== null ||
           releasedDecade !== null ||
@@ -318,7 +318,7 @@ export default function FiltersContent({
         >
           Save
         </Button>
-      </DrawerFooter>
+      </ContentFooter>
     </>
   );
 

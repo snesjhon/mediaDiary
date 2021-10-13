@@ -1,9 +1,9 @@
 import { useFuegoUser } from "@/fuego";
-import { MdContentHeader } from "@/md";
+import { MdContentHeader, MdLogo, MdStatus } from "@/md";
 import type { MediaDiaryWithId } from "@/types";
 import { useIsBreakpoint } from "@/utils";
 import useDebounce from "@/utils/useDebounce";
-import { Input, Text, HStack, Box } from "@chakra-ui/react";
+import { Input, Text, HStack, Box, Center } from "@chakra-ui/react";
 import React, { useState } from "react";
 import useSWR from "swr";
 import { fuegoDiarySearch } from "../Content/config/fuego";
@@ -54,7 +54,7 @@ export default function SearchDiary(): JSX.Element {
       >
         {data && data.length > 0 && <SearchMedia data={data} />}
         {data && data.length === 0 && <div>No Data</div>}
-        {!data && !isValidating && <div>Search For something</div>}
+        {!data && !isValidating && <MdStatus title="No Content" />}
       </Box>
     </Box>
   );

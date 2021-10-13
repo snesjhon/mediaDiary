@@ -11,13 +11,13 @@ import { MediaSpotify, MediaMovie, MediaTV } from "@/src/components/Media";
 import { CalendarIcon } from "@chakra-ui/icons";
 import {
   DrawerBody,
-  DrawerFooter,
   Button,
   DrawerCloseButton,
   DrawerHeader,
   Flex,
   IconButton,
 } from "@chakra-ui/react";
+import { ContentFooter } from "@/src/components/Content";
 
 export default function SelectedContent({
   item,
@@ -74,7 +74,7 @@ export default function SelectedContent({
         {item.type === "movie" && <MediaMovie data={data as MDbMovie} />}
         {item.type === "tv" && <MediaTV data={data as MDbTV} />}
       </DrawerBody>
-      <DrawerFooter borderTopWidth="1px" justifyContent="space-between">
+      <ContentFooter>
         <Button
           onClick={() =>
             dispatch({
@@ -125,7 +125,7 @@ export default function SelectedContent({
         >
           Add Diary
         </Button>
-      </DrawerFooter>
+      </ContentFooter>
     </>
   );
 
