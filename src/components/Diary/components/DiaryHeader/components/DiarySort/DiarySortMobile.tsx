@@ -59,7 +59,7 @@ export default function DiarySortMobile({ sortType, onChange }: Props) {
                   onChange={(e) =>
                     setLocalSort(e.target.value as SortType["sort"])
                   }
-                  value={sortType.sort}
+                  value={localSort}
                 >
                   <option value="asc">Ascending</option>
                   <option value="desc">Descending</option>
@@ -74,7 +74,7 @@ export default function DiarySortMobile({ sortType, onChange }: Props) {
                   onChange={(e) =>
                     setLocalType(e.target.value as SortType["type"])
                   }
-                  value={sortType.type}
+                  value={localType}
                 >
                   <option value="diaryDate"> Diary Added</option>
                   <option value="addedDate"> When Rated</option>
