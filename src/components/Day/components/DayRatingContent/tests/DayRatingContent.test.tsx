@@ -1,13 +1,13 @@
+import { mountWithDrawerSuspense } from "@/src/tests";
+import {
+  mockAlbumFetchData,
+  mockMovieFetchData,
+  mockAlbumDiaryWithId,
+  mockMovieDiaryWithId,
+} from "@/src/tests/fixtures";
 import { IconButton } from "@chakra-ui/react";
 import React from "react";
 import DayRatingContent from "..";
-import {
-  mockAlbumDiaryWithId,
-  mockAlbumFetchData,
-  mockMovieDiaryWithId,
-  mockMovieFetchData,
-  mountWithDrawerSuspense,
-} from "../../../../../utils/test-utils";
 import MdLoader from "../../../../md/MdLoader";
 import { MediaMovie, MediaSpotify, MediaTV } from "../../../../Media";
 import {

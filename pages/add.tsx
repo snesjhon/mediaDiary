@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
-import { Memories, Content, Add } from "../src/components";
+import { Content, Add } from "../src/components";
 import MdLoader from "../src/components/md/MdLoader";
 import useFuegoAuth from "../src/fuego/useFuegoAuth";
 

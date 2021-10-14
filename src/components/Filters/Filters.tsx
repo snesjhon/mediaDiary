@@ -38,21 +38,20 @@ export default function Filters({
 
   return (
     <Drawer placement="right" onClose={onClose} isOpen={isOpen}>
-      <DrawerOverlay sx={{ zIndex: 2 }}>
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader pt={3} pb={2}>
-            <MdLogo title="Filters" />
-          </DrawerHeader>
-          {data ? (
-            <FiltersContent data={data} onClose={onClose} />
-          ) : (
-            <DrawerBody px={{ base: 0, sm: 8 }}>
-              <MdStatus title="No Memories" />
-            </DrawerBody>
-          )}
-        </DrawerContent>
-      </DrawerOverlay>
+      <DrawerOverlay sx={{ zIndex: 2 }} />
+      <DrawerContent>
+        <DrawerCloseButton />
+        <DrawerHeader pt={3} pb={2}>
+          <MdLogo title="Filters" />
+        </DrawerHeader>
+        {data ? (
+          <FiltersContent data={data} onClose={onClose} />
+        ) : (
+          <DrawerBody px={{ base: 0, sm: 8 }}>
+            <MdStatus title="No Memories" />
+          </DrawerBody>
+        )}
+      </DrawerContent>
     </Drawer>
   );
 }

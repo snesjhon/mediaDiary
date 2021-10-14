@@ -16,7 +16,6 @@ import { useSwipeable } from "react-swipeable";
 export default function ContentDrawer({
   children,
   refHook,
-  placement = "right",
   isOpen,
   showHeader = true,
   ...rest
@@ -33,29 +32,28 @@ export default function ContentDrawer({
     delta: 250,
   });
   const sizeType = useBreakpointValue({ base: "full", sm: "md" });
-  const fullHeight = useBreakpointValue({ base: true, sm: false });
 
   return (
     <Drawer
       onClose={onClose}
       isOpen={isOpen}
       size={sizeType}
-      placement={placement}
+      placement="right"
       initialFocusRef={refHook}
-      isFullHeight={fullHeight}
       {...rest}
     >
-      <DrawerOverlay zIndex={2}>
-        <DrawerContent {...handlers}>
-          {showHeader && (
-            <DrawerHeader>
+      <DrawerOverlay zIndex="2" />
+      <DrawerContent height="100%" {...handlers}>
+        {showHeader && (
+          <>
+            <DrawerCloseButton />
+            <DrawerHeader pt={3} pb={2}>
               <MdLogo title="mediaDiary" />
-              <DrawerCloseButton />
             </DrawerHeader>
-          )}
-          {children}
-        </DrawerContent>
-      </DrawerOverlay>
+          </>
+        )}
+        {children}
+      </DrawerContent>
     </Drawer>
   );
 

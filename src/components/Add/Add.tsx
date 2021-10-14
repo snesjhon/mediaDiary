@@ -1,6 +1,6 @@
 import { useMDState } from "@/config";
 import { MdContentHeader, MdLoader, MdSpinner } from "@/md";
-import { fetcher, spotifyFetch } from "@/utils";
+import { fetcher, spotifyFetch, useIsBreakpoint } from "@/utils";
 import useDebounce from "@/utils/useDebounce";
 import { Box, Center, HStack, Input, Spinner, Text } from "@chakra-ui/react";
 import React, { Suspense, useState } from "react";
@@ -11,6 +11,7 @@ import type { MDbSearch, SpotifySearch } from "./types";
 export default function Add(): JSX.Element {
   const { preference } = useMDState();
   const [search, setSearch] = useState("");
+  const isMd = useIsBreakpoint("md");
 
   const bouncedSearch = useDebounce(search, 500);
   const { data, isValidating } = useSWR(
@@ -42,7 +43,8 @@ export default function Add(): JSX.Element {
             value={search}
             type="search"
             autoFocus
-            minW="sm"
+            size={!isMd ? "sm" : undefined}
+            minW={isMd ? "sm" : undefined}
           />
         </HStack>
       </MdContentHeader>

@@ -1,13 +1,12 @@
-import { useMDDispatch } from "@/config";
 import { useFuegoUser } from "@/fuego";
 import {
-  HomeIcon,
   BookmarkIcon,
   ActivityIcon,
   LayersIcon,
   PlusIcon,
+  BookIcon,
 } from "@/icons";
-import { SearchIcon, SettingsIcon } from "@chakra-ui/icons";
+import { SettingsIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, VStack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
@@ -16,14 +15,17 @@ import { ContentSidebarButton, ContentSidebarFooter } from ".";
 export default function ContentSidebarDesktop(): JSX.Element {
   const { user } = useFuegoUser();
   const router = useRouter();
-  const dispatch = useMDDispatch();
 
   return (
     <Box pr={8}>
       <Box position="sticky" top="3rem" pt={6}>
         <VStack spacing={6} align="flex-start">
           <Box>
-            <ContentSidebarButton title="Home" Icon={HomeIcon} route="/home" />
+            <ContentSidebarButton
+              title="Diary"
+              Icon={BookIcon}
+              route="/diary"
+            />
           </Box>
           <Box>
             <ContentSidebarButton

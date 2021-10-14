@@ -2,7 +2,7 @@ import { useMDState, useMDDispatch } from "@/config";
 import { LogoIcon } from "@/icons";
 import { MdContentHeader, MdLoader } from "@/md";
 import type { UserFuegoValidated, MediaDiaryWithId } from "@/types";
-import { createPosterURL } from "@/utils";
+import { createPosterURL, useIsBreakpoint } from "@/utils";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -21,6 +21,7 @@ import { fuegoBookmarkGet } from "./config";
 function Bookmarks({ user }: { user: UserFuegoValidated }): JSX.Element {
   const state = useMDState();
   const dispatch = useMDDispatch();
+  const isMd = useIsBreakpoint("md");
   const [purple500] = useToken("colors", ["purple.500"]);
 
   const { data, error, size, setSize, mutate } = useSWRInfinite<
@@ -92,7 +93,7 @@ function Bookmarks({ user }: { user: UserFuegoValidated }): JSX.Element {
       <>
         <MdContentHeader title="Bookmarks" description="Bookmarks" />
         <Grid
-          gridTemplateColumns="repeat(5, 1fr)"
+          gridTemplateColumns={`repeat(${isMd ? 5 : 3}, 1fr)`}
           gridGap={4}
           alignItems="flex-end"
           borderLeftWidth={{ base: 0, md: "1px" }}

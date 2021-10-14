@@ -3,6 +3,7 @@ import { useDataFetch, useMDDispatch } from "@/config";
 import { useFuegoUser } from "@/fuego";
 import { BookmarkIcon } from "@/icons";
 import { MdLoader } from "@/md";
+import { ContentFooter } from "@/src/components/Content";
 import MdLogo from "@/src/components/md/MdLogo";
 import { MediaMovie, MediaTV, MediaSpotify } from "@/src/components/Media";
 import type { MDbMovie, MDbTV, MediaDiaryWithId } from "@/types";
@@ -11,7 +12,6 @@ import {
   Button,
   DrawerBody,
   DrawerCloseButton,
-  DrawerFooter,
   DrawerHeader,
   Flex,
   IconButton,
@@ -110,11 +110,7 @@ export default function DayRatingContent({
           />
         )}
       </DrawerBody>
-      <DrawerFooter
-        borderTopWidth="1px"
-        justifyContent="space-between"
-        pb={{ base: 8, sm: 4 }}
-      >
+      <ContentFooter>
         <Button
           // TODO: At the current moment there isn't a good way of adding SEASON support
           // AFTER you've bookmarked TV. That is inconvenient because I'd want to refecth
@@ -142,7 +138,7 @@ export default function DayRatingContent({
         >
           Edit
         </Button>
-      </DrawerFooter>
+      </ContentFooter>
     </>
   );
 

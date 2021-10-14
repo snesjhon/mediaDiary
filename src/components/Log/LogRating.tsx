@@ -8,9 +8,10 @@ import { LogRatingReducer, fuegoLogRatingAdd } from "./config";
 import type { LogRatingState } from "./config";
 import { MdSpinner } from "@/md";
 import { Center } from "@chakra-ui/layout";
-import { DrawerBody, DrawerFooter, Button } from "@chakra-ui/react";
+import { DrawerBody, Button } from "@chakra-ui/react";
 import { MediaMovie, MediaTV, MediaSpotify } from "../Media";
 import { useRouter } from "next/router";
+import { ContentFooter } from "../Content";
 
 export interface LogTVSeason {
   season?: number;
@@ -100,7 +101,7 @@ export default function LogRating(): JSX.Element {
               />
             )}
           </DrawerBody>
-          <DrawerFooter borderTopWidth="1px">
+          <ContentFooter>
             <Button
               onClick={addData}
               isLoading={isSaving}
@@ -109,7 +110,7 @@ export default function LogRating(): JSX.Element {
             >
               Save
             </Button>
-          </DrawerFooter>
+          </ContentFooter>
         </>
       )}
     </>

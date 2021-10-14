@@ -29,7 +29,7 @@ export default function RegisterPage(): JSX.Element {
               });
               setIsNewUser(!!user);
             } else {
-              router.push("/home");
+              router.push("/diary");
             }
           }
         });
@@ -46,7 +46,7 @@ export default function RegisterPage(): JSX.Element {
     router.push("/new");
     return <MdLoader />;
   } else if (user) {
-    router.push("/home");
+    router.push("/diary");
     return <MdLoader />;
   } else {
     return (

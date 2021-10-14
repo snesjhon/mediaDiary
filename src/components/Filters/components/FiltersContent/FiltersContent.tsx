@@ -1,5 +1,6 @@
 import { useMDState, useMDDispatch } from "@/config";
 import { AlbumIcon, FilmIcon, TvIcon } from "@/icons";
+import { ContentFooter } from "@/src/components/Content";
 import type { MediaType } from "@/types";
 import { capFormat } from "@/utils";
 import {
@@ -7,7 +8,6 @@ import {
   Button,
   Divider,
   DrawerBody,
-  DrawerFooter,
   Flex,
   Heading,
   HStack,
@@ -92,7 +92,7 @@ export default function FiltersContent({
                       setReleasedDecade(null);
                       setLoggedBefore(null);
                       setGenre(null);
-                      setDiaryYear(value);
+                      setDiaryYear(value === 0 ? null : value);
                     }
                   } else {
                     setValue([]);
@@ -202,7 +202,9 @@ export default function FiltersContent({
                   )
                 }
                 value={
-                  releasedDecade === null ? "all" : releasedDecade.toString()
+                  localReleasedDecade === null
+                    ? "all"
+                    : localReleasedDecade.toString()
                 }
               >
                 <option value="all">All</option>
@@ -221,13 +223,20 @@ export default function FiltersContent({
           <Divider mt={2} mb={4} />
           <RadioGroup
             value={
-              typeof loggedBefore !== "undefined" && loggedBefore === null
+              typeof localLoggedBefore !== "undefined" &&
+              localLoggedBefore === null
                 ? "all"
-                : loggedBefore.toString()
+                : localLoggedBefore.toString()
             }
-            onChange={(val) =>
-              setLoggedBefore(val === "all" ? null : val === "true")
-            }
+            onChange={(val) => {
+              if (val === "all") {
+                setLoggedBefore(null);
+              } else if (val === "true") {
+                setLoggedBefore(true);
+              } else if (val === "false") {
+                setLoggedBefore(false);
+              }
+            }}
           >
             <Stack spacing={4} direction="row">
               <Radio value="all">All</Radio>
@@ -245,7 +254,7 @@ export default function FiltersContent({
                 onChange={(e) =>
                   setGenre(e.target.value === "all" ? null : e.target.value)
                 }
-                value={genre ?? "all"}
+                value={localGenre ?? "all"}
               >
                 <option value="all">All</option>
                 {createMediaKeys("genre")
@@ -259,13 +268,13 @@ export default function FiltersContent({
             )}
         </Box>
       </DrawerBody>
-      <DrawerFooter borderTopWidth="1px">
+      <ContentFooter>
         {(localMediaTypes.length !== 0 ||
-          rating !== null ||
-          releasedDecade !== null ||
-          loggedBefore !== null ||
-          genre !== null ||
-          diaryYear !== null) && (
+          localRating !== null ||
+          localReleasedDecade !== null ||
+          localLoggedBefore !== null ||
+          localGenre !== null ||
+          localDiaryYear !== null) && (
           <Button
             colorScheme="red"
             variant="outline"
@@ -311,7 +320,7 @@ export default function FiltersContent({
         >
           Save
         </Button>
-      </DrawerFooter>
+      </ContentFooter>
     </>
   );
 
