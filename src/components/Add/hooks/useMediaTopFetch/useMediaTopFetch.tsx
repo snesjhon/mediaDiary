@@ -45,7 +45,7 @@ export default function useMediaTopFetch({ type, searchType }: Props): {
   }
 
   function getMovieUrl(): string {
-    return `${apiURL}/movie/popular/${apiKey}`;
+    return `${apiURL}/discover/movie${apiKey}?certification_country=US&ott_region=US&page=1&primary_release_date.gte=&primary_release_date.lte=&region=&release_date.gte=&release_date.lte=2022-04-14&show_me=0&sort_by=popularity.desc&vote_average.gte=0&vote_average.lte=10&vote_count.gte=100&with_genres=&with_keywords=&with_networks=&with_origin_country=&with_original_language=&with_ott_monetization_types=&with_ott_providers=&with_release_type=&with_runtime.gte=0&with_runtime.lte=400`;
   }
 
   function getAlbumUrl(): string {

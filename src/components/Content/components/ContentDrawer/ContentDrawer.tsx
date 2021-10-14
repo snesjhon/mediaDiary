@@ -17,25 +17,29 @@ export default function ContentDrawer({
   children,
   refHook,
   isOpen,
+  onClose,
   showHeader = true,
   ...rest
 }: PropsWithChildren<unknown> & {
   refHook?: RefObject<HTMLInputElement> | undefined;
   isOpen: DrawerProps["isOpen"];
   placement?: DrawerProps["placement"];
+  onClose?: DrawerProps["onClose"];
   showHeader?: boolean;
 }): JSX.Element {
   const dispatch = useMDDispatch();
+  const onCloseHandler =
+    typeof onClose !== "undefined" ? onClose : onCloseLocal;
   const handlers = useSwipeable({
-    onSwipedRight: () => onClose(),
-    onSwipedDown: () => onClose(),
+    onSwipedRight: () => onCloseHandler(),
+    onSwipedDown: () => onCloseHandler(),
     delta: 250,
   });
   const sizeType = useBreakpointValue({ base: "full", sm: "md" });
 
   return (
     <Drawer
-      onClose={onClose}
+      onClose={onCloseHandler}
       isOpen={isOpen}
       size={sizeType}
       placement="right"
@@ -57,7 +61,7 @@ export default function ContentDrawer({
     </Drawer>
   );
 
-  function onClose() {
+  function onCloseLocal() {
     dispatch({ type: "view", payload: "md" });
   }
 }

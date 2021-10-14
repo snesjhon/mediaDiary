@@ -52,7 +52,7 @@ export type MDActions =
       payload: MDState["selected"];
     }
   | {
-      type: "log" | "logAgain" | "logRating";
+      type: "log" | "logAgain" | "logRating" | "addRating";
       payload: {
         selected: MDState["selected"];
         selectedTV: MDState["selectedTV"];
@@ -173,6 +173,15 @@ export function Reducer(state: MDState, actions: MDActions): MDState {
         selectedSpotify: actions.payload.selectedSpotify,
         view: "logRating",
         edit: undefined,
+      };
+    }
+    case "addRating": {
+      return {
+        ...state,
+        selected: actions.payload.selected,
+        selectedMovie: actions.payload.selectedMovie,
+        selectedTV: actions.payload.selectedTV,
+        selectedSpotify: actions.payload.selectedSpotify,
       };
     }
     case "logAgain": {

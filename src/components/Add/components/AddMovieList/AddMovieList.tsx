@@ -1,4 +1,5 @@
 import { FilmIcon } from "@/icons";
+import { ContentDrawer } from "@/src/components/Content/components";
 import Rate from "@/src/components/Rate/Rate";
 import { Box, Flex, Heading } from "@chakra-ui/layout";
 import { Button, useColorMode } from "@chakra-ui/react";
@@ -35,9 +36,18 @@ export default function AddMovieList(): JSX.Element {
           Next
         </Button>
       </Box>
-      {searchType !== "" && data && data.results.length > 0 && (
-        <Rate movieResult={data.results[counter]} />
-      )}
+      <ContentDrawer
+        isOpen={searchType !== ""}
+        onClose={() => setSearchType("")}
+        showHeader={false}
+      >
+        {searchType !== "" && data && data.results.length > 0 && (
+          <Rate
+            movieResult={data.results[counter]}
+            onNext={() => setCounter((oldCounter) => oldCounter + 1)}
+          />
+        )}
+      </ContentDrawer>
     </>
   );
 }
