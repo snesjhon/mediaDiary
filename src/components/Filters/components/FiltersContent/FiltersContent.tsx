@@ -202,7 +202,9 @@ export default function FiltersContent({
                   )
                 }
                 value={
-                  releasedDecade === null ? "all" : releasedDecade.toString()
+                  localReleasedDecade === null
+                    ? "all"
+                    : localReleasedDecade.toString()
                 }
               >
                 <option value="all">All</option>
@@ -268,11 +270,11 @@ export default function FiltersContent({
       </DrawerBody>
       <ContentFooter>
         {(localMediaTypes.length !== 0 ||
-          rating !== null ||
-          releasedDecade !== null ||
-          loggedBefore !== null ||
-          genre !== null ||
-          diaryYear !== null) && (
+          localRating !== null ||
+          localReleasedDecade !== null ||
+          localLoggedBefore !== null ||
+          localGenre !== null ||
+          localDiaryYear !== null) && (
           <Button
             colorScheme="red"
             variant="outline"
